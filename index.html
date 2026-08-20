@@ -281,7 +281,7 @@
     <div class="frame plain">
       <div class="appline">
         <img src="media/powerleash.png" alt="PowerLeash app icon">
-        <div class="mono-stat">background app: 717 → 210 Mops/s<br>frontmost app: untouched<br>restore: clean, 713 Mops/s</div>
+        <div class="mono-stat">eco mode · background app: 717 → 210 Mops/s<br>frontmost app: untouched<br><br>match charger on a 45W adapter:<br>system load: 59.0 → 42.7 W<br>battery flow: −15.6 → −3.5 W</div>
       </div>
     </div>
   </div>
@@ -289,13 +289,13 @@
     <div class="beat">
       <h2>PowerLeash</h2>
       <p class="meta">mac menu bar app · swift</p>
-      <p>A custom low power mode for macOS. I assumed low power mode capped my screen at 60Hz.</p>
+      <p>A custom low power mode for macOS — one that targets a power budget instead of blanket-throttling the machine. I assumed Low Power Mode capped my screen at 60Hz.</p>
     </div>
     <div class="beat">
-      <p>I measured it and it doesn't — it throttles the CPU ~40% while the panel stays at 120Hz.</p>
+      <p>I measured it: it doesn't. The panel holds 120Hz, and what Low Power Mode actually costs is ~40% of CPU clock applied globally — so it slows the app you're looking at as much as the background work. It also applies the same fixed cut whether you're on a 45W charger or a 96W one.</p>
     </div>
     <div class="beat">
-      <p>So instead I move background tasks to the efficiency cores and leave whatever's in front at full speed.</p>
+      <p><b>Eco Mode</b> demotes background apps to the efficiency cores and leaves the foreground alone. <b>Match Charger</b> closes a loop against your charger's real wattage, duty-cycling processes between performance and efficiency cores so heavy jobs run slower instead of draining the battery while plugged in.</p>
       <a class="cta" href="downloads/PowerLeash.zip" download>Download for Mac</a>
       <p class="grey small">Apple Silicon, unsigned — right click → Open.</p>
     </div>
