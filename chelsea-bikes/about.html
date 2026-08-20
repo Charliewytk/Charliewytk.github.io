@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us — Chelsea Bikes, Kings Road London</title>
+<meta name="description" content="Chelsea Bikes has been the independent bike shop on Kings Road since 2011 — new and refurbished bikes, expert repairs, and a greener way to ride.">
+<link rel="stylesheet" href="assets/css/styles.css?v=1786418436">
+</head>
+<body>
+<div id="app-header"></div>
+<main id="main">
+
+<section class="page-hero">
+  <div class="container">
+    <div class="crumbs"><a href="index.html">Home</a> / About Us</div>
+    <h1>About Chelsea Bikes</h1>
+    <p class="lede">An independent, green-minded bike shop on the Kings Road since 2011.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container split">
+    <div>
+      <span class="kicker">Our story</span>
+      <h2>Keeping Chelsea rolling since 2011</h2>
+      <p>Chelsea Bikes is a trusted name in bicycle sales, repair and service. From our shop at 427 Kings Road we stock quality new bikes from brands like Raleigh, Ridgeback, Dawes, Pashley, Tern and more — alongside carefully refurbished used bikes at prices that make cycling accessible to everyone.</p>
+      <p>Sustainability is at the heart of what we do. Every reconditioned bike we sell is one saved from landfill; our workshop keeps hundreds of bikes on the road each year that might otherwise be scrapped. And through our close work with the police and the Police National Computer checks on every used bike we buy, we're proud to stand against bike theft in London.</p>
+      <p>Open seven days a week, with a committed, professionally trained workshop team — walk in any time.</p>
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1.5rem;">
+        <a class="btn btn-primary" href="contact.html">Visit the shop</a>
+        <a class="btn btn-outline" href="bikes.html">See our bikes</a>
+      </div>
+    </div>
+    <div class="art" id="aboutArt"></div>
+  </div>
+</section>
+
+<section class="section section--alt">
+  <div class="container">
+    <div class="grid grid-3">
+      <div class="card" style="padding:1.6rem;">
+        <h3>Independent &amp; local</h3>
+        <p style="font-size:0.93rem;color:var(--ink-soft);margin:0;">No chain-store scripts — just honest advice from people who ride these streets every day.</p>
+      </div>
+      <div class="card" style="padding:1.6rem;">
+        <h3>Green by design</h3>
+        <p style="font-size:0.93rem;color:var(--ink-soft);margin:0;">Refurbishing and reusing bikes and parts to keep resources in circulation and London greener.</p>
+      </div>
+      <div class="card" style="padding:1.6rem;">
+        <h3>Community first</h3>
+        <p style="font-size:0.93rem;color:var(--ink-soft);margin:0;">Student discounts, workplace repair days, bike donations rehomed — we're part of the neighbourhood.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div id="app-footer"></div>
+<script src="assets/js/photos.js?v=1786418436"></script>
+<script src="assets/js/main.js?v=1786418436"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("aboutArt").innerHTML = photoSlot(bikeArt("navy", "about", "Classic"), "shop", "about", "Inside Chelsea Bikes");
+  hydratePhotos();
+});
+</script>
+</body>
+</html>

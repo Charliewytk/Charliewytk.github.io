@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>News & Articles — Chelsea Bikes</title>
+<meta name="description" content="Cycling news, maintenance tips and guides from the Chelsea Bikes workshop.">
+<link rel="stylesheet" href="assets/css/styles.css?v=1786418436">
+</head>
+<body>
+<div id="app-header"></div>
+<main id="main">
+
+<section class="page-hero">
+  <div class="container">
+    <div class="crumbs"><a href="index.html">Home</a> / News</div>
+    <h1>News &amp; articles</h1>
+    <p class="lede">Tips, guides and news from the workshop floor.</p>
+  </div>
+</section>
+
+<section class="section--tight" style="padding-top:2.5rem;">
+  <div class="container">
+    <div class="grid grid-3" id="postGrid"></div>
+  </div>
+</section>
+
+</main>
+
+<div id="app-footer"></div>
+<script src="assets/js/photos.js?v=1786418436"></script>
+<script src="assets/js/blog-content.js?v=1786418436"></script>
+<script src="assets/js/main.js?v=1786418436"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("postGrid").innerHTML = Object.keys(POSTS).map(function (k) {
+    var p = POSTS[k];
+    return `<a class="card post-card" href="article.html?post=${k}">
+      <span class="post-media">${photoSlot(sceneArt(p.palette, "post" + k, p.motif), "shop", "post-" + k, p.title)}</span>
+      <span class="post-body">
+        <span class="post-tag">${p.tag}</span>
+        <span class="post-title">${p.title}</span>
+        <span class="post-excerpt">${p.excerpt}</span>
+        <span class="post-date">${p.date} · Demo article</span>
+      </span>
+    </a>`;
+  }).join("");
+  hydratePhotos();
+});
+</script>
+</body>
+</html>

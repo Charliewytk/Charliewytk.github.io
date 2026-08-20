@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Before &amp; After — Chelsea Bikes</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="assets/css/styles.css?v=1786418436">
+<style>
+  .cmp-wrap{max-width:1400px;margin:0 auto;padding:0 var(--space-5)}
+  .cmp-bar{display:flex;gap:var(--space-3);align-items:center;flex-wrap:wrap;margin-bottom:var(--space-5)}
+  .cmp-bar .spacer{margin-left:auto}
+  .panes{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-5);align-items:start}
+  .pane{border:1px solid var(--line);border-radius:var(--radius);background:#fff;box-shadow:var(--shadow-sm);overflow:hidden;display:flex;flex-direction:column}
+  .pane-head{padding:.85rem 1.1rem;display:flex;align-items:center;gap:.6rem;border-bottom:1px solid var(--line)}
+  .pane-head h2{margin:0;font-size:1rem}
+  .pane.before .pane-head{background:#fbf1f1}
+  .pane.after .pane-head{background:var(--teal-100)}
+  .tagpill{font-size:.66rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:.2em .7em;border-radius:99px}
+  .pane.before .tagpill{background:#7d3b3b;color:#fff}
+  .pane.after .tagpill{background:var(--teal-600);color:#fff}
+  .stage{position:relative;background:#eef2f6;overflow:hidden}
+  .stage iframe{border:0;display:block;transform-origin:0 0;background:#fff}
+  .fallback{padding:1.6rem;min-height:420px;display:flex;flex-direction:column;justify-content:center;gap:.9rem}
+  .fault{display:flex;gap:.7rem;align-items:flex-start;font-size:.9rem;color:var(--ink-soft)}
+  .fault b{color:var(--navy-900);display:block;font-size:.94rem}
+  .fault .x{flex:none;width:20px;height:20px;border-radius:50%;background:#fdeaea;color:#c0392b;display:grid;place-items:center;font-weight:800;font-size:.72rem}
+  .live-note{font-size:.82rem;color:var(--ink-soft);margin-top:.4rem}
+  .statusline{font-size:.83rem;padding:.55rem .9rem;border-radius:8px;background:#fff6d6;border:1px solid #f0d68a;color:#7a5a12}
+  @media (max-width:900px){.panes{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="app-header"></div>
+<main id="main">
+
+<section class="page-hero">
+  <div class="container">
+    <div class="crumbs"><a href="index.html">Home</a> / Before &amp; After</div>
+    <h1>Before &amp; after</h1>
+    <p class="lede">The same business, side by side. Switch between desktop and phone to see the difference where it matters most.</p>
+  </div>
+</section>
+
+<section class="section--tight" style="padding:2rem 0 3.5rem;">
+  <div class="cmp-wrap">
+    <div class="cmp-bar">
+      <button class="chip on" data-w="1280">Desktop</button>
+      <button class="chip" data-w="375">Phone</button>
+      <span class="spacer"></span>
+      <button class="btn btn-outline btn-sm" id="loadLive">Load their live site</button>
+    </div>
+
+    <div id="liveStatus" class="statusline" style="display:none;margin-bottom:1rem;"></div>
+
+    <div class="panes">
+      <div class="pane before">
+        <div class="pane-head"><span class="tagpill">Before</span><h2>chelseabikes.co.uk today</h2></div>
+        <div class="stage" id="beforeStage">
+          <div class="fallback" id="beforeFallback">
+            <div class="fault"><span class="x">✕</span><div><b>Phone number locked inside an image</b>Address, hours and the phone number are saved as a picture — so on a phone nobody can tap to call, and Google can't read them.</div></div>
+            <div class="fault"><span class="x">✕</span><div><b>Valuations sent to another shop</b>The Cash for Bikes page directs customers to an email address at camdencycles.co.uk, under a heading about selling "to Camden Cycles".</div></div>
+            <div class="fault"><span class="x">✕</span><div><b>Dead links show adverts</b>Any old or mistyped link on the domain serves a third-party parked-domain advert page instead of a proper "page not found".</div></div>
+            <div class="fault"><span class="x">✕</span><div><b>Slow, and slowest at lunchtime</b>Roughly one load in five took over three seconds; the worst took nine. The homepage pulls 61 files and over 1.7 MB — the rebuild is 4 files and 94 KB.</div></div>
+            <div class="fault"><span class="x">✕</span><div><b>Reads as closed down</b>The footer still says "Copyright © 2011", with no indication the shop is open seven days a week.</div></div>
+            <p class="live-note">Press <strong>Load their live site</strong> above to show the real thing (needs internet, and their server has to be up).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pane after">
+        <div class="pane-head"><span class="tagpill">After</span><h2>The rebuild</h2></div>
+        <div class="stage" id="afterStage">
+          <iframe id="afterFrame" src="index.html" loading="lazy" title="Rebuilt Chelsea Bikes site"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div id="app-footer"></div>
+<script src="assets/js/photos.js?v=1786418436"></script>
+<script src="assets/js/main.js?v=1786418436"></script>
+<script>
+(function(){
+  var width = 1280;
+  var HEIGHT = 620;
+
+  function fit(stage, frame){
+    if(!frame) return;
+    var avail = stage.clientWidth;
+    // A hidden or not-yet-laid-out pane measures 0 — scaling by 0 hides the frame.
+    if(!avail){ requestAnimationFrame(function(){ fit(stage, frame); }); return; }
+    var scale = Math.min(1, avail / width);
+    var offset = Math.max(0, (avail - width * scale) / 2);
+    frame.style.width = width + "px";
+    frame.style.height = Math.round(HEIGHT / scale) + "px";
+    frame.style.transform = "translateX(" + offset + "px) scale(" + scale + ")";
+    stage.style.height = HEIGHT + "px";
+  }
+
+  function fitAll(){
+    fit(document.getElementById("afterStage"), document.getElementById("afterFrame"));
+    fit(document.getElementById("beforeStage"), document.getElementById("beforeFrame"));
+    var fb = document.getElementById("beforeFallback");
+    if(fb) document.getElementById("beforeStage").style.height = "";
+  }
+
+  document.querySelectorAll(".cmp-bar .chip").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      document.querySelectorAll(".cmp-bar .chip").forEach(function(b){ b.classList.remove("on"); });
+      btn.classList.add("on");
+      width = parseInt(btn.dataset.w, 10);
+      fitAll();
+    });
+  });
+
+  document.getElementById("loadLive").addEventListener("click", function(){
+    var stage = document.getElementById("beforeStage");
+    var status = document.getElementById("liveStatus");
+    status.style.display = "block";
+    status.textContent = "Loading chelseabikes.co.uk… if their server is down this panel will stay blank.";
+    stage.innerHTML = '<iframe id="beforeFrame" src="https://chelseabikes.co.uk/index.php" title="Current Chelsea Bikes site"></iframe>';
+    fitAll();
+    setTimeout(function(){
+      status.textContent = "Showing their live site. If it looks blank or says “temporarily unavailable”, that is their server — not this demo.";
+    }, 3000);
+  });
+
+  window.addEventListener("resize", fitAll);
+  window.addEventListener("pageshow", fitAll);
+  document.addEventListener("visibilitychange", function(){ if(!document.hidden) fitAll(); });
+  document.addEventListener("DOMContentLoaded", fitAll);
+  setTimeout(fitAll, 60);
+})();
+</script>
+</body>
+</html>

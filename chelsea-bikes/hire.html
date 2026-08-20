@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bike Hire London — from £25 | Chelsea Bikes</title>
+<meta name="description" content="Hire quality hybrid bikes in Chelsea from £25. Hourly, daily and weekly rates, student and group discounts, helmets and locks available.">
+<link rel="stylesheet" href="assets/css/styles.css?v=1786418436">
+</head>
+<body>
+<div id="app-header"></div>
+<main id="main">
+
+<section class="page-hero">
+  <div class="container">
+    <div class="crumbs"><a href="index.html">Home</a> / Bike Hire</div>
+    <h1>Bike hire</h1>
+    <p class="lede">Quality hybrids ready to ride from the heart of Chelsea — by the hour, day or week. Helmets, locks and lights available at minimal extra cost.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">Simple rates</span>
+      <h2>Hire rates</h2>
+      <p class="lede">Student &amp; group discounts with a valid student card. Larger groups? We can deliver the bikes to you — just book ahead.</p>
+    </div>
+    <div class="table-scroll">
+      <table class="price-table">
+        <thead><tr><th>Hire period</th><th>Standard rate</th><th>Student / group rate</th></tr></thead>
+        <tbody>
+          <tr><td>4 hours</td><td>£30</td><td>£25</td></tr>
+          <tr><td>1 day</td><td>£45</td><td>£40</td></tr>
+          <tr><td>1 week</td><td>£150</td><td>£125</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:0.85rem;color:var(--ink-faint);margin-top:1rem;">
+      Rates shown for bikes valued £120–£250; higher-value bikes charged accordingly. A £2 admin fee covers the hire contract. The bike's full value is taken as a fully refundable deposit, returned minus the hire charge. Please bring photo ID.
+    </p>
+  </div>
+</section>
+
+<section class="section section--alt">
+  <div class="container split">
+    <div class="art" id="hireArt"></div>
+    <div>
+      <span class="kicker">How it works</span>
+      <h2>Riding in 10 minutes</h2>
+      <div class="steps">
+        <div class="step"><span class="step-num"></span><div><h3>Tell us when</h3><p>Call, WhatsApp or use the form below so we can have the right size and type ready for you.</p></div></div>
+        <div class="step"><span class="step-num"></span><div><h3>Bring ID &amp; deposit</h3><p>Photo ID plus the refundable deposit — sign the quick hire contract and you're off.</p></div></div>
+        <div class="step"><span class="step-num"></span><div><h3>Ride &amp; return</h3><p>Every bike is checked and serviced between hires. Drop it back and your deposit is refunded on the spot.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container" style="max-width:760px;">
+    <div class="section-head section-head--center">
+      <span class="kicker">Reserve ahead</span>
+      <h2>Hire enquiry</h2>
+    </div>
+    <form class="card form-card" data-multistep data-submit-label="Send enquiry">
+      <div class="form-steps-bar" aria-hidden="true"></div>
+      <div class="form-steps-wrap">
+        <div class="form-step">
+          <h3>1 · Your ride</h3>
+          <div class="form-grid">
+            <div class="field"><label for="h-period">Hire period</label>
+              <select id="h-period" required>
+                <option value="">Choose…</option><option>4 hours</option><option>1 day</option><option>1 week</option><option>Longer / academic year</option>
+              </select>
+            </div>
+            <div class="field"><label for="h-count">Number of bikes</label>
+              <input id="h-count" type="number" min="1" value="1" required>
+            </div>
+            <div class="field"><label for="h-date">Start date</label><input id="h-date" type="date" required></div>
+            <div class="field"><label for="h-extras">Extras</label>
+              <select id="h-extras"><option>None</option><option>Helmet(s)</option><option>Lock(s)</option><option>Lights</option><option>Helmets + locks + lights</option></select>
+            </div>
+          </div>
+        </div>
+        <div class="form-step">
+          <h3>2 · Your details</h3>
+          <div class="form-grid">
+            <div class="field"><label for="h-name">Name</label><input id="h-name" type="text" required></div>
+            <div class="field"><label for="h-phone">Phone</label><input id="h-phone" type="tel" required></div>
+            <div class="field full"><label for="h-notes">Anything else? (rider heights, student/group discount, delivery for groups…)</label><textarea id="h-notes"></textarea></div>
+          </div>
+        </div>
+        <div class="form-nav">
+          <button class="btn btn-outline" data-prev>Back</button>
+          <button class="btn btn-primary" data-next>Continue</button>
+        </div>
+      </div>
+      <div class="form-success" role="status">
+        <div class="tick"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <h3>Enquiry sent</h3>
+        <p class="lede" style="font-size:0.98rem;">We'll confirm availability and sizes shortly. (Demo only — no data is sent in this prototype.)</p>
+      </div>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<div id="app-footer"></div>
+<script src="assets/js/photos.js?v=1786418436"></script>
+<script src="assets/js/main.js?v=1786418436"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("hireArt").innerHTML = photoSlot(sceneArt("green", "hire", "map"), "shop", "hire", "Hire bikes ready to go");
+  hydratePhotos();
+});
+</script>
+</body>
+</html>

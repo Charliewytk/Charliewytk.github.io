@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Privacy — Doorly</title>
+<meta name="description" content="What Doorly does with the addresses and location data you give it." />
+<meta name="robots" content="index, follow" />
+<link rel="stylesheet" href="/legal.css" />
+</head>
+<body>
+
+<div class="back-wrap"><a class="back" href="/">← Back to Doorly</a></div>
+
+<main>
+  <h1>Privacy</h1>
+  <p class="updated">Last updated 11 August 2026 · Doorly is in beta</p>
+
+  <p>
+    Doorly needs to know where you are starting from and where you are staying, because
+    that is the entire point of the product. This page explains exactly what happens to
+    that information. There are no accounts, no advertising, and nothing is sold.
+  </p>
+
+  <h2>Who is responsible</h2>
+  <p>
+    Doorly is an independent beta project run by Charlie Wuytack, the data controller for
+    the purposes of UK GDPR. Contact: <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a>.
+  </p>
+
+  <h2>What Doorly collects</h2>
+  <div class="table-scroll">
+  <table>
+    <thead>
+      <tr><th>Data</th><th>Why</th><th>Where it goes</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Addresses you type</td>
+        <td>To turn text into coordinates</td>
+        <td>Doorly's server, then a geocoding provider (LocationIQ, or OpenStreetMap's Nominatim)</td>
+      </tr>
+      <tr>
+        <td>Your precise location, only if you tap "use my current location"</td>
+        <td>To fill in the starting address for you</td>
+        <td>Sent once to Doorly's server and its geocoding provider to get a place name back</td>
+      </tr>
+      <tr>
+        <td>Coordinates of your start and destination</td>
+        <td>To find nearby airports and estimate ground transport</td>
+        <td>OpenRouteService, for travel times and distances</td>
+      </tr>
+      <tr>
+        <td>Airport codes and travel dates</td>
+        <td>To price flights</td>
+        <td>The flight price provider (Travelpayouts/Aviasales)</td>
+      </tr>
+      <tr>
+        <td>Your IP address</td>
+        <td>Rate limiting, so one visitor cannot exhaust shared API quota</td>
+        <td>Held in memory on Doorly's server; it may also appear in short-lived host logs</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>
+    <strong>Flight providers never receive your address.</strong> They only ever see an
+    airport pair and a date. The link between "where you live" and "which airport" is worked
+    out on Doorly's side and does not leave it.
+  </p>
+
+  <h2>What is stored, and for how long</h2>
+  <ul>
+    <li><strong>In your browser only:</strong> your last search, so the page is not empty when
+      you come back, and any API keys you enter yourself in the "connect" dialog. These live in
+      your browser's local storage and are never sent to Doorly. Clearing your browser data
+      removes them.</li>
+    <li><strong>On Doorly's server, as a cache:</strong> address lookups (7 days), route times
+      and distances (30 days), reverse-geocoded place names (30 days) and flight prices (1–6
+      hours). This cache is keyed by the query itself, not by who asked, and is not linked to
+      you or your IP address.</li>
+    <li><strong>Coordinates from "use my current location"</strong> are rounded to roughly 110
+      metres before they are used as a cache key, so the cache does not hold a precise record
+      of where anyone stood.</li>
+  </ul>
+
+  <h2>Cookies and tracking</h2>
+  <p>
+    Doorly sets <strong>no cookies</strong> and runs no advertising or analytics trackers. It
+    uses local storage for the two things listed above, which stays on your device.
+  </p>
+  <p>
+    If error monitoring is enabled, crash reports may be sent to Sentry to keep the site
+    working. Those reports have query strings stripped from every URL before sending — so the
+    addresses and dates in your search are not included — and session replay and performance
+    tracing are switched off.
+  </p>
+
+  <h2>Booking links</h2>
+  <p>
+    When you click through to book, you leave Doorly for an airline or a travel agent. Some of
+    those links are affiliate links, meaning Doorly may earn a commission if you book. The
+    destination site sets its own cookies and applies its own privacy policy, which Doorly does
+    not control. Affiliate links never change the ranking of results and never change the price
+    you pay.
+  </p>
+
+  <h2>Third parties your data reaches</h2>
+  <ul>
+    <li>Geocoding: <a href="https://locationiq.com/privacy" rel="noreferrer">LocationIQ</a>, or
+      <a href="https://osmfoundation.org/wiki/Privacy_Policy" rel="noreferrer">OpenStreetMap Foundation</a> (Nominatim)</li>
+    <li>Routing: <a href="https://openrouteservice.org/privacy-policy/" rel="noreferrer">OpenRouteService</a> (HeiGIT)</li>
+    <li>Flight prices: <a href="https://www.travelpayouts.com/privacy/" rel="noreferrer">Travelpayouts</a> (Aviasales)</li>
+    <li>Error monitoring, if enabled: <a href="https://sentry.io/privacy/" rel="noreferrer">Sentry</a></li>
+    <li>The hosting provider that runs the site</li>
+  </ul>
+
+  <h2>Your rights</h2>
+  <p>
+    Under UK GDPR you can ask what is held about you, ask for it to be corrected or deleted, and
+    complain to the <a href="https://ico.org.uk/" rel="noreferrer">ICO</a>. In practice Doorly
+    holds no account and no profile, so there is usually nothing to return beyond what is
+    described above. Email
+    <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a> and it will be dealt with.
+  </p>
+  <p>
+    Location access is always your choice. Your browser asks before sharing it, you can refuse,
+    and typing an address instead works exactly as well.
+  </p>
+
+  <h2>Children</h2>
+  <p>Doorly is not directed at children under 13 and does not knowingly collect their data.</p>
+
+  <h2>Changes</h2>
+  <p>
+    This page will change as the product does. The date at the top always reflects the current
+    version.
+  </p>
+
+  <div class="note">
+    <p>
+      <strong>Beta notice.</strong> Doorly is an early project, not a finished commercial
+      service. If anything here is unclear or looks wrong, please say so — that is genuinely
+      useful.
+    </p>
+  </div>
+</main>
+
+<footer>
+  <p><a href="/terms.html">Terms &amp; disclaimer</a> · <a href="/">Back to Doorly</a></p>
+</footer>
+
+</body>
+</html>

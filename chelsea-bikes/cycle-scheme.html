@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cycle to Work Scheme — Save up to 42% | Chelsea Bikes</title>
+<meta name="description" content="Use the Cycle to Work scheme at Chelsea Bikes and save on a new bike and accessories through salary sacrifice.">
+<link rel="stylesheet" href="assets/css/styles.css?v=1786418436">
+</head>
+<body>
+<div id="app-header"></div>
+<main id="main">
+
+<section class="page-hero">
+  <div class="container">
+    <div class="crumbs"><a href="index.html">Home</a> / Cycle to Work</div>
+    <h1>Cycle to Work scheme</h1>
+    <p class="lede">Get a new bike and accessories through your employer and spread the cost from your salary before tax — typically saving 25–42%.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container split">
+    <div>
+      <span class="kicker">How it works</span>
+      <h2>Tax-free cycling in four steps</h2>
+      <div class="steps">
+        <div class="step"><span class="step-num"></span><div><h3>Check with your employer</h3><p>Ask HR if they're signed up to a Cycle to Work provider (Cyclescheme, Cycle2Work and others). Most large employers are.</p></div></div>
+        <div class="step"><span class="step-num"></span><div><h3>Pick your bike with us</h3><p>Come in and choose any bike and accessories — we'll size you up properly and put a quote together.</p></div></div>
+        <div class="step"><span class="step-num"></span><div><h3>Get your voucher</h3><p>Apply through your employer's scheme; they issue a voucher or certificate which you redeem with us.</p></div></div>
+        <div class="step"><span class="step-num"></span><div><h3>Ride & save</h3><p>Payments come out of your gross salary — you save the tax and National Insurance, usually 25–42% off.</p></div></div>
+      </div>
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:2rem;">
+        <a class="btn btn-primary" href="contact.html">Ask us about the scheme</a>
+        <a class="btn btn-outline" href="bikes.html">Choose your bike</a>
+      </div>
+    </div>
+    <div class="art" id="schemeArt"></div>
+  </div>
+</section>
+
+<section class="section section--alt">
+  <div class="container">
+    <div class="section-head section-head--center">
+      <span class="kicker">Good to know</span>
+      <h2>Frequently asked</h2>
+    </div>
+    <div class="grid grid-3">
+      <div class="card" style="padding:1.5rem;">
+        <h3>What can I get?</h3>
+        <p style="font-size:0.93rem;color:var(--ink-soft);margin:0;">Any bike in the shop — including e-bikes — plus safety accessories like helmets, locks and lights, up to your employer's scheme limit.</p>
+      </div>
+      <div class="card" style="padding:1.5rem;">
+        <h3>How much do I save?</h3>
+        <p style="font-size:0.93rem;color:var(--ink-soft);margin:0;">Typically 25–33% for basic-rate taxpayers and up to 42% for higher-rate, spread over 12–18 monthly salary deductions.</p>
+      </div>
+      <div class="card" style="padding:1.5rem;">
+        <h3>Which schemes do you accept?</h3>
+        <p style="font-size:0.93rem;color:var(--ink-soft);margin:0;">We work with the major Cycle to Work providers — call us on 020 7376 3700 to confirm yours before you apply.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div id="app-footer"></div>
+<script src="assets/js/photos.js?v=1786418436"></script>
+<script src="assets/js/main.js?v=1786418436"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("schemeArt").innerHTML = photoSlot(sceneArt("teal", "scheme", "leaf"), "shop", "scheme", "Choosing a bike at Chelsea Bikes");
+  hydratePhotos();
+});
+</script>
+</body>
+</html>

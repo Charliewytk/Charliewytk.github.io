@@ -1,0 +1,13 @@
+{
+  "name": "Abyss Warden",
+  "short_name": "Abyss Warden",
+  "description": "An original deep-sea tower defence. Hold the trench. Keep the lights on.",
+  "start_url": ".",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#010912",
+  "theme_color": "#0b3d57",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

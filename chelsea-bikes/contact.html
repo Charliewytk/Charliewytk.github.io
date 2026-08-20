@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact & Find Us — Chelsea Bikes, 427 Kings Road</title>
+<meta name="description" content="Visit Chelsea Bikes at 427 Kings Road, Chelsea SW10 0LR. Open 7 days. Call 020 7376 3700 or WhatsApp +44 7305 842553.">
+<link rel="stylesheet" href="assets/css/styles.css?v=1786418436">
+</head>
+<body>
+<div id="app-header"></div>
+<main id="main">
+
+<section class="page-hero">
+  <div class="container">
+    <div class="crumbs"><a href="index.html">Home</a> / Contact</div>
+    <h1>Contact &amp; find us</h1>
+    <p class="lede">Drop in seven days a week, or reach us by phone, WhatsApp or email.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="grid grid-2" style="align-items:start;">
+      <div>
+        <div class="store-panel" style="grid-template-columns:1fr;">
+          <div class="store-panel-info">
+            <span class="kicker">The shop</span>
+            <h2 style="font-size:1.2rem;">427 Kings Road, Chelsea<br>London SW10 0LR</h2>
+            <table class="hours-table">
+              <tr><td>Monday – Friday</td><td>9:00 – 19:00</td></tr>
+              <tr><td>Saturday</td><td>9:00 – 18:30</td></tr>
+              <tr><td>Sunday</td><td>11:00 – 17:00</td></tr>
+            </table>
+            <div style="display:flex;gap:0.7rem;margin-top:1.4rem;flex-wrap:wrap;">
+              <a class="btn btn-primary btn-sm" href="tel:+442073763700">020 7376 3700</a>
+              <a class="btn btn-accent btn-sm" href="https://wa.me/447305842553">WhatsApp</a>
+              <a class="btn btn-ghost-light btn-sm" href="mailto:info@chelseabikes.co.uk">Email</a>
+            </div>
+          </div>
+          <div class="store-panel-map" id="mapArt2" style="min-height:220px;"></div>
+        </div>
+        <div class="card" style="padding:1.4rem;margin-top:1.4rem;">
+          <h3 style="font-size:1.05rem;">Getting here</h3>
+          <p style="font-size:0.9rem;color:var(--ink-soft);margin:0;">
+            One minute from the World's End side of Kings Road. Drop-off and pick-up directly outside during open hours, with pay &amp; display parking in front of the shop. Numerous buses serve Kings Road; nearest tubes are Fulham Broadway, Earl's Court and Sloane Square. <em>(Live build: embed Google Map here.)</em>
+          </p>
+        </div>
+      </div>
+      <form class="card form-card" onsubmit="event.preventDefault();this.querySelector('.form-body').style.display='none';this.querySelector('.form-success').classList.add('show');">
+        <div class="form-body">
+          <h3>Send us a message</h3>
+          <div class="form-grid">
+            <div class="field"><label for="ct-name">Name</label><input id="ct-name" type="text" required></div>
+            <div class="field"><label for="ct-phone">Phone</label><input id="ct-phone" type="tel"></div>
+            <div class="field full"><label for="ct-email">Email</label><input id="ct-email" type="email" required></div>
+            <div class="field full"><label for="ct-topic">Topic</label>
+              <select id="ct-topic"><option>General enquiry</option><option>Repairs &amp; servicing</option><option>Bike availability</option><option>Bike hire</option><option>Cash for bikes</option><option>Cycle to Work</option></select>
+            </div>
+            <div class="field full"><label for="ct-msg">Message</label><textarea id="ct-msg" required></textarea></div>
+          </div>
+          <button class="btn btn-primary btn-block" style="margin-top:1.2rem;">Send message</button>
+          <p class="hint" style="font-size:0.78rem;color:var(--ink-faint);margin-top:0.8rem;">We only use your details to reply to your enquiry. (Demo — no data is sent in this prototype.)</p>
+        </div>
+        <div class="form-success" role="status">
+          <div class="tick"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <h3>Message sent</h3>
+          <p class="lede" style="font-size:0.98rem;">We'll get back to you shortly. (Demo only.)</p>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div id="app-footer"></div>
+<script src="assets/js/photos.js?v=1786418436"></script>
+<script src="assets/js/main.js?v=1786418436"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("mapArt2").innerHTML = sceneArt("slate", "cmap", "map");
+});
+</script>
+</body>
+</html>

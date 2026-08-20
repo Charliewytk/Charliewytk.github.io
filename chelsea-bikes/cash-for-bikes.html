@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cash for Bikes — Sell Your Bike for Instant Cash | Chelsea Bikes</title>
+<meta name="description" content="Sell your bike for instant cash at Chelsea Bikes, Kings Road. Free expert valuation, police-database checked, paid on the spot.">
+<link rel="stylesheet" href="assets/css/styles.css?v=1786418436">
+</head>
+<body>
+<div id="app-header"></div>
+<main id="main">
+
+<section class="page-hero">
+  <div class="container">
+    <div class="crumbs"><a href="index.html">Home</a> / Cash for Bikes</div>
+    <h1>Cash for bikes</h1>
+    <p class="lede">Instant cash for your bicycle — a service most London bike shops don't offer. Free expert valuation, every purchase police-database checked.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container split">
+    <div>
+      <span class="kicker">How it works</span>
+      <h2>Sold in four steps</h2>
+      <div class="steps">
+        <div class="step"><span class="step-num"></span><div><h3>Get an estimate</h3><p>Send photos of your bike via the form below or WhatsApp for a quick estimated value, or just bring it straight in.</p></div></div>
+        <div class="step"><span class="step-num"></span><div><h3>Free in-store valuation</h3><p>Our expert valuer assesses age, condition, make and model and makes you our best offer on the spot.</p></div></div>
+        <div class="step"><span class="step-num"></span><div><h3>Quick ID &amp; security check</h3><p>You must be 18+, fill in a short Owner's Declaration and show two forms of ID (one photo, one address). The bike is checked against the Police National Computer / CheckMEND.</p></div></div>
+        <div class="step"><span class="step-num"></span><div><h3>Walk out with cash</h3><p>Once cleared, you're paid the agreed value immediately — or trade the value for parts, accessories or servicing instead.</p></div></div>
+      </div>
+    </div>
+    <div class="art" id="cashArt"></div>
+  </div>
+</section>
+
+<section class="section section--navy">
+  <div class="container">
+    <div class="grid grid-3">
+      <div>
+        <span class="kicker">Anti-theft pledge</span>
+        <h3>We stand against bike theft</h3>
+        <p style="color:#b6c8d8;font-size:0.95rem;">We work closely with the police. Every bike we buy is run through the Police National Computer or CheckMEND before any payment is made — no exceptions.</p>
+      </div>
+      <div>
+        <span class="kicker">Donations welcome</span>
+        <h3>Unloved bike? Donate it</h3>
+        <p style="color:#b6c8d8;font-size:0.95rem;">If your bike isn't worth selling, donate it — we'll find it a new home or reuse every good part. Greener than the skip.</p>
+      </div>
+      <div>
+        <span class="kicker">Trade in</span>
+        <h3>Swap value for anything in store</h3>
+        <p style="color:#b6c8d8;font-size:0.95rem;">Use your bike's value against parts, accessories, servicing or another bike — often worth more than the cash.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container" style="max-width:760px;">
+    <div class="section-head section-head--center">
+      <span class="kicker">Start here</span>
+      <h2>Get a free estimate</h2>
+      <p class="lede">Final value always subject to physical inspection in store.</p>
+    </div>
+    <form class="card form-card" data-multistep data-submit-label="Request valuation">
+      <div class="form-steps-bar" aria-hidden="true"></div>
+      <div class="form-steps-wrap">
+        <div class="form-step">
+          <h3>1 · About your bike</h3>
+          <div class="form-grid">
+            <div class="field"><label for="c-make">Make &amp; model</label><input id="c-make" type="text" placeholder="e.g. Brompton M3L" required></div>
+            <div class="field"><label for="c-year">Approximate age / year</label><input id="c-year" type="text" placeholder="e.g. 2021"></div>
+            <div class="field"><label for="c-cond">Condition</label>
+              <select id="c-cond" required>
+                <option value="">Choose…</option><option>Excellent — barely used</option><option>Good — normal wear</option><option>Fair — needs some work</option><option>Poor — for parts/donation</option>
+              </select>
+            </div>
+            <div class="field"><label for="c-photos">Photos</label>
+              <input id="c-photos" type="file" multiple accept="image/*">
+              <span class="hint">A side-on shot plus any damage close-ups helps us quote accurately.</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-step">
+          <h3>2 · Your details</h3>
+          <div class="form-grid">
+            <div class="field"><label for="c-name">Name</label><input id="c-name" type="text" required></div>
+            <div class="field"><label for="c-phone">Phone / WhatsApp</label><input id="c-phone" type="tel" required></div>
+            <div class="field full"><label for="c-notes">Anything else we should know?</label><textarea id="c-notes"></textarea></div>
+            <div class="field full"><span class="hint">To complete a sale in store you must be over 18 and bring two forms of ID — a photo ID and a proof of address.</span></div>
+          </div>
+        </div>
+        <div class="form-nav">
+          <button class="btn btn-outline" data-prev>Back</button>
+          <button class="btn btn-primary" data-next>Continue</button>
+        </div>
+      </div>
+      <div class="form-success" role="status">
+        <div class="tick"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <h3>Valuation request sent</h3>
+        <p class="lede" style="font-size:0.98rem;">We'll come back with an estimated value shortly. (Demo only — no data is sent in this prototype.)</p>
+      </div>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<div id="app-footer"></div>
+<script src="assets/js/photos.js?v=1786418436"></script>
+<script src="assets/js/main.js?v=1786418436"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("cashArt").innerHTML = photoSlot(sceneArt("amber", "cash", "tag"), "shop", "cash", "Valuing a bike at Chelsea Bikes");
+  hydratePhotos();
+});
+</script>
+</body>
+</html>

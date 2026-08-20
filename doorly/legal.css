@@ -1,0 +1,116 @@
+/* Shared styling for the standalone legal pages. Deliberately plain static
+   HTML rather than app routes: these documents must render even if the app
+   bundle fails, and they should be linkable, crawlable and printable. */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  color-scheme: light;
+  --ink: #10162a;
+  --ink-soft: #5a6478;
+  --ink-faint: #687083;
+  --bg: #f4f6fb;
+  --card: #ffffff;
+  --accent: #4353ff;
+  --line: #e6e9f2;
+  --amber-soft: #fdf1e0;
+  --amber-line: #e8c89a;
+  --amber-ink: #6b3708;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --ink: #e9ecf7;
+    --ink-soft: #a5adc4;
+    --ink-faint: #7b849f;
+    --bg: #0c0f1d;
+    --card: #161a2b;
+    --accent: #8b98ff;
+    --line: #282e45;
+    --amber-soft: #37290f;
+    --amber-line: #5c4818;
+    --amber-ink: #f5d99b;
+  }
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+  padding: 32px 20px 72px;
+}
+
+main {
+  max-width: 720px;
+  margin: 0 auto;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 32px;
+}
+
+@media (max-width: 600px) { main { padding: 22px 18px; } }
+
+.back {
+  display: inline-block;
+  max-width: 720px;
+  margin: 0 auto 16px;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.back-wrap { max-width: 720px; margin: 0 auto; }
+.back:hover { text-decoration: underline; }
+
+h1 {
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 28px 0 8px;
+  letter-spacing: -0.01em;
+}
+
+.updated { color: var(--ink-faint); font-size: 13.5px; margin-top: 6px; }
+
+p, li { color: var(--ink-soft); font-size: 15px; margin-bottom: 10px; }
+li { margin-bottom: 6px; }
+ul { padding-left: 20px; margin-bottom: 10px; }
+strong { color: var(--ink); font-weight: 650; }
+a { color: var(--accent); }
+
+.note {
+  background: var(--amber-soft);
+  border: 1px solid var(--amber-line);
+  color: var(--amber-ink);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin: 20px 0;
+  font-size: 14.5px;
+}
+
+.note p { color: inherit; margin-bottom: 0; }
+.note strong { color: inherit; }
+
+table { width: 100%; border-collapse: collapse; margin: 12px 0 16px; font-size: 14px; }
+th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-faint); }
+td { color: var(--ink-soft); }
+.table-scroll { overflow-x: auto; }
+
+footer {
+  max-width: 720px;
+  margin: 20px auto 0;
+  font-size: 13px;
+  color: var(--ink-faint);
+}

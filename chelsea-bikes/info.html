@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Information — Chelsea Bikes</title>
+<link rel="stylesheet" href="assets/css/styles.css?v=1786418436">
+<style>
+  .prose h2{font-size:1.15rem;margin-top:2rem}
+  .prose h2:first-child{margin-top:0}
+  .prose p{color:var(--ink-soft);max-width:68ch}
+  .prose a.btn{margin-right:.5rem;margin-top:.6rem}
+  .info-cols{display:grid;grid-template-columns:1fr 260px;gap:var(--space-7);align-items:start}
+  .info-side{position:sticky;top:96px}
+  .info-side h2{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint)}
+  .info-side ul{list-style:none;margin:0;padding:0}
+  .info-side li{margin-bottom:.15rem}
+  .info-side a{display:block;padding:.42rem .7rem;border-radius:8px;font-size:.9rem;color:var(--ink-soft);text-decoration:none}
+  .info-side a:hover{background:var(--navy-100);color:var(--navy-900)}
+  .info-side a.on{background:var(--teal-100);color:#095a61;font-weight:700}
+  .sitemap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-5)}
+  .sitemap-grid h2{font-size:.95rem;margin-bottom:.4rem}
+  .sitemap-grid ul{list-style:none;margin:0;padding:0}
+  .sitemap-grid li{margin-bottom:.35rem;font-size:.92rem}
+  @media (max-width:900px){.info-cols{grid-template-columns:1fr}.info-side{position:static}.sitemap-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="app-header"></div>
+<main id="main">
+
+<section class="page-hero">
+  <div class="container">
+    <div class="crumbs"><a href="index.html">Home</a> / <span id="crumbTitle">Information</span></div>
+    <h1 id="infoTitle">Information</h1>
+    <p class="lede" id="infoLede"></p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container info-cols">
+    <article class="prose" id="infoBody"></article>
+    <aside class="info-side">
+      <h2>Information</h2>
+      <ul id="infoNav"></ul>
+    </aside>
+  </div>
+</section>
+
+</main>
+
+<div id="app-footer"></div>
+<script src="assets/js/info-content.js?v=1786418436"></script>
+<script src="assets/js/photos.js?v=1786418436"></script>
+<script src="assets/js/main.js?v=1786418436"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var key = new URLSearchParams(location.search).get("page") || "delivery";
+  var page = INFO_PAGES[key];
+
+  if (!page) {
+    document.getElementById("infoTitle").textContent = "Page not found";
+    document.getElementById("infoLede").textContent =
+      "That information page does not exist. Everything we have is listed on the right.";
+    document.getElementById("infoBody").innerHTML =
+      '<p><a class="btn btn-primary" href="index.html">Back to the homepage</a></p>';
+  } else {
+    document.title = page.title.replace(/&amp;/g, "&") + " — Chelsea Bikes";
+    document.getElementById("infoTitle").innerHTML = page.title;
+    document.getElementById("crumbTitle").innerHTML = page.title;
+    document.getElementById("infoLede").textContent = page.lede || "";
+    document.getElementById("infoBody").innerHTML =
+      page.body === "SITEMAP_AUTO" ? buildSitemap() : page.body;
+  }
+
+  // Side navigation across all info pages
+  document.getElementById("infoNav").innerHTML = Object.keys(INFO_PAGES)
+    .map(function (k) {
+      return '<li><a class="' + (k === key ? "on" : "") + '" href="info.html?page=' + k + '">' +
+        INFO_PAGES[k].title + "</a></li>";
+    })
+    .join("");
+});
+
+function buildSitemap() {
+  var groups = [
+    ["Shop", [
+      ["Home", "index.html"],
+      ["All bikes", "bikes.html"],
+      ["New bikes", "bikes.html?cond=New"],
+      ["Used &amp; refurbished", "bikes.html?cond=Used"],
+      ["Electric bikes", "bikes.html?type=Electric"],
+      ["Folding bikes", "bikes.html?type=Folding"],
+      ["Kids bikes", "bikes.html?type=Kids"],
+      ["Scooters", "bikes.html?type=Scooter"],
+    ]],
+    ["Services", [
+      ["Repairs &amp; servicing", "services.html"],
+      ["Workshop price list", "services.html#pricelist"],
+      ["Book a service", "services.html#booking"],
+      ["Bike hire", "hire.html"],
+      ["Cash for bikes", "cash-for-bikes.html"],
+      ["Cycle to Work", "cycle-scheme.html"],
+      ["Workplace repair days", "services.html#workplace"],
+      ["Lock cutting", "info.html?page=lock-cutting"],
+    ]],
+    ["The shop", [
+      ["About us", "about.html"],
+      ["Contact &amp; find us", "contact.html"],
+      ["Customer reviews", "reviews.html"],
+      ["News &amp; articles", "blog.html"],
+      ["Sizing up your bike", "article.html?post=sizing"],
+      ["Signs you need a service", "article.html?post=service-signs"],
+      ["Jobs", "info.html?page=jobs"],
+      ["Gift vouchers", "info.html?page=gift-vouchers"],
+      ["Sizing up bicycles", "info.html?page=sizing"],
+      ["Cycle security pledge", "info.html?page=security-pledge"],
+    ]],
+    ["Policies", [
+      ["Delivery information", "info.html?page=delivery"],
+      ["Returns policy", "info.html?page=returns"],
+      ["Terms of use", "info.html?page=terms"],
+      ["Privacy &amp; security", "info.html?page=privacy"],
+    ]],
+  ];
+  return '<div class="sitemap-grid">' + groups.map(function (g) {
+    return "<div><h2>" + g[0] + "</h2><ul>" + g[1].map(function (l) {
+      return '<li><a href="' + l[1] + '">' + l[0] + "</a></li>";
+    }).join("") + "</ul></div>";
+  }).join("") + "</div>";
+}
+</script>
+</body>
+</html>

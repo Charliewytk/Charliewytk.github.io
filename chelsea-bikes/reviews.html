@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customer Reviews — Chelsea Bikes</title>
+<meta name="description" content="What customers say about Chelsea Bikes — repairs, servicing, used bikes and hire on the Kings Road.">
+<link rel="stylesheet" href="assets/css/styles.css?v=1786418436">
+</head>
+<body>
+<div id="app-header"></div>
+<main id="main">
+
+<section class="page-hero">
+  <div class="container">
+    <div class="crumbs"><a href="index.html">Home</a> / Customer Reviews</div>
+    <h1>Customer reviews</h1>
+    <p class="lede">Fifteen years on the Kings Road, and the workshop is still the reason most people come back.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="notice" style="margin-bottom:2rem;">
+      <strong>Demo placeholder.</strong> These are sample reviews written to show the layout.
+      In the live build this section pulls directly from the shop's Google Business Profile, so it
+      updates itself and every review is verifiable — no typing, no invented quotes.
+    </div>
+
+    <div class="grid grid-3" id="reviewGrid"></div>
+
+    <div class="cta-band" style="margin-top:3rem;">
+      <div>
+        <h2>Been in recently?</h2>
+        <p>A Google review takes thirty seconds and helps other riders find the shop.</p>
+      </div>
+      <a class="btn btn-accent btn-lg" href="contact.html">Leave a review</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div id="app-footer"></div>
+<script src="assets/js/photos.js?v=1786418436"></script>
+<script src="assets/js/main.js?v=1786418436"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var reviews = [
+    [5, "Puncture fixed while I waited, and they spotted a worn brake pad I hadn't noticed. Honest, quick, and didn't try to sell me anything I didn't need.", "Repair customer", "Sample"],
+    [5, "Bought a refurbished Brompton here. It looked brand new and they showed me the police check paperwork without me even asking.", "Used bike customer", "Sample"],
+    [5, "Hired two bikes for a weekend along the river. Sorted in ten minutes, both in great condition, helmets included.", "Hire customer", "Sample"],
+    [5, "Sold them my old road bike. Fair price, cash on the spot, and the whole thing took about twenty minutes.", "Cash for Bikes customer", "Sample"],
+    [4, "Busy on a Saturday so there was a wait, but the service was thorough and the price was exactly what they quoted.", "Service customer", "Sample"],
+    [5, "Used the Cycle to Work scheme through them. They handled the voucher side and sized the bike properly rather than just handing it over.", "Cycle to Work customer", "Sample"],
+  ];
+  document.getElementById("reviewGrid").innerHTML = reviews.map(function (r) {
+    return '<div class="card review-card">' +
+      '<span class="stars" aria-label="' + r[0] + ' out of 5 stars">' +
+      "★".repeat(r[0]) + '<span style="opacity:.25">' + "★".repeat(5 - r[0]) + "</span></span>" +
+      "<blockquote>" + r[1] + "</blockquote>" +
+      "<cite>" + r[2] + "<small>" + r[3] + " review — replace with live Google feed</small></cite></div>";
+  }).join("");
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Charlie Wuytack — projects you can actually use: a playable game, a flight-search demo, a shop redesign, research logs and tools.">
+<title>Charlie Wuytack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;450;600;700&display=swap">
+<style>
+  :root {
+    --bg: #f5f7f5;
+    --surface: #ffffff;
+    --ink: #1b2422;
+    --muted: #5c6864;
+    --faint: #8b968f;
+    --line: #dde3de;
+    --accent: #0b7a75;
+    --accent-ink: #085551;
+    --accent-contrast: #ffffff;
+    --ok: #2e7d4f;
+    --warn: #a5691c;
+    --dead: #a44a3f;
+    --chip-bg: #eef1ee;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #101816;
+      --surface: #17211e;
+      --ink: #e6ece8;
+      --muted: #9aa8a1;
+      --faint: #6d7a74;
+      --line: #263029;
+      --accent: #46c2b8;
+      --accent-ink: #7fd8d0;
+      --accent-contrast: #0c1a17;
+      --ok: #5cb884;
+      --warn: #d19a4f;
+      --dead: #d08076;
+      --chip-bg: #1f2a26;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #101816;
+    --surface: #17211e;
+    --ink: #e6ece8;
+    --muted: #9aa8a1;
+    --faint: #6d7a74;
+    --line: #263029;
+    --accent: #46c2b8;
+    --accent-ink: #7fd8d0;
+    --accent-contrast: #0c1a17;
+    --ok: #5cb884;
+    --warn: #d19a4f;
+    --dead: #d08076;
+    --chip-bg: #1f2a26;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 450;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+  a { color: var(--accent-ink); text-decoration: none; }
+  a:hover, a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+
+  .mono {
+    font-family: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  .eyebrow {
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+  }
+
+  /* ---- header ---- */
+  header { padding: 72px 0 56px; border-bottom: 1px solid var(--line); }
+  header h1 {
+    font-size: clamp(2rem, 5.5vw, 3.1rem);
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    margin: 14px 0 20px;
+    max-width: 21ch;
+    text-wrap: balance;
+  }
+  header .intro { max-width: 62ch; color: var(--muted); font-size: 1.02rem; margin: 0 0 26px; }
+  header .intro strong { color: var(--ink); font-weight: 600; }
+  .links { display: flex; flex-wrap: wrap; gap: 10px 22px; }
+  .links a {
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    font-size: 0.82rem; font-weight: 500;
+  }
+
+  /* ---- action buttons ---- */
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+  .btn {
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    font-size: 0.78rem; font-weight: 500;
+    border: 1px solid var(--line); border-radius: 4px;
+    padding: 7px 13px; background: var(--surface); color: var(--accent-ink);
+  }
+  .btn:hover { border-color: var(--accent); text-decoration: none; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); }
+  .btn.primary:hover { filter: brightness(1.08); }
+
+  /* ---- sections ---- */
+  section { padding: 52px 0 8px; }
+  .section-head {
+    display: flex; align-items: baseline; gap: 16px;
+    border-bottom: 1px solid var(--line); padding-bottom: 10px; margin-bottom: 8px;
+  }
+  .section-head h2 { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+  .section-head .count { color: var(--faint); font-size: 0.75rem; }
+  .section-head .more { margin-left: auto; font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; font-size: 0.75rem; }
+
+  /* ---- status chips ---- */
+  .chip {
+    display: inline-block;
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    font-size: 0.66rem; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 3px 8px 2px; border-radius: 3px;
+    background: var(--chip-bg); color: var(--muted);
+  }
+  .chip.shipped { color: var(--ok); }
+  .chip.live { color: var(--accent-ink); }
+  .chip.beta { color: var(--warn); }
+  .chip.dead { color: var(--dead); }
+
+  /* ---- featured rows ---- */
+  .case {
+    display: grid; grid-template-columns: 200px 1fr; gap: 12px 40px;
+    padding: 34px 0; border-bottom: 1px solid var(--line);
+  }
+  .case .meta { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+  .case .meta .stack {
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    font-size: 0.72rem; color: var(--faint); line-height: 1.7;
+  }
+  .case h3 { font-size: 1.35rem; font-weight: 600; letter-spacing: -0.015em; margin: 0 0 10px; }
+  .case p { margin: 0 0 12px; max-width: 68ch; color: var(--muted); }
+  .case p strong { color: var(--ink); font-weight: 600; }
+  .case .stat {
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    font-size: 0.78rem; font-weight: 500; color: var(--accent-ink);
+    border-left: 2px solid var(--accent);
+    padding-left: 10px; margin-top: 14px;
+  }
+
+  /* ---- archive rows ---- */
+  .row {
+    display: grid; grid-template-columns: 200px 1fr; gap: 6px 40px;
+    padding: 20px 0; border-bottom: 1px solid var(--line);
+  }
+  .row:last-child { border-bottom: none; }
+  .row .r-meta { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+  .row h3 { font-size: 1rem; font-weight: 600; margin: 0 0 4px; }
+  .row p { margin: 0; max-width: 68ch; color: var(--muted); font-size: 0.94rem; }
+
+  /* ---- now + footer ---- */
+  .now {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 6px;
+    padding: 24px 28px; margin-top: 44px;
+  }
+  .now p { margin: 8px 0 0; color: var(--muted); max-width: 70ch; }
+  footer { padding: 56px 0 80px; }
+  footer p { color: var(--muted); max-width: 62ch; margin: 12px 0 0; }
+
+  @media (max-width: 700px) {
+    .case, .row { grid-template-columns: 1fr; }
+    .case .meta, .row .r-meta { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+    header { padding-top: 48px; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    header > * { animation: rise 0.5s ease both; }
+    header h1 { animation-delay: 0.05s; }
+    header .intro { animation-delay: 0.12s; }
+    header .links { animation-delay: 0.18s; }
+    @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  }
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Charlie Wuytack — project log</div>
+    <h1>I build things, measure them, and keep honest logs.</h1>
+    <p class="intro">Games, macOS tools, trading research, web products. Some <strong>shipped</strong>, some are <strong>live</strong>, and a few were <strong>killed on purpose</strong> — with the kill criteria written down before they earned anything. Everything here is real, and most of it you can use right now: <strong>play the game, run the flight search, click through the shop redesign</strong>.</p>
+    <div class="actions">
+      <a class="btn primary" href="abyss-warden/">▶ Play Abyss Warden</a>
+      <a class="btn" href="doorly/">Try Doorly</a>
+      <a class="btn" href="research.html">Research log</a>
+      <a class="btn" href="essays/90-Hypotheses-Zero-Edges.pdf">Read the essay</a>
+    </div>
+    <div class="links" style="margin-top:22px">
+      <a href="https://github.com/Charliewytk">github.com/Charliewytk</a>
+      <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a>
+    </div>
+  </header>
+
+  <section id="featured">
+    <div class="section-head"><h2>Selected work</h2><span class="count mono">5 entries</span></div>
+
+    <article class="case">
+      <div class="meta">
+        <span class="chip shipped">Shipped</span>
+        <div class="stack">vanilla JS · Canvas<br>Web Audio API<br>Aug 2026</div>
+      </div>
+      <div>
+        <h3>Abyss Warden</h3>
+        <p>An original deep-sea tower defence game: harpoon turrets, arc coils and drone bays against armoured isopods, cloaked stalkers and five trench-shaking bosses. <strong>Every sprite is drawn in canvas code and every sound is synthesised live</strong> with the Web Audio API — no engine, no dependencies, no borrowed assets. Balanced through scripted playthroughs, then packaged with store-ready builds for itch.io, Newgrounds, Game Jolt, Armor Games, Poki, CrazyGames and Kongregate.</p>
+        <div class="stat">~5,600 lines · 0 dependencies · 0 external assets</div>
+        <div class="actions"><a class="btn primary" href="abyss-warden/">▶ Play it in your browser</a></div>
+      </div>
+    </article>
+
+    <article class="case">
+      <div class="meta">
+        <span class="chip beta">Beta</span>
+        <div class="stack">Node · Vite<br>Capacitor (iOS)<br>Docker</div>
+      </div>
+      <div>
+        <h3>Doorly</h3>
+        <p>The cheapest flight isn't always the cheapest trip. Doorly is a flight scanner that ranks journeys by <strong>true door-to-door cost</strong>: transport from your exact location to the airport, the fare, then transport to your exact accommodation. Every leg's mode — tube, train, express, bus, taxi, bike — is selectable with its own cost and time, and the ranking updates live. The full version runs on live provider data with an iOS build via Capacitor; the demo here runs on clearly-labelled demo fares.</p>
+        <div class="stat">ranks the whole journey, not just the fare</div>
+        <div class="actions"><a class="btn primary" href="doorly/">Search a trip — live demo</a></div>
+      </div>
+    </article>
+
+    <article class="case">
+      <div class="meta">
+        <span class="chip shipped">Pitched</span>
+        <div class="stack">HTML · CSS · JS<br>self-contained</div>
+      </div>
+      <div>
+        <h3>Chelsea Bikes Redesign</h3>
+        <p>A complete redesign prototype for a real London bike shop — eleven pages including a bikes listing with live filters, product details, the shop's real servicing price list, hire rates, booking and valuation forms — plus an accessibility audit. Built self-contained to demo offline when pitching the owner, with a side-by-side page comparing the current live site against the rebuild.</p>
+        <div class="stat">11 pages · real price lists · offline-ready demo</div>
+        <div class="actions">
+          <a class="btn primary" href="chelsea-bikes/compare.html">Before &amp; after</a>
+          <a class="btn" href="chelsea-bikes/">Browse the full prototype</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="case">
+      <div class="meta">
+        <span class="chip live">Working tool</span>
+        <div class="stack">Swift · Darwin APIs<br>Apple Silicon</div>
+      </div>
+      <div>
+        <h3>PowerLeash</h3>
+        <p>A selective battery saver for Apple Silicon Macs. It began as an attempt to stop Low Power Mode dropping the display to 60&nbsp;Hz — then measurement showed <strong>it never does</strong>: the panel stays at 120&nbsp;Hz while the CPU loses up to 40% of its speed, which is exactly why Low Power Mode feels sluggish. So instead of a blunt power cut, PowerLeash demotes background apps to the efficiency cores through the public Darwin scheduling API and leaves the app you're actually looking at at full speed. Verified on processes it didn't spawn, with a clean restore.</p>
+        <div class="stat">measured: 717 → 210 Mops/s on demote, 713 on restore</div>
+        <div class="actions"><a class="btn primary" href="downloads/PowerLeash.zip" download>↓ Download for Mac (Apple Silicon)</a></div>
+        <p style="font-size:0.8rem; margin-top:10px; color:var(--faint)">Early build, not yet notarised — on first launch, right-click the app and choose Open.</p>
+      </div>
+    </article>
+
+    <article class="case">
+      <div class="meta">
+        <span class="chip live">Live</span>
+        <div class="stack">Python · LightGBM<br>PyTorch (GRU)</div>
+      </div>
+      <div>
+        <h3>Quant research &amp; tournament ML</h3>
+        <p>One connected body of work: infrastructure that makes it impossible to fool yourself while backtesting (<strong>Hypothesis Factory</strong> — pre-registration, hash-chained logs, FDR correction), the essay it produced (<em>90 Hypotheses, Zero Edges</em>), five retail strategies taken to final verdicts, execution tooling for the one that survived, and live data-science tournament models — including a DataCrunch model currently ranked <strong>~14th of 13,534</strong>.</p>
+        <div class="stat">top 0.2% on DataCrunch · 90 hypotheses pre-registered · 3 strategies killed by the numbers</div>
+        <div class="actions">
+          <a class="btn primary" href="research.html">Read the full research log</a>
+          <a class="btn" href="essays/90-Hypotheses-Zero-Edges.pdf">The essay (PDF)</a>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section id="markets">
+    <div class="section-head"><h2>Markets &amp; research</h2><span class="count mono">5 entries</span><a class="more" href="research.html">full log →</a></div>
+
+    <div class="row">
+      <div class="r-meta"><span class="chip">Research</span></div>
+      <div>
+        <h3><a href="research.html#factory">Hypothesis Factory</a></h3>
+        <p>Backtesting infrastructure with four enforced non-negotiables: pre-registration before data is touched, automatic false-discovery-rate correction, a sealed one-shot holdout, and no parameter sweeping — each enforced by code, not policy.</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="r-meta"><span class="chip">Verdicts filed</span></div>
+      <div>
+        <h3><a href="research.html#validation">Strategy Validation</a></h3>
+        <p>Five capacity-constrained retail trading strategies validated on free data with costs included and biases stamped. Final verdicts: one promising upper bound, one marginal-but-real, three dead — each with the specific number that killed it.</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="r-meta"><span class="chip live">Live</span></div>
+      <div>
+        <h3><a href="research.html#capture">uw-capture</a></h3>
+        <p>Execution tooling for odd-lot tender offers — the one strategy the validation work rated worth running. Broker preflights, guard tests and paper-forward tracking across Alpaca and Trading&nbsp;212.</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="r-meta"><span class="chip dead">Retired</span></div>
+      <div>
+        <h3><a href="research.html#bot">Trading Bot</a></h3>
+        <p>An earlier market bot that grew a serious audit culture: fill-reality baselines, cross-arb stop-loss findings, edge remediation reports, and finally an autopsy. Its real output was the discipline that became Hypothesis Factory.</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="r-meta"><span class="chip beta">Blocked, honestly</span></div>
+      <div>
+        <h3><a href="research.html#etf">ETF Selector</a></h3>
+        <p>A total-cost-of-ownership optimiser for ETFs. It currently ranks nothing — because ranking on a partial cost stack would put the fund with the least <em>data</em> on top rather than the least <em>cost</em>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="product">
+    <div class="section-head"><h2>Web &amp; product</h2><span class="count mono">3 entries</span></div>
+
+    <div class="row">
+      <div class="r-meta"><span class="chip live">Working</span></div>
+      <div>
+        <h3>Resale Radar</h3>
+        <p>Sourcing research for resale marketplaces. Tracks listing velocity over time (saves weighted 6× above likes), models the real fee structure of Depop, Vinted, eBay and Grailed, and prices in returns — so "is this item worth buying stock for?" becomes arithmetic rather than vibes.</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="r-meta"><span class="chip beta">Running</span></div>
+      <div>
+        <h3>Trying New Things</h3>
+        <p>Small internet businesses run as one experiment: fifteen programmatic SEO sites, a website-audit service and a merger-arbitrage newsletter. The rule that matters: each one's shut-down criteria were written before it launched.</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="r-meta"><span class="chip live">Live</span></div>
+      <div>
+        <h3>tp-watch</h3>
+        <p>A two-part ticket watcher for Exeter club nights: a Mac half polling every ~20 seconds with DND-bypassing alerts, a cloud half covering 3am drops while the laptop sleeps, and a deadman switch that reports when the watcher itself goes down.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="now">
+    <div class="eyebrow">Now — August 2026</div>
+    <p>Tournament models are live and resubmitting. The odd-lot tender scanner is moving from paper-forward to live. This site is new — more write-ups coming.</p>
+  </div>
+
+  <footer>
+    <div class="eyebrow">Contact</div>
+    <p>Most of this code sits in private repos — I'm happy to walk through any of it, including the failures. <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a> · <a href="https://github.com/Charliewytk">github.com/Charliewytk</a></p>
+  </footer>
+</div>
+
+</body>
+</html>

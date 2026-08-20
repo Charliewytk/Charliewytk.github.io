@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>News — Chelsea Bikes</title>
+<link rel="stylesheet" href="assets/css/styles.css?v=1786418436">
+<style>
+  .article-cols{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:var(--space-7);align-items:start}
+  .prose h2{font-size:1.2rem;margin-top:2rem}
+  .prose h2:first-child{margin-top:0}
+  .prose p{color:var(--ink-soft);max-width:68ch}
+  .prose .lede{color:var(--ink);font-size:1.08rem}
+  .prose .btn{margin-right:.5rem;margin-top:.6rem}
+  .article-hero{aspect-ratio:16/6;border-radius:var(--radius);overflow:hidden;margin-bottom:var(--space-6);background:var(--navy-100)}
+  .article-hero svg{width:100%;height:100%}
+  .meta{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:var(--space-5);font-size:.85rem;color:var(--ink-faint)}
+  .meta .post-tag{font-size:.72rem}
+  .more{position:sticky;top:96px}
+  .more h2{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:var(--space-3)}
+  .more a{display:block;padding:.6rem .75rem;border-radius:9px;text-decoration:none;margin-bottom:.2rem}
+  .more a:hover{background:var(--navy-100)}
+  .more strong{display:block;font-size:.9rem;color:var(--navy-900);line-height:1.3}
+  .more small{color:var(--ink-faint);font-size:.78rem}
+  @media (max-width:900px){.article-cols{grid-template-columns:1fr}.more{position:static}}
+</style>
+</head>
+<body>
+<div id="app-header"></div>
+<main id="main">
+
+<section class="page-hero">
+  <div class="container">
+    <div class="crumbs"><a href="index.html">Home</a> / <a href="blog.html">News</a> / <span id="crumbTitle">Article</span></div>
+    <h1 id="postTitle">Article</h1>
+    <p class="lede" id="postExcerpt"></p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container article-cols">
+    <article>
+      <div class="article-hero" id="postHero"></div>
+      <div class="meta" id="postMeta"></div>
+      <div class="prose" id="postBody"></div>
+    </article>
+    <aside class="more">
+      <h2>More from the shop</h2>
+      <div id="morePosts"></div>
+      <a class="btn btn-outline btn-sm" href="blog.html" style="margin-top:1rem;display:inline-block;">All articles</a>
+    </aside>
+  </div>
+</section>
+
+</main>
+<div id="app-footer"></div>
+<script src="assets/js/photos.js?v=1786418436"></script>
+<script src="assets/js/blog-content.js?v=1786418436"></script>
+<script src="assets/js/main.js?v=1786418436"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var key = new URLSearchParams(location.search).get("post");
+  var post = POSTS[key];
+
+  if (!post) {
+    document.title = "Article not found — Chelsea Bikes";
+    document.getElementById("postTitle").textContent = "That article has moved";
+    document.getElementById("postExcerpt").textContent =
+      "It may have been renamed. Everything we've written is listed on the News page.";
+    document.getElementById("postHero").style.display = "none";
+    document.getElementById("postBody").innerHTML =
+      '<p><a class="btn btn-primary" href="blog.html">All articles</a></p>';
+  } else {
+    document.title = post.title + " — Chelsea Bikes";
+    document.getElementById("postTitle").textContent = post.title;
+    document.getElementById("crumbTitle").textContent = post.tag;
+    document.getElementById("postExcerpt").textContent = post.excerpt;
+    document.getElementById("postHero").innerHTML =
+      photoSlot(sceneArt(post.palette, "art" + key, post.motif), "shop", "post-" + key, post.title);
+    document.getElementById("postMeta").innerHTML =
+      '<span class="post-tag">' + post.tag + "</span><span>" + post.date +
+      '</span><span>· Demo article</span>';
+    document.getElementById("postBody").innerHTML = post.body;
+    hydratePhotos();
+  }
+
+  document.getElementById("morePosts").innerHTML = Object.keys(POSTS)
+    .filter(function (k) { return k !== key; })
+    .slice(0, 4)
+    .map(function (k) {
+      return '<a href="article.html?post=' + k + '"><strong>' + POSTS[k].title +
+        "</strong><small>" + POSTS[k].tag + " · " + POSTS[k].date + "</small></a>";
+    })
+    .join("");
+});
+</script>
+</body>
+</html>
