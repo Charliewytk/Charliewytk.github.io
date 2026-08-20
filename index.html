@@ -85,9 +85,9 @@
   .frame.plain { border: none; box-shadow: none; background: none; }
 
   /* the text that scrolls past it */
-  .beats { order: 1; padding: 18vh 0 10vh; }
-  .beat { min-height: 66vh; display: flex; flex-direction: column; justify-content: center; }
-  .beat:last-child { min-height: 44vh; }
+  .beats { order: 1; padding: 20vh 0 12vh; }
+  .beat { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+  .beat:last-child { min-height: 70vh; }
   .beat > * {
     opacity: 0; transform: translateY(22px);
     transition: opacity 0.95s ease, transform 1.05s cubic-bezier(0.22,1,0.36,1);
@@ -159,7 +159,7 @@
     .pin { position: sticky; top: 0; height: auto; padding: 14px 0 20px; order: 1;
            background: linear-gradient(#0b0e11 80%, rgba(11,14,17,0)); z-index: 2; }
     .beats { order: 2; padding: 3vh 0 8vh; }
-    .beat { min-height: 46vh; }
+    .beat { min-height: 62vh; }
     .frame { opacity: 1; transform: none; }
     p { max-width: none; }
   }
@@ -289,7 +289,10 @@
     <div class="beat">
       <h2>PowerLeash</h2>
       <p class="meta">mac menu bar app · swift</p>
-      <p>A custom low power mode for macOS. I assumed low power mode capped my screen at 60Hz. I measured it and it doesn't — it throttles the CPU ~40% while the panel stays at 120Hz.</p>
+      <p>A custom low power mode for macOS. I assumed low power mode capped my screen at 60Hz.</p>
+    </div>
+    <div class="beat">
+      <p>I measured it and it doesn't — it throttles the CPU ~40% while the panel stays at 120Hz.</p>
     </div>
     <div class="beat">
       <p>So instead I move background tasks to the efficiency cores and leave whatever's in front at full speed.</p>
