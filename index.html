@@ -91,6 +91,27 @@
     font-variant-numeric: tabular-nums;
   }
 
+  .maths {
+    border-left: 1px solid #2b333c;
+    padding-left: 16px;
+    margin: 0 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+  }
+  .maths .row { display: flex; flex-direction: column; gap: 3px; }
+  .maths code {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.76rem;
+    color: #9db0ba;
+    font-variant-numeric: tabular-nums;
+  }
+  .maths .why {
+    font-size: 0.9rem;
+    color: #8d949a;
+    max-width: 58ch;
+  }
+
   footer { margin-top: 110px; padding-top: 26px; border-top: 1px solid #232930; color: #8d949a; font-size: 0.88rem; }
   footer a { color: #8d949a; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #3d454c; }
   footer a:hover { color: #cfd5d9; }
@@ -113,15 +134,6 @@
     <h2>Abyss Warden</h2>
     <p class="meta">browser game · vanilla js + canvas + web audio</p>
     <p>My favourite video game of all time is Kingdom Rush. It is a niche indie strategy tower defence game. Here is my attempt at making something similar, no assets no engine, pure code - but with a deep sea theme.</p>
-    <a class="shot" href="abyss-warden/" aria-label="Play Abyss Warden">
-      <video autoplay muted loop playsinline preload="metadata" poster="media/abyss-poster.jpg">
-        <source src="media/abyss.mp4" type="video/mp4">
-      </video>
-    </a>
-    <div class="strip">
-      <a class="shot" href="abyss-warden/"><img src="media/abyss-2.jpg" alt="Boss fight" loading="lazy"></a>
-      <a class="shot" href="abyss-warden/"><img src="media/abyss-3.jpg" alt="Station upgrades" loading="lazy"></a>
-    </div>
     <p><a href="abyss-warden/">Play it</a> — free, no install, phones work.</p>
   </section>
 
@@ -145,7 +157,7 @@
     <h2>Chess Exchange</h2>
     <p class="meta">prediction market · live chess.com data</p>
     <p>Simply I think it would be fun to live bet on chess games. I am a fan of poker - it being about half skill and half luck - and I feel chess exchange would be more of an 80/20 split, with the luck landing on whether a player plays what you think is the best move.</p>
-  </section>
+    </section>
 
   <section class="proj">
     <h2>PowerLeash</h2>
@@ -160,9 +172,9 @@
 
   <section class="proj">
     <h2>Trading research</h2>
-    <p class="meta">backtesting rig · tournament models · verdicts</p>
+    <p class="meta">machine learning · backtesting rig · live tournaments</p>
     <!-- CHARLIE: your words here — why you made it, the design decisions, the math, any ML -->
-    <p><a href="essays/90-Hypotheses-Zero-Edges.pdf">90 Hypotheses, Zero Edges (pdf)</a> · <a href="research.html">longer notes</a></p>
+    <p><a href="essays/90-Hypotheses-Zero-Edges-short.pdf">90 Hypotheses, Zero Edges (pdf)</a> · <a href="research.html">longer notes</a></p>
   </section>
 
   <section class="proj">

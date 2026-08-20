@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Charlie Wuytack's trading research notes: tournament models, the hypothesis rig, strategy verdicts.">
+<meta name="description" content="Charlie Wuytack's trading research notes, explained in plain English.">
 <title>Research notes — Charlie Wuytack</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
@@ -18,97 +18,120 @@
     -webkit-font-smoothing: antialiased;
   }
   ::selection { background: #2c4a45; color: #eef7f4; }
-  .page { max-width: 700px; margin: 0 auto; padding: 64px 22px 100px; }
+  .page { max-width: 700px; margin: 0 auto; padding: 56px 22px 100px; }
+
   a { color: #8fd0c3; text-decoration: none; }
   a:hover { text-decoration: underline; text-underline-offset: 3px; }
   a:focus-visible { outline: 2px solid #8fd0c3; outline-offset: 3px; border-radius: 2px; }
-  h1 { font-family: "Newsreader", Georgia, serif; font-weight: 500; font-size: 2rem; margin: 10px 0 16px; color: #f4f2ee; }
-  h2 { font-family: "Newsreader", Georgia, serif; font-weight: 500; font-size: 1.5rem; margin: 0 0 10px; color: #f4f2ee; }
-  h3 { font-size: 1rem; margin: 26px 0 6px; color: #f4f2ee; }
-  p { margin: 0 0 13px; max-width: 64ch; }
-  ul { margin: 0 0 13px; padding-left: 22px; max-width: 62ch; }
-  li { margin-bottom: 9px; }
-  .aside { color: #8d949a; font-size: 0.88rem; }
-  hr { border: none; border-top: 1px solid #232930; margin: 46px 0 34px; }
-  .tw { overflow-x: auto; margin: 16px 0; border: 1px solid #232930; border-radius: 8px; }
+
+  h1 { font-family: "Newsreader", Georgia, serif; font-weight: 500; font-size: 2.1rem; margin: 14px 0; color: #f4f2ee; }
+  h2 { font-family: "Newsreader", Georgia, serif; font-weight: 500; font-size: 1.6rem; margin: 0 0 6px; color: #f4f2ee; }
+  h3 { font-size: 1rem; margin: 30px 0 8px; color: #f4f2ee; }
+  .meta {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.72rem; letter-spacing: 0.06em; color: #6d757d; margin: 0 0 16px;
+  }
+  p { margin: 0 0 14px; max-width: 64ch; }
+  .lede { font-family: "Newsreader", Georgia, serif; font-style: italic; font-size: 1.2rem; color: #b9bfc4; }
+  ul { margin: 0 0 14px; padding-left: 22px; max-width: 62ch; }
+  li { margin-bottom: 10px; }
+  .back { font-size: 0.88rem; }
+
+  section { margin-top: 76px; padding-top: 30px; border-top: 1px solid #232930; }
+
+  .maths {
+    border-left: 1px solid #2b333c;
+    padding-left: 16px;
+    margin: 0 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+  }
+  .maths .row { display: flex; flex-direction: column; gap: 3px; }
+  .maths code {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.78rem; color: #a6dbd0; font-variant-numeric: tabular-nums;
+  }
+  .maths .why { font-size: 0.9rem; color: #8d949a; max-width: 58ch; }
+
+  .tw { overflow-x: auto; margin: 18px 0; border: 1px solid #232930; border-radius: 8px; }
   table { border-collapse: collapse; width: 100%; font-size: 0.87rem; }
-  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #232930; vertical-align: top; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid #232930; vertical-align: top; }
   tr:last-child td { border-bottom: none; }
   th { background: #161b21; font-weight: 600; color: #b9bfc4; }
   td.num { font-variant-numeric: tabular-nums; white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 0.82rem; }
-  code { font-size: 0.85em; color: #9aa8b0; }
-  .back { font-size: 0.88rem; }
+  footer { margin-top: 80px; padding-top: 26px; border-top: 1px solid #232930; color: #8d949a; font-size: 0.88rem; }
+  footer a { color: #8d949a; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #3d454c; }
 </style>
 </head>
 <body>
 <div class="page">
   <p class="back"><a href="index.html">← charliewytk.github.io</a></p>
   <h1>Research notes</h1>
-  <p>The trading and ML side of what I do. Mostly it's about learning not to trust my own backtests, and what I built after I stopped.</p>
+  <p class="lede">The maths and machine learning behind what I build, and how I stopped trusting my own backtests.</p>
 
-  <hr>
+  <section>
+    <h2>The problem</h2>
+    <p class="meta">why the rest of this exists</p>
+    <p>Test enough ideas and some look brilliant purely by luck. They are not fakes — that is just what randomness looks like when you go hunting for patterns.</p>
+    </section>
 
-  <h2>Tournament models</h2>
-  <p>Data science tournaments are the one place a solo researcher gets an honest scoreboard: fixed data, thousands of competitors, and no way to grade your own homework. I keep live models in three.</p>
+  <section>
+    <h2>The rig</h2>
+    <p class="meta">backtesting infrastructure · python</p>
+    <p>Four rules, enforced by the code rather than my good intentions:</p>
+    <ul>
+      <li>Every idea is written down before any data is touched, in a log where editing an old entry breaks the chain.</li>
+      <li>The multiple-testing correction is applied automatically, every time results are read — so a failure from months ago still counts against a claim I make today.</li>
+      <li>The final test period is sealed. One attempt per idea, and the attempt is recorded before the test runs — so a crash still uses it up.</li>
+      <li>Parameter fishing is refused. Three versions of an idea count as three tests.</li>
+    </ul>
+    <p>Ninety ideas went through it. None survived — written up as <a href="essays/90-Hypotheses-Zero-Edges-short.pdf">90 Hypotheses, Zero Edges (pdf)</a>.</p>
+  </section>
 
-  <h3>DataCrunch</h3>
-  <p>Four model generations so far. Each one got promoted only after multi-seed confirmation runs on a held-out window; the final one was confirmed across 7 seeds before I staged it. The v3 regression is left in because it happened.</p>
-  <div class="tw"><table>
-    <tr><th>Generation</th><th>Cloud score</th><th></th></tr>
-    <tr><td>v1</td><td class="num">0.0394</td><td>baseline</td></tr>
-    <tr><td>v2</td><td class="num">0.0491</td><td>first big jump</td></tr>
-    <tr><td>v3</td><td class="num">0.0443</td><td>a regression</td></tr>
-    <tr><td>v4</td><td class="num">0.0535</td><td>current, auto-selected</td></tr>
-  </table></div>
-  <p>Current rank: about 14th of 13,534.</p>
+  <section>
+    <h2>Machine learning, scored publicly</h2>
+    <p class="meta">datacrunch · adia · numerai</p>
+    <p>The one place I get an honest scoreboard: same data for everyone, thousands of entrants, no marking my own homework.</p>
 
-  <h3>ADIA structural break challenge</h3>
-  <p>Detecting regime changes in time series. My entry is a GRU ensemble over 46 features (26 streaming, 20 changepoint statistics), trained across 5 seeds with a strict early-stop protocol where the holdout gets touched exactly once per artefact. The ensemble scores 0.5696 on holdout against a 0.5588 GBM baseline; the individual seeds range 0.5579 to 0.5664.</p>
+    <h3>DataCrunch — about 14th of 13,534</h3>
+    <div class="tw"><table>
+      <tr><th>Generation</th><th>Score</th><th></th></tr>
+      <tr><td>v1</td><td class="num">0.0394</td><td>first attempt</td></tr>
+      <tr><td>v2</td><td class="num">0.0491</td><td>big jump</td></tr>
+      <tr><td>v3</td><td class="num">0.0443</td><td>went backwards, left in the log</td></tr>
+      <tr><td>v4</td><td class="num">0.0535</td><td>current</td></tr>
+    </table></div>
+    <h3>ADIA structural break challenge</h3>
+    <p>Spotting the moment a time series changes behaviour. My entry is a recurrent network — one that reads the data in order and remembers what came before — trained five separate times and averaged. It scores 0.5696 against the standard baseline's 0.5588, where 0.5 would be a coin flip.</p>
+    <h3>Numerai</h3>
+    <p>Full pipeline in one file. Nothing staked yet — live scores build the record first.</p>
+  </section>
 
-  <h3>Numerai</h3>
-  <p>A single-file pipeline: download, train, validate, predict, submit, targeting their v5.3 dataset, plus their model-upload path. One detail I'm fond of: their scoring container runs Python 3.12, and building the pickle on any other minor version fails as a segfault inside their container rather than an error message, so the pipeline pins the version and I confirmed the container image through their API. I deliberately don't stake money on it yet. Live scores build a public track record first; capital only goes in if the record earns it.</p>
+  <section>
+    <h2>Five strategies, five verdicts</h2>
+    <p class="meta">what survives real costs</p>
+    <div class="tw"><table>
+      <tr><th>Strategy</th><th>Verdict</th><th>What decided it</th></tr>
+      <tr><td>Closed-end fund discounts</td><td>upper bound</td><td>44% of the profit was market drift, not timing</td></tr>
+      <tr><td>Odd-lot tenders</td><td>small but real</td><td>~£200/yr, capped at 99 shares per deal no matter the bankroll</td></tr>
+      <tr><td>Polymarket orphans</td><td>dead</td><td>nowhere near enough money could be placed</td></tr>
+      <tr><td>Copying activist investors</td><td>dead</td><td>45-day disclosure lag; you pay fees to trail the index</td></tr>
+      <tr><td>Index addition trades</td><td>dead</td><td>decayed, and confirming it needs paid data</td></tr>
+    </table></div>
+    <p>The survivor got execution tooling: broker preflights, and a test suite whose only job is stopping the code placing an order the strategy never asked for.</p>
+  </section>
 
-  <hr>
+  <section>
+    <h2>Two things that failed usefully</h2>
+    <p class="meta">the bot, and the tool that won't answer</p>
+    <p><b>A trading bot.</b> Its backtests looked wonderful because I had assumed prices I could not really trade at. Recalculated honestly, the profit vanished. I retired it and turned each lesson into a rule in the rig above.</p>
+    <p><b>An ETF cost comparison.</b> It ranks nothing on purpose: two cost components are not available free, so ranking would just promote whichever fund has the least data. It reports what is missing instead.</p>
+  </section>
 
-  <h2>The hypothesis rig</h2>
-  <p>If you backtest 100 ideas at a 5% significance level, about 5 will pass by pure chance, with clean equity curves and good p-values. So the rig makes fooling myself hard:</p>
-  <ul>
-    <li>Every hypothesis is registered before any data gets touched: the claim, direction, universe, holding period and pass criterion, timestamped into an append-only log that's hash-chained, so editing or deleting any row breaks verification for everything after it. A failed idea counts against me forever.</li>
-    <li>Benjamini-Hochberg correction is recomputed across every hypothesis ever tested, every time results are read. No raw p-value is ever shown without its corrected value next to it. There's a test that enforces this.</li>
-    <li>The holdout is sealed behind a fixed calendar date and each hypothesis gets one shot at it. The attempt is written to a ledger before the test runs, so a crash still burns it.</li>
-    <li>Parameter sweeps are refused at registration. If you want three variants of an idea, that's three registrations, and all three count against the correction.</li>
-  </ul>
-  <p>It also refuses to pretend about data quality. Free data can't make most stock universes survivorship-free (yfinance only knows tickers that exist today, so every delisting and bankruptcy is silently missing), so instead of pretending otherwise, results from biased universes get stamped as upper bounds. Every field carries a known-as-of date so restated fundamentals can't leak the future into the past.</p>
-  <p>90 registered hypotheses went through it. Zero survived. Annoying, but that's the job. The audit trail became an essay: <a href="essays/90-Hypotheses-Zero-Edges.pdf">90 Hypotheses, Zero Edges (pdf)</a>.</p>
-
-  <hr>
-
-  <h2>Strategy verdicts</h2>
-  <p>A separate project: five strategies that plausibly work at small size but not fund size, each taken to a written verdict on free data with costs included. The whole table, dead ones included:</p>
-  <div class="tw"><table>
-    <tr><th>Strategy</th><th>Verdict</th><th>What decided it</th></tr>
-    <tr><td>CEF discount z-score</td><td>upper bound, unproven</td><td>44% of the headline return was drift rather than timing, and the survivorship bias can't be bounded</td></tr>
-    <tr><td>Odd-lot tenders</td><td>marginal but real</td><td>capacity is capital-flat, 99 shares per deal; the machine-verified floor is roughly £200/yr</td></tr>
-    <tr><td>Polymarket orphans</td><td>dead</td><td>capacity rounded to zero, nothing left to run</td></tr>
-    <tr><td>13F activist cloning</td><td>dead</td><td>the 45-day filing lag eats the edge; you'd pay fees to lag the index</td></tr>
-    <tr><td>Russell index-adds</td><td>dead</td><td>decayed, and verifying needs licensed data</td></tr>
-    <tr><td>FTSE 250 adds</td><td>untested</td><td>data unblocked but the join is deferred, since join mortality correlates with outcomes</td></tr>
-  </table></div>
-
-  <h3>uw-capture</h3>
-  <p>The odd-lot tender idea survived, so it got execution tooling. The edge is small and per-deal, which means the engineering is mostly about not losing it to operational mistakes: preflight checks against both brokers (Alpaca and Trading 212) before any order path is trusted, guard tests whose whole job is stopping the code from placing an order the strategy didn't ask for, and a paper-forward phase that runs everything as if live to build a verifiable record before real money moves.</p>
-
-  <hr>
-
-  <h2>Where the discipline came from</h2>
-  <p>The earliest project here was a trading bot, and it's the most instructive one because of how it ended. Its backtests kept looking too good, and each audit round found out why: optimistic fill assumptions, costs that existed in the market but not the simulator. The repo filenames tell the story on their own: <code>HONEST_FILL_BASELINE</code>, <code>FILL_REALITY_RESULT</code>, <code>BACKTEST_CALIBRATION_REPORT</code>, <code>EDGE_REMEDIATION_REPORT</code>, and eventually <code>AUTOPSY_MAIN_ENGINE</code>. I retired it and turned the lessons into the hard constraints in the hypothesis rig above.</p>
-
-  <h3>ETF selector, currently blocked</h3>
-  <p>A total-cost-of-ownership tool for ETFs that deliberately ranks nothing right now. The free-data audit found the cost stack can't be completed (tracking difference needs licensed index data, TER needs per-issuer documents, and no free source lists funds that have closed), and ranking on a partial stack would put the fund with the least data on top rather than the least cost. So it just reports what's missing for each fund instead.</p>
-
-  <hr>
-
-  <p class="aside">Code for most of this is in private repos. Happy to walk through any of it, including the dead ends: <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></p>
+  <footer>
+    Most of this is in private repos — happy to walk through any of it, dead ends included. <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a> · <a href="index.html">back to the projects</a>
+  </footer>
 </div>
 </body>
 </html>
