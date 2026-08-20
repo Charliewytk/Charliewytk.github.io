@@ -3,272 +3,132 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Charlie Wuytack's quant research log — tournament ML, Hypothesis Factory, strategy validation verdicts, and the tooling behind them.">
-<title>Research Log — Charlie Wuytack</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;450;600;700&display=swap">
+<meta name="description" content="Charlie Wuytack's trading research notes: tournament models, the hypothesis rig, strategy verdicts.">
+<title>Research notes — Charlie Wuytack</title>
 <style>
   :root {
-    --bg: #f5f7f5;
-    --surface: #ffffff;
-    --ink: #1b2422;
-    --muted: #5c6864;
-    --faint: #8b968f;
-    --line: #dde3de;
-    --accent: #0b7a75;
-    --accent-ink: #085551;
-    --accent-contrast: #ffffff;
-    --ok: #2e7d4f;
-    --warn: #a5691c;
-    --dead: #a44a3f;
-    --chip-bg: #eef1ee;
+    --bg: #ffffff;
+    --ink: #1a1a1a;
+    --soft: #555555;
+    --link: #0645ad;
+    --line: #dddddd;
+    --thbg: #f4f4f2;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #101816;
-      --surface: #17211e;
-      --ink: #e6ece8;
-      --muted: #9aa8a1;
-      --faint: #6d7a74;
-      --line: #263029;
-      --accent: #46c2b8;
-      --accent-ink: #7fd8d0;
-      --accent-contrast: #0c1a17;
-      --ok: #5cb884;
-      --warn: #d19a4f;
-      --dead: #d08076;
-      --chip-bg: #1f2a26;
+      --bg: #16181a;
+      --ink: #d8d8d4;
+      --soft: #9a9a94;
+      --link: #8ab4f8;
+      --line: #33363a;
+      --thbg: #1e2124;
     }
   }
   :root[data-theme="dark"] {
-    --bg: #101816;
-    --surface: #17211e;
-    --ink: #e6ece8;
-    --muted: #9aa8a1;
-    --faint: #6d7a74;
-    --line: #263029;
-    --accent: #46c2b8;
-    --accent-ink: #7fd8d0;
-    --accent-contrast: #0c1a17;
-    --ok: #5cb884;
-    --warn: #d19a4f;
-    --dead: #d08076;
-    --chip-bg: #1f2a26;
+    --bg: #16181a;
+    --ink: #d8d8d4;
+    --soft: #9a9a94;
+    --link: #8ab4f8;
+    --line: #33363a;
+    --thbg: #1e2124;
   }
-
   * { box-sizing: border-box; }
   body {
     margin: 0;
     background: var(--bg);
     color: var(--ink);
-    font-family: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
-    font-weight: 450;
-    line-height: 1.65;
-    -webkit-font-smoothing: antialiased;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+    font-size: 16px;
   }
-  .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
-  a { color: var(--accent-ink); text-decoration: none; }
-  a:hover, a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
-  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
-
-  .mono { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; font-variant-numeric: tabular-nums; }
-  .eyebrow {
-    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
-    font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em;
-    text-transform: uppercase; color: var(--accent-ink);
-  }
-  .chip {
-    display: inline-block;
-    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
-    font-size: 0.66rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
-    padding: 3px 8px 2px; border-radius: 3px;
-    background: var(--chip-bg); color: var(--muted);
-  }
-  .chip.ok { color: var(--ok); }
-  .chip.live { color: var(--accent-ink); }
-  .chip.warn { color: var(--warn); }
-  .chip.dead { color: var(--dead); }
-
-  header { padding: 56px 0 40px; border-bottom: 1px solid var(--line); }
-  header .back { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; font-size: 0.78rem; }
-  header h1 {
-    font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 700;
-    letter-spacing: -0.02em; line-height: 1.15; margin: 18px 0 16px;
-    max-width: 24ch; text-wrap: balance;
-  }
-  header p { color: var(--muted); max-width: 64ch; margin: 0; }
-  header p strong { color: var(--ink); font-weight: 600; }
-
-  section { padding: 48px 0 12px; }
-  section > .eyebrow { display: block; margin-bottom: 6px; }
-  h2 { font-size: 1.45rem; font-weight: 600; letter-spacing: -0.015em; margin: 0 0 14px; }
-  h3 { font-size: 1.02rem; font-weight: 600; margin: 26px 0 8px; }
-  p { color: var(--muted); max-width: 68ch; margin: 0 0 14px; }
-  p strong, li strong { color: var(--ink); font-weight: 600; }
-  ul { margin: 0 0 14px; padding-left: 20px; color: var(--muted); max-width: 66ch; }
-  li { margin-bottom: 8px; }
-
-  .tablebox { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; margin: 18px 0; background: var(--surface); }
-  table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
-  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
-  tr:last-child td { border-bottom: none; }
-  th {
-    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
-    font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--faint); background: var(--chip-bg);
-  }
-  td { color: var(--muted); }
-  td:first-child { color: var(--ink); font-weight: 600; white-space: nowrap; }
-  td.num { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
-
-  .callout {
-    border-left: 2px solid var(--accent);
-    padding: 4px 0 4px 16px; margin: 18px 0;
-  }
-  .callout .big {
-    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
-    font-size: 1.05rem; font-weight: 600; color: var(--accent-ink);
-  }
-  .callout p { margin: 4px 0 0; font-size: 0.9rem; }
-
-  .rule { border: none; border-top: 1px solid var(--line); margin: 40px 0 0; }
-  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0; }
-  .btn {
-    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
-    font-size: 0.78rem; font-weight: 500;
-    border: 1px solid var(--line); border-radius: 4px;
-    padding: 7px 13px; background: var(--surface); color: var(--accent-ink);
-  }
-  .btn:hover { border-color: var(--accent); text-decoration: none; }
-  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); }
-
-  footer { padding: 48px 0 72px; color: var(--muted); }
+  .page { max-width: 680px; margin: 0 auto; padding: 48px 20px 80px; }
+  a { color: var(--link); }
+  a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+  h1 { font-size: 1.5rem; margin: 8px 0 16px; }
+  h2 { font-size: 1.15rem; margin: 40px 0 8px; }
+  h3 { font-size: 1rem; margin: 24px 0 6px; }
+  p { margin: 0 0 12px; }
+  ul { margin: 0 0 12px; padding-left: 22px; }
+  li { margin-bottom: 10px; }
+  .aside { color: var(--soft); font-size: 0.88rem; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 36px 0; }
+  .tw { overflow-x: auto; margin: 14px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+  th, td { text-align: left; padding: 7px 10px; border: 1px solid var(--line); vertical-align: top; }
+  th { background: var(--thbg); font-weight: 600; }
+  td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  code { font-size: 0.85em; }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <a class="back" href="index.html">← charlie wuytack</a>
-    <h1>The research log: one long argument with myself about what's real.</h1>
-    <p>Everything on this page is connected. A trading bot taught me how easy it is to fool yourself; I built infrastructure that makes that <strong>impossible by construction</strong>; the infrastructure correctly found that 90 of my ideas were worthless; a separate validation effort killed three more strategies with arithmetic; the one survivor got execution tooling; and the same discipline, pointed at data-science tournaments, produced a <strong>top-0.2% model</strong>. Failures are documented with the same care as wins — that's the point.</p>
-  </header>
+<div class="page">
+  <p><a href="index.html">← back</a></p>
+  <h1>Research notes</h1>
+  <p>This is the trading and ML side of what I do, in one place. It's mostly a story about learning not to trust my own backtests, and what I built once I stopped trusting them. The failures are documented as carefully as the wins, because the failures are where the method came from.</p>
 
-  <section id="tournaments">
-    <span class="eyebrow">01 — Live scoreboards</span>
-    <h2>Tournament ML</h2>
-    <p>Data-science tournaments are the one place a retail researcher gets an honest, public scoreboard: fixed data, thousands of competitors, no way to grade your own homework. I run live models in three.</p>
+  <hr>
 
-    <h3>DataCrunch <span class="chip live">Live</span></h3>
-    <p>Four model generations, each promoted only after multi-seed confirmation runs on a held-out window — the final champion was confirmed across <strong>7 seeds</strong> before staging, and hyperparameter sweep losers were logged alongside the winner.</p>
-    <div class="tablebox"><table>
-      <tr><th>Generation</th><th>Cloud score</th><th>Note</th></tr>
-      <tr><td>v1</td><td class="num">0.0394</td><td>baseline</td></tr>
-      <tr><td>v2</td><td class="num">0.0491</td><td>first big jump</td></tr>
-      <tr><td>v3</td><td class="num">0.0443</td><td>a regression — kept in the log, not hidden</td></tr>
-      <tr><td>v4</td><td class="num">0.0535</td><td>champion, auto-selected</td></tr>
-    </table></div>
-    <div class="callout">
-      <div class="big">rank ~14 of 13,534 — top 0.2%</div>
-      <p>Current DataCrunch leaderboard position at time of writing.</p>
-    </div>
+  <h2>Tournament models</h2>
+  <p>Data science tournaments are the one place a solo researcher gets an honest scoreboard: fixed data, thousands of competitors, and no way to grade your own homework. I keep live models in three.</p>
 
-    <h3>ADIA Structural Break Challenge <span class="chip live">Submitted</span></h3>
-    <p>Detecting regime changes in time series. The model is a <strong>46-feature GRU ensemble</strong> — 26 streaming features plus 20 changepoint statistics — trained across 5 seeds with a strict early-stop protocol: the holdout is touched exactly once per artefact.</p>
-    <div class="tablebox"><table>
-      <tr><th>Model</th><th>Holdout score</th></tr>
-      <tr><td>Per-seed GRUs (5)</td><td class="num">0.5579 – 0.5664</td></tr>
-      <tr><td>GBM baseline</td><td class="num">0.5588</td></tr>
-      <tr><td>GRU ensemble</td><td class="num">0.5696</td></tr>
-    </table></div>
+  <h3>DataCrunch</h3>
+  <p>Four model generations so far. Each one got promoted only after multi-seed confirmation runs on a held-out window; the final one was confirmed across 7 seeds before I staged it. The v3 regression is in the table because pretending it didn't happen would defeat the purpose of keeping a log.</p>
+  <div class="tw"><table>
+    <tr><th>Generation</th><th>Cloud score</th><th></th></tr>
+    <tr><td>v1</td><td class="num">0.0394</td><td>baseline</td></tr>
+    <tr><td>v2</td><td class="num">0.0491</td><td>first big jump</td></tr>
+    <tr><td>v3</td><td class="num">0.0443</td><td>a regression</td></tr>
+    <tr><td>v4</td><td class="num">0.0535</td><td>current, auto-selected</td></tr>
+  </table></div>
+  <p>Current rank: about 14th of 13,534.</p>
 
-    <h3>Numerai <span class="chip live">Live</span></h3>
-    <p>A single-file pipeline — download → train → validate → predict → submit — targeting dataset v5.3 ("Quantum"), plus the zero-infrastructure model-upload path (matched to their Python 3.12 scoring container, a constraint confirmed via their API because getting it wrong fails as a segfault, not an error). Deliberately <strong>unstaked</strong>: live scores build a public verified track record first; capital goes in only if the record justifies it, with pre-registered kill criteria — the same ledger rules as everything else on this page.</p>
-  </section>
+  <h3>ADIA structural break challenge</h3>
+  <p>Detecting regime changes in time series. My entry is a GRU ensemble over 46 features (26 streaming, 20 changepoint statistics), trained across 5 seeds with a strict early-stop protocol where the holdout gets touched exactly once per artefact. The ensemble scores 0.5696 on holdout against a 0.5588 GBM baseline; the individual seeds range 0.5579 to 0.5664.</p>
 
-  <hr class="rule">
+  <h3>Numerai</h3>
+  <p>A single-file pipeline: download, train, validate, predict, submit, targeting their v5.3 dataset, plus their model-upload path. One detail I'm fond of: their scoring container runs Python 3.12, and building the pickle on any other minor version fails as a segfault inside their container rather than an error message, so the pipeline pins the version and I confirmed the container image through their API. I deliberately don't stake money on it yet. Live scores build a public track record first; capital only goes in if the record earns it.</p>
 
-  <section id="factory">
-    <span class="eyebrow">02 — The instrument</span>
-    <h2>Hypothesis Factory</h2>
-    <p>Infrastructure for testing hundreds of trading hypotheses without fooling yourself. The core problem: at a 5% significance level, 100 uncorrected backtests hand you ~5 false discoveries by pure chance — and they look exactly like real edges: clean equity curves, good p-values, plausible stories. The factory's job is not running backtests; it is <strong>making self-deception structurally impossible</strong>. Four non-negotiables, each enforced by code rather than good intentions:</p>
-    <ul>
-      <li><strong>Pre-registration before any data is touched.</strong> Claim, direction, universe, holding period and success criterion are recorded to an append-only, hash-chained log. Editing, deleting or reordering any row breaks the chain, which every tool verifies before trusting anything. A failed hypothesis counts against the correction forever.</li>
-      <li><strong>FDR correction, automatic and unavoidable.</strong> Benjamini–Hochberg is recomputed across every hypothesis ever tested, on every read. The report never shows a raw p-value without its adjusted counterpart on the same line — enforced by test.</li>
-      <li><strong>Sealed holdout, one shot per hypothesis.</strong> History splits at a fixed calendar date. A hypothesis touches the holdout exactly once, and the attempt is burned to a ledger <em>before</em> the test runs — so a crash still consumes it. "It crashed, run it again" is a re-test loophole, and it is closed.</li>
-      <li><strong>No parameter sweeping — enforced, not documented.</strong> A list or range as a parameter is refused at registration as the signature of a sweep. Three variants of an idea are three registrations counting three times against FDR. That's the correct accounting, not an inconvenience.</li>
-    </ul>
-    <p>The factory also refuses to pretend about data quality: universes must declare whether they are survivorship-free (with free data, most can't be — so results are stamped <span class="mono">SURVIVORSHIP-BIASED: UPPER BOUND</span> rather than presented as estimates), and every field carries a known-as-of date so restated fundamentals can't leak the future into the past.</p>
+  <hr>
 
-    <h3>What it found: nothing — and that's the result</h3>
-    <p>90 pre-registered hypotheses went through the machine. Zero survived. The system worked exactly as designed: it correctly refused to hand me a false edge to lose money on. The full audit trail became a 6,600-word essay.</p>
-    <div class="actions">
-      <a class="btn primary" href="essays/90-Hypotheses-Zero-Edges.pdf">Read: 90 Hypotheses, Zero Edges (PDF)</a>
-    </div>
-  </section>
+  <h2>The hypothesis rig</h2>
+  <p>The core problem with backtesting lots of ideas: at a 5% significance level, 100 uncorrected tests will hand you about 5 false edges by pure chance, and they look exactly like real ones. Clean equity curves, good p-values, plausible stories. So I built infrastructure where fooling myself is structurally hard, not just discouraged:</p>
+  <ul>
+    <li>Every hypothesis is registered before any data gets touched: the claim, direction, universe, holding period and pass criterion, timestamped into an append-only log that's hash-chained, so editing or deleting any row breaks verification for everything after it. A failed idea counts against me forever.</li>
+    <li>Benjamini-Hochberg correction is recomputed across every hypothesis ever tested, every time results are read. No raw p-value is ever shown without its corrected value next to it. There's a test that enforces this.</li>
+    <li>The holdout is sealed behind a fixed calendar date and each hypothesis gets one shot at it. The attempt is written to a ledger before the test runs, so a crash still burns it. "It crashed, run it again" is a retesting loophole and it's closed.</li>
+    <li>Parameter sweeps are refused at registration. If you want three variants of an idea, that's three registrations, and all three count against the correction.</li>
+  </ul>
+  <p>It also refuses to pretend about data quality. Free data can't make most stock universes survivorship-free (yfinance only knows tickers that exist today, so every delisting and bankruptcy is silently missing), so instead of pretending otherwise, results from biased universes get stamped as upper bounds. Every field carries a known-as-of date so restated fundamentals can't leak the future into the past.</p>
+  <p>I ran 90 registered hypotheses through it. Zero survived. That's the rig working, not failing: it refused to hand me a fake edge to lose money on. The full audit trail became a 6,600 word essay, <a href="essays/90-Hypotheses-Zero-Edges.pdf">90 Hypotheses, Zero Edges (pdf)</a>.</p>
 
-  <hr class="rule">
+  <hr>
 
-  <section id="validation">
-    <span class="eyebrow">03 — The verdicts</span>
-    <h2>Strategy Validation</h2>
-    <p>Separate from the factory: five capacity-constrained strategies that plausibly work at retail size but not fund size, each taken to a final written verdict on free data, with costs included and biases stamped. Most validation projects quietly report only the survivors. This one files every verdict:</p>
-    <div class="tablebox"><table>
-      <tr><th>Strategy</th><th>Verdict</th><th>The number that decided it</th></tr>
-      <tr><td>CEF discount z-score</td><td><span class="chip warn">Upper bound</span></td><td>44% of the headline return was drift, not timing; survivorship unbounded through 3 nested filters</td></tr>
-      <tr><td>Odd-lot tenders</td><td><span class="chip ok">Marginal-real</span></td><td>capital-flat: 99 shares per deal per account, machine-verified floor ~£200/yr</td></tr>
-      <tr><td>Polymarket orphans</td><td><span class="chip dead">Dead</span></td><td>capacity ≈ zero: nothing left to run</td></tr>
-      <tr><td>13F activist cloning</td><td><span class="chip dead">Dead</span></td><td>the 45-day filing lag eats the edge — you pay to lag the index</td></tr>
-      <tr><td>Russell index-adds</td><td><span class="chip dead">Dead</span></td><td>decayed, and the data needed to verify is licensed</td></tr>
-      <tr><td>FTSE 250 adds</td><td><span class="chip">Untested</span></td><td>data unblocked, join deferred — join mortality correlates with outcomes</td></tr>
-    </table></div>
-    <p>Three dead, one honest upper bound, one small-but-real. The point of the exercise was the verdicts, and the verdicts are specific.</p>
-  </section>
+  <h2>Strategy verdicts</h2>
+  <p>A separate project: five strategies that plausibly work at small size but not fund size, each taken to a final written verdict on free data with costs included. Most validation work quietly reports only survivors, so here's the whole table:</p>
+  <div class="tw"><table>
+    <tr><th>Strategy</th><th>Verdict</th><th>What decided it</th></tr>
+    <tr><td>CEF discount z-score</td><td>upper bound, unproven</td><td>44% of the headline return was drift rather than timing, and the survivorship bias can't be bounded</td></tr>
+    <tr><td>Odd-lot tenders</td><td>marginal but real</td><td>capacity is capital-flat, 99 shares per deal; the machine-verified floor is roughly £200/yr</td></tr>
+    <tr><td>Polymarket orphans</td><td>dead</td><td>capacity rounded to zero, nothing left to run</td></tr>
+    <tr><td>13F activist cloning</td><td>dead</td><td>the 45-day filing lag eats the edge; you'd pay fees to lag the index</td></tr>
+    <tr><td>Russell index-adds</td><td>dead</td><td>decayed, and verifying needs licensed data</td></tr>
+    <tr><td>FTSE 250 adds</td><td>untested</td><td>data unblocked but the join is deferred, since join mortality correlates with outcomes</td></tr>
+  </table></div>
 
-  <hr class="rule">
+  <h3>uw-capture</h3>
+  <p>The odd-lot tender idea survived, so it got execution tooling. The edge is small and per-deal, which means the engineering is mostly about not losing it to operational mistakes: preflight checks against both brokers (Alpaca and Trading 212) before any order path is trusted, guard tests whose whole job is stopping the code from placing an order the strategy didn't ask for, and a paper-forward phase that runs everything as if live to build a verifiable record before real money moves.</p>
 
-  <section id="capture">
-    <span class="eyebrow">04 — The survivor, taken live</span>
-    <h2>uw-capture <span class="chip live">Live</span></h2>
-    <p>The odd-lot tender strategy — the one verdict worth acting on — turned into execution tooling. Because the edge is small and per-deal, the engineering is mostly about <strong>not losing it to operational error</strong>:</p>
-    <ul>
-      <li>Broker preflight checks and API probes for both Alpaca and Trading&nbsp;212 (fractional-share behaviour, FX handling, auth) before any order path is trusted.</li>
-      <li>Guard tests on both broker integrations — the test suite exists to stop the code placing an order the strategy didn't ask for.</li>
-      <li>Paper-forward tracking first: the pipeline runs and records as if live, building a verifiable record before capital is committed.</li>
-      <li>Per-deal cost modelling and basket verification, plus scheduled monitoring via launchd.</li>
-    </ul>
-  </section>
+  <hr>
 
-  <hr class="rule">
+  <h2>Where the discipline came from</h2>
+  <p>The earliest project here was a trading bot, and it's the most instructive one because of how it ended. Its backtests kept looking too good, and each audit round found out why: optimistic fill assumptions, costs that existed in the market but not the simulator. The repo filenames tell the story on their own: <code>HONEST_FILL_BASELINE</code>, <code>FILL_REALITY_RESULT</code>, <code>BACKTEST_CALIBRATION_REPORT</code>, <code>EDGE_REMEDIATION_REPORT</code>, and eventually <code>AUTOPSY_MAIN_ENGINE</code>. I retired it and rebuilt the lessons as hard constraints in the hypothesis rig. Everything the bot let me get away with, the rig now refuses.</p>
 
-  <section id="bot">
-    <span class="eyebrow">05 — Where the discipline came from</span>
-    <h2>Trading Bot <span class="chip dead">Retired</span></h2>
-    <p>The earliest project here, and the most instructive. It started as a market bot and became an exercise in finding out why its backtests were too good. The repo's table of contents tells the story better than a summary could: <span class="mono">HONEST_FILL_BASELINE</span>, <span class="mono">FILL_REALITY_RESULT</span>, <span class="mono">CROSS_ARB_STOPLOSS_FINDING</span>, <span class="mono">BACKTEST_CALIBRATION_REPORT</span>, <span class="mono">EDGE_REMEDIATION_REPORT</span>, and finally <span class="mono">AUTOPSY_MAIN_ENGINE</span>.</p>
-    <p>Each audit round found real problems — optimistic fill assumptions, costs that existed in the market but not in the simulator. Rather than patch around them, the project was retired and its lessons were rebuilt as constraints in Hypothesis Factory: everything the bot let me get away with, the factory now refuses.</p>
-  </section>
+  <h3>ETF selector, currently blocked</h3>
+  <p>A total-cost-of-ownership tool for ETFs that deliberately ranks nothing right now. The free-data audit found the cost stack can't be completed (tracking difference needs licensed index data, TER needs per-issuer documents, and no free source lists funds that have closed), and ranking on a partial stack would put the fund with the least data on top rather than the least cost. So instead of a confident wrong answer it reports exactly what's missing for each fund. Blocked is the honest status.</p>
 
-  <hr class="rule">
+  <hr>
 
-  <section id="etf">
-    <span class="eyebrow">06 — Blocked, honestly</span>
-    <h2>ETF Selector <span class="chip warn">Blocked</span></h2>
-    <p>A total-cost-of-ownership optimiser for ETFs — not a return ranker. Three modules: can each required field be sourced free, what is the expected annual cost drag decomposed per residency, and what is the realised risk and correlation (measured, never forecast).</p>
-    <p>It currently ranks <strong>nothing</strong>, deliberately. The free-data availability audit found the cost stack can't be completed: spreads are sourceable for most funds, but TER needs per-issuer documents, tracking difference needs licensed index data, and point-in-time fund universes don't exist free. Ranking on a partial stack would put the fund with the least <em>data</em> on top rather than the least <em>cost</em> — so instead of a confident wrong answer, the tool reports exactly what is missing per fund.</p>
-    <div class="tablebox"><table>
-      <tr><th>Field</th><th>Free-data status</th></tr>
-      <tr><td>Bid-ask spread</td><td class="num">5/6 funds sourced</td></tr>
-      <tr><td>Accumulating / distributing</td><td class="num">4/6 sourced</td></tr>
-      <tr><td>Domicile</td><td class="num">5/6 (inferred)</td></tr>
-      <tr><td>TER</td><td class="num">2/6 — needs per-issuer KID documents</td></tr>
-      <tr><td>Tracking difference</td><td class="num">0/6 — blocked, licensed index data</td></tr>
-      <tr><td>Point-in-time universe</td><td class="num">blocked — no free source lists closed funds</td></tr>
-    </table></div>
-  </section>
-
-  <footer>
-    <div class="eyebrow">Contact</div>
-    <p style="margin-top:12px">The code behind this page sits in private repos — I'm happy to walk through any of it, including the failures. <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a> · <a href="https://github.com/Charliewytk">github.com/Charliewytk</a> · <a href="index.html">back to the project log</a></p>
-  </footer>
+  <p class="aside">Code for most of this is in private repos. Happy to walk through any of it, including the dead ends: <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></p>
 </div>
 </body>
 </html>
