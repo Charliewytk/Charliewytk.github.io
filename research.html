@@ -5,64 +5,44 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Charlie Wuytack's trading research notes: tournament models, the hypothesis rig, strategy verdicts.">
 <title>Research notes — Charlie Wuytack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
 <style>
-  :root {
-    --bg: #ffffff;
-    --ink: #1a1a1a;
-    --soft: #555555;
-    --link: #0645ad;
-    --line: #dddddd;
-    --thbg: #f4f4f2;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #16181a;
-      --ink: #d8d8d4;
-      --soft: #9a9a94;
-      --link: #8ab4f8;
-      --line: #33363a;
-      --thbg: #1e2124;
-    }
-  }
-  :root[data-theme="dark"] {
-    --bg: #16181a;
-    --ink: #d8d8d4;
-    --soft: #9a9a94;
-    --link: #8ab4f8;
-    --line: #33363a;
-    --thbg: #1e2124;
-  }
-  * { box-sizing: border-box; }
   body {
     margin: 0;
-    background: var(--bg);
-    color: var(--ink);
+    background: #0f1216;
+    color: #e6e4df;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    line-height: 1.55;
-    font-size: 16px;
+    line-height: 1.6;
+    font-size: 16.5px;
+    -webkit-font-smoothing: antialiased;
   }
-  .page { max-width: 680px; margin: 0 auto; padding: 48px 20px 80px; }
-  a { color: var(--link); }
-  a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
-  h1 { font-size: 1.5rem; margin: 8px 0 16px; }
-  h2 { font-size: 1.15rem; margin: 40px 0 8px; }
-  h3 { font-size: 1rem; margin: 24px 0 6px; }
-  p { margin: 0 0 12px; }
-  ul { margin: 0 0 12px; padding-left: 22px; }
-  li { margin-bottom: 10px; }
-  .aside { color: var(--soft); font-size: 0.88rem; }
-  hr { border: none; border-top: 1px solid var(--line); margin: 36px 0; }
-  .tw { overflow-x: auto; margin: 14px 0; }
-  table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
-  th, td { text-align: left; padding: 7px 10px; border: 1px solid var(--line); vertical-align: top; }
-  th { background: var(--thbg); font-weight: 600; }
-  td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
-  code { font-size: 0.85em; }
+  ::selection { background: #2c4a45; color: #eef7f4; }
+  .page { max-width: 700px; margin: 0 auto; padding: 64px 22px 100px; }
+  a { color: #8fd0c3; text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  a:focus-visible { outline: 2px solid #8fd0c3; outline-offset: 3px; border-radius: 2px; }
+  h1 { font-family: "Newsreader", Georgia, serif; font-weight: 500; font-size: 2rem; margin: 10px 0 16px; color: #f4f2ee; }
+  h2 { font-family: "Newsreader", Georgia, serif; font-weight: 500; font-size: 1.5rem; margin: 0 0 10px; color: #f4f2ee; }
+  h3 { font-size: 1rem; margin: 26px 0 6px; color: #f4f2ee; }
+  p { margin: 0 0 13px; max-width: 64ch; }
+  ul { margin: 0 0 13px; padding-left: 22px; max-width: 62ch; }
+  li { margin-bottom: 9px; }
+  .aside { color: #8d949a; font-size: 0.88rem; }
+  hr { border: none; border-top: 1px solid #232930; margin: 46px 0 34px; }
+  .tw { overflow-x: auto; margin: 16px 0; border: 1px solid #232930; border-radius: 8px; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.87rem; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #232930; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  th { background: #161b21; font-weight: 600; color: #b9bfc4; }
+  td.num { font-variant-numeric: tabular-nums; white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 0.82rem; }
+  code { font-size: 0.85em; color: #9aa8b0; }
+  .back { font-size: 0.88rem; }
 </style>
 </head>
 <body>
 <div class="page">
-  <p><a href="index.html">← back</a></p>
+  <p class="back"><a href="index.html">← charliewytk.github.io</a></p>
   <h1>Research notes</h1>
   <p>The trading and ML side of what I do. Mostly it's about learning not to trust my own backtests, and what I built after I stopped.</p>
 
