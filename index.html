@@ -6,40 +6,63 @@
 <meta name="description" content="Charlie Wuytack: games, tools and trading research.">
 <title>Charlie Wuytack</title>
 <style>
-  :root {
-    --bg: #ffffff;
-    --ink: #1a1a1a;
-    --soft: #666666;
-    --link: #0645ad;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #17191b;
-      --ink: #d6d6d2;
-      --soft: #96968f;
-      --link: #8ab4f8;
-    }
-  }
-  :root[data-theme="dark"] {
-    --bg: #17191b;
-    --ink: #d6d6d2;
-    --soft: #96968f;
-    --link: #8ab4f8;
-  }
+  /* dark by choice — everything painted explicitly, no theme switching */
+  html { scroll-behavior: smooth; }
   body {
     margin: 0;
-    background: var(--bg);
-    color: var(--ink);
+    background: #0c1015;
+    color: #d9dee4;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    line-height: 1.5;
-    font-size: 16px;
+    line-height: 1.55;
+    font-size: 16.5px;
+    -webkit-font-smoothing: antialiased;
   }
-  .page { max-width: 580px; margin: 0 auto; padding: 44px 20px 70px; }
-  a { color: var(--link); }
-  h1 { font-size: 1.35rem; margin: 0 0 2px; }
-  p { margin: 0 0 18px; }
-  .grey { color: var(--soft); }
+  .page { max-width: 680px; margin: 0 auto; padding: 56px 20px 90px; }
+  a { color: #7db4f0; }
+  a:hover { color: #a8ccf5; }
+  a:focus-visible { outline: 2px solid #7db4f0; outline-offset: 2px; border-radius: 2px; }
+
+  h1 { font-size: 1.7rem; margin: 0 0 4px; color: #f2f5f7; }
+  .sub { color: #8a939c; margin: 0 0 10px; }
+  .lede { margin: 0 0 8px; }
+
+  .proj { margin-top: 72px; }
+  .proj h2 { font-size: 1.3rem; margin: 0 0 10px; color: #f2f5f7; }
+  .proj p { margin: 0 0 12px; }
+  .grey { color: #8a939c; }
   .small { font-size: 0.85rem; }
+
+  .shot {
+    display: block;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #232b34;
+    box-shadow: 0 14px 40px rgba(0,0,0,0.45);
+    margin: 18px 0 16px;
+    transition: transform 0.35s cubic-bezier(0.22,1,0.36,1), box-shadow 0.35s ease;
+    background: #0c1015;
+  }
+  a.shot:hover { transform: translateY(-3px) scale(1.012); box-shadow: 0 22px 56px rgba(0,0,0,0.6); }
+  .shot img, .shot video { display: block; width: 100%; height: auto; }
+
+  .strip { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0 0 16px; }
+  .strip .shot { margin: 0; }
+  @media (max-width: 520px) { .strip { grid-template-columns: 1fr; } }
+
+  .appline { display: flex; align-items: center; gap: 16px; margin: 18px 0 16px; }
+  .appline img { width: 84px; height: 84px; flex: none; filter: drop-shadow(0 10px 24px rgba(0,0,0,0.5)); }
+  .appline .m {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.82rem; color: #9fb0be; line-height: 1.7;
+  }
+
+  footer { margin-top: 80px; color: #8a939c; font-size: 0.9rem; }
+
+  /* scroll reveal */
+  @media (prefers-reduced-motion: no-preference) {
+    .proj { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22,1,0.36,1); }
+    .proj.in { opacity: 1; transform: none; }
+  }
 </style>
 </head>
 <body>
@@ -47,26 +70,90 @@
 
 <div class="page">
   <h1>Charlie Wuytack</h1>
-  <p class="grey">Exeter, UK · <a href="mailto:charlie@wuytack.net">email</a> · <a href="https://github.com/Charliewytk">github</a></p>
+  <p class="sub">Exeter, UK · <a href="mailto:charlie@wuytack.net">email</a> · <a href="https://github.com/Charliewytk">github</a></p>
+  <p class="lede">Things I've made. Most of them work right here on this page.</p>
 
-  <p>Things I've made. Most of them work right here on this page.</p>
+  <section class="proj in">
+    <h2>Abyss Warden</h2>
+    <p>Tower defence game set on the ocean floor. ~5,600 lines of vanilla JS, no engine, no assets: sprites are drawn in code, sounds synthesised in the browser. Five bosses.</p>
+    <a class="shot" href="abyss-warden/" aria-label="Play Abyss Warden">
+      <video autoplay muted loop playsinline preload="metadata" poster="media/abyss-poster.jpg">
+        <source src="media/abyss.mp4" type="video/mp4">
+      </video>
+    </a>
+    <div class="strip">
+      <a class="shot" href="abyss-warden/"><img src="media/abyss-2.jpg" alt="Boss fight" loading="lazy"></a>
+      <a class="shot" href="abyss-warden/"><img src="media/abyss-3.jpg" alt="Station upgrades" loading="lazy"></a>
+    </div>
+    <p><a href="abyss-warden/">Play it</a> — free, no install, phones work.</p>
+  </section>
 
-  <p><b>Abyss Warden</b> — tower defence game set on the ocean floor. ~5,600 lines of vanilla JS, no engine, no assets: sprites are drawn in code, sounds synthesised in the browser. <a href="abyss-warden/">Play it</a> (phones work).</p>
+  <section class="proj">
+    <h2>Doorly</h2>
+    <p>Flight search that prices the journey door to door, tube/train/taxi legs included, not just the fare. iOS build exists.</p>
+    <a class="shot" href="doorly/" aria-label="Try the Doorly demo"><img src="media/doorly.jpg" alt="Doorly search screen" loading="lazy"></a>
+    <p><a href="doorly/">Try the demo</a> <span class="grey small">(fake fares, labelled as such — the real thing pulls live prices)</span></p>
+  </section>
 
-  <p><b>Chess Exchange</b> — prediction market on live chess.com games. When titled players start a blitz game a market opens on the result, an LMSR market maker sets prices, six bots trade off material and clock, and the real result settles it. Play money. Runs as a server, so no web demo yet.</p>
+  <section class="proj">
+    <h2>Chelsea Bikes</h2>
+    <p>Rebuilt chelseabikes.co.uk to pitch to the shop. Their site has the phone number stuck inside an image; mine has their real prices and works offline. Not pitched yet.</p>
+    <a class="shot" href="chelsea-bikes/compare.html" aria-label="See the before and after"><img src="media/chelsea.jpg" alt="Chelsea Bikes rebuild homepage" loading="lazy"></a>
+    <p><a href="chelsea-bikes/compare.html">Before/after</a> · <a href="chelsea-bikes/">full prototype</a></p>
+  </section>
 
-  <p><b>Doorly</b> — flight search that prices the journey door to door, tube/train/taxi legs included, not just the fare. <a href="doorly/">Demo</a> (fake fares, labelled as such). iOS build exists.</p>
+  <section class="proj">
+    <h2>Chess Exchange</h2>
+    <p>Prediction market on live chess.com games. When titled players start a blitz game a market opens on the result, an LMSR market maker sets prices, six bots trade off material and clock, and the real result settles it. Play money. Runs as a server, so no web demo yet — screenshots soon.</p>
+  </section>
 
-  <p><b>Chelsea Bikes</b> — rebuilt chelseabikes.co.uk to pitch to the shop. Their site has the phone number stuck inside an image; mine has their real prices and works offline. <a href="chelsea-bikes/compare.html">Before/after</a>, <a href="chelsea-bikes/">full prototype</a>. Not pitched yet.</p>
+  <section class="proj">
+    <h2>PowerLeash</h2>
+    <p>Mac menu bar app. I measured Low Power Mode and found it throttles the CPU ~40% without touching the display refresh rate, so I built this instead: background apps get pushed onto the efficiency cores, the app in front stays fast.</p>
+    <div class="appline">
+      <img src="media/powerleash.png" alt="PowerLeash app icon">
+      <div class="m">background app: 717 → 210 Mops/s<br>frontmost app: untouched<br>restore: clean, 713 Mops/s</div>
+    </div>
+    <p><a href="downloads/PowerLeash.zip" download>Download</a> <span class="grey small">(Apple Silicon, unsigned — right click → Open)</span></p>
+  </section>
 
-  <p><b>PowerLeash</b> — Mac menu bar app. I measured Low Power Mode and found it throttles the CPU ~40% without touching the display refresh rate, so I built this instead: background apps get pushed onto the efficiency cores, the app in front stays fast. <a href="downloads/PowerLeash.zip" download>Download</a> <span class="grey small">(Apple Silicon, unsigned — right click → Open)</span>.</p>
+  <section class="proj">
+    <h2>Trading research</h2>
+    <p>A backtesting rig with pre-registration, a one-shot holdout and FDR correction. Ran 90 ideas through it and all 90 failed, which I wrote up: <a href="essays/90-Hypotheses-Zero-Edges.pdf">90 Hypotheses, Zero Edges (pdf)</a>. Also five small-account strategies taken to written verdicts (three dead), and live tournament models — the DataCrunch one is around 14th of 13,534.</p>
+    <p><a href="research.html">Longer notes here</a>.</p>
+  </section>
 
-  <p><b>Trading research</b> — a backtesting rig with pre-registration, a one-shot holdout and FDR correction. Ran 90 ideas through it and all 90 failed, which I wrote up: <a href="essays/90-Hypotheses-Zero-Edges.pdf">90 Hypotheses, Zero Edges (pdf)</a>. Also five small-account strategies taken to written verdicts (three dead), and live tournament models — the DataCrunch one is around 14th of 13,534. <a href="research.html">Longer notes here</a>.</p>
+  <section class="proj">
+    <h2>Smaller stuff</h2>
+    <p>Resale Radar (Depop/Vinted margin maths with real fees and return rates), tp-watch (pings my phone when club night tickets restock), and a batch of SEO/newsletter experiments that each had kill criteria written before launch.</p>
+  </section>
 
-  <p><b>Smaller stuff</b> — Resale Radar (Depop/Vinted margin maths with real fees and return rates), tp-watch (pings my phone when club night tickets restock), and a batch of SEO/newsletter experiments that each had kill criteria written before launch.</p>
-
-  <p class="grey small">last updated 20 aug 2026</p>
+  <footer>last updated 20 aug 2026 · <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></footer>
 </div>
+
+<script>
+  (function () {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduce && 'IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { rootMargin: '0px 0px -8% 0px' });
+      document.querySelectorAll('.proj:not(.in)').forEach(function (el) { io.observe(el); });
+    } else {
+      document.querySelectorAll('.proj').forEach(function (el) { el.classList.add('in'); });
+    }
+    var vid = document.querySelector('video');
+    if (vid && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { vid.play().catch(function(){}); } else { vid.pause(); }
+        });
+      }, { threshold: 0.2 }).observe(vid);
+    }
+  })();
+</script>
 
 </body>
 </html>
