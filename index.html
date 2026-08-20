@@ -8,217 +8,339 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
 <style>
-  /* dark by choice — everything painted explicitly */
+  /* dark by choice — every colour painted explicitly */
+  * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
     margin: 0;
-    background: #0f1216;
+    background: #0b0e11;
     color: #e6e4df;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
     line-height: 1.6;
     font-size: 16.5px;
     -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
   }
   ::selection { background: #2c4a45; color: #eef7f4; }
-  .page { max-width: 700px; margin: 0 auto; padding: 84px 22px 110px; }
-
   a { color: #8fd0c3; text-decoration: none; }
-  a:hover { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
-  a:focus-visible { outline: 2px solid #8fd0c3; outline-offset: 3px; border-radius: 2px; }
+  a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  a:focus-visible { outline: 2px solid #8fd0c3; outline-offset: 3px; border-radius: 3px; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
 
-  h1 {
+  /* ---------- hero ---------- */
+  .hero {
+    min-height: 88vh;
+    display: flex; flex-direction: column; justify-content: center;
+    max-width: 1120px; margin: 0 auto; padding: 0 24px;
+  }
+  .hero h1 {
     font-family: "Newsreader", Georgia, serif;
     font-weight: 500;
-    font-size: 2.3rem;
-    letter-spacing: -0.01em;
-    margin: 0 0 6px;
-    color: #f4f2ee;
+    font-size: clamp(2.6rem, 8vw, 5rem);
+    letter-spacing: -0.025em;
+    line-height: 1.02;
+    margin: 0 0 18px;
+    color: #f6f4f0;
   }
-  .sub { color: #8d949a; margin: 0 0 34px; font-size: 0.95rem; }
-  .sub a { color: #8d949a; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #3d454c; }
-  .sub a:hover { color: #cfd5d9; }
-  .lede {
-    font-family: "Newsreader", Georgia, serif;
-    font-style: italic;
-    font-size: 1.25rem;
-    color: #b9bfc4;
-    margin: 0;
+  .hero .sub { color: #8d949a; margin: 0; font-size: 1rem; }
+  .hero .sub a { color: #b9c0c6; }
+  .cue {
+    margin-top: 54px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: #5d666e;
+  }
+  .cue span { display: inline-block; animation: bob 2.4s ease-in-out infinite; }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+
+  /* ---------- pinned chapters ---------- */
+  .chapter {
+    max-width: 1120px; margin: 0 auto; padding: 0 24px;
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: 0 64px;
+    align-items: start;
   }
 
-  .proj { margin-top: 100px; padding-top: 34px; border-top: 1px solid #232930; }
-  .proj h2 {
+  /* the media that holds still */
+  .pin {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex; align-items: center;
+    order: 2;
+  }
+  .frame {
+    width: 100%;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.09);
+    background: #0b0e11;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.55);
+    transform: scale(0.965);
+    opacity: 0.5;
+    transition: transform 0.9s cubic-bezier(0.22,1,0.36,1), opacity 0.9s ease, border-color 0.9s ease;
+  }
+  .chapter.active .frame { transform: scale(1); opacity: 1; border-color: rgba(255,255,255,0.16); }
+  .frame video, .frame img { display: block; width: 100%; height: auto; }
+  .frame.plain { border: none; box-shadow: none; background: none; }
+
+  /* the text that scrolls past it */
+  .beats { order: 1; padding: 14vh 0 8vh; }
+  .beat { min-height: 48vh; display: flex; flex-direction: column; justify-content: center; }
+  .beat:last-child { min-height: 34vh; }
+  .beat > * {
+    opacity: 0; transform: translateY(22px);
+    transition: opacity 0.8s ease, transform 0.9s cubic-bezier(0.22,1,0.36,1);
+  }
+  .beat.in > * { opacity: 1; transform: none; }
+  .beat.in > *:nth-child(2) { transition-delay: 0.08s; }
+  .beat.in > *:nth-child(3) { transition-delay: 0.16s; }
+  .beat.in > *:nth-child(4) { transition-delay: 0.24s; }
+
+  h2 {
     font-family: "Newsreader", Georgia, serif;
     font-weight: 500;
-    font-size: 1.65rem;
-    letter-spacing: -0.005em;
-    margin: 0 0 4px;
-    color: #f4f2ee;
+    font-size: clamp(1.9rem, 4vw, 2.7rem);
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+    margin: 0 0 8px;
+    color: #f6f4f0;
   }
   .meta {
     font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
-    color: #6d757d;
-    margin: 0 0 16px;
+    font-size: 0.72rem; letter-spacing: 0.07em; color: #6d757d; margin: 0 0 18px;
   }
-  .proj p { margin: 0 0 14px; max-width: 62ch; }
+  p { margin: 0 0 14px; max-width: 46ch; }
   .grey { color: #8d949a; }
-  .small { font-size: 0.85rem; }
-
-  .shot {
-    display: block;
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.09);
-    box-shadow: 0 18px 48px rgba(0,0,0,0.5);
-    margin: 22px 0 18px;
-    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s ease, border-color 0.4s ease;
-    background: #0f1216;
+  .small { font-size: 0.86rem; }
+  .cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 6px; font-size: 0.95rem;
   }
-  a.shot:hover { transform: translateY(-3px); box-shadow: 0 26px 64px rgba(0,0,0,0.62); border-color: rgba(255,255,255,0.16); text-decoration: none; }
-  .shot img, .shot video { display: block; width: 100%; height: auto; }
+  .cta::after { content: "→"; transition: transform 0.35s cubic-bezier(0.22,1,0.36,1); }
+  .cta:hover { text-decoration: none; }
+  .cta:hover::after { transform: translateX(5px); }
 
-  .strip { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 0 0 18px; }
-  .strip .shot { margin: 0; }
-  @media (max-width: 540px) { .strip { grid-template-columns: 1fr; } }
-
-  .appline { display: flex; align-items: center; gap: 18px; margin: 22px 0 18px; }
-  .appline img { width: 88px; height: 88px; flex: none; filter: drop-shadow(0 12px 26px rgba(0,0,0,0.55)); }
-  .appline .m {
+  .mono-stat {
     font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    font-size: 0.82rem; color: #9aa8b0; line-height: 1.75;
+    font-size: 0.8rem; color: #9aa8b0; line-height: 1.85;
     font-variant-numeric: tabular-nums;
+    border-left: 1px solid #2b333c; padding-left: 15px;
   }
 
-  .maths {
-    border-left: 1px solid #2b333c;
-    padding-left: 16px;
-    margin: 0 0 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 13px;
-  }
+  /* maths blocks — held back until MATHS = True in build.py */
+  .maths { border-left: 1px solid #2b333c; padding-left: 16px; margin: 0 0 20px; display: flex; flex-direction: column; gap: 13px; }
   .maths .row { display: flex; flex-direction: column; gap: 3px; }
-  .maths code {
-    font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    font-size: 0.76rem;
-    color: #9db0ba;
-    font-variant-numeric: tabular-nums;
-  }
-  .maths .why {
-    font-size: 0.9rem;
-    color: #8d949a;
-    max-width: 58ch;
+  .maths code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.78rem; color: #a6dbd0; font-variant-numeric: tabular-nums; }
+  .maths .why { font-size: 0.9rem; color: #8d949a; max-width: 46ch; }
+
+  /* ---------- quiet sections (no media) ---------- */
+  .quiet { max-width: 1120px; margin: 0 auto; padding: 14vh 24px; }
+  .quiet .inner { max-width: 52ch; }
+  .quiet h2 { font-size: clamp(1.7rem, 3.4vw, 2.3rem); }
+  .fade { opacity: 0; transform: translateY(22px); transition: opacity 0.8s ease, transform 0.9s cubic-bezier(0.22,1,0.36,1); }
+  .fade.in { opacity: 1; transform: none; }
+
+  .appline { display: flex; align-items: center; gap: 20px; }
+  .appline img { width: 96px; height: 96px; flex: none; filter: drop-shadow(0 14px 30px rgba(0,0,0,0.6)); }
+
+  footer { border-top: 1px solid #1d232a; margin-top: 8vh; }
+  footer .wrap { padding-top: 30px; padding-bottom: 90px; color: #8d949a; font-size: 0.88rem; }
+  footer a { color: #b9c0c6; }
+
+  /* ---------- mobile ---------- */
+  @media (max-width: 860px) {
+    .chapter { grid-template-columns: 1fr; gap: 0; }
+    .pin { position: sticky; top: 0; height: auto; padding: 14px 0 20px; order: 1;
+           background: linear-gradient(#0b0e11 80%, rgba(11,14,17,0)); z-index: 2; }
+    .beats { order: 2; padding: 3vh 0 8vh; }
+    .beat { min-height: 34vh; }
+    .frame { opacity: 1; transform: none; }
+    p { max-width: none; }
   }
 
-  footer { margin-top: 110px; padding-top: 26px; border-top: 1px solid #232930; color: #8d949a; font-size: 0.88rem; }
-  footer a { color: #8d949a; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #3d454c; }
-  footer a:hover { color: #cfd5d9; }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .proj { opacity: 0; transform: translateY(24px); transition: opacity 0.75s ease, transform 0.75s cubic-bezier(0.22,1,0.36,1), border-color 0.4s; }
-    .proj.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .beat > *, .fade { opacity: 1; transform: none; transition: none; }
+    .frame { opacity: 1; transform: none; transition: none; }
+    .cue span { animation: none; }
   }
 </style>
 </head>
 <body>
 
 
-<div class="page">
+<header class="hero">
   <h1>Charlie Wuytack</h1>
   <p class="sub">Exeter, UK &nbsp;·&nbsp; <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a> &nbsp;·&nbsp; <a href="https://github.com/Charliewytk">github</a></p>
-  <!-- CHARLIE: your words here — why you made it, the design decisions, the math, any ML -->
+  <p class="cue"><span>scroll ↓</span></p>
+</header>
 
-  <section class="proj in">
-    <h2>Abyss Warden</h2>
-    <p class="meta">browser game · vanilla js + canvas + web audio</p>
-    <p>My favourite video game of all time is Kingdom Rush. It is a niche indie strategy tower defence game. Here is my attempt at making something similar, no assets no engine, pure code - but with a deep sea theme.</p>
-    <a class="shot" href="abyss-warden/" aria-label="Play Abyss Warden">
-      <video autoplay muted loop playsinline preload="metadata" poster="media/abyss-poster.jpg">
+<section class="chapter" id="abyss">
+  <div class="pin">
+    <div class="frame">
+      <video muted loop playsinline preload="none" poster="media/abyss-poster.jpg">
         <source src="media/abyss.mp4" type="video/mp4">
       </video>
-    </a>
-    <div class="strip">
-      <a class="shot" href="abyss-warden/"><img src="media/abyss-2.jpg" alt="Boss fight" loading="lazy"></a>
-      <a class="shot" href="abyss-warden/"><img src="media/abyss-3.jpg" alt="Station upgrades" loading="lazy"></a>
     </div>
-    <p><a href="abyss-warden/">Play it</a> — free, no install, phones work.</p>
-  </section>
-
-  <section class="proj">
-    <h2>Doorly</h2>
-    <p class="meta">flight search · web + ios</p>
-    <p>One only flies to get from point A to point B. But I found that websites such as flightscanner did not account for the prices and time taken to get to and from the airport on either side. For example, a flight from Heathrow may cost £120 and from City £130. Of which normal flight trackers would recommend Heathrow as it is cheaper. However, taking into account where you live, at least for me, City would end up being cheaper.</p>
-    <a class="shot" href="doorly/" aria-label="Try the Doorly demo"><img src="media/doorly.jpg" alt="Doorly search screen" loading="lazy"></a>
-    <p><a href="doorly/">Try the demo</a> <span class="grey small">(demo fares, labelled as such — the real thing pulls live prices)</span></p>
-  </section>
-
-  <section class="proj">
-    <h2>Chelsea Bikes</h2>
-    <p class="meta">redesign · pitch for a real shop</p>
-    <p>My local bike shop. I bought my bike there (second hand as I think most things are better value for money second hand). I also do some repairs there. However, sometimes I found using the website to not be very good and clean, potentially reducing customers and so revenue and so profits. Hence, I have created a website, that is yet to be pitched, that should increase customers and so forth.</p>
-    <a class="shot" href="chelsea-bikes/compare.html" aria-label="See the before and after"><img src="media/chelsea.jpg" alt="Chelsea Bikes rebuild homepage" loading="lazy"></a>
-    <p><a href="chelsea-bikes/compare.html">Before/after</a> · <a href="chelsea-bikes/">full prototype</a></p>
-  </section>
-
-  <section class="proj">
-    <h2>Chess Exchange</h2>
-    <p class="meta">prediction market · live chess.com data</p>
-    <p>Simply I think it would be fun to live bet on chess games. I am a fan of poker - it being about half skill and half luck - and I feel chess exchange would be more of an 80/20 split, with the luck landing on whether a player plays what you think is the best move.</p>
-    <div class="shot"><img src="media/chess.jpg" alt="Chess Exchange: live markets on chess.com and lichess games, with bot traders and a live trade tape" loading="lazy"></div>
-    <p class="grey small">Runs as a live server, so there is no hosted demo yet — this is it running on my machine.</p>
-    </section>
-
-  <section class="proj">
-    <h2>PowerLeash</h2>
-    <p class="meta">mac menu bar app · swift</p>
-    <p>A custom low power mode for macOS. I assumed low power mode capped my screen at 60Hz. I measured it and it doesn't — it throttles the CPU ~40% while the panel stays at 120Hz. So instead I move background tasks to the efficiency cores and leave whatever's in front at full speed.</p>
-    <div class="appline">
-      <img src="media/powerleash.png" alt="PowerLeash app icon">
-      <div class="m">background app: 717 → 210 Mops/s<br>frontmost app: untouched<br>restore: clean, 713 Mops/s</div>
+  </div>
+  <div class="beats">
+    <div class="beat">
+      <h2>Abyss Warden</h2>
+      <p class="meta">browser game · vanilla js + canvas + web audio</p>
+      <p>My favourite video game of all time is Kingdom Rush. It is a niche indie strategy tower defence game. Here is my attempt at making something similar, no assets no engine, pure code - but with a deep sea theme.</p>
     </div>
-    <p><a href="downloads/PowerLeash.zip" download>Download</a> <span class="grey small">(Apple Silicon, unsigned — right click → Open)</span></p>
-  </section>
+    <div class="beat">
+      <p class="mono-stat">~5,600 lines of vanilla JS<br>no engine, no external assets<br>every sprite drawn in code<br>every sound synthesised live</p>
+    </div>
+    <div class="beat">
+      <a class="cta" href="abyss-warden/">Play it in your browser</a>
+      <p class="grey small">Free, no install. Works on phones.</p>
+    </div>
+  </div>
+</section>
 
-  <section class="proj">
+<section class="chapter" id="doorly">
+  <div class="pin">
+    <div class="frame">
+      <video muted loop playsinline preload="none" poster="media/doorly.jpg">
+        <source src="media/doorly-demo.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+  <div class="beats">
+    <div class="beat">
+      <h2>Doorly</h2>
+      <p class="meta">flight search · web + ios</p>
+      <p>One only flies to get from point A to point B. But I found that websites such as flightscanner did not account for the prices and time taken to get to and from the airport on either side.</p>
+    </div>
+    <div class="beat">
+      <p>For example, a flight from Heathrow may cost £120 and from City £130. Of which normal flight trackers would recommend Heathrow as it is cheaper. However, taking into account where you live, at least for me, City would end up being cheaper.</p>
+    </div>
+    <div class="beat">
+      <a class="cta" href="doorly/">Try the demo</a>
+      <p class="grey small">Demo fares, labelled as such — the real thing pulls live prices.</p>
+    </div>
+  </div>
+</section>
+
+<section class="chapter" id="chelsea">
+  <div class="pin">
+    <div class="frame">
+      <video muted loop playsinline preload="none" poster="media/chelsea.jpg">
+        <source src="media/chelsea-demo.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+  <div class="beats">
+    <div class="beat">
+      <h2>Chelsea Bikes</h2>
+      <p class="meta">redesign · pitch for a real shop</p>
+      <p>My local bike shop. I bought my bike there (second hand as I think most things are better value for money second hand). I also do some repairs there.</p>
+    </div>
+    <div class="beat">
+      <p>However, sometimes I found using the website to not be very good and clean, potentially reducing customers and so revenue and so profits. Hence, I have created a website, that is yet to be pitched, that should increase customers and so forth.</p>
+    </div>
+    <div class="beat">
+      <a class="cta" href="chelsea-bikes/compare.html">See before and after</a>
+      <p class="grey small"><a href="chelsea-bikes/">Or browse the full prototype</a> — eleven pages, works offline.</p>
+    </div>
+  </div>
+</section>
+
+<section class="chapter" id="chess">
+  <div class="pin">
+    <div class="frame">
+      <video muted loop playsinline preload="none" poster="media/chess.jpg">
+        <source src="media/chess-demo.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+  <div class="beats">
+    <div class="beat">
+      <h2>Chess Exchange</h2>
+      <p class="meta">prediction market · live chess.com data</p>
+      <p>Simply I think it would be fun to live bet on chess games. I am a fan of poker - it being about half skill and half luck - and I feel chess exchange would be more of an 80/20 split, with the luck landing on whether a player plays what you think is the best move.</p>
+    </div>
+    <div class="beat">
+      <p class="mono-stat">markets open on live titled-player games<br>six bots trading against you<br>the real result settles the market</p>
+    </div>
+    <div class="beat">
+      <p class="grey small">Runs as a live server, so there is no hosted demo yet — this is it running on my machine.</p>
+    </div>
+  </div>
+</section>
+
+<section class="chapter" id="powerleash">
+  <div class="pin">
+    <div class="frame plain">
+      <div class="appline">
+        <img src="media/powerleash.png" alt="PowerLeash app icon">
+        <div class="mono-stat">background app: 717 → 210 Mops/s<br>frontmost app: untouched<br>restore: clean, 713 Mops/s</div>
+      </div>
+    </div>
+  </div>
+  <div class="beats">
+    <div class="beat">
+      <h2>PowerLeash</h2>
+      <p class="meta">mac menu bar app · swift</p>
+      <p>A custom low power mode for macOS. I assumed low power mode capped my screen at 60Hz. I measured it and it doesn't — it throttles the CPU ~40% while the panel stays at 120Hz.</p>
+    </div>
+    <div class="beat">
+      <p>So instead I move background tasks to the efficiency cores and leave whatever's in front at full speed.</p>
+      <a class="cta" href="downloads/PowerLeash.zip" download>Download for Mac</a>
+      <p class="grey small">Apple Silicon, unsigned — right click → Open.</p>
+    </div>
+  </div>
+</section>
+
+<section class="quiet" id="research">
+  <div class="inner fade">
     <h2>Trading research</h2>
     <p class="meta">machine learning · backtesting rig · live tournaments</p>
     <p class="grey small">Still writing this one up properly — more tomorrow.</p>
-    <!-- CHARLIE: your words here — why you made it, the design decisions, the math, any ML -->
     <p><a href="essays/90-Hypotheses-Zero-Edges-short.pdf">90 Hypotheses, Zero Edges (pdf)</a> · <a href="research.html">longer notes</a></p>
-  </section>
+  </div>
+</section>
 
-  <section class="proj">
+<section class="quiet" id="exeter">
+  <div class="inner fade">
     <h2>Exeter auto buys</h2>
     <p class="meta">ticket watcher · mac + cloud</p>
     <p>I may be going to the University of Exeter to study economics in September. To prepare I built a bot that watches the events that sell out fastest and alerts me the second tickets appear.</p>
-  </section>
+  </div>
+</section>
 
-  <footer>21 aug 2026 &nbsp;·&nbsp; <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></footer>
-</div>
+<footer>
+  <div class="wrap">21 aug 2026 &nbsp;·&nbsp; <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a> &nbsp;·&nbsp; <a href="https://github.com/Charliewytk">github</a></div>
+</footer>
 
 <script>
   (function () {
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!reduce && 'IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-        });
-      }, { rootMargin: '0px 0px -8% 0px' });
-      document.querySelectorAll('.proj:not(.in)').forEach(function (el) { io.observe(el); });
-    } else {
-      document.querySelectorAll('.proj').forEach(function (el) { el.classList.add('in'); });
-    }
-    var vid = document.querySelector('video');
-    if (vid && 'IntersectionObserver' in window) {
-      new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting) { vid.play().catch(function(){}); } else { vid.pause(); }
-        });
-      }, { threshold: 0.2 }).observe(vid);
-    }
+
+    var revealer = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); revealer.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -18% 0px' });
+    document.querySelectorAll('.beat, .fade').forEach(function (el) {
+      if (reduce) el.classList.add('in'); else revealer.observe(el);
+    });
+
+    var activator = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { e.target.classList.toggle('active', e.intersectionRatio > 0.18); });
+    }, { threshold: [0, 0.18, 0.5] });
+    document.querySelectorAll('.chapter').forEach(function (c) { activator.observe(c); });
+
+    var player = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        var v = e.target;
+        if (e.isIntersecting) {
+          if (v.getAttribute('preload') === 'none') { v.setAttribute('preload', 'auto'); v.load(); }
+          v.play().catch(function () {});
+        } else { v.pause(); }
+      });
+    }, { threshold: 0.25 });
+    document.querySelectorAll('video').forEach(function (v) { player.observe(v); });
   })();
 </script>
 
