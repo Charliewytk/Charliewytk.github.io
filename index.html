@@ -78,19 +78,19 @@
     box-shadow: 0 30px 80px rgba(0,0,0,0.55);
     transform: scale(0.965);
     opacity: 0.5;
-    transition: transform 0.9s cubic-bezier(0.22,1,0.36,1), opacity 0.9s ease, border-color 0.9s ease;
+    transition: transform 1.1s cubic-bezier(0.22,1,0.36,1), opacity 1.1s ease, border-color 1.1s ease;
   }
   .chapter.active .frame { transform: scale(1); opacity: 1; border-color: rgba(255,255,255,0.16); }
   .frame video, .frame img { display: block; width: 100%; height: auto; }
   .frame.plain { border: none; box-shadow: none; background: none; }
 
   /* the text that scrolls past it */
-  .beats { order: 1; padding: 14vh 0 8vh; }
-  .beat { min-height: 48vh; display: flex; flex-direction: column; justify-content: center; }
-  .beat:last-child { min-height: 34vh; }
+  .beats { order: 1; padding: 18vh 0 10vh; }
+  .beat { min-height: 66vh; display: flex; flex-direction: column; justify-content: center; }
+  .beat:last-child { min-height: 44vh; }
   .beat > * {
     opacity: 0; transform: translateY(22px);
-    transition: opacity 0.8s ease, transform 0.9s cubic-bezier(0.22,1,0.36,1);
+    transition: opacity 0.95s ease, transform 1.05s cubic-bezier(0.22,1,0.36,1);
   }
   .beat.in > * { opacity: 1; transform: none; }
   .beat.in > *:nth-child(2) { transition-delay: 0.08s; }
@@ -138,7 +138,7 @@
   .quiet { max-width: 1120px; margin: 0 auto; padding: 14vh 24px; }
   .quiet .inner { max-width: 52ch; }
   .quiet h2 { font-size: clamp(1.7rem, 3.4vw, 2.3rem); }
-  .fade { opacity: 0; transform: translateY(22px); transition: opacity 0.8s ease, transform 0.9s cubic-bezier(0.22,1,0.36,1); }
+  .fade { opacity: 0; transform: translateY(22px); transition: opacity 0.95s ease, transform 1.05s cubic-bezier(0.22,1,0.36,1); }
   .fade.in { opacity: 1; transform: none; }
 
   .appline { display: flex; align-items: center; gap: 20px; }
@@ -154,7 +154,7 @@
     .pin { position: sticky; top: 0; height: auto; padding: 14px 0 20px; order: 1;
            background: linear-gradient(#0b0e11 80%, rgba(11,14,17,0)); z-index: 2; }
     .beats { order: 2; padding: 3vh 0 8vh; }
-    .beat { min-height: 34vh; }
+    .beat { min-height: 46vh; }
     .frame { opacity: 1; transform: none; }
     p { max-width: none; }
   }
