@@ -3,55 +3,43 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Charlie Wuytack: games, tools and trading research you can try in the browser.">
+<meta name="description" content="Charlie Wuytack: games, tools and trading research.">
 <title>Charlie Wuytack</title>
 <style>
   :root {
     --bg: #ffffff;
     --ink: #1a1a1a;
-    --soft: #555555;
+    --soft: #666666;
     --link: #0645ad;
-    --line: #dddddd;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #16181a;
-      --ink: #d8d8d4;
-      --soft: #9a9a94;
+      --bg: #17191b;
+      --ink: #d6d6d2;
+      --soft: #96968f;
       --link: #8ab4f8;
-      --line: #33363a;
     }
   }
   :root[data-theme="dark"] {
-    --bg: #16181a;
-    --ink: #d8d8d4;
-    --soft: #9a9a94;
+    --bg: #17191b;
+    --ink: #d6d6d2;
+    --soft: #96968f;
     --link: #8ab4f8;
-    --line: #33363a;
   }
-  * { box-sizing: border-box; }
   body {
     margin: 0;
     background: var(--bg);
     color: var(--ink);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    line-height: 1.55;
+    line-height: 1.5;
     font-size: 16px;
   }
-  .page { max-width: 640px; margin: 0 auto; padding: 48px 20px 80px; }
+  .page { max-width: 580px; margin: 0 auto; padding: 44px 20px 70px; }
   a { color: var(--link); }
-  a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
-  h1 { font-size: 1.6rem; margin: 0 0 4px; }
-  .sub { color: var(--soft); margin: 0 0 24px; }
-  h2 { font-size: 1.15rem; margin: 40px 0 8px; }
-  h2 .note { font-weight: normal; font-size: 0.85rem; color: var(--soft); }
-  p { margin: 0 0 12px; }
-  ul { margin: 0 0 12px; padding-left: 22px; }
-  li { margin-bottom: 10px; }
-  .try { margin: 4px 0 0; }
-  .aside { color: var(--soft); font-size: 0.88rem; }
-  hr { border: none; border-top: 1px solid var(--line); margin: 36px 0; }
-  img { max-width: 100%; }
+  h1 { font-size: 1.35rem; margin: 0 0 2px; }
+  p { margin: 0 0 18px; }
+  .grey { color: var(--soft); }
+  .small { font-size: 0.85rem; }
 </style>
 </head>
 <body>
@@ -59,46 +47,25 @@
 
 <div class="page">
   <h1>Charlie Wuytack</h1>
-  <p class="sub">I make games, tools and trading research. This page is the stuff itself rather than writeups about it: you can play the game, run the flight search, download the Mac app.</p>
-  <p><a href="https://github.com/Charliewytk">github</a> · <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></p>
+  <p class="grey">Exeter, UK · <a href="mailto:charlie@wuytack.net">email</a> · <a href="https://github.com/Charliewytk">github</a></p>
 
-  <hr>
+  <p>Things I've made. Most of them work right here on this page.</p>
 
-  <h2>Abyss Warden</h2>
-  <p>A tower defence game set on the ocean floor. I wrote it in plain JavaScript on canvas, about 5,600 lines, with no assets at all: every sprite is drawn in code and every sound is synthesised in the browser while you play. Five bosses, around 20 levels, works with touch. It's finished, and builds are packaged for itch.io, Newgrounds and a few other portals.</p>
-  <p class="try">→ <a href="abyss-warden/">Play it in your browser</a> (phones work too)</p>
+  <p><b>Abyss Warden</b> — tower defence game set on the ocean floor. ~5,600 lines of vanilla JS, no engine, no assets: sprites are drawn in code, sounds synthesised in the browser. <a href="abyss-warden/">Play it</a> (phones work).</p>
 
-  <h2>Chess Exchange <span class="note">new this week</span></h2>
-  <p>A play-money prediction market on real chess.com games. When titled players start a blitz game, a market opens on the result, priced off their Elo gap and draw rates. When the actual game ends, the market resolves and winning shares pay out. There's an automated market maker so you can always trade, plus six bots with different personalities that price replays off material and the clock, so a blunder makes the odds jump like it would on Polymarket. No frameworks, no real money.</p>
-  <p class="try aside">It runs as a live server so I can't embed it in this static site. Hosted demo coming; ask me for a walkthrough in the meantime.</p>
+  <p><b>Chess Exchange</b> — prediction market on live chess.com games. When titled players start a blitz game a market opens on the result, an LMSR market maker sets prices, six bots trade off material and clock, and the real result settles it. Play money. Runs as a server, so no web demo yet.</p>
 
-  <h2>Doorly</h2>
-  <p>Flight search that prices the whole journey door to door, because a cheap fare from an airport that costs £30 and two hours to reach isn't cheap. You type where you're starting and where you're staying, pick how you'd get to and from each airport (tube, train, coach, taxi, bike), and it re-ranks everything live. There's an iOS build too.</p>
-  <p class="try">→ <a href="doorly/">Try the demo</a> <span class="aside">(demo fares, clearly labelled; the real thing pulls live prices)</span></p>
+  <p><b>Doorly</b> — flight search that prices the journey door to door, tube/train/taxi legs included, not just the fare. <a href="doorly/">Demo</a> (fake fares, labelled as such). iOS build exists.</p>
 
-  <h2>Chelsea Bikes rebuild</h2>
-  <p>I rebuilt chelseabikes.co.uk as a pitch for the shop. Their current site has the phone number locked inside an image so nobody can tap to call, and dead links that resolve to adverts. My version is eleven pages with their real servicing prices, live filters on the bike listings, and booking forms, and it works offline. Haven't pitched the owner yet.</p>
-  <p class="try">→ <a href="chelsea-bikes/compare.html">Before and after</a> · <a href="chelsea-bikes/">the full prototype</a></p>
+  <p><b>Chelsea Bikes</b> — rebuilt chelseabikes.co.uk to pitch to the shop. Their site has the phone number stuck inside an image; mine has their real prices and works offline. <a href="chelsea-bikes/compare.html">Before/after</a>, <a href="chelsea-bikes/">full prototype</a>. Not pitched yet.</p>
 
-  <h2>PowerLeash</h2>
-  <p>A Mac menu bar app. I originally wanted to stop Low Power Mode dropping my screen to 60Hz. Then I measured it: Low Power Mode never touches the screen, it just throttles the CPU by roughly 40%, which is why everything feels worse while the panel happily runs at 120Hz. So I built what I actually wanted instead. It pushes background apps onto the efficiency cores (via the same public API as <code>taskpolicy -b</code>) and leaves whatever you're looking at running at full speed.</p>
-  <p class="try">→ <a href="downloads/PowerLeash.zip" download>Download</a> <span class="aside">(Apple Silicon, unsigned for now: right-click → Open the first time)</span></p>
+  <p><b>PowerLeash</b> — Mac menu bar app. I measured Low Power Mode and found it throttles the CPU ~40% without touching the display refresh rate, so I built this instead: background apps get pushed onto the efficiency cores, the app in front stays fast. <a href="downloads/PowerLeash.zip" download>Download</a> <span class="grey small">(Apple Silicon, unsigned — right click → Open)</span>.</p>
 
-  <h2>Trading research</h2>
-  <p>The long version has <a href="research.html">its own page</a>. The short version: I built a backtesting rig designed to stop me fooling myself (every hypothesis pre-registered before touching data, a one-shot holdout, false-discovery correction across everything ever tested), then ran 90 ideas through it. All 90 failed. I wrote that up as an essay because a documented zero is worth more than an undocumented maybe.</p>
-  <p>Separately, I took five "works at small size" strategies to written verdicts (three dead, one honest upper bound, one small but real, now running), and I keep live models in a few ML tournaments. The DataCrunch one is currently ranked about 14th of 13,534.</p>
-  <p class="try">→ <a href="research.html">Research notes</a> · <a href="essays/90-Hypotheses-Zero-Edges.pdf">the essay (pdf)</a></p>
+  <p><b>Trading research</b> — a backtesting rig with pre-registration, a one-shot holdout and FDR correction. Ran 90 ideas through it and all 90 failed, which I wrote up: <a href="essays/90-Hypotheses-Zero-Edges.pdf">90 Hypotheses, Zero Edges (pdf)</a>. Also five small-account strategies taken to written verdicts (three dead), and live tournament models — the DataCrunch one is around 14th of 13,534. <a href="research.html">Longer notes here</a>.</p>
 
-  <h2>Smaller things</h2>
-  <ul>
-    <li><b>Resale Radar</b>. Tracks Depop/Vinted/eBay listings over time and models the actual fees and return rates, so "is this item worth stocking" gets a number instead of a guess. Saves get weighted well above likes; a save is someone planning to buy, a like is a bookmark.</li>
-    <li><b>tp-watch</b>. Watches club night ticket pages in Exeter and pings my phone the moment something changes. Two halves: my laptop polls every 20 seconds when awake, a cloud copy covers 3am drops, and a deadman switch tells me if the watcher itself dies.</li>
-    <li><b>Trying new things</b>. A batch of small internet experiments (programmatic SEO sites, an audit service, a newsletter). The rule I set myself: the conditions for killing each one were written down before it launched.</li>
-  </ul>
+  <p><b>Smaller stuff</b> — Resale Radar (Depop/Vinted margin maths with real fees and return rates), tp-watch (pings my phone when club night tickets restock), and a batch of SEO/newsletter experiments that each had kill criteria written before launch.</p>
 
-  <hr>
-
-  <p class="aside">August 2026: tournament models resubmitting weekly, Chess Exchange just shipped, tender scanner going live soon. Most of the code above is in private repos; happy to walk through any of it, failures included. <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></p>
+  <p class="grey small">last updated 20 aug 2026</p>
 </div>
 
 </body>

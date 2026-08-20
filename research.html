@@ -64,7 +64,7 @@
 <div class="page">
   <p><a href="index.html">← back</a></p>
   <h1>Research notes</h1>
-  <p>This is the trading and ML side of what I do, in one place. It's mostly a story about learning not to trust my own backtests, and what I built once I stopped trusting them. The failures are documented as carefully as the wins, because the failures are where the method came from.</p>
+  <p>The trading and ML side of what I do. Mostly it's about learning not to trust my own backtests, and what I built after I stopped.</p>
 
   <hr>
 
@@ -72,7 +72,7 @@
   <p>Data science tournaments are the one place a solo researcher gets an honest scoreboard: fixed data, thousands of competitors, and no way to grade your own homework. I keep live models in three.</p>
 
   <h3>DataCrunch</h3>
-  <p>Four model generations so far. Each one got promoted only after multi-seed confirmation runs on a held-out window; the final one was confirmed across 7 seeds before I staged it. The v3 regression is in the table because pretending it didn't happen would defeat the purpose of keeping a log.</p>
+  <p>Four model generations so far. Each one got promoted only after multi-seed confirmation runs on a held-out window; the final one was confirmed across 7 seeds before I staged it. The v3 regression is left in because it happened.</p>
   <div class="tw"><table>
     <tr><th>Generation</th><th>Cloud score</th><th></th></tr>
     <tr><td>v1</td><td class="num">0.0394</td><td>baseline</td></tr>
@@ -91,20 +91,20 @@
   <hr>
 
   <h2>The hypothesis rig</h2>
-  <p>The core problem with backtesting lots of ideas: at a 5% significance level, 100 uncorrected tests will hand you about 5 false edges by pure chance, and they look exactly like real ones. Clean equity curves, good p-values, plausible stories. So I built infrastructure where fooling myself is structurally hard, not just discouraged:</p>
+  <p>If you backtest 100 ideas at a 5% significance level, about 5 will pass by pure chance, with clean equity curves and good p-values. So the rig makes fooling myself hard:</p>
   <ul>
     <li>Every hypothesis is registered before any data gets touched: the claim, direction, universe, holding period and pass criterion, timestamped into an append-only log that's hash-chained, so editing or deleting any row breaks verification for everything after it. A failed idea counts against me forever.</li>
     <li>Benjamini-Hochberg correction is recomputed across every hypothesis ever tested, every time results are read. No raw p-value is ever shown without its corrected value next to it. There's a test that enforces this.</li>
-    <li>The holdout is sealed behind a fixed calendar date and each hypothesis gets one shot at it. The attempt is written to a ledger before the test runs, so a crash still burns it. "It crashed, run it again" is a retesting loophole and it's closed.</li>
+    <li>The holdout is sealed behind a fixed calendar date and each hypothesis gets one shot at it. The attempt is written to a ledger before the test runs, so a crash still burns it.</li>
     <li>Parameter sweeps are refused at registration. If you want three variants of an idea, that's three registrations, and all three count against the correction.</li>
   </ul>
   <p>It also refuses to pretend about data quality. Free data can't make most stock universes survivorship-free (yfinance only knows tickers that exist today, so every delisting and bankruptcy is silently missing), so instead of pretending otherwise, results from biased universes get stamped as upper bounds. Every field carries a known-as-of date so restated fundamentals can't leak the future into the past.</p>
-  <p>I ran 90 registered hypotheses through it. Zero survived. That's the rig working, not failing: it refused to hand me a fake edge to lose money on. The full audit trail became a 6,600 word essay, <a href="essays/90-Hypotheses-Zero-Edges.pdf">90 Hypotheses, Zero Edges (pdf)</a>.</p>
+  <p>90 registered hypotheses went through it. Zero survived. Annoying, but that's the job. The audit trail became an essay: <a href="essays/90-Hypotheses-Zero-Edges.pdf">90 Hypotheses, Zero Edges (pdf)</a>.</p>
 
   <hr>
 
   <h2>Strategy verdicts</h2>
-  <p>A separate project: five strategies that plausibly work at small size but not fund size, each taken to a final written verdict on free data with costs included. Most validation work quietly reports only survivors, so here's the whole table:</p>
+  <p>A separate project: five strategies that plausibly work at small size but not fund size, each taken to a written verdict on free data with costs included. The whole table, dead ones included:</p>
   <div class="tw"><table>
     <tr><th>Strategy</th><th>Verdict</th><th>What decided it</th></tr>
     <tr><td>CEF discount z-score</td><td>upper bound, unproven</td><td>44% of the headline return was drift rather than timing, and the survivorship bias can't be bounded</td></tr>
@@ -121,10 +121,10 @@
   <hr>
 
   <h2>Where the discipline came from</h2>
-  <p>The earliest project here was a trading bot, and it's the most instructive one because of how it ended. Its backtests kept looking too good, and each audit round found out why: optimistic fill assumptions, costs that existed in the market but not the simulator. The repo filenames tell the story on their own: <code>HONEST_FILL_BASELINE</code>, <code>FILL_REALITY_RESULT</code>, <code>BACKTEST_CALIBRATION_REPORT</code>, <code>EDGE_REMEDIATION_REPORT</code>, and eventually <code>AUTOPSY_MAIN_ENGINE</code>. I retired it and rebuilt the lessons as hard constraints in the hypothesis rig. Everything the bot let me get away with, the rig now refuses.</p>
+  <p>The earliest project here was a trading bot, and it's the most instructive one because of how it ended. Its backtests kept looking too good, and each audit round found out why: optimistic fill assumptions, costs that existed in the market but not the simulator. The repo filenames tell the story on their own: <code>HONEST_FILL_BASELINE</code>, <code>FILL_REALITY_RESULT</code>, <code>BACKTEST_CALIBRATION_REPORT</code>, <code>EDGE_REMEDIATION_REPORT</code>, and eventually <code>AUTOPSY_MAIN_ENGINE</code>. I retired it and turned the lessons into the hard constraints in the hypothesis rig above.</p>
 
   <h3>ETF selector, currently blocked</h3>
-  <p>A total-cost-of-ownership tool for ETFs that deliberately ranks nothing right now. The free-data audit found the cost stack can't be completed (tracking difference needs licensed index data, TER needs per-issuer documents, and no free source lists funds that have closed), and ranking on a partial stack would put the fund with the least data on top rather than the least cost. So instead of a confident wrong answer it reports exactly what's missing for each fund. Blocked is the honest status.</p>
+  <p>A total-cost-of-ownership tool for ETFs that deliberately ranks nothing right now. The free-data audit found the cost stack can't be completed (tracking difference needs licensed index data, TER needs per-issuer documents, and no free source lists funds that have closed), and ranking on a partial stack would put the fund with the least data on top rather than the least cost. So it just reports what's missing for each fund instead.</p>
 
   <hr>
 
