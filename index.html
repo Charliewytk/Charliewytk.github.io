@@ -373,7 +373,7 @@
   .now-playing b { color: var(--accent); font-weight: 600; }
   .mini::after {
     content: "Change the record";
-    position: absolute; left: 50%; bottom: calc(100% + 10px); transform: translateX(-50%);
+    position: absolute; left: 0; bottom: calc(100% + 10px);
     font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase;
     color: #22201d; background: #f7f7ef; padding: 5px 9px; white-space: nowrap;
     border: 1px solid #22201d; opacity: 0; transition: opacity 0.25s ease; pointer-events: none;
@@ -939,10 +939,17 @@
       var to = mini.getBoundingClientRect();
       var clone = gv.cloneNode(true);
       clone.classList.add('vinyl-clone');
+      clone.classList.remove('loading');
+      // a running CSS animation outranks an inline transform, so clear them on the clone
+      clone.style.animation = 'none';
+      var kids = clone.querySelectorAll('*');
+      for (var i = 0; i < kids.length; i++) { kids[i].style.animation = 'none'; }
       clone.style.left = from.left + 'px'; clone.style.top = from.top + 'px';
       clone.style.width = from.width + 'px'; clone.style.height = from.height + 'px';
+      clone.style.transform = 'translate(0px, 0px) scale(1)';
       document.body.appendChild(clone);
       gv.style.visibility = 'hidden';
+      void clone.offsetWidth; // commit the start state before transitioning
       requestAnimationFrame(function () {
         var sc = to.width / from.width;
         clone.style.transform = 'translate(' + (to.left - from.left) + 'px,' + (to.top - from.top) + 'px) scale(' + sc + ')';
