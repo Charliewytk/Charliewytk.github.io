@@ -6,41 +6,42 @@
 <meta name="description" content="Charlie Wuytack's trading research notes, explained in plain English.">
 <title>Research notes — Charlie Wuytack</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap">
 <style>
   body {
     margin: 0;
-    background: #0f1216;
-    color: #e6e4df;
+    background: #f7f7ef;
+    color: #22201d;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
     line-height: 1.6;
     font-size: 16.5px;
     -webkit-font-smoothing: antialiased;
   }
-  ::selection { background: #2c4a45; color: #eef7f4; }
+  ::selection { background: #e4e2d4; color: #22201d; }
   .page { max-width: 700px; margin: 0 auto; padding: 56px 22px 100px; }
 
-  a { color: #8fd0c3; text-decoration: none; }
+  a { color: #22201d; text-decoration: none; border-bottom: 1px solid #c9c6b4; }
+  a:hover { color: #a9331f; border-color: #a9331f; }
   a:hover { text-decoration: underline; text-underline-offset: 3px; }
-  a:focus-visible { outline: 2px solid #8fd0c3; outline-offset: 3px; border-radius: 2px; }
+  a:focus-visible { outline: 2px solid #a9331f; outline-offset: 3px; border-radius: 2px; }
 
-  h1 { font-family: "Newsreader", Georgia, serif; font-weight: 500; font-size: 2.1rem; margin: 14px 0; color: #f4f2ee; }
-  h2 { font-family: "Newsreader", Georgia, serif; font-weight: 500; font-size: 1.6rem; margin: 0 0 6px; color: #f4f2ee; }
-  h3 { font-size: 1rem; margin: 30px 0 8px; color: #f4f2ee; }
+  h1 { font-family: "Lora", Georgia, serif; font-weight: 600; font-size: 2.1rem; margin: 14px 0; color: #22201d; }
+  h2 { font-family: "Lora", Georgia, serif; font-weight: 600; font-size: 1.6rem; margin: 0 0 6px; color: #22201d; }
+  h3 { font-size: 1rem; margin: 30px 0 8px; color: #22201d; }
   .meta {
     font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    font-size: 0.72rem; letter-spacing: 0.06em; color: #6d757d; margin: 0 0 16px;
+    font-size: 0.72rem; letter-spacing: 0.06em; color: #8a8478; margin: 0 0 16px;
   }
   p { margin: 0 0 14px; max-width: 64ch; }
-  .lede { font-family: "Newsreader", Georgia, serif; font-style: italic; font-size: 1.2rem; color: #b9bfc4; }
+  .lede { font-family: "Lora", Georgia, serif; font-style: italic; font-size: 1.2rem; color: #4a463f; }
   ul { margin: 0 0 14px; padding-left: 22px; max-width: 62ch; }
   li { margin-bottom: 10px; }
   .back { font-size: 0.88rem; }
 
-  section { margin-top: 76px; padding-top: 30px; border-top: 1px solid #232930; }
+  section { margin-top: 76px; padding-top: 30px; border-top: 1px solid #e2dfd0; }
 
   .maths {
-    border-left: 1px solid #2b333c;
+    border-left: 1px solid #d6d3c2;
     padding-left: 16px;
     margin: 0 0 20px;
     display: flex;
@@ -50,18 +51,18 @@
   .maths .row { display: flex; flex-direction: column; gap: 3px; }
   .maths code {
     font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    font-size: 0.78rem; color: #a6dbd0; font-variant-numeric: tabular-nums;
+    font-size: 0.78rem; color: #a9331f; font-variant-numeric: tabular-nums;
   }
-  .maths .why { font-size: 0.9rem; color: #8d949a; max-width: 58ch; }
+  .maths .why { font-size: 0.9rem; color: #5f5b52; max-width: 58ch; }
 
-  .tw { overflow-x: auto; margin: 18px 0; border: 1px solid #232930; border-radius: 8px; }
+  .tw { overflow-x: auto; margin: 18px 0; border: 1px solid #e2dfd0; border-radius: 8px; }
   table { border-collapse: collapse; width: 100%; font-size: 0.87rem; }
-  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid #232930; vertical-align: top; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid #e2dfd0; vertical-align: top; }
   tr:last-child td { border-bottom: none; }
-  th { background: #161b21; font-weight: 600; color: #b9bfc4; }
+  th { background: #efeee4; font-weight: 600; color: #4a463f; }
   td.num { font-variant-numeric: tabular-nums; white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 0.82rem; }
-  footer { margin-top: 80px; padding-top: 26px; border-top: 1px solid #232930; color: #8d949a; font-size: 0.88rem; }
-  footer a { color: #8d949a; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #3d454c; }
+  footer { margin-top: 80px; padding-top: 26px; border-top: 1px solid #e2dfd0; color: #5f5b52; font-size: 0.88rem; }
+  footer a { color: #5f5b52; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #c9c6b4; }
 </style>
 </head>
 <body>

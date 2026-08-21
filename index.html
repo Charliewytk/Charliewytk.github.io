@@ -6,396 +6,379 @@
 <meta name="description" content="Charlie Wuytack: games, tools and trading research.">
 <title>Charlie Wuytack</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap">
 <style>
-  /* dark by choice — every colour painted explicitly */
+  /* light by design — cream ground, near-black ink, one red accent */
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
     margin: 0;
-    background: #0b0e11;
-    color: #e6e4df;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    line-height: 1.6;
-    font-size: 16.5px;
+    background: #f7f7ef;
+    color: #22201d;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
-  ::selection { background: #2c4a45; color: #eef7f4; }
-  a { color: #8fd0c3; text-decoration: none; }
-  a:hover { text-decoration: underline; text-underline-offset: 3px; }
-  a:focus-visible { outline: 2px solid #8fd0c3; outline-offset: 3px; border-radius: 3px; }
-  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+  ::selection { background: #e4e2d4; }
+  a { color: #22201d; text-decoration: none; border-bottom: 1px solid #c9c6b4; padding-bottom: 1px; }
+  a:hover { color: #a9331f; border-color: #a9331f; }
+  a:focus-visible { outline: 2px solid #a9331f; outline-offset: 3px; border-radius: 2px; }
 
-  /* ---------- hero ---------- */
-  .hero {
-    min-height: 88vh;
-    display: flex; flex-direction: column; justify-content: center;
-    max-width: 1120px; margin: 0 auto; padding: 0 24px;
-  }
-  .hero h1 {
-    font-family: "Newsreader", Georgia, serif;
-    font-weight: 500;
-    font-size: clamp(2.6rem, 8vw, 5rem);
-    letter-spacing: -0.025em;
-    line-height: 1.02;
-    margin: 0 0 18px;
-    color: #f6f4f0;
-  }
-  .hero .sub { color: #8d949a; margin: 0; font-size: 1rem; }
-  .hero .sub a { color: #b9c0c6; }
-  .cue {
-    margin-top: 54px;
-    font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: #5d666e;
-  }
-  .cue span { display: inline-block; animation: bob 2.4s ease-in-out infinite; }
-  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+  .shell { max-width: 1152px; margin: 0 auto; padding: 0 32px; }
 
-  /* ---------- pinned chapters ---------- */
-  .chapter {
-    max-width: 1120px; margin: 0 auto; padding: 0 24px;
-    display: grid;
-    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-    gap: 0 64px;
-    align-items: start;
+  /* ---------- masthead ---------- */
+  .masthead {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 26px 34px 34px;
+    font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase;
+    background: linear-gradient(#f7f7ef 62%, rgba(247, 247, 239, 0));
+    pointer-events: none;
+  }
+  .masthead a, .masthead .who { pointer-events: auto; }
+  .masthead a { border: none; }
+  .masthead .who { font-weight: 700; }
+
+  /* ---------- opening statement ---------- */
+  .opening {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 0 32px;
+  }
+  .opening h1 {
+    font-family: "Lora", Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(2.9rem, 8.5vw, 5.6rem);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    margin: 0;
+    max-width: 16ch;
+  }
+  .opening .under {
+    margin: 34px 0 0;
+    font-size: 0.95rem;
+    color: #5f5b52;
+    max-width: 46ch;
   }
 
-  /* the media that holds still */
-  .pin {
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    display: flex; align-items: center;
-    order: 2;
+  /* ---------- a said-out-loud statement ---------- */
+  .statement {
+    min-height: 78vh;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 0 32px;
   }
+  .statement p {
+    font-family: "Lora", Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(1.5rem, 3.2vw, 2.4rem);
+    line-height: 1.35;
+    max-width: 22ch;
+    margin: 0;
+  }
+
+  /* ---------- work ---------- */
+  .work { position: relative; padding-bottom: 12vh; }
+  .head {
+    position: sticky; top: 0; z-index: 6;
+    background: #f7f7ef;
+    padding: 11vh 32px 3.5vh;
+    text-align: center;
+  }
+  .head::after {
+    content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 46px;
+    background: linear-gradient(#f7f7ef, rgba(247, 247, 239, 0)); pointer-events: none;
+  }
+  .eyebrow {
+    font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: #8a8478; margin: 0 0 16px;
+  }
+  .head h2 {
+    font-family: "Lora", Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(2.1rem, 5vw, 3.4rem);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    margin: 0;
+  }
+  .stream { position: relative; z-index: 5; }
   .frame {
-    width: 100%;
-    border-radius: 14px;
-    overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.09);
-    background: #0b0e11;
-    box-shadow: 0 30px 80px rgba(0,0,0,0.55);
-    transform: scale(0.965);
-    opacity: 0.5;
-    transition: transform 1.1s cubic-bezier(0.22,1,0.36,1), opacity 1.1s ease, border-color 1.1s ease;
+    max-width: 1000px; margin: 0 auto 9vh;
+    border-radius: 4px; overflow: hidden;
+    background: #22201d;
+    box-shadow: 0 26px 60px rgba(34, 32, 29, 0.18);
   }
-  .chapter.active .frame { transform: scale(1); opacity: 1; border-color: rgba(255,255,255,0.16); }
   .frame video, .frame img { display: block; width: 100%; height: auto; }
-  .frame.plain { border: none; box-shadow: none; background: none; }
 
-  /* the text that scrolls past it */
-  .beats { order: 1; padding: 20vh 0 12vh; }
-  .beat { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
-  .beat:last-child { min-height: 70vh; }
-  .beat > * {
-    opacity: 0; transform: translateY(22px);
-    transition: opacity 0.95s ease, transform 1.05s cubic-bezier(0.22,1,0.36,1);
+  .say {
+    max-width: 30ch; margin: 0 auto 9vh; text-align: center;
+    font-family: "Lora", Georgia, serif;
+    font-size: clamp(1.15rem, 2.1vw, 1.5rem);
+    line-height: 1.45;
   }
-  .beat.in > * { opacity: 1; transform: none; }
-  .beat.in > *:nth-child(2) { transition-delay: 0.08s; }
-  .beat.in > *:nth-child(3) { transition-delay: 0.16s; }
-  .beat.in > *:nth-child(4) { transition-delay: 0.24s; }
+  .say.small { font-family: inherit; font-size: 0.95rem; color: #5f5b52; max-width: 44ch; }
 
-  h2 {
-    font-family: "Newsreader", Georgia, serif;
-    font-weight: 500;
-    font-size: clamp(1.9rem, 4vw, 2.7rem);
-    letter-spacing: -0.02em;
-    line-height: 1.08;
-    margin: 0 0 8px;
-    color: #f6f4f0;
+  .doing-row { text-align: center; margin: 0 auto 9vh; }
+  .doing-row .go {
+    font-family: "Lora", Georgia, serif;
+    font-size: 1.15rem; border-bottom-width: 1px;
   }
-  .meta {
-    font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    font-size: 0.72rem; letter-spacing: 0.07em; color: #6d757d; margin: 0 0 18px;
-  }
-  p { margin: 0 0 14px; max-width: 46ch; }
-  .grey { color: #8d949a; }
-  .small { font-size: 0.86rem; }
-  .cta {
-    display: inline-flex; align-items: center; gap: 8px;
-    margin-top: 6px; font-size: 0.95rem;
-  }
-  .cta::after { content: "→"; transition: transform 0.35s cubic-bezier(0.22,1,0.36,1); }
-  .cta:hover { text-decoration: none; }
-  .cta:hover::after { transform: translateX(5px); }
+  .doing-row .note { display: block; margin-top: 12px; font-size: 0.85rem; color: #8a8478; }
+  .doing-row .note a { border-color: #c9c6b4; }
 
+  /* status list */
   .todo {
-    margin: 18px 0 0; padding: 0; list-style: none;
-    font-size: 0.82rem; line-height: 1.5; max-width: 46ch;
+    list-style: none; padding: 0;
+    margin: 0 auto; max-width: 40ch; text-align: left;
+    font-size: 0.86rem;
   }
-  .todo li { display: flex; gap: 9px; margin-bottom: 6px; color: #8d949a; }
-  .todo li::before { content: "·"; color: #6d757d; flex: none; width: 9px; }
-  .todo li.done { color: #5f686f; }
-  .todo li.done::before { content: "✓"; color: #6f9d92; font-size: 0.78rem; }
-  .todo li.doing { color: #a9b3ba; }
-  .todo li.doing::before { content: "→"; color: #8fd0c3; }
-  .todo li.done span { text-decoration: line-through; text-decoration-color: #4a545b; }
+  .todo li { display: flex; gap: 10px; margin-bottom: 7px; color: #5f5b52; }
+  .todo li::before { content: "·"; color: #a9a496; flex: none; width: 10px; }
+  .todo li.done { color: #8a8478; }
+  .todo li.done::before { content: "✓"; color: #6d8a6f; font-size: 0.78rem; }
+  .todo li.done span { text-decoration: line-through; text-decoration-color: #c2bfae; }
+  .todo li.doing { color: #22201d; }
+  .todo li.doing::before { content: "→"; color: #a9331f; }
   .todo-label {
-    font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase;
-    color: #5d666e; margin: 22px 0 0;
+    text-align: center; margin: 0 0 18px;
+    font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: #a9a496;
   }
-
   .mono-stat {
     font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    font-size: 0.8rem; color: #9aa8b0; line-height: 1.85;
+    font-size: 0.8rem; line-height: 1.9; color: #5f5b52;
     font-variant-numeric: tabular-nums;
-    border-left: 1px solid #2b333c; padding-left: 15px;
+    text-align: left; max-width: 40ch; margin: 0 auto 9vh;
+    border-left: 1px solid #d6d3c2; padding-left: 16px;
   }
 
   /* maths blocks — held back until MATHS = True in build.py */
-  .maths { border-left: 1px solid #2b333c; padding-left: 16px; margin: 0 0 20px; display: flex; flex-direction: column; gap: 13px; }
-  .maths .row { display: flex; flex-direction: column; gap: 3px; }
-  .maths code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.78rem; color: #a6dbd0; font-variant-numeric: tabular-nums; }
-  .maths .why { font-size: 0.9rem; color: #8d949a; max-width: 46ch; }
+  .maths { max-width: 40ch; margin: 0 auto 9vh; border-left: 1px solid #d6d3c2; padding-left: 16px; display: flex; flex-direction: column; gap: 14px; text-align: left; }
+  .maths .row { display: flex; flex-direction: column; gap: 4px; }
+  .maths code { font-family: ui-monospace, Menlo, monospace; font-size: 0.78rem; color: #a9331f; font-variant-numeric: tabular-nums; }
+  .maths .why { font-size: 0.88rem; color: #5f5b52; }
 
-  /* ---------- quiet sections (no media) ---------- */
-  .quiet { max-width: 1120px; margin: 0 auto; padding: 14vh 24px; }
-  .quiet .inner { max-width: 52ch; }
-  .quiet h2 { font-size: clamp(1.7rem, 3.4vw, 2.3rem); }
-  .fade { opacity: 0; transform: translateY(22px); transition: opacity 0.95s ease, transform 1.05s cubic-bezier(0.22,1,0.36,1); }
-  .fade.in { opacity: 1; transform: none; }
-
-  .appline { display: flex; align-items: center; gap: 20px; }
-  .appline img { width: 96px; height: 96px; flex: none; filter: drop-shadow(0 14px 30px rgba(0,0,0,0.6)); }
-
-  footer { border-top: 1px solid #1d232a; margin-top: 8vh; }
-  footer .wrap { padding-top: 30px; padding-bottom: 90px; color: #8d949a; font-size: 0.88rem; }
-  footer .didnt {
-    font-size: 0.76rem; color: #5f686f; max-width: 68ch;
-    margin: 0 0 14px; line-height: 1.75;
+  /* ---------- quiet blocks ---------- */
+  .quiet { padding: 12vh 32px; text-align: center; }
+  .quiet .eyebrow { margin-bottom: 18px; }
+  .quiet h2 {
+    font-family: "Lora", Georgia, serif; font-weight: 600;
+    font-size: clamp(1.8rem, 3.6vw, 2.5rem); margin: 0 0 26px; letter-spacing: -0.01em;
   }
-  footer .didnt a { color: #7b858c; }
-  footer a { color: #b9c0c6; }
+  .quiet p { max-width: 40ch; margin: 0 auto 14px; color: #4a463f; }
 
-  /* ---------- mobile ---------- */
-  @media (max-width: 860px) {
-    .chapter { grid-template-columns: 1fr; gap: 0; }
-    .pin { position: sticky; top: 0; height: auto; padding: 14px 0 20px; order: 1;
-           background: linear-gradient(#0b0e11 80%, rgba(11,14,17,0)); z-index: 2; }
-    .beats { order: 2; padding: 3vh 0 8vh; }
-    .beat { min-height: 62vh; }
-    .frame { opacity: 1; transform: none; }
-    p { max-width: none; }
+  /* ---------- close ---------- */
+  .close { padding: 14vh 32px 12vh; text-align: center; border-top: 1px solid #e2dfd0; margin-top: 8vh; }
+  .close .mail {
+    font-family: "Lora", Georgia, serif;
+    font-size: clamp(1.6rem, 3.4vw, 2.2rem);
   }
+  .close .didnt {
+    margin: 44px auto 0; max-width: 60ch;
+    font-size: 0.78rem; line-height: 1.8; color: #8a8478;
+  }
+  .close .stamp { margin-top: 26px; font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: #a9a496; }
 
+  /* ---------- reveal ---------- */
+  .rise { opacity: 0; transform: translateY(20px); transition: opacity 0.9s ease, transform 1s cubic-bezier(0.22,1,0.36,1); }
+  .rise.in { opacity: 1; transform: none; }
+
+  @media (max-width: 760px) {
+    .head { padding: 8vh 22px 3vh; }
+    .frame { margin-bottom: 7vh; border-radius: 3px; }
+    .say, .mono-stat, .todo, .maths { margin-bottom: 7vh; }
+    .masthead { padding: 18px 22px; font-size: 0.7rem; }
+  }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    .beat > *, .fade { opacity: 1; transform: none; transition: none; }
-    .frame { opacity: 1; transform: none; transition: none; }
-    .cue span { animation: none; }
+    .rise { opacity: 1; transform: none; transition: none; }
   }
 </style>
 </head>
 <body>
 
 
-<header class="hero">
-  <h1>Charlie Wuytack</h1>
-  <p class="sub"><a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a> &nbsp;·&nbsp; <a href="https://github.com/Charliewytk">github</a></p>
-  <p class="cue"><span>scroll ↓</span></p>
+<div class="masthead">
+  <span class="who">Charlie Wuytack</span>
+  <a href="mailto:charlie@wuytack.net">Get in touch</a>
+</div>
+
+<header class="opening">
+  <h1>Built it. Measured it. Wrote down what broke.</h1>
+  <p class="under">Games, macOS tools, flight search, prediction markets and trading research. Most of it works right here on this page.</p>
 </header>
 
-<section class="chapter" id="abyss">
-  <div class="pin">
-    <div class="frame">
+<section class="statement">
+  <p class="rise">Five things I made, and what each one taught me.</p>
+</section>
+
+<!-- ABYSS WARDEN -->
+<section class="work" id="abyss">
+  <div class="head">
+    <p class="eyebrow">Browser game · vanilla js, canvas, web audio</p>
+    <h2>Abyss Warden</h2>
+  </div>
+  <div class="stream">
+    <div class="frame rise">
       <video muted loop playsinline preload="none" poster="media/abyss-poster.jpg">
         <source src="media/abyss.mp4" type="video/mp4">
       </video>
     </div>
-  </div>
-  <div class="beats">
-    <div class="beat">
-      <h2>Abyss Warden</h2>
-      <p class="meta">browser game · vanilla js + canvas + web audio</p>
-      <p>My favourite video game of all time is Kingdom Rush. It is a niche indie strategy tower defence game.</p>
+    <p class="say rise">My favourite video game of all time is Kingdom Rush. It is a niche indie strategy tower defence game.</p>
+    <p class="say rise">Here is my attempt at making something similar, no assets no engine, pure code - but with a deep sea theme.</p>
+    <div class="doing-row rise">
+      <a class="go" href="abyss-warden/">Play it in your browser</a>
+      <span class="note">Free, no install. Works on phones.</span>
     </div>
-    <div class="beat">
-      <p>Here is my attempt at making something similar, no assets no engine, pure code - but with a deep sea theme.</p>
-    </div>
-    <div class="beat">
-      <a class="cta" href="abyss-warden/">Play it in your browser</a>
-      <p class="grey small">Free, no install. Works on phones.</p>
-      <p class="todo-label">where it's at</p>
-      <ul class="todo">
-              <li class="done"><span>Finished — all 15 levels, 5 bosses, balance passed</span></li>
-              <li class="done"><span>Builds packaged for itch.io, Newgrounds, Poki and four other portals</span></li>
-              <li class="doing"><span>Submitting them to the portals</span></li>
-              <li><span>Nudge level 2 starting gold if 3-star rates run high</span></li>
-            </ul>
-    </div>
+    <p class="todo-label rise">Where it's at</p>
+    <ul class="todo rise">
+      <li class="done"><span>Finished — all 15 levels, 5 bosses, balance passed</span></li>
+      <li class="done"><span>Builds packaged for itch.io, Newgrounds, Poki and four other portals</span></li>
+      <li class="doing"><span>Submitting them to the portals</span></li>
+      <li><span>Nudge level 2 starting gold if 3-star rates run high</span></li>
+    </ul>
   </div>
 </section>
 
-<section class="chapter" id="doorly">
-  <div class="pin">
-    <div class="frame">
+<!-- DOORLY -->
+<section class="work" id="doorly">
+  <div class="head">
+    <p class="eyebrow">Flight search · web and ios</p>
+    <h2>Doorly</h2>
+  </div>
+  <div class="stream">
+    <div class="frame rise">
       <video muted loop playsinline preload="none" poster="media/doorly.jpg">
         <source src="media/doorly-demo.mp4" type="video/mp4">
       </video>
     </div>
-  </div>
-  <div class="beats">
-    <div class="beat">
-      <h2>Doorly</h2>
-      <p class="meta">flight search · web + ios</p>
-      <p>One only flies to get from point A to point B. But I found that websites such as flightscanner did not account for the prices and time taken to get to and from the airport on either side.</p>
+    <p class="say rise">One only flies to get from point A to point B. But I found that websites such as flightscanner did not account for the prices and time taken to get to and from the airport on either side.</p>
+    <p class="say rise">For example, a flight from Heathrow may cost £120 and from City £130. Of which normal flight trackers would recommend Heathrow as it is cheaper. However, taking into account where you live, at least for me, City would end up being cheaper.</p>
+    <div class="doing-row rise">
+      <a class="go" href="doorly/">Try the demo</a>
+      <span class="note">Demo fares, labelled as such — the real thing pulls live prices.</span>
     </div>
-    <div class="beat">
-      <p>For example, a flight from Heathrow may cost £120 and from City £130. Of which normal flight trackers would recommend Heathrow as it is cheaper. However, taking into account where you live, at least for me, City would end up being cheaper.</p>
-    </div>
-    <div class="beat">
-      <a class="cta" href="doorly/">Try the demo</a>
-      <p class="grey small">Demo fares, labelled as such — the real thing pulls live prices.</p>
-      <p class="todo-label">where it's at</p>
-      <ul class="todo">
-              <li class="done"><span>Live provider data, door-to-door ranking, iOS build via Capacitor</span></li>
-              <li><span>Connecting flights — right now it only searches direct</span></li>
-              <li><span>Host it publicly rather than running locally</span></li>
-            </ul>
-    </div>
+    <p class="todo-label rise">Where it's at</p>
+    <ul class="todo rise">
+      <li class="done"><span>Live provider data, door-to-door ranking, iOS build via Capacitor</span></li>
+      <li><span>Connecting flights — right now it only searches direct</span></li>
+      <li><span>Host it publicly rather than running locally</span></li>
+    </ul>
   </div>
 </section>
 
-<section class="chapter" id="chelsea">
-  <div class="pin">
-    <div class="frame">
+<!-- CHELSEA BIKES -->
+<section class="work" id="chelsea">
+  <div class="head">
+    <p class="eyebrow">Redesign · pitch for a real shop</p>
+    <h2>Chelsea Bikes</h2>
+  </div>
+  <div class="stream">
+    <div class="frame rise">
       <video muted loop playsinline preload="none" poster="media/chelsea.jpg">
         <source src="media/chelsea-demo.mp4" type="video/mp4">
       </video>
     </div>
-  </div>
-  <div class="beats">
-    <div class="beat">
-      <h2>Chelsea Bikes</h2>
-      <p class="meta">redesign · pitch for a real shop</p>
-      <p>My local bike shop. I bought my bike there (second hand as I think most things are better value for money second hand). I also do some repairs there.</p>
+    <p class="say rise">My local bike shop. I bought my bike there (second hand as I think most things are better value for money second hand). I also do some repairs there.</p>
+    <p class="say rise">However, sometimes I found using the website to not be very good and clean, potentially reducing customers and so revenue and so profits. Hence, I have created a website, that is yet to be pitched, that should increase customers and so forth.</p>
+    <div class="doing-row rise">
+      <a class="go" href="chelsea-bikes/compare.html">See before and after</a>
+      <span class="note"><a href="chelsea-bikes/">Or browse the full prototype</a> — eleven pages, works offline.</span>
     </div>
-    <div class="beat">
-      <p>However, sometimes I found using the website to not be very good and clean, potentially reducing customers and so revenue and so profits. Hence, I have created a website, that is yet to be pitched, that should increase customers and so forth.</p>
-    </div>
-    <div class="beat">
-      <a class="cta" href="chelsea-bikes/compare.html">See before and after</a>
-      <p class="grey small"><a href="chelsea-bikes/">Or browse the full prototype</a> — eleven pages, works offline.</p>
-      <p class="todo-label">where it's at</p>
-      <ul class="todo">
-              <li class="done"><span>Prototype finished — 11 pages, accessibility pass, works offline</span></li>
-              <li class="done"><span>Pitch materials: before/after tool, one-page leave-behind, quote template</span></li>
-              <li class="done"><span>Photo-drop system, so real shop photos replace the illustrations instantly</span></li>
-              <li><span>Pitch it to the owner</span></li>
-            </ul>
-    </div>
+    <p class="todo-label rise">Where it's at</p>
+    <ul class="todo rise">
+      <li class="done"><span>Prototype finished — 11 pages, accessibility pass, works offline</span></li>
+      <li class="done"><span>Pitch materials: before/after tool, one-page leave-behind, quote template</span></li>
+      <li class="done"><span>Photo-drop system, so real shop photos replace the illustrations instantly</span></li>
+      <li><span>Pitch it to the owner</span></li>
+    </ul>
   </div>
 </section>
 
-<section class="chapter" id="chess">
-  <div class="pin">
-    <div class="frame">
+<!-- CHESS EXCHANGE -->
+<section class="work" id="chess">
+  <div class="head">
+    <p class="eyebrow">Prediction market · live lichess and chess.com games</p>
+    <h2>Chess Exchange</h2>
+  </div>
+  <div class="stream">
+    <div class="frame rise">
       <video muted loop playsinline preload="none" poster="media/chess.jpg">
         <source src="media/chess-demo.mp4" type="video/mp4">
       </video>
     </div>
-  </div>
-  <div class="beats">
-    <div class="beat">
-      <h2>Chess Exchange</h2>
-      <p class="meta">prediction market · live lichess + chess.com games</p>
-      <p>Simply I think it would be fun to live bet on chess games.</p>
-    </div>
-    <div class="beat">
-      <p>I am a fan of poker - it being about half skill and half luck - and I feel chess exchange would be more of an 80/20 split, with the luck landing on whether a player plays what you think is the best move.</p>
-    </div>
-        <div class="beat">
-      <p class="grey small">Runs as a live server, so there is no hosted demo yet — this is it running on my machine.</p>
-      <p class="todo-label">where it's at</p>
-      <ul class="todo">
-              <li class="done"><span>Live boards from lichess TV, markets on chess.com titled games</span></li>
-              <li class="done"><span>LMSR market maker, six liquidity bots, replays at true clock speed</span></li>
-              <li><span>Host it so it is playable rather than a video</span></li>
-              <li><span>Long term: real players betting against each other, not bots</span></li>
-            </ul>
-    </div>
+    <p class="say rise">Simply I think it would be fun to live bet on chess games.</p>
+    <p class="say rise">I am a fan of poker - it being about half skill and half luck - and I feel chess exchange would be more of an 80/20 split, with the luck landing on whether a player plays what you think is the best move.</p>
+    <p class="say small rise">Runs as a live server, so there is no hosted demo yet — this is it running on my machine.</p>
+    <p class="todo-label rise">Where it's at</p>
+    <ul class="todo rise">
+      <li class="done"><span>Live boards from lichess TV, markets on chess.com titled games</span></li>
+      <li class="done"><span>LMSR market maker, six liquidity bots, replays at true clock speed</span></li>
+      <li><span>Host it so it is playable rather than a video</span></li>
+      <li><span>Long term: real players betting against each other, not bots</span></li>
+    </ul>
   </div>
 </section>
 
-<section class="chapter" id="powerleash">
-  <div class="pin">
-    <div class="frame plain">
-      <div class="appline">
-        <img src="media/powerleash.png" alt="PowerLeash app icon">
-        <div class="mono-stat">eco mode · background app: 717 → 210 Mops/s<br>frontmost app: untouched<br><br>match charger on a 45W adapter:<br>system load: 59.0 → 42.7 W<br>battery flow: −15.6 → −3.5 W</div>
-      </div>
-    </div>
+<!-- POWERLEASH -->
+<section class="work" id="powerleash">
+  <div class="head">
+    <p class="eyebrow">Mac menu bar app · swift</p>
+    <h2>PowerLeash</h2>
   </div>
-  <div class="beats">
-    <div class="beat">
-      <h2>PowerLeash</h2>
-      <p class="meta">mac menu bar app · swift</p>
-      <p>A custom low power mode. Apple's native low power mode made macOS feel sluggish: the cursor was slow and laggy and the movements felt off.</p>
+  <div class="stream">
+    <p class="say rise">A custom low power mode. Apple's native low power mode made macOS feel sluggish: the cursor was slow and laggy and the movements felt off.</p>
+    <p class="say rise">I also only have a charger of 45W on a Mac that can draw much more than that: I was losing battery working on heavy tasks while on charge.</p>
+    <p class="say rise">I found out the reason LPM was sluggish was because it killed the CPU by about 40%.</p>
+    <div class="mono-stat rise">eco mode · background app: 717 → 210 Mops/s<br>frontmost app: untouched<br><br>match charger on a 45W adapter:<br>system load: 59.0 → 42.7 W<br>battery flow: −15.6 → −3.5 W</div>
+    <p class="say rise">Eco Mode is my own low power mode, moving all background apps to efficiency cores leaving the foreground untouched. Match Charger capped my total draw by what I could supply.</p>
+    <div class="doing-row rise">
+      <a class="go" href="downloads/PowerLeash.zip" download>Download for Mac</a>
+      <span class="note">Apple Silicon, unsigned — right click → Open.</span>
     </div>
-    <div class="beat">
-      <p>I also only have a charger of 45W on a Mac that can draw much more than that: I was losing battery working on heavy tasks while on charge.</p>
-    </div>
-    <div class="beat">
-      <p>I found out the reason LPM was sluggish was because it killed the CPU by about 40%.</p>
-    </div>
-    <div class="beat">
-      <p>Eco Mode is my own low power mode, moving all background apps to efficiency cores leaving the foreground untouched. Match Charger capped my total draw by what I could supply.</p>
-      <a class="cta" href="downloads/PowerLeash.zip" download>Download for Mac</a>
-      <p class="grey small">Apple Silicon, unsigned — right click → Open.</p>
-      <p class="todo-label">where it's at</p>
-      <ul class="todo">
-              <li class="done"><span>Eco Mode — background apps to efficiency cores</span></li>
-              <li class="done"><span>Match Charger — caps total draw at what the charger supplies</span></li>
-              <li class="done"><span>Live power readout at 1s, per-process watts, brightness break-even</span></li>
-              <li class="done"><span>Fixed the power model double-counting battery while charging</span></li>
-              <li><span>Quantify the actual battery saving — the gauge only updates every ~16s</span></li>
-              <li><span>GPU-bound workloads: no public API to lower GPU clocks</span></li>
-            </ul>
-    </div>
+    <p class="todo-label rise">Where it's at</p>
+    <ul class="todo rise">
+      <li class="done"><span>Eco Mode — background apps to efficiency cores</span></li>
+      <li class="done"><span>Match Charger — caps total draw at what the charger supplies</span></li>
+      <li class="done"><span>Live power readout at 1s, per-process watts, brightness break-even</span></li>
+      <li class="done"><span>Fixed the power model double-counting battery while charging</span></li>
+      <li><span>Quantify the actual battery saving — the gauge only updates every ~16s</span></li>
+      <li><span>GPU-bound workloads: no public API to lower GPU clocks</span></li>
+    </ul>
   </div>
 </section>
 
 <section class="quiet" id="research">
-  <div class="inner fade">
-    <h2>Trading research</h2>
-    <p class="meta">machine learning · backtesting rig · live tournaments</p>
-    <p class="grey small">Still writing this one up properly — more tomorrow.</p>
-    <p><a href="essays/90-Hypotheses-Zero-Edges-short.pdf">90 Hypotheses, Zero Edges (pdf)</a> · <a href="research.html">longer notes</a></p>
-  </div>
+  <p class="eyebrow rise">Machine learning · backtesting rig · live tournaments</p>
+  <h2 class="rise">Trading research</h2>
+  <p class="rise">Still writing this one up properly — more tomorrow.</p>
+  <p class="rise"><a href="essays/90-Hypotheses-Zero-Edges-short.pdf">90 Hypotheses, Zero Edges (pdf)</a> · <a href="research.html">longer notes</a></p>
 </section>
 
 <section class="quiet" id="exeter">
-  <div class="inner fade">
-    <h2>Exeter auto buys</h2>
-    <p class="meta">ticket watcher · mac + cloud</p>
-    <p>I may be going to the University of Exeter to study economics in September. To prepare I built a bot that watches the events that sell out fastest and alerts me the second tickets appear.</p>
-  </div>
+  <p class="eyebrow rise">Ticket watcher · mac and cloud</p>
+  <h2 class="rise">Exeter auto buys</h2>
+  <p class="rise">I may be going to the University of Exeter to study economics in September. To prepare I built a bot that watches the events that sell out fastest and alerts me the second tickets appear.</p>
 </section>
 
-<footer>
-  <div class="wrap">
-    <p class="didnt">Also built, didn't make the cut: Resale Radar (resale margin maths with real fees and return rates), a trading bot retired after its own audit, an ETF cost tool that deliberately ranks nothing, fifteen programmatic SEO sites, a merger-arbitrage newsletter, and a strategy-validation project that killed three ideas out of five.</p>
-    21 aug 2026 &nbsp;·&nbsp; <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a> &nbsp;·&nbsp; <a href="https://github.com/Charliewytk">github</a></div>
+<footer class="close">
+  <p class="rise"><a class="mail" href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></p>
+  <p class="didnt rise">Also built, didn't make the cut: Resale Radar (resale margin maths with real fees and return rates), a trading bot retired after its own audit, an ETF cost tool that deliberately ranks nothing, fifteen programmatic SEO sites, a merger-arbitrage newsletter, and a strategy-validation project that killed three ideas out of five.</p>
+  <p class="stamp rise">21 aug 2026 · <a href="https://github.com/Charliewytk">github</a></p>
 </footer>
 
 <script>
   (function () {
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    var revealer = new IntersectionObserver(function (es) {
-      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); revealer.unobserve(e.target); } });
-    }, { rootMargin: '0px 0px -18% 0px' });
-    document.querySelectorAll('.beat, .fade').forEach(function (el) {
-      if (reduce) el.classList.add('in'); else revealer.observe(el);
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -12% 0px' });
+    document.querySelectorAll('.rise').forEach(function (el) {
+      if (reduce) el.classList.add('in'); else io.observe(el);
     });
-
-    var activator = new IntersectionObserver(function (es) {
-      es.forEach(function (e) { e.target.classList.toggle('active', e.intersectionRatio > 0.18); });
-    }, { threshold: [0, 0.18, 0.5] });
-    document.querySelectorAll('.chapter').forEach(function (c) { activator.observe(c); });
 
     var player = new IntersectionObserver(function (es) {
       es.forEach(function (e) {
