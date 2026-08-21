@@ -22,7 +22,19 @@ open('index.html', 'w').write(f'''<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Charlie Wuytack: games, tools and trading research.">
+<meta name="description" content="Games, flight search, prediction markets, macOS tools and trading research \u2014 most of it playable right here.">
+<link rel="icon" href="media/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://charliewytk.github.io/">
+<meta property="og:title" content="Charlie Wuytack \u2014 I'd rather build than consume">
+<meta property="og:description" content="Games, flight search, prediction markets, macOS tools and trading research \u2014 most of it playable right here.">
+<meta property="og:image" content="https://charliewytk.github.io/media/preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Charlie Wuytack \u2014 I'd rather build than consume">
+<meta name="twitter:description" content="Games, flight search, prediction markets, macOS tools and trading research.">
+<meta name="twitter:image" content="https://charliewytk.github.io/media/preview.png">
 {head}
 </head>
 <body>
