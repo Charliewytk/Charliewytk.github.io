@@ -129,6 +129,8 @@
   .todo li::before { content: "·"; color: #6d757d; flex: none; width: 9px; }
   .todo li.done { color: #5f686f; }
   .todo li.done::before { content: "✓"; color: #6f9d92; font-size: 0.78rem; }
+  .todo li.doing { color: #a9b3ba; }
+  .todo li.doing::before { content: "→"; color: #8fd0c3; }
   .todo li.done span { text-decoration: line-through; text-decoration-color: #4a545b; }
   .todo-label {
     font-family: ui-monospace, "SF Mono", Menlo, monospace;
@@ -208,10 +210,10 @@
     <div class="beat">
       <h2>Abyss Warden</h2>
       <p class="meta">browser game · vanilla js + canvas + web audio</p>
-      <p>My favourite video game of all time is Kingdom Rush. It is a niche indie strategy tower defence game. Here is my attempt at making something similar, no assets no engine, pure code - but with a deep sea theme.</p>
+      <p>My favourite video game of all time is Kingdom Rush. It is a niche indie strategy tower defence game.</p>
     </div>
     <div class="beat">
-      <p class="mono-stat">~5,600 lines of vanilla JS<br>no engine, no external assets<br>every sprite drawn in code<br>every sound synthesised live</p>
+      <p>Here is my attempt at making something similar, no assets no engine, pure code - but with a deep sea theme.</p>
     </div>
     <div class="beat">
       <a class="cta" href="abyss-warden/">Play it in your browser</a>
@@ -220,7 +222,7 @@
       <ul class="todo">
               <li class="done"><span>Finished — all 15 levels, 5 bosses, balance passed</span></li>
               <li class="done"><span>Builds packaged for itch.io, Newgrounds, Poki and four other portals</span></li>
-              <li><span>Actually submit them to the portals</span></li>
+              <li class="doing"><span>Submitting them to the portals</span></li>
               <li><span>Nudge level 2 starting gold if 3-star rates run high</span></li>
             </ul>
     </div>
