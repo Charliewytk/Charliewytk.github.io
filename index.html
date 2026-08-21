@@ -360,6 +360,25 @@
   .mini .vinyl.small { width: 78px; }
   .mini:not(.playing) .vinyl { animation: none; }
 
+
+  .now-playing {
+    position: fixed; left: 108px; bottom: 34px; z-index: 40;
+    font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: #8a8478; opacity: 0; pointer-events: none;
+    transition: opacity 0.5s ease;
+  }
+  .entered .now-playing { opacity: 1; }
+  .now-playing b { color: var(--accent); font-weight: 600; }
+  .mini::after {
+    content: "Change the record";
+    position: absolute; left: 50%; bottom: calc(100% + 10px); transform: translateX(-50%);
+    font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: #22201d; background: #f7f7ef; padding: 5px 9px; white-space: nowrap;
+    border: 1px solid #22201d; opacity: 0; transition: opacity 0.25s ease; pointer-events: none;
+  }
+  .mini:hover::after, .mini:focus-visible::after { opacity: 1; }
+  @media (max-width: 700px) { .now-playing { display: none; } }
+
   /* ---------- ticker ---------- */
   .ticker {
     border-top: 1px solid #22201d; border-bottom: 1px solid #22201d;
@@ -509,19 +528,20 @@
     </div>
     <p class="needle">Drop the needle</p>
     <div class="picks">
-      <button class="pick" type="button" data-src="media/bang.mp3" data-a="74.05168" data-b="85.03454" data-accent="#a9331f" data-gain="0.85">
+      <button class="pick" type="button" data-src="media/tank.m4a" data-a="49.91315" data-b="71.82735" data-accent="#a9331f" data-gain="0.56">
         <span class="mood">Locked in</span><span class="track">Tank!</span>
       </button>
-      <button class="pick" type="button" data-src="media/backdrop.m4a" data-accent="#24476f" data-gain="0.67">
+      <button class="pick" type="button" data-src="media/backdrop.m4a" data-accent="#24476f" data-gain="0.78">
         <span class="mood">Late night</span><span class="track">Jazz noir</span>
       </button>
-      <button class="pick" type="button" data-src="media/third.m4a" data-accent="#2f6a47" data-gain="0.80">
+      <button class="pick" type="button" data-src="media/third.m4a" data-accent="#2f6a47" data-gain="0.64">
         <span class="mood">Sunday</span><span class="track">Bossa nova</span>
       </button>
     </div>
   </div>
 </div>
-<button class="mini" id="mini" type="button" title="pause the record" aria-label="toggle music">
+<span class="now-playing" id="nowPlaying" aria-live="polite"></span>
+<button class="mini" id="mini" type="button" title="Change the record" aria-label="Change the record — back to the start">
 <svg class="vinyl small" viewBox="0 0 200 200" aria-hidden="true">
       <circle cx="100" cy="100" r="97" fill="#17140f"/>
       <g fill="none" stroke="rgba(247,247,239,0.07)" stroke-width="1">
@@ -1003,6 +1023,8 @@
 
         // 2. start fetching + decoding straight away, and tell the user we are
         if (deck) deck.classList.add('loading');
+        var np = document.getElementById('nowPlaying');
+        if (np) np.innerHTML = '<b>' + btn.querySelector('.mood').textContent + '</b> — ' + btn.querySelector('.track').textContent;
         var g = parseFloat(btn.getAttribute('data-gain')) || 0.8;
         audio = makeAudio(src, a, b, g);
         if (audio) audio.start();
@@ -1024,10 +1046,31 @@
         } else { advance(); }
       });
     });
-    if (mini) mini.addEventListener('click', function () {
-      if (!audio) { audio = makeAudio('media/bang.mp3', 74.05168, 85.03454, 0.85); if (audio) { audio.start(); setPlaying(true); } return; }
-      if (playing) { audio.pause(); setPlaying(false); }
-      else { audio.resume(); setPlaying(false); setPlaying(true); }
+    // the corner record is the way back — pick a different side (Nielsen #3: user control and freedom)
+    function backToStart() {
+      if (audio) { try { audio.pause(); } catch (e) {} }
+      setPlaying(false);
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+      var deck = document.getElementById('deck');
+      if (gate) {
+        gate.style.display = '';
+        // let the browser paint the reset state before sliding it back down
+        requestAnimationFrame(function () { gate.classList.remove('open'); });
+      }
+      if (deck) { deck.classList.remove('cueing', 'picked', 'loading'); }
+      var picksBox = document.querySelector('.picks');
+      var needleLbl = document.querySelector('.needle');
+      if (picksBox) picksBox.style.opacity = '';
+      if (needleLbl) needleLbl.style.opacity = '';
+      picks.forEach(function (o) { o.disabled = false; });
+      document.body.classList.remove('entered');
+      document.body.classList.add('locked');
+      audio = null;
+    }
+    if (mini) mini.addEventListener('click', backToStart);
+    // Escape does the same, from anywhere
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape' && document.body.classList.contains('entered')) backToStart();
     });
 
     var setSbw = function () {
