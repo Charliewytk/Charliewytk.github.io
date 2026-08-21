@@ -104,6 +104,16 @@
     margin: 0;
   }
 
+
+  /* a red pen through the phrase that carries the argument */
+  .mk {
+    background-image: linear-gradient(transparent 58%, rgba(169,51,31,0.26) 58%, rgba(169,51,31,0.26) 92%, transparent 92%);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    padding: 0 0.04em;
+  }
+  .mk-u { border-bottom: 2px solid #a9331f; padding-bottom: 1px; }
+
   /* ---------- work ---------- */
   .work { position: relative; padding-bottom: 12vh; }
   .head {
@@ -134,7 +144,9 @@
     overflow: hidden;
     background: #22201d;
     border: 1px solid #22201d;
+    transition: box-shadow 0.35s ease, transform 0.35s cubic-bezier(0.22,1,0.36,1);
   }
+  a.frame:hover, .stream a:hover .frame { box-shadow: 0 0 0 4px rgba(169,51,31,0.35); }
   .frame video, .frame img { display: block; width: 100%; height: auto; }
 
   .say {
@@ -205,6 +217,26 @@
   }
   .close .stamp { margin-top: 26px; font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: #a9a496; }
 
+
+
+  .rail {
+    position: fixed; right: 22px; top: 50%; transform: translateY(-50%); z-index: 30;
+    display: flex; flex-direction: column; gap: 12px; align-items: flex-end;
+    opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
+  }
+  .entered .rail { opacity: 1; pointer-events: auto; }
+  .rail a {
+    width: 26px; height: 2px; background: #c2bfae; border: none; padding: 0;
+    position: relative; transition: background 0.3s ease, width 0.3s ease;
+  }
+  .rail a:hover, .rail a.on { background: #a9331f; width: 40px; }
+  .rail a::after {
+    content: attr(data-t); position: absolute; right: 46px; top: -0.65em;
+    font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: #22201d; white-space: nowrap; opacity: 0; transition: opacity 0.25s ease;
+  }
+  .rail a:hover::after { opacity: 1; }
+  @media (max-width: 900px) { .rail { display: none; } }
 
   /* ---------- entry gate ---------- */
   .gate {
@@ -408,6 +440,16 @@
     </svg>
 </button>
 
+<nav class="rail" aria-label="sections">
+  <a href="#abyss" data-t="Abyss Warden"></a>
+  <a href="#doorly" data-t="Doorly"></a>
+  <a href="#chelsea" data-t="Chelsea Bikes"></a>
+  <a href="#chess" data-t="Chess Exchange"></a>
+  <a href="#powerleash" data-t="PowerLeash"></a>
+  <a href="#research" data-t="Trading research"></a>
+  <a href="#exeter" data-t="Exeter auto buys"></a>
+</nav>
+
 <div class="masthead">
   <span class="who">Charlie Wuytack</span>
   <a href="mailto:charlie@wuytack.net">Get in touch</a>
@@ -437,7 +479,7 @@
       </video>
     </div>
     <p class="say rise">My favourite video game of all time is Kingdom Rush. It is a niche indie strategy tower defence game.</p>
-    <p class="say rise">Here is my attempt at making something similar, no assets no engine, pure code - but with a deep sea theme.</p>
+    <p class="say rise">Here is my attempt at making something similar, <span class="mk">no assets no engine, pure code</span> - but with a deep sea theme.</p>
     <div class="doing-row rise">
       <a class="go" href="abyss-warden/">Play it in your browser</a>
       <span class="note">Free, no install. Works on phones.</span>
@@ -464,7 +506,7 @@
         <source src="media/doorly-demo.mp4" type="video/mp4">
       </video>
     </div>
-    <p class="say rise">One only flies to get from point A to point B. But I found that websites such as flightscanner did not account for the prices and time taken to get to and from the airport on either side.</p>
+    <p class="say rise">One only flies to get from point A to point B. But I found that websites such as flightscanner did not account for <span class="mk">the prices and time taken to get to and from the airport on either side</span>.</p>
     <p class="say rise">For example, a flight from Heathrow may cost £120 and from City £130. Of which normal flight trackers would recommend Heathrow as it is cheaper. However, taking into account where you live, at least for me, City would end up being cheaper.</p>
     <div class="doing-row rise">
       <a class="go" href="doorly/">Try the demo</a>
@@ -492,7 +534,7 @@
       </video>
     </div>
     <p class="say rise">My local bike shop. I bought my bike there (second hand as I think most things are better value for money second hand). I also do some repairs there.</p>
-    <p class="say rise">However, sometimes I found using the website to not be very good and clean, potentially reducing customers and so revenue and so profits. Hence, I have created a website, that is yet to be pitched, that should increase customers and so forth.</p>
+    <p class="say rise">However, sometimes I found using the website to not be very good and clean, potentially reducing customers and so revenue and so profits. Hence, I have created a website, that is yet to be pitched, <span class="mk">that should increase customers</span> and so forth.</p>
     <div class="doing-row rise">
       <a class="go" href="chelsea-bikes/compare.html">See before and after</a>
       <span class="note"><a href="chelsea-bikes/">Or browse the full prototype</a> — eleven pages, works offline.</span>
@@ -520,7 +562,7 @@
       </video>
     </div>
     <p class="say rise">Simply I think it would be fun to live bet on chess games.</p>
-    <p class="say rise">I am a fan of poker - it being about half skill and half luck - and I feel chess exchange would be more of an 80/20 split, with the luck landing on whether a player plays what you think is the best move.</p>
+    <p class="say rise">I am a fan of poker - it being <span class="mk">about half skill and half luck</span> - and I feel chess exchange would be more of an 80/20 split, with the luck landing on whether a player plays what you think is the best move.</p>
     <p class="say small rise">Runs as a live server, so there is no hosted demo yet — this is it running on my machine.</p>
     <p class="todo-label rise">Where it's at</p>
     <ul class="todo rise">
@@ -542,7 +584,7 @@
   <div class="stream">
     <p class="say rise">A custom low power mode. Apple's native low power mode made macOS feel sluggish: the cursor was slow and laggy and the movements felt off.</p>
     <p class="say rise">I also only have a charger of 45W on a Mac that can draw much more than that: I was losing battery working on heavy tasks while on charge.</p>
-    <p class="say rise">I found out the reason LPM was sluggish was because it killed the CPU by about 40%.</p>
+    <p class="say rise">I found out the reason LPM was sluggish was because <span class="mk">it killed the CPU by about 40%</span>.</p>
     <p class="say rise">Eco Mode is my own low power mode, moving all background apps to efficiency cores leaving the foreground untouched. Match Charger capped my total draw by what I could supply.</p>
     <div class="panel rise">
       <div class="panel-in">
@@ -664,7 +706,7 @@
         </div>
       </div>
     </div>
-    <p class="say rise">I may be going to the University of Exeter to study economics in September. To prepare I built a bot that watches the events that sell out fastest and alerts me the second tickets appear.</p>
+    <p class="say rise">I may be going to the University of Exeter to study economics in September. To prepare I built a bot that watches the events that sell out fastest and <span class="mk">alerts me the second tickets appear</span>.</p>
   </div>
 </section>
 
@@ -691,8 +733,9 @@
     var audio = null;
     function makeAudio() {
       // measured from the file: 175.25 bpm, bar 1.3696s.
-      // 4-bar vamp inside the intro bassline, snapped to zero crossings so the seam is silent.
-      var LOOP_A = 2.8356, LOOP_B = 8.3438, TAIL = 3.4, BED = 0.34;
+      // 8-bar bed (10.96s), chosen by seam-similarity scoring across the whole track
+      // and snapped to zero crossings. Most bass-dominant of the candidates.
+      var LOOP_A = 5.59431, LOOP_B = 16.55181, TAIL = 3.4, BED = 0.34;
       var Ctor = window.AudioContext || window.webkitAudioContext;
       if (!Ctor) return makeSynth();
 
@@ -963,6 +1006,29 @@
       veil.style.setProperty('--reveal', '100%');
       if (opening) opening.style.setProperty('--tail-op', 1);
     }
+
+
+    // rail: highlight the section you are in
+    var railLinks = [].slice.call(document.querySelectorAll('.rail a'));
+    if (railLinks.length) {
+      var secs = railLinks.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+      var spy = new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          var i = secs.indexOf(e.target);
+          if (i > -1 && e.isIntersecting) {
+            railLinks.forEach(function (a) { a.classList.remove('on'); });
+            railLinks[i].classList.add('on');
+          }
+        });
+      }, { rootMargin: '-45% 0px -45% 0px' });
+      secs.forEach(function (sec) { if (sec) spy.observe(sec); });
+    }
+    // keyboard: Enter opens the gate
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Enter' && document.body.classList.contains('locked')) {
+        ev.preventDefault(); enter(true);
+      }
+    });
 
     var barBox = document.getElementById('bars');
     if (barBox) {
