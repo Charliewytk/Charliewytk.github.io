@@ -121,6 +121,21 @@
   .cta:hover { text-decoration: none; }
   .cta:hover::after { transform: translateX(5px); }
 
+  .todo {
+    margin: 18px 0 0; padding: 0; list-style: none;
+    font-size: 0.82rem; line-height: 1.5; max-width: 46ch;
+  }
+  .todo li { display: flex; gap: 9px; margin-bottom: 6px; color: #8d949a; }
+  .todo li::before { content: "·"; color: #6d757d; flex: none; width: 9px; }
+  .todo li.done { color: #5f686f; }
+  .todo li.done::before { content: "✓"; color: #6f9d92; font-size: 0.78rem; }
+  .todo li.done span { text-decoration: line-through; text-decoration-color: #4a545b; }
+  .todo-label {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: #5d666e; margin: 22px 0 0;
+  }
+
   .mono-stat {
     font-family: ui-monospace, "SF Mono", Menlo, monospace;
     font-size: 0.8rem; color: #9aa8b0; line-height: 1.85;
@@ -201,6 +216,13 @@
     <div class="beat">
       <a class="cta" href="abyss-warden/">Play it in your browser</a>
       <p class="grey small">Free, no install. Works on phones.</p>
+      <p class="todo-label">where it's at</p>
+      <ul class="todo">
+              <li class="done"><span>Finished — all 15 levels, 5 bosses, balance passed</span></li>
+              <li class="done"><span>Builds packaged for itch.io, Newgrounds, Poki and four other portals</span></li>
+              <li><span>Actually submit them to the portals</span></li>
+              <li><span>Nudge level 2 starting gold if 3-star rates run high</span></li>
+            </ul>
     </div>
   </div>
 </section>
@@ -225,6 +247,12 @@
     <div class="beat">
       <a class="cta" href="doorly/">Try the demo</a>
       <p class="grey small">Demo fares, labelled as such — the real thing pulls live prices.</p>
+      <p class="todo-label">where it's at</p>
+      <ul class="todo">
+              <li class="done"><span>Live provider data, door-to-door ranking, iOS build via Capacitor</span></li>
+              <li><span>Connecting flights — right now it only searches direct</span></li>
+              <li><span>Host it publicly rather than running locally</span></li>
+            </ul>
     </div>
   </div>
 </section>
@@ -249,6 +277,13 @@
     <div class="beat">
       <a class="cta" href="chelsea-bikes/compare.html">See before and after</a>
       <p class="grey small"><a href="chelsea-bikes/">Or browse the full prototype</a> — eleven pages, works offline.</p>
+      <p class="todo-label">where it's at</p>
+      <ul class="todo">
+              <li class="done"><span>Prototype finished — 11 pages, accessibility pass, works offline</span></li>
+              <li class="done"><span>Pitch materials: before/after tool, one-page leave-behind, quote template</span></li>
+              <li class="done"><span>Photo-drop system, so real shop photos replace the illustrations instantly</span></li>
+              <li><span>Pitch it to the owner</span></li>
+            </ul>
     </div>
   </div>
 </section>
@@ -272,6 +307,13 @@
     </div>
     <div class="beat">
       <p class="grey small">Runs as a live server, so there is no hosted demo yet — this is it running on my machine.</p>
+      <p class="todo-label">where it's at</p>
+      <ul class="todo">
+              <li class="done"><span>Live boards from lichess TV, markets on chess.com titled games</span></li>
+              <li class="done"><span>LMSR market maker, six liquidity bots, replays at true clock speed</span></li>
+              <li><span>Host it so it is playable rather than a video</span></li>
+              <li><span>Long term: real players betting against each other, not bots</span></li>
+            </ul>
     </div>
   </div>
 </section>
@@ -301,6 +343,15 @@
       <p>Eco Mode is my own low power mode, moving all background apps to efficiency cores leaving the foreground untouched. Match Charger capped my total draw by what I could supply.</p>
       <a class="cta" href="downloads/PowerLeash.zip" download>Download for Mac</a>
       <p class="grey small">Apple Silicon, unsigned — right click → Open.</p>
+      <p class="todo-label">where it's at</p>
+      <ul class="todo">
+              <li class="done"><span>Eco Mode — background apps to efficiency cores</span></li>
+              <li class="done"><span>Match Charger — caps total draw at what the charger supplies</span></li>
+              <li class="done"><span>Live power readout at 1s, per-process watts, brightness break-even</span></li>
+              <li class="done"><span>Fixed the power model double-counting battery while charging</span></li>
+              <li><span>Quantify the actual battery saving — the gauge only updates every ~16s</span></li>
+              <li><span>GPU-bound workloads: no public API to lower GPU clocks</span></li>
+            </ul>
     </div>
   </div>
 </section>
