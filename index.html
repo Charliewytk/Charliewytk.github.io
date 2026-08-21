@@ -292,6 +292,23 @@
   .quiet-in:hover { color: var(--accent); border-color: var(--accent); }
 
 
+
+  /* ---------- the gate arrives from nothing ---------- */
+  @keyframes gate-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @keyframes record-in { from { opacity: 0; transform: translateY(-42px) scale(0.9); } to { opacity: 1; transform: translateY(-16px) scale(0.96); } }
+  .gate-mast, .deck, .needle, .picks, .quiet-in { opacity: 0; }
+  .gate-mast { animation: gate-in 0.8s ease 0.55s both; }
+  .deck .vinyl { animation: record-in 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0.9s both; }
+  .deck { animation: gate-in 0.01s linear 0.9s both; }
+  .needle { animation: gate-in 0.7s ease 1.85s both; }
+  .picks { animation: gate-in 0.7s ease 2.05s both; }
+  .quiet-in { animation: gate-in 0.7s ease 2.3s both; }
+  /* once a record is cueing, the settle transition takes over from the intro */
+  .deck.cueing .vinyl { animation: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .gate-mast, .deck, .deck .vinyl, .needle, .picks, .quiet-in { animation: none; opacity: 1; }
+  }
+
   /* ---------- the deck: record, platter, tonearm ---------- */
   .deck { position: relative; display: inline-block; }
   .deck .vinyl {
