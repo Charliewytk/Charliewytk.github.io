@@ -9,7 +9,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Anton&display=swap">
 <style>
-  /* light by design — cream ground, near-black ink, one red accent */
+  /* light by design — cream ground, near-black ink, an accent that follows the record */
+  :root { --accent: #a9331f; }
+  a, .mk, .num-r, .head .eyebrow::after, .todo li.doing::before { transition: color 0.6s ease, background-color 0.6s ease, border-color 0.6s ease; }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
@@ -23,8 +25,8 @@
   }
   ::selection { background: #e4e2d4; }
   a { color: #22201d; text-decoration: none; border-bottom: 1px solid #c9c6b4; padding-bottom: 1px; }
-  a:hover { color: #a9331f; border-color: #a9331f; }
-  a:focus-visible { outline: 2px solid #a9331f; outline-offset: 3px; border-radius: 2px; }
+  a:hover { color: var(--accent); border-color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
 
   .shell { max-width: 1152px; margin: 0 auto; padding: 0 32px; }
 
@@ -75,7 +77,7 @@
     display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px;
     margin: 30px 0 0; padding: 0;
     font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    font-size: 0.7rem; letter-spacing: 0.1em; color: #a9331f;
+    font-size: 0.7rem; letter-spacing: 0.1em; color: var(--accent);
     font-variant-numeric: tabular-nums;
     opacity: var(--tail-op, 0); transition: opacity 0.6s ease;
   }
@@ -107,13 +109,13 @@
 
   /* a red pen through the phrase that carries the argument */
   .mk {
-    background-image: linear-gradient(transparent 58%, rgba(169,51,31,0.26) 58%, rgba(169,51,31,0.26) 92%, transparent 92%);
+    background-image: linear-gradient(transparent 58%, color-mix(in srgb, var(--accent) 26%, transparent) 58%, color-mix(in srgb, var(--accent) 26%, transparent) 92%, transparent 92%);
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
     padding: 0 0.04em;
   }
-  .mk-u { border-bottom: 2px solid #a9331f; padding-bottom: 1px; }
-  .num-r { color: #a9331f; }
+  .mk-u { border-bottom: 2px solid var(--accent); padding-bottom: 1px; }
+  .num-r { color: var(--accent); }
 
 
   /* ---------- work ---------- */
@@ -141,7 +143,7 @@
   .head .eyebrow { margin: 10px 0 0; position: relative; display: inline-block; padding-bottom: 9px; }
   .head .eyebrow::after {
     content: ""; position: absolute; left: 50%; transform: translateX(-50%); bottom: 0;
-    width: 34px; height: 2px; background: #a9331f;
+    width: 34px; height: 2px; background: var(--accent);
   }
   .stream { position: relative; z-index: 5; }
   .frame {
@@ -152,7 +154,7 @@
     border: 1px solid #22201d;
     transition: box-shadow 0.35s ease, transform 0.35s cubic-bezier(0.22,1,0.36,1);
   }
-  a.frame:hover, .stream a:hover .frame { box-shadow: 0 0 0 4px rgba(169,51,31,0.35); }
+  a.frame:hover, .stream a:hover .frame { box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 35%, transparent); }
   .frame video, .frame img { display: block; width: 100%; height: auto; }
 
   .say {
@@ -183,7 +185,7 @@
   .todo li.done::before { content: "✓"; color: #6d8a6f; font-size: 0.78rem; }
   .todo li.done span { text-decoration: line-through; text-decoration-color: #c2bfae; }
   .todo li.doing { color: #22201d; }
-  .todo li.doing::before { content: "→"; color: #a9331f; }
+  .todo li.doing::before { content: "→"; color: var(--accent); }
   .todo-label {
     text-align: center; margin: 0 0 18px;
     font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: #a9a496;
@@ -199,7 +201,7 @@
   /* maths blocks — held back until MATHS = True in build.py */
   .maths { max-width: 40ch; margin: 0 auto 9vh; border-left: 1px solid #d6d3c2; padding-left: 16px; display: flex; flex-direction: column; gap: 14px; text-align: left; }
   .maths .row { display: flex; flex-direction: column; gap: 4px; }
-  .maths code { font-family: ui-monospace, Menlo, monospace; font-size: 0.78rem; color: #a9331f; font-variant-numeric: tabular-nums; }
+  .maths code { font-family: ui-monospace, Menlo, monospace; font-size: 0.78rem; color: var(--accent); font-variant-numeric: tabular-nums; }
   .maths .why { font-size: 0.88rem; color: #5f5b52; }
 
   /* ---------- quiet blocks ---------- */
@@ -214,7 +216,7 @@
   /* ---------- close ---------- */
   .close { padding: 14vh 32px 12vh; text-align: center; border-top: 1px solid #e2dfd0; margin-top: 8vh; }
   .close .mail {
-    border-bottom: 2px solid #a9331f;
+    border-bottom: 2px solid var(--accent);
     font-family: "Lora", Georgia, serif;
     font-size: clamp(1.6rem, 3.4vw, 2.2rem);
   }
@@ -236,7 +238,7 @@
     width: 26px; height: 2px; background: #c2bfae; border: none; padding: 0;
     position: relative; transition: background 0.3s ease, width 0.3s ease;
   }
-  .rail a:hover, .rail a.on { background: #a9331f; width: 40px; }
+  .rail a:hover, .rail a.on { background: var(--accent); width: 40px; }
   .rail a::after {
     content: attr(data-t); position: absolute; right: 46px; top: -0.65em;
     font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase;
@@ -287,7 +289,7 @@
     font-family: "Lora", Georgia, serif; font-style: italic; font-size: 0.95rem;
     color: #5f5b52; border-bottom: 1px solid #c9c6b4; padding: 0 0 1px;
   }
-  .quiet-in:hover { color: #a9331f; border-color: #a9331f; }
+  .quiet-in:hover { color: var(--accent); border-color: var(--accent); }
 
   /* ---------- corner record ---------- */
   .mini {
@@ -351,7 +353,7 @@
     font-size: 0.74rem; letter-spacing: 0.2em; text-transform: uppercase;
     color: rgba(34,32,29,0.55); margin: 12px 0 0;
   }
-  .panel .accent { color: #a9331f; }
+  .panel .accent { color: var(--accent); }
 
   .chart { margin: 6vh 0 0; }
   .loadchart { width: 100%; height: auto; display: block; }
@@ -367,12 +369,12 @@
     transform-origin: bottom; transform: scaleY(var(--grow, 0));
     transition: transform 1.1s cubic-bezier(0.22,1,0.36,1);
   }
-  .bar.now .stalk { background: #a9331f; }
+  .bar.now .stalk { background: var(--accent); }
   .bar .val {
     font-family: ui-monospace, Menlo, monospace; font-size: 0.76rem;
     font-variant-numeric: tabular-nums; color: #22201d;
   }
-  .bar.now .val { color: #a9331f; }
+  .bar.now .val { color: var(--accent); }
   .bar .gen {
     font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase;
     color: rgba(34,32,29,0.45); border-top: 1px solid rgba(34,32,29,0.25); padding-top: 8px;
@@ -390,7 +392,7 @@
   .feed .row { display: grid; grid-template-columns: 190px 1fr; gap: 20px; padding: 11px 0; border-top: 1px solid rgba(34,32,29,0.18); }
   .feed .row:first-child { border-top: none; }
   .feed time { color: rgba(34,32,29,0.5); font-variant-numeric: tabular-nums; }
-  .feed .down { color: #a9331f; }
+  .feed .down { color: var(--accent); }
   @media (max-width: 700px) {
     .facts { grid-template-columns: 1fr; gap: 20px; }
     .feed .row { grid-template-columns: 1fr; gap: 2px; }
@@ -432,7 +434,7 @@
       </g>
       <path d="M14 100 a86 86 0 0 1 172 0" fill="none" stroke="rgba(247,7,239,0)" />
       <path d="M30 100 a70 70 0 0 1 140 0" fill="none" stroke="rgba(247,247,239,0.12)" stroke-width="1.5"/>
-      <circle cx="100" cy="100" r="34" fill="#a9331f"/>
+      <circle cx="100" cy="100" r="34" fill="var(--accent)"/>
       <circle cx="100" cy="100" r="33" fill="none" stroke="rgba(247,247,239,0.4)" stroke-width="0.6"/>
       <text x="100" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" letter-spacing="2" fill="#f7f7ef">C.W.</text>
       <text x="100" y="112" text-anchor="middle" font-family="Arial, sans-serif" font-size="5.5" letter-spacing="1.5" fill="rgba(247,247,239,0.8)">SIDE A · 45 RPM</text>
@@ -440,14 +442,14 @@
     </svg>
     <p class="needle">Drop the needle</p>
     <div class="picks">
-      <button class="pick" type="button" data-src="media/bang.mp3" data-a="74.05168" data-b="85.03454">
+      <button class="pick" type="button" data-src="media/bang.mp3" data-a="74.05168" data-b="85.03454" data-accent="#a9331f">
         <span class="mood">Locked in</span><span class="track">Tank!</span>
       </button>
-      <button class="pick" type="button" data-src="media/backdrop.m4a">
+      <button class="pick" type="button" data-src="media/backdrop.m4a" data-accent="#24476f">
         <span class="mood">Late night</span><span class="track">Jazz noir</span>
       </button>
-      <button class="pick" type="button" data-src="media/third.m4a">
-        <span class="mood">Out</span><span class="track">—</span>
+      <button class="pick" type="button" data-src="media/third.m4a" data-accent="#2f6a47">
+        <span class="mood">Sunday</span><span class="track">Bossa nova</span>
       </button>
     </div>
     <button class="quiet-in" id="quietBtn" type="button">enter in silence</button>
@@ -462,7 +464,7 @@
       </g>
       <path d="M14 100 a86 86 0 0 1 172 0" fill="none" stroke="rgba(247,7,239,0)" />
       <path d="M30 100 a70 70 0 0 1 140 0" fill="none" stroke="rgba(247,247,239,0.12)" stroke-width="1.5"/>
-      <circle cx="100" cy="100" r="34" fill="#a9331f"/>
+      <circle cx="100" cy="100" r="34" fill="var(--accent)"/>
       <circle cx="100" cy="100" r="33" fill="none" stroke="rgba(247,247,239,0.4)" stroke-width="0.6"/>
       <text x="100" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" letter-spacing="2" fill="#f7f7ef">C.W.</text>
       <text x="100" y="112" text-anchor="middle" font-family="Arial, sans-serif" font-size="5.5" letter-spacing="1.5" fill="rgba(247,247,239,0.8)">SIDE A · 45 RPM</text>
@@ -631,8 +633,8 @@
             <g fill="rgba(34,32,29,0.5)" font-family="ui-monospace, Menlo, monospace" font-size="11">
               <text x="8" y="20">64W</text><text x="8" y="107">32W</text><text x="8" y="194">0W</text>
             </g>
-            <line x1="46" y1="73.6" x2="960" y2="73.6" stroke="#a9331f" stroke-width="1.5" stroke-dasharray="6 5"/>
-            <text x="960" y="66" text-anchor="end" fill="#a9331f" font-family="ui-monospace, Menlo, monospace" font-size="11">CHARGER CAP 42.8W</text>
+            <line x1="46" y1="73.6" x2="960" y2="73.6" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="6 5"/>
+            <text x="960" y="66" text-anchor="end" fill="var(--accent)" font-family="ui-monospace, Menlo, monospace" font-size="11">CHARGER CAP 42.8W</text>
             <polyline points="60,32.9 280,75.3 500,72.9 720,159.2 940,163.1"
                       fill="none" stroke="#22201d" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
             <g fill="#22201d">
@@ -911,6 +913,8 @@
       btn.addEventListener('click', function () {
         var a = parseFloat(btn.getAttribute('data-a')) || null;
         var b = parseFloat(btn.getAttribute('data-b')) || null;
+        var accent = btn.getAttribute('data-accent');
+        if (accent) document.documentElement.style.setProperty('--accent', accent);
         audio = makeAudio(src, a, b);
         if (audio) { audio.start(); setPlaying(true); }
         enter(false);
