@@ -263,13 +263,25 @@
   .vinyl { width: clamp(240px, 32vw, 360px); height: auto; display: block; }
   .spinning .vinyl, .mini.playing .vinyl { animation: spin 1.8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .enter {
-    font: 700 0.85rem/1 -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-    letter-spacing: 0.18em;
-    background: #22201d; color: #f7f7ef;
-    border: 1px solid #22201d; padding: 16px 30px; cursor: pointer;
+  .needle {
+    margin: 0; font-size: 0.72rem; letter-spacing: 0.24em; text-transform: uppercase;
+    color: #8a8478;
   }
-  .enter:hover { background: #a9331f; border-color: #a9331f; }
+  .picks { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .pick {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    min-width: 132px; padding: 15px 20px; cursor: pointer;
+    background: #f7f7ef; border: 1px solid #22201d;
+    transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+  }
+  .pick .mood {
+    font: 700 0.82rem/1 -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .pick .track { font-family: "Lora", Georgia, serif; font-style: italic; font-size: 0.82rem; color: #8a8478; }
+  .pick:hover { background: #22201d; color: #f7f7ef; transform: translateY(-2px); }
+  .pick:hover .track { color: rgba(247,247,239,0.7); }
+  .pick.missing { display: none; }
   .quiet-in {
     background: none; border: none; cursor: pointer;
     font-family: "Lora", Georgia, serif; font-style: italic; font-size: 0.95rem;
@@ -426,8 +438,19 @@
       <text x="100" y="112" text-anchor="middle" font-family="Arial, sans-serif" font-size="5.5" letter-spacing="1.5" fill="rgba(247,247,239,0.8)">SIDE A · 45 RPM</text>
       <circle cx="100" cy="100" r="3.2" fill="#f7f7ef"/>
     </svg>
-    <button class="enter" id="enterBtn" type="button">DROP THE NEEDLE — ENTER</button>
-    <button class="quiet-in" id="quietBtn" type="button">enter quietly</button>
+    <p class="needle">Drop the needle</p>
+    <div class="picks">
+      <button class="pick" type="button" data-src="media/bang.mp3" data-a="74.05168" data-b="85.03454">
+        <span class="mood">Locked in</span><span class="track">Tank!</span>
+      </button>
+      <button class="pick" type="button" data-src="media/backdrop.m4a">
+        <span class="mood">Late night</span><span class="track">Jazz noir</span>
+      </button>
+      <button class="pick" type="button" data-src="media/third.m4a">
+        <span class="mood">Out</span><span class="track">—</span>
+      </button>
+    </div>
+    <button class="quiet-in" id="quietBtn" type="button">enter in silence</button>
   </div>
 </div>
 <button class="mini" id="mini" type="button" title="pause the record" aria-label="toggle music">
@@ -465,7 +488,7 @@
 <header class="opening">
   <div class="pin-hero">
     <div class="stage">
-      <h1 class="veil"><span class="slab">BUILT IT.</span><span class="ital">Measured it.</span></h1>
+      <h1 class="veil"><span class="slab">I'D RATHER BUILD</span><span class="ital">than consume.</span></h1>
     </div>
     <p class="readout" aria-hidden="true"><span id="clock">--:--:--</span><span>119.8 Hz</span><span>0.21 ms</span><span>717 → 210 Mops/s</span><span id="soundstate">SOUND OFF</span></p>
     <p class="under">Games, macOS tools, flight search, prediction markets and trading research. Most of it works right here on this page.</p>
@@ -477,7 +500,7 @@
 <section class="work" id="abyss">
   <div class="head">
     <h2>Abyss Warden</h2>
-    <p class="eyebrow">Browser game · vanilla js, canvas, web audio</p>
+    <p class="eyebrow">A personalised version of my favourite strategy game</p>
   </div>
   <div class="stream">
     <div class="frame rise">
@@ -486,10 +509,10 @@
       </video>
     </div>
     <p class="say rise">My favourite video game of all time is Kingdom Rush. It is a niche indie strategy tower defence game.</p>
-    <p class="say rise">Here is my attempt at making something similar, <span class="mk">no assets no engine, pure code</span> - but with a deep sea theme.</p>
+    <p class="say rise">Here is my attempt at making something similar - but with a deep sea theme.</p>
     <div class="doing-row rise">
       <a class="go" href="abyss-warden/">Play it in your browser</a>
-      <span class="note">Free, no install. Works on phones.</span>
+      
     </div>
     <p class="todo-label rise">Where it's at</p>
     <ul class="todo rise">
@@ -505,7 +528,7 @@
 <section class="work" id="doorly">
   <div class="head">
     <h2>Doorly</h2>
-    <p class="eyebrow">Flight search · web and ios</p>
+    <p class="eyebrow">The cheapest flight is rarely the cheapest trip</p>
   </div>
   <div class="stream">
     <div class="frame rise">
@@ -532,7 +555,7 @@
 <section class="work" id="chelsea">
   <div class="head">
     <h2>Chelsea Bikes</h2>
-    <p class="eyebrow">Redesign · pitch for a real shop</p>
+    <p class="eyebrow">Rebuilding my local bike shop, unasked</p>
   </div>
   <div class="stream">
     <div class="frame rise">
@@ -560,7 +583,7 @@
 <section class="work" id="chess">
   <div class="head">
     <h2>Chess Exchange</h2>
-    <p class="eyebrow">Prediction market · live lichess and chess.com games</p>
+    <p class="eyebrow">Betting on live chess, with play money</p>
   </div>
   <div class="stream">
     <div class="frame rise">
@@ -586,7 +609,7 @@
 <section class="work" id="powerleash">
   <div class="head">
     <h2>PowerLeash</h2>
-    <p class="eyebrow">Mac menu bar app · swift</p>
+    <p class="eyebrow">Apple's low power mode made my Mac worse, so I made my own</p>
   </div>
   <div class="stream">
     <p class="say rise">A custom low power mode. Apple's native low power mode made macOS feel sluggish: the cursor was slow and laggy and the movements felt off.</p>
@@ -657,7 +680,7 @@
 <section class="work" id="research">
   <div class="head">
     <h2>Trading Research</h2>
-    <p class="eyebrow">Machine learning · backtesting rig · live tournaments</p>
+    <p class="eyebrow">Ninety ideas tested. None survived.</p>
   </div>
   <div class="stream">
     <div class="panel rise">
@@ -694,7 +717,7 @@
 <section class="work" id="exeter">
   <div class="head">
     <h2>Exeter Auto Buys</h2>
-    <p class="eyebrow">Ticket watcher · mac and cloud</p>
+    <p class="eyebrow">A bot that watches for tickets so I do not have to</p>
   </div>
   <div class="stream">
     <div class="panel rise">
@@ -738,11 +761,8 @@
 
     // ---------- synthesised jazz loop (original, no samples) ----------
     var audio = null;
-    function makeAudio() {
-      // Loop is an actual clip of the track — 8 bars, 74.05s-85.03s,
-      // snapped to zero crossings so the seam step (0.066) sits under the
-      // track's own typical step (0.097). Verified with an offline render.
-      var LOOP_A = 74.05168, LOOP_B = 85.03454, TAIL = 3.2, LOOP_VOL = 0.55;
+    function makeAudio(src, loopA, loopB) {
+      var TAIL = 3.2, LOOP_VOL = 0.55;
       var Ctor = window.AudioContext || window.webkitAudioContext;
       if (!Ctor) return null;
 
@@ -752,43 +772,52 @@
       out.connect(an); an.connect(ctx.destination);
       window.__analyser = an;
 
-      var songGain = ctx.createGain(); songGain.gain.value = 0.85;
-      var loopGain = ctx.createGain(); loopGain.gain.value = 0.0001;
-      songGain.connect(out); loopGain.connect(out);
+      var el = null, useEl = false;
 
-      var buffer = null, started = false, failed = false, wantStart = false;
+      // A track with measured loop points gets the seamless treatment;
+      // anything else just loops natively end to end.
+      if (loopA && loopB) {
+        var songGain = ctx.createGain(); songGain.gain.value = 0.85;
+        var loopGain = ctx.createGain(); loopGain.gain.value = 0.0001;
+        songGain.connect(out); loopGain.connect(out);
+        var buffer = null, started = false, wantStart = false;
 
-      function launch() {
-        if (started) return;
-        started = true;
-        if (failed || !buffer) return;
-        var t0 = ctx.currentTime + 0.05;
-        var song = ctx.createBufferSource(); song.buffer = buffer;
-        song.connect(songGain); song.start(t0);
-
-        var handoff = t0 + Math.max(1, buffer.duration - TAIL);
-        var loop = ctx.createBufferSource();
-        loop.buffer = buffer; loop.loop = true;
-        loop.loopStart = LOOP_A; loop.loopEnd = LOOP_B;
-        loop.connect(loopGain);
-        loop.start(handoff, LOOP_A);
-
-        songGain.gain.setValueAtTime(0.85, handoff);
-        songGain.gain.exponentialRampToValueAtTime(0.0001, handoff + TAIL);
-        loopGain.gain.setValueAtTime(0.0001, handoff);
-        loopGain.gain.linearRampToValueAtTime(LOOP_VOL, handoff + TAIL);
+        var launch = function () {
+          if (started || !buffer) return;
+          started = true;
+          var t0 = ctx.currentTime + 0.05;
+          var song = ctx.createBufferSource(); song.buffer = buffer;
+          song.connect(songGain); song.start(t0);
+          var handoff = t0 + Math.max(1, buffer.duration - TAIL);
+          var loop = ctx.createBufferSource();
+          loop.buffer = buffer; loop.loop = true;
+          loop.loopStart = loopA; loop.loopEnd = loopB;
+          loop.connect(loopGain);
+          loop.start(handoff, loopA);
+          songGain.gain.setValueAtTime(0.85, handoff);
+          songGain.gain.exponentialRampToValueAtTime(0.0001, handoff + TAIL);
+          loopGain.gain.setValueAtTime(0.0001, handoff);
+          loopGain.gain.linearRampToValueAtTime(LOOP_VOL, handoff + TAIL);
+        };
+        fetch(src).then(function (r) { return r.arrayBuffer(); })
+          .then(function (a) { return ctx.decodeAudioData(a); })
+          .then(function (buf) { buffer = buf; if (wantStart) launch(); })
+          .catch(function () {});
+        return {
+          start: function () { wantStart = true; ctx.resume(); launch(); },
+          pause: function () { ctx.suspend(); },
+          resume: function () { ctx.resume(); }
+        };
       }
 
-      fetch('media/bang.mp3')
-        .then(function (r) { if (!r.ok) throw new Error('404'); return r.arrayBuffer(); })
-        .then(function (a) { return ctx.decodeAudioData(a); })
-        .then(function (buf) { buffer = buf; if (wantStart) launch(); })
-        .catch(function () { failed = true; });
-
+      el = new Audio(src);
+      el.loop = true; el.volume = 0.7; el.preload = 'auto';
+      var node = ctx.createMediaElementSource(el);
+      node.connect(out);
       return {
-        start: function () { wantStart = true; ctx.resume(); launch(); },
-        pause: function () { ctx.suspend(); },
-        resume: function () { ctx.resume(); }
+        start: function () { ctx.resume(); el.play().catch(function () {}); },
+        pause: function () { el.pause(); },
+        resume: function () { el.play().catch(function () {}); }
       };
     }
 
@@ -825,10 +854,6 @@
     }
     function enter(withSound) {
       var wait = flyVinyl();
-      if (withSound) {
-        if (!audio) audio = makeAudio();
-        if (audio) { audio.start(); setPlaying(true); }
-      }
       if (gate) {
         gate.classList.add('open');
         setTimeout(function () { gate.style.display = 'none'; }, 1100);
@@ -875,12 +900,26 @@
       requestAnimationFrame(step);
     })();
     document.body.classList.add('locked');
-    var eb = document.getElementById('enterBtn');
+    var picks = [].slice.call(document.querySelectorAll('.pick'));
+    picks.forEach(function (btn) {
+      var src = btn.getAttribute('data-src');
+      // hide a slot whose track isn't there yet
+      fetch(src, { method: 'HEAD' }).then(function (r) {
+        if (!r.ok) btn.classList.add('missing');
+      }).catch(function () { btn.classList.add('missing'); });
+
+      btn.addEventListener('click', function () {
+        var a = parseFloat(btn.getAttribute('data-a')) || null;
+        var b = parseFloat(btn.getAttribute('data-b')) || null;
+        audio = makeAudio(src, a, b);
+        if (audio) { audio.start(); setPlaying(true); }
+        enter(false);
+      });
+    });
     var qb = document.getElementById('quietBtn');
-    if (eb) eb.addEventListener('click', function () { enter(true); });
     if (qb) qb.addEventListener('click', function () { enter(false); });
     if (mini) mini.addEventListener('click', function () {
-      if (!audio) { audio = makeAudio(); if (audio) { audio.start(); setPlaying(true); } return; }
+      if (!audio) { audio = makeAudio('media/bang.mp3', 74.05168, 85.03454); if (audio) { audio.start(); setPlaying(true); } return; }
       if (playing) { audio.pause(); setPlaying(false); }
       else { audio.resume(); setPlaying(false); setPlaying(true); }
     });
@@ -942,7 +981,9 @@
     // keyboard: Enter opens the gate
     document.addEventListener('keydown', function (ev) {
       if (ev.key === 'Enter' && document.body.classList.contains('locked')) {
-        ev.preventDefault(); enter(true);
+        ev.preventDefault();
+        var first = document.querySelector('.pick:not(.missing)');
+        if (first) first.click(); else enter(false);
       }
     });
 
