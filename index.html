@@ -7,7 +7,7 @@
 <title>Charlie Wuytack</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Anton&display=swap">
 <style>
   /* light by design — cream ground, near-black ink, one red accent */
   * { box-sizing: border-box; }
@@ -32,9 +32,10 @@
   .masthead {
     position: fixed; top: 0; left: 0; right: 0; z-index: 20;
     display: flex; justify-content: space-between; align-items: baseline;
-    padding: 26px 34px 34px;
+    padding: 18px 34px;
     font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase;
-    background: linear-gradient(#f7f7ef 62%, rgba(247, 247, 239, 0));
+    background: #f7f7ef;
+    border-bottom: 1px solid #22201d;
     pointer-events: none;
   }
   .masthead a, .masthead .who { pointer-events: auto; }
@@ -49,14 +50,24 @@
     text-align: center; padding: 0 32px;
   }
   .stage { position: relative; width: 100%; }
-  .opening h1 {
+  .opening h1 { margin: 0; }
+  .opening .slab {
+    display: block;
+    font-family: "Anton", "Arial Narrow", sans-serif;
+    font-weight: 400;
+    font-size: clamp(4.2rem, 16vw, 12.5rem);
+    line-height: 0.9;
+    letter-spacing: 0.005em;
+    color: #22201d;
+  }
+  .opening .ital {
+    display: block;
     font-family: "Lora", Georgia, serif;
-    font-weight: 600;
-    font-size: clamp(3.4rem, 12vw, 8rem);
-    line-height: 0.98;
-    letter-spacing: -0.03em;
-    margin: 0;
-    max-width: none;
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(2rem, 6.2vw, 4.6rem);
+    margin-top: -0.52em;
+    color: #22201d;
   }
   .veil { clip-path: inset(0 calc(100% - var(--reveal, 0%)) 0 0); }
   .runner {
@@ -104,31 +115,32 @@
   .head {
     position: sticky; top: 0; z-index: 6;
     background: #f7f7ef;
-    padding: 11vh 32px 3.5vh;
+    border-bottom: 1px solid #22201d;
+    padding: 64px 32px 18px;
     text-align: center;
-  }
-  .head::after {
-    content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 46px;
-    background: linear-gradient(#f7f7ef, rgba(247, 247, 239, 0)); pointer-events: none;
   }
   .eyebrow {
     font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
     color: #8a8478; margin: 0 0 16px;
   }
   .head h2 {
-    font-family: "Lora", Georgia, serif;
-    font-weight: 600;
-    font-size: clamp(2.1rem, 5vw, 3.4rem);
-    line-height: 1.1;
-    letter-spacing: -0.015em;
+    font-family: "Anton", "Arial Narrow", sans-serif;
+    font-weight: 400;
+    font-size: clamp(3rem, 8.5vw, 6.8rem);
+    line-height: 0.95;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
     margin: 0;
   }
+  .head .eyebrow { margin: 10px 0 0; }
   .stream { position: relative; z-index: 5; }
   .frame {
     width: calc(100vw - var(--sbw, 0px));
     margin: 0 0 10vh calc(50% - (100vw - var(--sbw, 0px)) / 2);
     overflow: hidden;
     background: #22201d;
+    border-top: 1px solid #22201d;
+    border-bottom: 1px solid #22201d;
   }
   .frame video, .frame img { display: block; width: 100%; height: auto; }
 
@@ -200,6 +212,68 @@
   }
   .close .stamp { margin-top: 26px; font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: #a9a496; }
 
+
+  /* ---------- entry gate ---------- */
+  .gate {
+    position: fixed; inset: 0; z-index: 60;
+    background: #f7f7ef;
+    display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+    padding: 0 0 26px;
+    transition: transform 1s cubic-bezier(0.7, 0, 0.2, 1);
+  }
+  .gate.open { transform: translateY(-101%); }
+  .gate-mast {
+    width: 100%; display: flex; justify-content: space-between;
+    padding: 18px 34px; border-bottom: 1px solid #22201d;
+    font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700;
+  }
+  .gate-mid { display: flex; flex-direction: column; align-items: center; gap: 30px; }
+  .vinyl { width: clamp(240px, 32vw, 360px); height: auto; display: block; }
+  .spinning .vinyl, .mini.playing .vinyl { animation: spin 1.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .enter {
+    font: 700 0.85rem/1 -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    letter-spacing: 0.18em;
+    background: #22201d; color: #f7f7ef;
+    border: 1px solid #22201d; padding: 16px 30px; cursor: pointer;
+  }
+  .enter:hover { background: #a9331f; border-color: #a9331f; }
+  .quiet-in {
+    background: none; border: none; cursor: pointer;
+    font-family: "Lora", Georgia, serif; font-style: italic; font-size: 0.95rem;
+    color: #5f5b52; border-bottom: 1px solid #c9c6b4; padding: 0 0 1px;
+  }
+  .quiet-in:hover { color: #a9331f; border-color: #a9331f; }
+  .gate-note { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: #8a8478; margin: 0; padding: 0 20px; text-align: center; }
+
+  /* ---------- corner record ---------- */
+  .mini {
+    position: fixed; left: 22px; bottom: 22px; z-index: 40;
+    width: 58px; height: 58px; padding: 0;
+    background: none; border: none; cursor: pointer;
+    opacity: 0; pointer-events: none; transition: opacity 0.6s ease;
+  }
+  .entered .mini { opacity: 1; pointer-events: auto; }
+  .mini .vinyl.small { width: 58px; }
+  .mini:not(.playing) .vinyl { animation: none; }
+
+  /* ---------- ticker ---------- */
+  .ticker {
+    border-top: 1px solid #22201d; border-bottom: 1px solid #22201d;
+    background: #f7f7ef;
+    overflow: hidden; white-space: nowrap;
+    padding: 9px 0;
+  }
+  .ticker .belt { display: inline-block; }
+  .ticker span {
+    display: inline-block;
+    font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: #22201d;
+    animation: belt 36s linear infinite;
+  }
+  @keyframes belt { to { transform: translateX(-100%); } }
+
+  body.locked { overflow: hidden; }
+
   /* ---------- reveal ---------- */
   .rise { opacity: 0; transform: translateY(20px); transition: opacity 0.9s ease, transform 1s cubic-bezier(0.22,1,0.36,1); }
   .rise.in { opacity: 1; transform: none; }
@@ -212,6 +286,9 @@
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
+    .spinning .vinyl, .mini.playing .vinyl { animation: none; }
+    .ticker span { animation: none; }
+    .gate { transition: none; }
     .rise { opacity: 1; transform: none; transition: none; }
     .opening .rule path { animation: none; stroke-dashoffset: 0; }
     .readout { animation: none; opacity: 1; }
@@ -221,6 +298,45 @@
 <body>
 
 
+<div class="gate" id="gate">
+  <div class="gate-mast"><span>CHARLIE WUYTACK</span><span>PORTFOLIO — 2026</span></div>
+  <div class="gate-mid">
+<svg class="vinyl" viewBox="0 0 200 200" aria-hidden="true">
+      <circle cx="100" cy="100" r="97" fill="#17140f"/>
+      <g fill="none" stroke="rgba(247,247,239,0.07)" stroke-width="1">
+        <circle cx="100" cy="100" r="44"/><circle cx="100" cy="100" r="52"/><circle cx="100" cy="100" r="60"/>
+        <circle cx="100" cy="100" r="68"/><circle cx="100" cy="100" r="76"/><circle cx="100" cy="100" r="84"/><circle cx="100" cy="100" r="91"/>
+      </g>
+      <path d="M14 100 a86 86 0 0 1 172 0" fill="none" stroke="rgba(247,7,239,0)" />
+      <path d="M30 100 a70 70 0 0 1 140 0" fill="none" stroke="rgba(247,247,239,0.12)" stroke-width="1.5"/>
+      <circle cx="100" cy="100" r="34" fill="#a9331f"/>
+      <circle cx="100" cy="100" r="33" fill="none" stroke="rgba(247,247,239,0.4)" stroke-width="0.6"/>
+      <text x="100" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" letter-spacing="2" fill="#f7f7ef">C.W.</text>
+      <text x="100" y="112" text-anchor="middle" font-family="Arial, sans-serif" font-size="5.5" letter-spacing="1.5" fill="rgba(247,247,239,0.8)">SIDE A · 45 RPM</text>
+      <circle cx="100" cy="100" r="3.2" fill="#f7f7ef"/>
+    </svg>
+    <button class="enter" id="enterBtn" type="button">DROP THE NEEDLE — ENTER</button>
+    <button class="quiet-in" id="quietBtn" type="button">enter quietly</button>
+  </div>
+  <p class="gate-note">Sound is played on this site — an original loop, synthesised in code. No samples.</p>
+</div>
+<button class="mini" id="mini" type="button" title="pause the record" aria-label="toggle music">
+<svg class="vinyl small" viewBox="0 0 200 200" aria-hidden="true">
+      <circle cx="100" cy="100" r="97" fill="#17140f"/>
+      <g fill="none" stroke="rgba(247,247,239,0.07)" stroke-width="1">
+        <circle cx="100" cy="100" r="44"/><circle cx="100" cy="100" r="52"/><circle cx="100" cy="100" r="60"/>
+        <circle cx="100" cy="100" r="68"/><circle cx="100" cy="100" r="76"/><circle cx="100" cy="100" r="84"/><circle cx="100" cy="100" r="91"/>
+      </g>
+      <path d="M14 100 a86 86 0 0 1 172 0" fill="none" stroke="rgba(247,7,239,0)" />
+      <path d="M30 100 a70 70 0 0 1 140 0" fill="none" stroke="rgba(247,247,239,0.12)" stroke-width="1.5"/>
+      <circle cx="100" cy="100" r="34" fill="#a9331f"/>
+      <circle cx="100" cy="100" r="33" fill="none" stroke="rgba(247,247,239,0.4)" stroke-width="0.6"/>
+      <text x="100" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" letter-spacing="2" fill="#f7f7ef">C.W.</text>
+      <text x="100" y="112" text-anchor="middle" font-family="Arial, sans-serif" font-size="5.5" letter-spacing="1.5" fill="rgba(247,247,239,0.8)">SIDE A · 45 RPM</text>
+      <circle cx="100" cy="100" r="3.2" fill="#f7f7ef"/>
+    </svg>
+</button>
+
 <div class="masthead">
   <span class="who">Charlie Wuytack</span>
   <a href="mailto:charlie@wuytack.net">Get in touch</a>
@@ -229,7 +345,7 @@
 <header class="opening">
   <div class="pin-hero">
     <div class="stage">
-      <h1 class="veil">Built it.<br>Measured it.</h1>
+      <h1 class="veil"><span class="slab">BUILT IT.</span><span class="ital">Measured it.</span></h1>
       <svg class="runner" viewBox="0 0 420 300" aria-hidden="true">
       <g fill="#22201d">
         <g opacity="0.5">
@@ -256,16 +372,17 @@
       </g>
     </svg>
     </div>
-    <p class="readout" aria-hidden="true"><span>119.8 Hz</span><span>0.21 ms</span><span>717 → 210 Mops/s</span><span>0.5714</span></p>
+    <p class="readout" aria-hidden="true"><span id="clock">--:--:--</span><span>119.8 Hz</span><span>0.21 ms</span><span>717 → 210 Mops/s</span><span id="soundstate">SOUND OFF</span></p>
     <p class="under">Games, macOS tools, flight search, prediction markets and trading research. Most of it works right here on this page.</p>
   </div>
 </header>
+<div class="ticker" aria-hidden="true"><div class="belt"><span>SONAR PICKING UP SOMETHING WITH… OPINIONS. ★ HOLD THE TRENCH. KEEP THE LIGHTS ON. ★ THE CHEAPEST FLIGHT ISN'T ALWAYS THE CHEAPEST TRIP. ★ 90 HYPOTHESES, ZERO EDGES. ★ 717 → 210 MOPS/S, RESTORED CLEAN. ★ RANK ~12 OF 13,534. ★ </span><span>SONAR PICKING UP SOMETHING WITH… OPINIONS. ★ HOLD THE TRENCH. KEEP THE LIGHTS ON. ★ THE CHEAPEST FLIGHT ISN'T ALWAYS THE CHEAPEST TRIP. ★ 90 HYPOTHESES, ZERO EDGES. ★ 717 → 210 MOPS/S, RESTORED CLEAN. ★ RANK ~12 OF 13,534. ★ </span></div></div>
 
 <!-- ABYSS WARDEN -->
 <section class="work" id="abyss">
   <div class="head">
-    <p class="eyebrow">Browser game · vanilla js, canvas, web audio</p>
     <h2>Abyss Warden</h2>
+    <p class="eyebrow">Browser game · vanilla js, canvas, web audio</p>
   </div>
   <div class="stream">
     <div class="frame rise">
@@ -292,8 +409,8 @@
 <!-- DOORLY -->
 <section class="work" id="doorly">
   <div class="head">
-    <p class="eyebrow">Flight search · web and ios</p>
     <h2>Doorly</h2>
+    <p class="eyebrow">Flight search · web and ios</p>
   </div>
   <div class="stream">
     <div class="frame rise">
@@ -319,8 +436,8 @@
 <!-- CHELSEA BIKES -->
 <section class="work" id="chelsea">
   <div class="head">
-    <p class="eyebrow">Redesign · pitch for a real shop</p>
     <h2>Chelsea Bikes</h2>
+    <p class="eyebrow">Redesign · pitch for a real shop</p>
   </div>
   <div class="stream">
     <div class="frame rise">
@@ -347,8 +464,8 @@
 <!-- CHESS EXCHANGE -->
 <section class="work" id="chess">
   <div class="head">
-    <p class="eyebrow">Prediction market · live lichess and chess.com games</p>
     <h2>Chess Exchange</h2>
+    <p class="eyebrow">Prediction market · live lichess and chess.com games</p>
   </div>
   <div class="stream">
     <div class="frame rise">
@@ -372,8 +489,8 @@
 <!-- POWERLEASH -->
 <section class="work" id="powerleash">
   <div class="head">
-    <p class="eyebrow">Mac menu bar app · swift</p>
     <h2>PowerLeash</h2>
+    <p class="eyebrow">Mac menu bar app · swift</p>
   </div>
   <div class="stream">
     <p class="say rise">A custom low power mode. Apple's native low power mode made macOS feel sluggish: the cursor was slow and laggy and the movements felt off.</p>
@@ -418,6 +535,137 @@
 
 <script>
   (function () {
+    // ---------- clock ----------
+    var clock = document.getElementById('clock');
+    if (clock) {
+      var tick = function () {
+        var d = new Date();
+        var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+        clock.textContent = pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+      };
+      tick(); setInterval(tick, 1000);
+    }
+
+    // ---------- synthesised jazz loop (original, no samples) ----------
+    var audio = null;
+    function makeAudio() {
+      var C = window.AudioContext || window.webkitAudioContext;
+      if (!C) return null;
+      var ctx = new C();
+      var master = ctx.createGain();
+      master.gain.value = 0.13;
+      master.connect(ctx.destination);
+
+      var noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 0.12, ctx.sampleRate);
+      var d = noiseBuf.getChannelData(0);
+      for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+
+      var tempo = 154, spb = 60 / tempo;
+      var midi = function (m) { return 440 * Math.pow(2, (m - 69) / 12); };
+
+      function bass(t, m) {
+        var o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = midi(m);
+        var f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 480; f.Q.value = 5;
+        var g = ctx.createGain();
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(0.55, t + 0.012);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + spb * 0.9);
+        o.connect(f); f.connect(g); g.connect(master);
+        o.start(t); o.stop(t + spb);
+      }
+      function ride(t, acc) {
+        var b = ctx.createBufferSource(); b.buffer = noiseBuf;
+        var f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 7600; f.Q.value = 1.1;
+        var g = ctx.createGain();
+        g.gain.setValueAtTime(acc ? 0.3 : 0.14, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+        b.connect(f); f.connect(g); g.connect(master);
+        b.start(t); b.stop(t + 0.1);
+      }
+      function stab(t, notes, dur) {
+        for (var i = 0; i < notes.length; i++) {
+          var o = ctx.createOscillator(); o.type = 'square'; o.frequency.value = midi(notes[i]);
+          var f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 2100;
+          var g = ctx.createGain();
+          g.gain.setValueAtTime(0.0001, t);
+          g.gain.exponentialRampToValueAtTime(0.085, t + 0.012);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+          o.connect(f); f.connect(g); g.connect(master);
+          o.start(t); o.stop(t + dur + 0.05);
+        }
+      }
+
+      // walking line in A minor: four bars, quarters
+      var lines = [
+        [45, 48, 52, 55], [50, 53, 57, 55], [48, 52, 55, 57], [52, 51, 50, 47]
+      ];
+      var bar = 0, nextT = 0, timer = null;
+
+      function scheduleBar(t) {
+        var line = lines[bar % lines.length];
+        for (var b = 0; b < 4; b++) {
+          var bt = t + b * spb;
+          bass(bt, line[b] - 12);
+          ride(bt, b === 0 || b === 2);
+          ride(bt + spb * 0.66, false);
+        }
+        if (bar % 4 === 3) {
+          stab(t + 2 * spb, [69, 72, 76], 0.16);
+          stab(t + 2.5 * spb, [67, 71, 74], 0.30);
+        }
+        bar++;
+      }
+      function pump() {
+        while (nextT < ctx.currentTime + 0.6) { scheduleBar(nextT); nextT += 4 * spb; }
+      }
+      return {
+        start: function () {
+          ctx.resume();
+          if (timer) return;
+          nextT = ctx.currentTime + 0.08; bar = 0;
+          pump(); timer = setInterval(pump, 150);
+        },
+        pause: function () { ctx.suspend(); },
+        resume: function () { ctx.resume(); },
+        running: function () { return ctx.state === 'running' && timer; }
+      };
+    }
+
+    // ---------- entry gate ----------
+    var gate = document.getElementById('gate');
+    var mini = document.getElementById('mini');
+    var soundState = document.getElementById('soundstate');
+    var playing = false;
+
+    function setPlaying(on) {
+      playing = on;
+      if (mini) mini.classList.toggle('playing', on);
+      if (gate) gate.classList.toggle('spinning', on);
+      if (soundState) soundState.textContent = on ? 'SOUND ON' : 'SOUND OFF';
+    }
+    function enter(withSound) {
+      if (withSound) {
+        if (!audio) audio = makeAudio();
+        if (audio) { audio.start(); setPlaying(true); }
+      }
+      if (gate) {
+        gate.classList.add('open');
+        setTimeout(function () { gate.style.display = 'none'; }, 1100);
+      }
+      document.body.classList.remove('locked');
+      document.body.classList.add('entered');
+    }
+    document.body.classList.add('locked');
+    var eb = document.getElementById('enterBtn');
+    var qb = document.getElementById('quietBtn');
+    if (eb) eb.addEventListener('click', function () { enter(true); });
+    if (qb) qb.addEventListener('click', function () { enter(false); });
+    if (mini) mini.addEventListener('click', function () {
+      if (!audio) { audio = makeAudio(); if (audio) { audio.start(); setPlaying(true); } return; }
+      if (playing) { audio.pause(); setPlaying(false); }
+      else { audio.resume(); setPlaying(false); setPlaying(true); }
+    });
+
     var setSbw = function () {
       document.documentElement.style.setProperty('--sbw',
         (window.innerWidth - document.documentElement.clientWidth) + 'px');
