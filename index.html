@@ -71,6 +71,22 @@
     margin-top: -0.52em;
     color: #22201d;
   }
+
+  .scroll-hint {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    bottom: -12vh; margin: 0;
+    font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase;
+    color: #8a8478; pointer-events: none;
+    opacity: var(--hint-op, 1); transition: opacity 0.5s ease;
+  }
+  .scroll-hint::after {
+    content: ""; display: block; width: 1px; height: 26px; margin: 10px auto 0;
+    background: linear-gradient(#8a8478, transparent);
+    animation: hint-drop 1.9s ease-in-out infinite;
+  }
+  @keyframes hint-drop { 0%,100% { opacity: 0.3; transform: translateY(-4px); } 50% { opacity: 1; transform: translateY(2px); } }
+  @media (prefers-reduced-motion: reduce) { .scroll-hint::after { animation: none; } }
+
   .veil { clip-path: inset(0 calc(100% - var(--reveal, 0%)) 0 0); }
 
 
@@ -578,6 +594,7 @@
 <header class="opening">
   <div class="pin-hero">
     <div class="stage">
+      <p class="scroll-hint" id="scrollHint">Scroll</p>
       <h1 class="veil"><span class="slab">I'D RATHER BUILD</span><span class="ital">than consume.</span></h1>
     </div>
     <p class="under">Games, macOS tools, flight search, prediction markets and trading research. Most of it works right here on this page.</p>
@@ -1005,8 +1022,13 @@
       };
       requestAnimationFrame(step);
     })();
-    var seenBefore = false;
-    try { seenBefore = localStorage.getItem('cw-entered') === '1'; } catch (e) {}
+    var seenBefore = false, forceGate = false;
+    try {
+      seenBefore = localStorage.getItem('cw-entered') === '1';
+      forceGate = sessionStorage.getItem('cw-showgate') === '1';
+      if (forceGate) sessionStorage.removeItem('cw-showgate');
+    } catch (e) {}
+    if (forceGate) seenBefore = false;
     if (seenBefore) {
       // been here before: skip the ceremony, the corner record still offers it
       if (gate) gate.style.display = 'none';
@@ -1077,31 +1099,10 @@
     // the corner record is the way back — pick a different side (Nielsen #3: user control and freedom)
     function backToStart() {
       if (audio) { try { audio.pause(); } catch (e) {} }
-      setPlaying(false);
-      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
-      var deck = document.getElementById('deck');
-      if (gate) {
-        gate.style.display = '';
-        // let the browser paint the reset state before sliding it back down
-        requestAnimationFrame(function () { gate.classList.remove('open'); });
-      }
-      if (deck) { deck.classList.remove('cueing', 'picked', 'loading'); }
-      var picksBox = document.querySelector('.picks');
-      var needleLbl = document.querySelector('.needle');
-      if (picksBox) picksBox.style.opacity = '';
-      if (needleLbl) needleLbl.style.opacity = '';
-      picks.forEach(function (o) { o.disabled = false; });
-      document.body.classList.remove('entered');
-      var seenBefore = false;
-    try { seenBefore = localStorage.getItem('cw-entered') === '1'; } catch (e) {}
-    if (seenBefore) {
-      // been here before: skip the ceremony, the corner record still offers it
-      if (gate) gate.style.display = 'none';
-      document.body.classList.add('entered');
-    } else {
-      document.body.classList.add('locked');
-    }
-      audio = null;
+      // reopening the gate by hand left half-reset state behind (hidden deck,
+      // faded picks, spent intro animations). A reload gives a guaranteed clean start.
+      try { sessionStorage.setItem('cw-showgate', '1'); } catch (e) {}
+      location.href = location.pathname;
     }
     if (mini) mini.addEventListener('click', backToStart);
     // Escape does the same, from anywhere
@@ -1136,6 +1137,7 @@
         var e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
         veil.style.setProperty('--reveal', (e * 100) + '%');
         opening.style.setProperty('--tail-op', e > 0.97 ? 1 : 0);
+        opening.style.setProperty('--hint-op', e > 0.04 ? 0 : 1);
         pend = false;
       };
       window.addEventListener('scroll', function () {
