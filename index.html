@@ -738,119 +738,11 @@
 
     // ---------- synthesised jazz loop (original, no samples) ----------
     var audio = null;
-    // A fixed-length pattern, scheduled on a loop with lookahead timing.
-    // Same bars every cycle -> a genuinely perfect loop, not a seam chase.
-    function makeChillLoop(destGain, ctx) {
-      var tempo = 82, beat = 60 / tempo, bar = beat * 4;
-      var midi = function (m) { return 440 * Math.pow(2, (m - 69) / 12); };
-
-      var crackleBuf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
-      var cd = crackleBuf.getChannelData(0);
-      for (var i = 0; i < cd.length; i++) cd[i] = (Math.random() * 2 - 1) * (Math.random() < 0.02 ? 1 : 0.15);
-      var crackleSrc = ctx.createBufferSource();
-      crackleSrc.buffer = crackleBuf; crackleSrc.loop = true;
-      var crackleFilt = ctx.createBiquadFilter(); crackleFilt.type = 'bandpass'; crackleFilt.frequency.value = 3200; crackleFilt.Q.value = 0.7;
-      var crackleGain = ctx.createGain(); crackleGain.gain.value = 0.018;
-      crackleSrc.connect(crackleFilt); crackleFilt.connect(crackleGain); crackleGain.connect(destGain);
-      crackleSrc.start();
-
-      var hitBuf = ctx.createBuffer(1, ctx.sampleRate * 0.2, ctx.sampleRate);
-      var hd = hitBuf.getChannelData(0);
-      for (var j = 0; j < hd.length; j++) hd[j] = Math.random() * 2 - 1;
-
-      function kick(t) {
-        var o = ctx.createOscillator(); o.type = 'sine';
-        o.frequency.setValueAtTime(120, t);
-        o.frequency.exponentialRampToValueAtTime(46, t + 0.09);
-        var g = ctx.createGain();
-        g.gain.setValueAtTime(0.001, t);
-        g.gain.exponentialRampToValueAtTime(0.42, t + 0.008);
-        g.gain.exponentialRampToValueAtTime(0.001, t + 0.34);
-        o.connect(g); g.connect(destGain);
-        o.start(t); o.stop(t + 0.36);
-      }
-      function snap(t, vol) {
-        var b = ctx.createBufferSource(); b.buffer = hitBuf;
-        var f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 1250; f.Q.value = 0.5;
-        var g = ctx.createGain();
-        g.gain.setValueAtTime(vol, t);
-        g.gain.exponentialRampToValueAtTime(0.001, t + 0.11);
-        b.connect(f); f.connect(g); g.connect(destGain);
-        b.start(t); b.stop(t + 0.12);
-      }
-      function hat(t, open) {
-        var b = ctx.createBufferSource(); b.buffer = hitBuf;
-        var f = ctx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 7200;
-        var g = ctx.createGain();
-        var dur = open ? 0.16 : 0.045;
-        g.gain.setValueAtTime(open ? 0.06 : 0.045, t);
-        g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-        b.connect(f); f.connect(g); g.connect(destGain);
-        b.start(t); b.stop(t + dur + 0.02);
-      }
-      function chord(t, notes, dur) {
-        for (var k = 0; k < notes.length; k++) {
-          [-3, 3].forEach(function (det) {
-            var o = ctx.createOscillator(); o.type = k === 0 ? 'sine' : 'triangle';
-            o.frequency.value = midi(notes[k]); o.detune.value = det;
-            var f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 1900; f.Q.value = 0.4;
-            var g = ctx.createGain();
-            g.gain.setValueAtTime(0.0001, t);
-            g.gain.linearRampToValueAtTime(0.05, t + 0.5);
-            g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-            o.connect(f); f.connect(g); g.connect(destGain);
-            o.start(t); o.stop(t + dur + 0.05);
-          });
-        }
-      }
-      function warmBass(t, note, dur) {
-        var o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = midi(note);
-        var g = ctx.createGain();
-        g.gain.setValueAtTime(0.0001, t);
-        g.gain.linearRampToValueAtTime(0.16, t + 0.05);
-        g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-        o.connect(g); g.connect(destGain);
-        o.start(t); o.stop(t + dur + 0.05);
-      }
-
-      // 8-bar progression: Dm9 - Gm7 - Cmaj7 - Fmaj7, twice through
-      var chords = [
-        { notes: [50, 53, 57, 60, 64], bass: 38 },
-        { notes: [55, 58, 62, 65],     bass: 43 },
-        { notes: [48, 52, 55, 59],     bass: 36 },
-        { notes: [53, 57, 60, 64],     bass: 41 },
-      ];
-      var barIdx = 0, nextT = 0, timer = null;
-
-      function scheduleBar(t) {
-        var c = chords[barIdx % chords.length];
-        var isEven = (barIdx % 2) === 0;
-        if (isEven) chord(t, c.notes, bar * 2 - 0.15);
-        warmBass(t, c.bass, bar * 0.9);
-        if (barIdx % 2 === 1) warmBass(t + beat * 2, c.bass + 7, bar * 0.4);
-
-        kick(t);
-        kick(t + beat * 2.5);
-        snap(t + beat * 1, 0.16);
-        snap(t + beat * 3, 0.16);
-        for (var h = 0; h < 8; h++) {
-          hat(t + h * beat * 0.5, h === 6);
-        }
-        barIdx++;
-      }
-      function pump() {
-        while (nextT < ctx.currentTime + 0.7) { scheduleBar(nextT); nextT += bar; }
-      }
-      return {
-        start: function () {
-          if (timer) return;
-          nextT = ctx.currentTime + 0.05; barIdx = 0;
-          pump(); timer = setInterval(pump, 180);
-        }
-      };
-    }
-
     function makeAudio() {
+      // Loop is an actual clip of the track — 8 bars, 74.05s-85.03s,
+      // snapped to zero crossings so the seam step (0.066) sits under the
+      // track's own typical step (0.097). Verified with an offline render.
+      var LOOP_A = 74.05168, LOOP_B = 85.03454, TAIL = 3.2, LOOP_VOL = 0.55;
       var Ctor = window.AudioContext || window.webkitAudioContext;
       if (!Ctor) return null;
 
@@ -864,32 +756,34 @@
       var loopGain = ctx.createGain(); loopGain.gain.value = 0.0001;
       songGain.connect(out); loopGain.connect(out);
 
-      var TAIL = 3.2;
       var buffer = null, started = false, failed = false, wantStart = false;
-      var loop = makeChillLoop(loopGain, ctx);
 
-      function crossToLoop(handoff) {
-        loop.start();
-        songGain.gain.setValueAtTime(0.85, handoff);
-        songGain.gain.exponentialRampToValueAtTime(0.0001, handoff + TAIL);
-        loopGain.gain.setValueAtTime(0.0001, handoff);
-        loopGain.gain.linearRampToValueAtTime(0.5, handoff + TAIL);
-      }
       function launch() {
         if (started) return;
         started = true;
-        if (failed || !buffer) { crossToLoop(ctx.currentTime + 0.05); return; }
+        if (failed || !buffer) return;
         var t0 = ctx.currentTime + 0.05;
         var song = ctx.createBufferSource(); song.buffer = buffer;
         song.connect(songGain); song.start(t0);
-        crossToLoop(t0 + Math.max(1, buffer.duration - TAIL));
+
+        var handoff = t0 + Math.max(1, buffer.duration - TAIL);
+        var loop = ctx.createBufferSource();
+        loop.buffer = buffer; loop.loop = true;
+        loop.loopStart = LOOP_A; loop.loopEnd = LOOP_B;
+        loop.connect(loopGain);
+        loop.start(handoff, LOOP_A);
+
+        songGain.gain.setValueAtTime(0.85, handoff);
+        songGain.gain.exponentialRampToValueAtTime(0.0001, handoff + TAIL);
+        loopGain.gain.setValueAtTime(0.0001, handoff);
+        loopGain.gain.linearRampToValueAtTime(LOOP_VOL, handoff + TAIL);
       }
 
       fetch('media/bang.mp3')
         .then(function (r) { if (!r.ok) throw new Error('404'); return r.arrayBuffer(); })
         .then(function (a) { return ctx.decodeAudioData(a); })
         .then(function (buf) { buffer = buf; if (wantStart) launch(); })
-        .catch(function () { failed = true; if (wantStart) launch(); });
+        .catch(function () { failed = true; });
 
       return {
         start: function () { wantStart = true; ctx.resume(); launch(); },
