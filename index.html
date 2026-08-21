@@ -289,13 +289,13 @@
     <div class="beat">
       <h2>PowerLeash</h2>
       <p class="meta">mac menu bar app · swift</p>
-      <p>A custom low power mode for macOS — one that targets a power budget instead of blanket-throttling the machine. I assumed Low Power Mode capped my screen at 60Hz.</p>
+      <p>A custom low power mode. Apple's native low power mode made macOS feel sluggish: the cursor was slow and laggy and the movements felt off.</p>
     </div>
     <div class="beat">
-      <p>I measured it: it doesn't. The panel holds 120Hz, and what Low Power Mode actually costs is ~40% of CPU clock applied globally — so it slows the app you're looking at as much as the background work. It also applies the same fixed cut whether you're on a 45W charger or a 96W one.</p>
+      <p>I also only have a charger of 45W on a Mac that can draw much more than that: I was losing battery working on heavy tasks while on charge. I found out the reason LPM was sluggish was because it killed the CPU by about 40%.</p>
     </div>
     <div class="beat">
-      <p><b>Eco Mode</b> demotes background apps to the efficiency cores and leaves the foreground alone. <b>Match Charger</b> closes a loop against your charger's real wattage, duty-cycling processes between performance and efficiency cores so heavy jobs run slower instead of draining the battery while plugged in.</p>
+      <p>Eco Mode is my own low power mode, moving all background apps to efficiency cores leaving the foreground untouched. Match Charger capped my total draw by what I could supply.</p>
       <a class="cta" href="downloads/PowerLeash.zip" download>Download for Mac</a>
       <p class="grey small">Apple Silicon, unsigned — right click → Open.</p>
     </div>
