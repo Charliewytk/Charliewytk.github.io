@@ -129,12 +129,11 @@
   .head .eyebrow { margin: 10px 0 0; }
   .stream { position: relative; z-index: 5; }
   .frame {
-    width: calc(100vw - var(--sbw, 0px));
-    margin: 0 0 10vh calc(50% - (100vw - var(--sbw, 0px)) / 2);
+    width: min(100%, 1060px);
+    margin: 0 auto 11vh;
     overflow: hidden;
     background: #22201d;
-    border-top: 1px solid #22201d;
-    border-bottom: 1px solid #22201d;
+    border: 1px solid #22201d;
   }
   .frame video, .frame img { display: block; width: 100%; height: auto; }
 
@@ -353,7 +352,7 @@
 
   @media (max-width: 760px) {
     .head { padding: 8vh 22px 3vh; }
-    .frame { margin-bottom: 7vh; }
+    .frame { margin-bottom: 7vh; width: 100%; }
     .say, .mono-stat, .todo, .maths { margin-bottom: 7vh; }
     .masthead { padding: 18px 22px; font-size: 0.7rem; }
   }
@@ -689,65 +688,64 @@
     // ---------- synthesised jazz loop (original, no samples) ----------
     var audio = null;
     function makeAudio() {
-      var LOOP_START = 12.0, LOOP_END = 40.5, LOOP_VOL = 0.3;
-      var synth = null;
-      var useFile = true;
-      var el = new Audio('media/bang.mp3');
-      el.loop = false; el.volume = 0.75; el.preload = 'auto';
-      el.crossOrigin = 'anonymous';
-      el.addEventListener('error', function () { useFile = false; });
-      var looping = false, fadeTimer = null;
-      function fadeTo(v, ms) {
-        if (fadeTimer) clearInterval(fadeTimer);
-        var step = (v - el.volume) / (ms / 50);
-        fadeTimer = setInterval(function () {
-          var nv = el.volume + step;
-          if ((step < 0 && nv <= v) || (step > 0 && nv >= v)) { el.volume = v; clearInterval(fadeTimer); }
-          else el.volume = Math.max(0, Math.min(1, nv));
-        }, 50);
-      }
-      function seam() {
-        if (!looping && el.duration && el.currentTime >= el.duration - 0.45) {
-          looping = true; fadeTo(LOOP_VOL, 1400);
-          el.currentTime = LOOP_START; el.play().catch(function () {});
-        } else if (looping && el.currentTime >= LOOP_END) {
-          el.currentTime = LOOP_START;
-        }
-      }
-      el.addEventListener('timeupdate', seam);
-      el.addEventListener('ended', function () {
-        looping = true; el.volume = LOOP_VOL;
-        el.currentTime = LOOP_START; el.play().catch(function () {});
-      });
+      // measured from the file: 175.25 bpm, bar 1.3696s.
+      // 4-bar vamp inside the intro bassline, snapped to zero crossings so the seam is silent.
+      var LOOP_A = 2.8356, LOOP_B = 8.3438, TAIL = 3.4, BED = 0.34;
+      var Ctor = window.AudioContext || window.webkitAudioContext;
+      if (!Ctor) return makeSynth();
 
-      // analyser tap for the floating notes
-      var actx = null, analyser = null;
-      function wireAnalyser() {
-        if (actx || !window.AudioContext) return;
-        try {
-          actx = new AudioContext();
-          var src = actx.createMediaElementSource(el);
-          analyser = actx.createAnalyser(); analyser.fftSize = 256;
-          src.connect(analyser); analyser.connect(actx.destination);
-          window.__analyser = analyser;
-        } catch (e) { analyser = null; }
+      var ctx = new Ctor();
+      var out = ctx.createGain(); out.gain.value = 1;
+      var an = ctx.createAnalyser(); an.fftSize = 256;
+      out.connect(an); an.connect(ctx.destination);
+      window.__analyser = an;
+
+      var songGain = ctx.createGain(); songGain.gain.value = 0.85;
+      var bedGain = ctx.createGain(); bedGain.gain.value = 0.0001;
+      var muffle = ctx.createBiquadFilter();
+      muffle.type = 'lowpass'; muffle.frequency.value = 1150; muffle.Q.value = 0.6;
+      songGain.connect(out); bedGain.connect(muffle); muffle.connect(out);
+
+      var buffer = null, song = null, bed = null, started = false, failed = false, wantStart = false;
+
+      function launch() {
+        if (!buffer || started) return;
+        started = true;
+        var t0 = ctx.currentTime + 0.05;
+        song = ctx.createBufferSource(); song.buffer = buffer;
+        song.connect(songGain); song.start(t0);
+
+        var handoff = t0 + Math.max(1, buffer.duration - TAIL);
+        bed = ctx.createBufferSource();
+        bed.buffer = buffer; bed.loop = true;
+        bed.loopStart = LOOP_A; bed.loopEnd = LOOP_B;
+        bed.connect(bedGain);
+        bed.start(handoff, LOOP_A);
+
+        // smooth crossfade: song out, muffled vamp in
+        songGain.gain.setValueAtTime(0.85, handoff);
+        songGain.gain.exponentialRampToValueAtTime(0.0001, handoff + TAIL);
+        bedGain.gain.setValueAtTime(0.0001, handoff);
+        bedGain.gain.exponentialRampToValueAtTime(BED, handoff + TAIL);
       }
-      var ensureSynth = function () { if (!synth) synth = makeSynth(); return synth; };
+
+      fetch('media/bang.mp3')
+        .then(function (r) { if (!r.ok) throw new Error('404'); return r.arrayBuffer(); })
+        .then(function (a) { return ctx.decodeAudioData(a); })
+        .then(function (buf) { buffer = buf; if (wantStart) launch(); })
+        .catch(function () { failed = true; if (wantStart) { window.__analyser = null; synthFallback().start(); } });
+
+      var sf = null;
+      function synthFallback() { if (!sf) sf = makeSynth(); return sf; }
+
       return {
         start: function () {
-          if (!useFile) { ensureSynth().start(); return; }
-          wireAnalyser();
-          if (actx) actx.resume();
-          var pr = el.play();
-          if (pr && pr.then) pr.then(null, function () { useFile = false; ensureSynth().start(); });
+          wantStart = true; ctx.resume();
+          if (failed) { synthFallback().start(); return; }
+          launch();
         },
-        pause: function () { if (useFile) el.pause(); else if (synth) synth.pause(); },
-        resume: function () {
-          if (!useFile) { ensureSynth().resume(); return; }
-          if (actx) actx.resume();
-          var pr = el.play();
-          if (pr && pr.then) pr.then(null, function () { useFile = false; ensureSynth().resume(); });
-        }
+        pause: function () { if (failed && sf) sf.pause(); else ctx.suspend(); },
+        resume: function () { if (failed && sf) sf.resume(); else ctx.resume(); }
       };
     }
     function makeSynth() {
