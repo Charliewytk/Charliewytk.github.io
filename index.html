@@ -284,12 +284,6 @@
   .pick:hover { background: #22201d; color: #f7f7ef; transform: translateY(-2px); }
   .pick:hover .track { color: rgba(247,247,239,0.7); }
   .pick.missing { display: none; }
-  .quiet-in {
-    background: none; border: none; cursor: pointer;
-    font-family: "Lora", Georgia, serif; font-style: italic; font-size: 0.95rem;
-    color: #5f5b52; border-bottom: 1px solid #c9c6b4; padding: 0 0 1px;
-  }
-  .quiet-in:hover { color: var(--accent); border-color: var(--accent); }
 
 
 
@@ -305,17 +299,16 @@
   /* ---------- the gate arrives from nothing ---------- */
   @keyframes gate-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
   @keyframes record-in { from { opacity: 0; transform: translateY(-42px) scale(0.9); } to { opacity: 1; transform: translateY(-16px) scale(0.96); } }
-  .gate-mast, .deck, .needle, .picks, .quiet-in { opacity: 0; }
+  .gate-mast, .deck, .needle, .picks { opacity: 0; }
   .gate-mast { animation: gate-in 0.8s ease 0.55s both; }
   .deck .vinyl { animation: record-in 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0.9s both; }
   .deck { animation: gate-in 0.01s linear 0.9s both; }
   .needle { animation: gate-in 0.7s ease 1.85s both; }
   .picks { animation: gate-in 0.7s ease 2.05s both; }
-  .quiet-in { animation: gate-in 0.7s ease 2.3s both; }
   /* once a record is cueing, the settle transition takes over from the intro */
   .deck.cueing .vinyl { animation: none; }
   @media (prefers-reduced-motion: reduce) {
-    .gate-mast, .deck, .deck .vinyl, .needle, .picks, .quiet-in { animation: none; opacity: 1; }
+    .gate-mast, .deck, .deck .vinyl, .needle, .picks { animation: none; opacity: 1; }
   }
 
   /* ---------- the deck: record, platter, tonearm ---------- */
@@ -519,7 +512,6 @@
         <span class="mood">Sunday</span><span class="track">Bossa nova</span>
       </button>
     </div>
-    <button class="quiet-in" id="quietBtn" type="button">enter in silence</button>
   </div>
 </div>
 <button class="mini" id="mini" type="button" title="pause the record" aria-label="toggle music">
@@ -994,7 +986,6 @@
           var needleLbl = document.querySelector('.needle');
           if (picksBox) { picksBox.style.transition = 'opacity 0.45s ease'; picksBox.style.opacity = '0'; }
           if (needleLbl) { needleLbl.style.transition = 'opacity 0.45s ease'; needleLbl.style.opacity = '0'; }
-          if (qb) { qb.style.transition = 'opacity 0.45s ease'; qb.style.opacity = '0'; }
         }
 
         // 2. needle lands -> sound starts
@@ -1007,8 +998,6 @@
         setTimeout(function () { enter(false); }, reduce ? 0 : 1350);
       });
     });
-    var qb = document.getElementById('quietBtn');
-    if (qb) qb.addEventListener('click', function () { enter(false); });
     if (mini) mini.addEventListener('click', function () {
       if (!audio) { audio = makeAudio('media/bang.mp3', 74.05168, 85.03454); if (audio) { audio.start(); setPlaying(true); } return; }
       if (playing) { audio.pause(); setPlaying(false); }
@@ -1074,7 +1063,7 @@
       if (ev.key === 'Enter' && document.body.classList.contains('locked')) {
         ev.preventDefault();
         var first = document.querySelector('.pick:not(.missing)');
-        if (first) first.click(); else enter(false);
+        if (first) first.click();
       }
     });
 
