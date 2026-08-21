@@ -293,6 +293,15 @@
 
 
 
+
+  .vinyl .label-fill, .vinyl .label-text, .vinyl .label-dot {
+    transition: fill 0.75s ease;
+  }
+  .deck.picked .vinyl .label-fill { fill: var(--accent); }
+  .deck.picked .vinyl .label-text { fill: #f7f7ef; }
+  .deck.picked .vinyl .label-text.sub { fill: rgba(247,247,239,0.8); }
+  .deck.picked .vinyl .label-dot { fill: #f7f7ef; }
+
   /* ---------- the gate arrives from nothing ---------- */
   @keyframes gate-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
   @keyframes record-in { from { opacity: 0; transform: translateY(-42px) scale(0.9); } to { opacity: 1; transform: translateY(-16px) scale(0.96); } }
@@ -491,11 +500,11 @@
       </g>
       <path d="M14 100 a86 86 0 0 1 172 0" fill="none" stroke="rgba(247,7,239,0)" />
       <path d="M30 100 a70 70 0 0 1 140 0" fill="none" stroke="rgba(247,247,239,0.12)" stroke-width="1.5"/>
-      <circle cx="100" cy="100" r="34" fill="var(--accent)"/>
-      <circle cx="100" cy="100" r="33" fill="none" stroke="rgba(247,247,239,0.4)" stroke-width="0.6"/>
-      <text x="100" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" letter-spacing="2" fill="#f7f7ef">C.W.</text>
-      <text x="100" y="112" text-anchor="middle" font-family="Arial, sans-serif" font-size="5.5" letter-spacing="1.5" fill="rgba(247,247,239,0.8)">SIDE A · 45 RPM</text>
-      <circle cx="100" cy="100" r="3.2" fill="#f7f7ef"/>
+      <circle class="label-fill" cx="100" cy="100" r="34" fill="#f4f2e8"/>
+      <circle cx="100" cy="100" r="33" fill="none" stroke="rgba(34,32,29,0.18)" stroke-width="0.6"/>
+      <text class="label-text" x="100" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" letter-spacing="2" fill="#22201d">C.W.</text>
+      <text class="label-text sub" x="100" y="112" text-anchor="middle" font-family="Arial, sans-serif" font-size="5.5" letter-spacing="1.5" fill="rgba(34,32,29,0.65)">SIDE A · 45 RPM</text>
+      <circle class="label-dot" cx="100" cy="100" r="3.2" fill="#22201d"/>
     </svg>
     </div>
     <p class="needle">Drop the needle</p>
@@ -976,6 +985,7 @@
 
         var deck = document.getElementById('deck');
         picks.forEach(function (o) { o.disabled = true; });
+        if (deck) deck.classList.add('picked');
 
         // 1. record settles onto the platter, tonearm swings down
         if (deck && !reduce) {
