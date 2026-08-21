@@ -11,7 +11,7 @@
 <style>
   /* light by design — cream ground, near-black ink, one red accent */
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; overflow-x: clip; }
   body {
     margin: 0;
     background: #f7f7ef;
@@ -52,14 +52,38 @@
   .opening h1 {
     font-family: "Lora", Georgia, serif;
     font-weight: 600;
-    font-size: clamp(2.9rem, 8.5vw, 5.6rem);
-    line-height: 1.05;
-    letter-spacing: -0.015em;
+    font-size: clamp(3.4rem, 12vw, 8rem);
+    line-height: 0.98;
+    letter-spacing: -0.03em;
     margin: 0;
-    max-width: 16ch;
+    max-width: none;
   }
+  .opening h1 .measured { position: relative; display: inline-block; }
+  .opening .rule {
+    position: absolute; left: -1%; right: -1%; bottom: -0.16em; width: 102%; height: 0.42em;
+    overflow: visible; pointer-events: none;
+  }
+  .opening .rule path {
+    fill: none; stroke: #a9331f; stroke-width: 2.5; stroke-linecap: round;
+    stroke-dasharray: 620; stroke-dashoffset: 620;
+    animation: draw 1.5s cubic-bezier(0.65,0,0.35,1) 0.75s forwards;
+  }
+  .opening .rule path:nth-child(2) { animation-delay: 2.1s; animation-duration: 0.3s; }
+  .opening .rule path:nth-child(3) { animation-delay: 2.25s; animation-duration: 0.3s; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+
+  .readout {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px;
+    margin: 30px 0 0; padding: 0;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.7rem; letter-spacing: 0.1em; color: #a9331f;
+    font-variant-numeric: tabular-nums;
+    opacity: 0; animation: fadein 1s ease 2.5s forwards;
+  }
+  @keyframes fadein { to { opacity: 1; } }
+
   .opening .under {
-    margin: 34px 0 0;
+    margin: 30px 0 0;
     font-size: 0.95rem;
     color: #5f5b52;
     max-width: 46ch;
@@ -107,10 +131,9 @@
   }
   .stream { position: relative; z-index: 5; }
   .frame {
-    max-width: 1000px; margin: 0 auto 9vh;
-    border-radius: 4px; overflow: hidden;
+    width: 100vw; max-width: 100vw;
+    margin: 0 0 10vh calc(50% - 50vw); overflow: hidden;
     background: #22201d;
-    box-shadow: 0 26px 60px rgba(34, 32, 29, 0.18);
   }
   .frame video, .frame img { display: block; width: 100%; height: auto; }
 
@@ -188,13 +211,15 @@
 
   @media (max-width: 760px) {
     .head { padding: 8vh 22px 3vh; }
-    .frame { margin-bottom: 7vh; border-radius: 3px; }
+    .frame { margin-bottom: 7vh; }
     .say, .mono-stat, .todo, .maths { margin-bottom: 7vh; }
     .masthead { padding: 18px 22px; font-size: 0.7rem; }
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .rise { opacity: 1; transform: none; transition: none; }
+    .opening .rule path { animation: none; stroke-dashoffset: 0; }
+    .readout { animation: none; opacity: 1; }
   }
 </style>
 </head>
@@ -207,13 +232,10 @@
 </div>
 
 <header class="opening">
-  <h1>Built it. Measured it. Wrote down what broke.</h1>
+  <h1>Built it.<br><span class="measured">Measured it.<svg class="rule" viewBox="0 0 600 40" preserveAspectRatio="none" aria-hidden="true"><path d="M4 20 H596" /><path d="M4 8 V32" /><path d="M596 8 V32" /></svg></span></h1>
+  <p class="readout" aria-hidden="true"><span>119.8 Hz</span><span>0.21 ms</span><span>717 → 210 Mops/s</span><span>0.5714</span></p>
   <p class="under">Games, macOS tools, flight search, prediction markets and trading research. Most of it works right here on this page.</p>
 </header>
-
-<section class="statement">
-  <p class="rise">Five things I made, and what each one taught me.</p>
-</section>
 
 <!-- ABYSS WARDEN -->
 <section class="work" id="abyss">
