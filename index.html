@@ -311,6 +311,13 @@
     .gate-mast, .deck, .deck .vinyl, .needle, .picks { animation: none; opacity: 1; }
   }
 
+
+  /* the record eases into a spin while the track loads, so a click always shows a response */
+  @keyframes cue-spin { to { transform: rotate(360deg); } }
+  .deck.loading .vinyl { animation: cue-spin 2.6s linear infinite; }
+  .deck.loading.cueing .vinyl { animation: cue-spin 2.6s linear infinite; }
+  @media (prefers-reduced-motion: reduce) { .deck.loading .vinyl { animation: none; } }
+
   /* ---------- the deck: record, platter, tonearm ---------- */
   .deck { position: relative; display: inline-block; }
   .deck .vinyl {
@@ -833,20 +840,20 @@
       out.connect(an); an.connect(ctx.destination);
       window.__analyser = an;
 
-      var el = null, useEl = false;
+      var songGain = ctx.createGain(); songGain.gain.value = 0.85;
+      var loopGain = ctx.createGain(); loopGain.gain.value = 0.0001;
+      songGain.connect(out); loopGain.connect(out);
 
-      // A track with measured loop points gets the seamless treatment;
-      // anything else just loops natively end to end.
-      if (loopA && loopB) {
-        var songGain = ctx.createGain(); songGain.gain.value = 0.85;
-        var loopGain = ctx.createGain(); loopGain.gain.value = 0.0001;
-        songGain.connect(out); loopGain.connect(out);
-        var buffer = null, started = false, wantStart = false;
+      var buffer = null, started = false, wantStart = false, node = null;
+      var onReady = null;
 
-        var launch = function () {
-          if (started || !buffer) return;
-          started = true;
-          var t0 = ctx.currentTime + 0.05;
+      function launch() {
+        if (started || !buffer) return;
+        started = true;
+        var t0 = ctx.currentTime + 0.02;
+
+        if (loopA && loopB) {
+          // measured loop points: play through, then crossfade into the seamless section
           var song = ctx.createBufferSource(); song.buffer = buffer;
           song.connect(songGain); song.start(t0);
           var handoff = t0 + Math.max(1, buffer.duration - TAIL);
@@ -859,26 +866,31 @@
           songGain.gain.exponentialRampToValueAtTime(0.0001, handoff + TAIL);
           loopGain.gain.setValueAtTime(0.0001, handoff);
           loopGain.gain.linearRampToValueAtTime(LOOP_VOL, handoff + TAIL);
-        };
-        fetch(src).then(function (r) { return r.arrayBuffer(); })
-          .then(function (a) { return ctx.decodeAudioData(a); })
-          .then(function (buf) { buffer = buf; if (wantStart) launch(); })
-          .catch(function () {});
-        return {
-          start: function () { wantStart = true; ctx.resume(); launch(); },
-          pause: function () { ctx.suspend(); },
-          resume: function () { ctx.resume(); }
-        };
+        } else {
+          // no measured points: loop the whole buffer, same low-latency path
+          node = ctx.createBufferSource();
+          node.buffer = buffer; node.loop = true;
+          node.connect(songGain);
+          songGain.gain.setValueAtTime(0.0001, t0);
+          songGain.gain.linearRampToValueAtTime(0.7, t0 + 0.35);
+          node.start(t0);
+        }
+        if (onReady) onReady();
       }
 
-      el = new Audio(src);
-      el.loop = true; el.volume = 0.7; el.preload = 'auto';
-      var node = ctx.createMediaElementSource(el);
-      node.connect(out);
+      // decode starts the instant the record is chosen, not when the needle lands
+      fetch(src)
+        .then(function (r) { return r.arrayBuffer(); })
+        .then(function (a) { return ctx.decodeAudioData(a); })
+        .then(function (buf) { buffer = buf; if (wantStart) launch(); })
+        .catch(function () {});
+
       return {
-        start: function () { ctx.resume(); el.play().catch(function () {}); },
-        pause: function () { el.pause(); },
-        resume: function () { el.play().catch(function () {}); }
+        ready: function () { return !!buffer; },
+        whenPlaying: function (cb) { onReady = cb; },
+        start: function () { wantStart = true; ctx.resume(); launch(); },
+        pause: function () { ctx.suspend(); },
+        resume: function () { ctx.resume(); }
       };
     }
 
@@ -988,14 +1000,26 @@
           if (needleLbl) { needleLbl.style.transition = 'opacity 0.45s ease'; needleLbl.style.opacity = '0'; }
         }
 
-        // 2. needle lands -> sound starts
-        setTimeout(function () {
-          audio = makeAudio(src, a, b);
-          if (audio) { audio.start(); setPlaying(true); }
-        }, reduce ? 0 : 950);
+        // 2. start fetching + decoding straight away, and tell the user we are
+        if (deck) deck.classList.add('loading');
+        audio = makeAudio(src, a, b);
+        if (audio) audio.start();
 
-        // 3. the whole player retreats to the corner
-        setTimeout(function () { enter(false); }, reduce ? 0 : 1350);
+        // 3. hold the needle until sound is actually ready (cap the wait so it never stalls)
+        var advanced = false;
+        var advance = function () {
+          if (advanced) return;
+          advanced = true;
+          if (deck) deck.classList.remove('loading');
+          setPlaying(true);
+          setTimeout(function () { enter(false); }, reduce ? 0 : 420);
+        };
+        if (reduce) { advance(); }
+        else if (audio) {
+          audio.whenPlaying(advance);
+          setTimeout(function () { if (audio.ready()) advance(); }, 950);
+          setTimeout(advance, 4000);
+        } else { advance(); }
       });
     });
     if (mini) mini.addEventListener('click', function () {
