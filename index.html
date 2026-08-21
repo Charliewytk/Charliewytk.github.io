@@ -42,6 +42,17 @@
   .masthead a { border: none; }
   .masthead .who { font-weight: 700; }
 
+  .gallop {
+    position: fixed; top: 17vh; left: 0; z-index: 4;
+    width: 100%; pointer-events: none;
+    will-change: transform;
+  }
+  .horse {
+    width: clamp(170px, 19vw, 300px); height: auto; display: block;
+    transform: translateX(var(--x, -30vw)) translateY(var(--bob, 0px)) rotate(var(--tilt, 0deg));
+  }
+  .gallop .fl1, .gallop .fl2, .gallop .hl1, .gallop .hl2 { transform-origin: 50% 30%; }
+
   /* ---------- opening statement ---------- */
   .opening {
     min-height: 100vh;
@@ -231,6 +242,21 @@
   <a href="mailto:charlie@wuytack.net">Get in touch</a>
 </div>
 
+<div class="gallop" aria-hidden="true">
+  <svg class="horse" viewBox="0 0 400 320">
+    <g fill="#22201d">
+      <path d="M228 110 C200 116 170 120 140 126 C122 130 106 142 100 162 C98 176 106 190 118 198 C150 208 190 210 224 200 C232 180 234 156 242 134 C254 116 272 102 292 94 L310 98 C328 102 346 102 358 106 L368 98 C362 82 344 70 324 74 L308 68 C282 74 254 90 238 106 C234 108 230 109 228 110 Z" />
+      <path d="M314 70 L310 50 L324 68 Z" />
+      <path d="M326 72 L332 52 L342 70 Z" />
+      <path d="M308 68 C282 74 254 90 238 106 L228 116 L244 92 L228 96 L250 74 L234 76 L260 58 L244 58 L272 46 L258 44 L288 38 L300 52 Z" />
+      <path d="M102 152 C84 134 58 124 32 128 C48 134 60 142 68 152 C50 148 32 154 20 166 C38 162 54 164 66 170 C50 178 38 192 34 208 C48 192 66 182 86 178 L106 172 Z" />
+      <path class="fl1" d="M226 196 C242 210 260 224 276 232 C286 237 291 248 287 258 L280 278 C277 287 267 290 260 285 C253 280 252 270 255 262 L260 248 C242 240 224 226 210 210 Z" />
+      <path class="fl2" d="M204 204 C206 224 210 246 216 266 C219 276 214 286 204 287 C194 288 188 279 189 269 C188 248 188 226 188 206 Z" />
+      <path class="hl1" d="M106 182 C94 198 76 214 56 226 C46 232 42 244 48 253 C54 262 66 263 73 255 L88 238 C105 223 118 208 126 192 Z" />
+      <path class="hl2" d="M134 202 C136 222 140 244 146 264 C149 274 144 284 134 285 C124 286 118 277 119 267 C118 246 116 224 116 204 Z" />
+    </g>
+  </svg>
+</div>
 <header class="opening">
   <h1>Built it.<br><span class="measured">Measured it.<svg class="rule" viewBox="0 0 600 40" preserveAspectRatio="none" aria-hidden="true"><path d="M4 20 H596" /><path d="M4 8 V32" /><path d="M596 8 V32" /></svg></span></h1>
   <p class="readout" aria-hidden="true"><span>119.8 Hz</span><span>0.21 ms</span><span>717 → 210 Mops/s</span><span>0.5714</span></p>
@@ -401,6 +427,29 @@
     document.querySelectorAll('.rise').forEach(function (el) {
       if (reduce) el.classList.add('in'); else io.observe(el);
     });
+
+
+    // the horse gallops across while the opening statement is on screen
+    var gallop = document.querySelector('.gallop');
+    var horse = document.querySelector('.horse');
+    if (gallop && horse && !reduce) {
+      var ticking = false;
+      var run = function () {
+        var vh = window.innerHeight;
+        var p = Math.min(1, Math.max(0, window.scrollY / (vh * 1.35)));
+        horse.style.setProperty('--x', (-30 + p * 165) + 'vw');
+        horse.style.setProperty('--bob', (Math.sin(p * Math.PI * 7) * 12).toFixed(1) + 'px');
+        horse.style.setProperty('--tilt', (Math.sin(p * Math.PI * 7) * 4).toFixed(1) + 'deg');
+        gallop.style.opacity = p > 0.995 ? 0 : 1;
+        ticking = false;
+      };
+      window.addEventListener('scroll', function () {
+        if (!ticking) { ticking = true; requestAnimationFrame(run); }
+      }, { passive: true });
+      run();
+    } else if (gallop) {
+      gallop.style.display = 'none';
+    }
 
     var player = new IntersectionObserver(function (es) {
       es.forEach(function (e) {
