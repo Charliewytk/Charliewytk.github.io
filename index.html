@@ -43,7 +43,7 @@
   .masthead .who { font-weight: 700; }
 
   /* ---------- opening statement ---------- */
-  .opening { height: 230vh; position: relative; }
+  .opening { height: 170vh; position: relative; }
   .pin-hero {
     position: sticky; top: 0; height: 100vh; overflow: hidden;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -70,12 +70,6 @@
     color: #22201d;
   }
   .veil { clip-path: inset(0 calc(100% - var(--reveal, 0%)) 0 0); }
-  .runner {
-    position: absolute; top: 50%; left: 0; margin-top: -11vw;
-    width: clamp(190px, 22vw, 340px); height: auto;
-    transform: translateX(var(--x, -30vw));
-    will-change: transform;
-  }
 
   .readout {
     display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px;
@@ -217,8 +211,8 @@
   .gate {
     position: fixed; inset: 0; z-index: 60;
     background: #f7f7ef;
-    display: flex; flex-direction: column; align-items: center; justify-content: space-between;
-    padding: 0 0 26px;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    gap: 9vh;
     transition: transform 1s cubic-bezier(0.7, 0, 0.2, 1);
   }
   .gate.open { transform: translateY(-101%); }
@@ -244,7 +238,6 @@
     color: #5f5b52; border-bottom: 1px solid #c9c6b4; padding: 0 0 1px;
   }
   .quiet-in:hover { color: #a9331f; border-color: #a9331f; }
-  .gate-note { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: #8a8478; margin: 0; padding: 0 20px; text-align: center; }
 
   /* ---------- corner record ---------- */
   .mini {
@@ -318,7 +311,6 @@
     <button class="enter" id="enterBtn" type="button">DROP THE NEEDLE — ENTER</button>
     <button class="quiet-in" id="quietBtn" type="button">enter quietly</button>
   </div>
-  <p class="gate-note">Sound is played on this site — an original loop, synthesised in code. No samples.</p>
 </div>
 <button class="mini" id="mini" type="button" title="pause the record" aria-label="toggle music">
 <svg class="vinyl small" viewBox="0 0 200 200" aria-hidden="true">
@@ -346,31 +338,6 @@
   <div class="pin-hero">
     <div class="stage">
       <h1 class="veil"><span class="slab">BUILT IT.</span><span class="ital">Measured it.</span></h1>
-      <svg class="runner" viewBox="0 0 420 300" aria-hidden="true">
-      <g fill="#22201d">
-        <g opacity="0.5">
-          <g id="ff"><path d="M226 146 h24 l-5 58 h-16 Z"/>
-            <g id="ffk"><path d="M229 202 h16 l-3 58 h-10 Z"/><path d="M226 258 h22 l2 13 h-26 Z"/></g></g>
-          <g id="fh"><path d="M112 146 h30 l-7 58 h-18 Z"/>
-            <g id="fhk"><path d="M117 202 h16 l-3 58 h-10 Z"/><path d="M114 258 h22 l2 13 h-26 Z"/></g></g>
-        </g>
-        <path d="M246 142 C214 128 178 124 146 130 C120 136 104 152 100 172 C97 190 108 202 126 208 C158 216 200 212 228 198 C244 190 252 172 251 154 C250 148 249 144 246 142 Z"/>
-        <path d="M206 118 L310 56 L342 84 L246 176 Z"/>
-        <path d="M312 54 L212 124 L228 96 L204 106 L234 74 L212 82 L246 52 L228 54 L264 30 L248 28 L286 16 L306 30 Z"/>
-        <path d="M308 52 L348 42 L392 62 L398 76 L376 80 L340 78 L320 70 Z"/>
-        <path d="M314 48 L310 30 L326 46 Z"/>
-        <path d="M328 46 L332 28 L342 44 Z"/>
-        <g fill="none" stroke="#22201d" stroke-linecap="round">
-          <path d="M108 148 C78 132 46 130 18 146" stroke-width="13"/>
-          <path d="M106 158 C76 152 44 158 20 178" stroke-width="10"/>
-          <path d="M104 168 C80 172 56 186 42 208" stroke-width="8"/>
-        </g>
-        <g id="nf"><path d="M224 144 h28 l-6 60 h-18 Z"/>
-          <g id="nfk"><path d="M228 202 h18 l-4 60 h-12 Z"/><path d="M225 260 h24 l2 14 h-28 Z"/></g></g>
-        <g id="nh"><path d="M110 144 h34 l-8 60 h-20 Z"/>
-          <g id="nhk"><path d="M116 202 h18 l-4 60 h-12 Z"/><path d="M113 260 h24 l2 14 h-28 Z"/></g></g>
-      </g>
-    </svg>
     </div>
     <p class="readout" aria-hidden="true"><span id="clock">--:--:--</span><span>119.8 Hz</span><span>0.21 ms</span><span>717 → 210 Mops/s</span><span id="soundstate">SOUND OFF</span></p>
     <p class="under">Games, macOS tools, flight search, prediction markets and trading research. Most of it works right here on this page.</p>
@@ -549,6 +516,27 @@
     // ---------- synthesised jazz loop (original, no samples) ----------
     var audio = null;
     function makeAudio() {
+      var synth = null;
+      var useFile = true;
+      var el = new Audio('media/bang.mp3');
+      el.loop = true; el.volume = 0.75; el.preload = 'auto';
+      el.addEventListener('error', function () { useFile = false; });
+      var ensureSynth = function () { if (!synth) synth = makeSynth(); return synth; };
+      return {
+        start: function () {
+          if (!useFile) { ensureSynth().start(); return; }
+          var pr = el.play();
+          if (pr && pr.then) pr.then(null, function () { useFile = false; ensureSynth().start(); });
+        },
+        pause: function () { if (useFile) el.pause(); else if (synth) synth.pause(); },
+        resume: function () {
+          if (!useFile) { ensureSynth().resume(); return; }
+          var pr = el.play();
+          if (pr && pr.then) pr.then(null, function () { useFile = false; ensureSynth().resume(); });
+        }
+      };
+    }
+    function makeSynth() {
       var C = window.AudioContext || window.webkitAudioContext;
       if (!C) return null;
       var ctx = new C();
@@ -682,52 +670,26 @@
     });
 
 
-    // the horse gallops in and uncovers the headline as it goes
-    var stage = document.querySelector('.stage');
-    var runner = document.querySelector('.runner');
+    // the headline wipes in, left to right, as you scroll
     var veil = document.querySelector('.veil');
     var opening = document.querySelector('.opening');
-    var CYCLE = [
-      [-55,-50, 40, 55,-20,-70, 70, 30],
-      [-20,-75, 70, 25, 25,-40, 40, 10],
-      [ 25,-45, 45, 10, 55,-15,  5, 15],
-      [ 55,-15,  5, 20, 40, -8,-30, 40],
-      [ 40, -8,-30, 45,  5,-30,-20, 70],
-      [  5,-35,-25, 75,-30,-60, 20, 60],
-      [-30,-60, 15, 65,-50,-60, 55, 40],
-      [-50,-55, 40, 55,-35,-70, 70, 30]
-    ];
-    var joints = ['nf','nfk','nh','nhk','ff','ffk','fh','fhk'].map(function (id) { return document.getElementById(id); });
-    var PIV = [[238,150],[238,204],[126,152],[126,204],[238,150],[238,204],[126,152],[126,204]];
-
-    if (runner && veil && !reduce) {
-      var pending = false;
-      var frame = function () {
+    if (veil && !reduce) {
+      var pend = false;
+      var wipe = function () {
         var vh = window.innerHeight;
-        var p = Math.min(1, Math.max(0, window.scrollY / (vh * 1.15)));
-        var x = -32 + p * 168;                       // vw
-        runner.style.setProperty('--x', x + 'vw');
-        // reveal exactly to the horse's nose, measured from the live geometry
-        var hr = runner.getBoundingClientRect();
-        var tr = veil.getBoundingClientRect();
-        var nose = hr.left + hr.width * 0.96;
-        var revealed = Math.min(100, Math.max(0, (nose - tr.left) / tr.width * 100));
-        veil.style.setProperty('--reveal', revealed + '%');
-        opening.style.setProperty('--tail-op', revealed > 97 ? 1 : 0);
-        var pose = CYCLE[Math.floor(p * 26) % CYCLE.length];
-        for (var i = 0; i < joints.length; i++) {
-          if (joints[i]) joints[i].setAttribute('transform', 'rotate(' + pose[i] + ' ' + PIV[i][0] + ' ' + PIV[i][1] + ')');
-        }
-        pending = false;
+        var p = Math.min(1, Math.max(0, window.scrollY / (vh * 0.9)));
+        var e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+        veil.style.setProperty('--reveal', (e * 100) + '%');
+        opening.style.setProperty('--tail-op', e > 0.97 ? 1 : 0);
+        pend = false;
       };
       window.addEventListener('scroll', function () {
-        if (!pending) { pending = true; requestAnimationFrame(frame); }
+        if (!pend) { pend = true; requestAnimationFrame(wipe); }
       }, { passive: true });
-      frame();
+      wipe();
     } else if (veil) {
       veil.style.setProperty('--reveal', '100%');
       if (opening) opening.style.setProperty('--tail-op', 1);
-      if (runner) runner.style.display = 'none';
     }
 
     var player = new IntersectionObserver(function (es) {
