@@ -73,14 +73,6 @@
   }
   .veil { clip-path: inset(0 calc(100% - var(--reveal, 0%)) 0 0); }
 
-  .readout {
-    display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px;
-    margin: 30px 0 0; padding: 0;
-    font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    font-size: 0.7rem; letter-spacing: 0.1em; color: var(--accent);
-    font-variant-numeric: tabular-nums;
-    opacity: var(--tail-op, 0); transition: opacity 0.6s ease;
-  }
 
   .opening .under {
     opacity: var(--tail-op, 0); transition: opacity 0.6s ease 0.1s;
@@ -368,6 +360,16 @@
     transition: opacity 0.5s ease;
   }
   .entered .now-playing { opacity: 1; }
+  .mini::before {
+    content: ""; position: absolute; inset: -6px; border-radius: 50%;
+    border: 2px solid var(--accent); opacity: 0;
+  }
+  .entered .mini::before { animation: hint-ring 1s ease-out 1.2s 2; }
+  @keyframes hint-ring {
+    0% { opacity: 0.9; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.35); }
+  }
+  @media (prefers-reduced-motion: reduce) { .entered .mini::before { animation: none; } }
   .now-playing b { color: var(--accent); font-weight: 600; }
   .mini::after {
     content: "Change the record";
@@ -578,7 +580,6 @@
     <div class="stage">
       <h1 class="veil"><span class="slab">I'D RATHER BUILD</span><span class="ital">than consume.</span></h1>
     </div>
-    <p class="readout" aria-hidden="true"><span id="clock">--:--:--</span><span>119.8 Hz</span><span>0.21 ms</span><span>717 → 210 Mops/s</span><span id="soundstate">SOUND OFF</span></p>
     <p class="under">Games, macOS tools, flight search, prediction markets and trading research. Most of it works right here on this page.</p>
   </div>
 </header>
@@ -599,7 +600,7 @@
     <p class="say rise">My favourite video game of all time is Kingdom Rush. It is a niche indie strategy tower defence game.</p>
     <p class="say rise">Here is my attempt at making something similar - but with a deep sea theme.</p>
     <div class="doing-row rise">
-      <a class="go" href="abyss-warden/">Play it in your browser</a>
+      <a class="go" href="abyss-warden/" target="_blank" rel="noopener">Play it in your browser</a>
       
     </div>
     <p class="todo-label rise">Where it's at</p>
@@ -627,7 +628,7 @@
     <p class="say rise">One only flies to get from point A to point B. But I found that websites such as flightscanner did not account for <span class="mk">the prices and time taken to get to and from the airport on either side</span>.</p>
     <p class="say rise">For example, a flight from Heathrow may cost <span class="num-r">£120</span> and from City <span class="num-r">£130</span>. Of which normal flight trackers would recommend Heathrow as it is cheaper. However, taking into account where you live, at least for me, City would end up being cheaper.</p>
     <div class="doing-row rise">
-      <a class="go" href="doorly/">Try the demo</a>
+      <a class="go" href="doorly/" target="_blank" rel="noopener">Try the demo</a>
       <span class="note">Demo fares, labelled as such — the real thing pulls live prices.</span>
     </div>
     <p class="todo-label rise">Where it's at</p>
@@ -654,8 +655,8 @@
     <p class="say rise">My local bike shop. I bought my bike there (second hand as I think most things are better value for money second hand). I also do some repairs there.</p>
     <p class="say rise">However, sometimes I found using the website to not be very good and clean, potentially reducing customers and so revenue and so profits. Hence, I have created a website, that is yet to be pitched, <span class="mk">that should increase customers</span> and so forth.</p>
     <div class="doing-row rise">
-      <a class="go" href="chelsea-bikes/compare.html">See before and after</a>
-      <span class="note"><a href="chelsea-bikes/">Or browse the full prototype</a> — eleven pages, works offline.</span>
+      <a class="go" href="chelsea-bikes/compare.html" target="_blank" rel="noopener">See before and after</a>
+      <span class="note"><a href="chelsea-bikes/" target="_blank" rel="noopener">Or browse the full prototype</a> — eleven pages, works offline.</span>
     </div>
     <p class="todo-label rise">Where it's at</p>
     <ul class="todo rise">
@@ -744,7 +745,7 @@
         <div class="facts">
           <div><b>59.0 → 42.7<span class="accent">W</span></b><span>system load, before and after Match Charger</span></div>
           <div><b>−15.6 → −3.5<span class="accent">W</span></b><span>battery flow: draining hard while plugged in, to nearly break-even</span></div>
-          <div><b>717 → 210</b><span>Mops/s on a demoted background app · frontmost untouched</span></div>
+          <div><b>60 → 30<span class="accent">W</span></b><span>one heavy background app demoted · the app in front untouched</span></div>
         </div>
       </div>
     </div>
@@ -866,7 +867,7 @@
       songGain.connect(out); loopGain.connect(out);
 
       var buffer = null, started = false, wantStart = false, node = null;
-      var onReady = null;
+      var onReady = null, onFail = null;
 
       function launch() {
         if (started || !buffer) return;
@@ -904,11 +905,14 @@
         .then(function (r) { return r.arrayBuffer(); })
         .then(function (a) { return ctx.decodeAudioData(a); })
         .then(function (buf) { buffer = buf; if (wantStart) launch(); })
-        .catch(function () {});
+        .catch(function () {
+          if (typeof onFail === 'function') onFail();
+        });
 
       return {
         ready: function () { return !!buffer; },
         whenPlaying: function (cb) { onReady = cb; },
+        whenFailed: function (cb) { onFail = cb; },
         start: function () { wantStart = true; ctx.resume(); launch(); },
         pause: function () { ctx.suspend(); },
         resume: function () { ctx.resume(); }
@@ -953,6 +957,7 @@
         setTimeout(function () { gate.style.display = 'none'; }, 1100);
       }
       document.body.classList.remove('locked');
+      try { localStorage.setItem('cw-entered', '1'); } catch (e) {}
       setTimeout(function () { document.body.classList.add('entered'); }, wait);
     }
 
@@ -993,7 +998,15 @@
       };
       requestAnimationFrame(step);
     })();
-    document.body.classList.add('locked');
+    var seenBefore = false;
+    try { seenBefore = localStorage.getItem('cw-entered') === '1'; } catch (e) {}
+    if (seenBefore) {
+      // been here before: skip the ceremony, the corner record still offers it
+      if (gate) gate.style.display = 'none';
+      document.body.classList.add('entered');
+    } else {
+      document.body.classList.add('locked');
+    }
     var picks = [].slice.call(document.querySelectorAll('.pick'));
     picks.forEach(function (btn) {
       var src = btn.getAttribute('data-src');
@@ -1006,7 +1019,10 @@
         var a = parseFloat(btn.getAttribute('data-a')) || null;
         var b = parseFloat(btn.getAttribute('data-b')) || null;
         var accent = btn.getAttribute('data-accent');
-        if (accent) document.documentElement.style.setProperty('--accent', accent);
+        if (accent) {
+          document.documentElement.style.setProperty('--accent', accent);
+          try { localStorage.setItem('cw-accent', accent); } catch (e) {}
+        }
 
         var deck = document.getElementById('deck');
         picks.forEach(function (o) { o.disabled = true; });
@@ -1041,6 +1057,11 @@
         if (reduce) { advance(); }
         else if (audio) {
           audio.whenPlaying(advance);
+          audio.whenFailed(function () {
+            var np = document.getElementById('nowPlaying');
+            if (np) np.innerHTML = '<b>Sound unavailable</b> — the rest of the site works';
+            advance();
+          });
           setTimeout(function () { if (audio.ready()) advance(); }, 950);
           setTimeout(advance, 4000);
         } else { advance(); }
@@ -1064,7 +1085,15 @@
       if (needleLbl) needleLbl.style.opacity = '';
       picks.forEach(function (o) { o.disabled = false; });
       document.body.classList.remove('entered');
+      var seenBefore = false;
+    try { seenBefore = localStorage.getItem('cw-entered') === '1'; } catch (e) {}
+    if (seenBefore) {
+      // been here before: skip the ceremony, the corner record still offers it
+      if (gate) gate.style.display = 'none';
+      document.body.classList.add('entered');
+    } else {
       document.body.classList.add('locked');
+    }
       audio = null;
     }
     if (mini) mini.addEventListener('click', backToStart);

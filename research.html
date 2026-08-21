@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap">
 <style>
+  :root { --accent: #a9331f; }
   body {
     margin: 0;
     background: #f7f7ef;
@@ -21,9 +22,9 @@
   .page { max-width: 700px; margin: 0 auto; padding: 56px 22px 100px; }
 
   a { color: #22201d; text-decoration: none; border-bottom: 1px solid #c9c6b4; }
-  a:hover { color: #a9331f; border-color: #a9331f; }
+  a:hover { color: var(--accent); border-color: var(--accent); }
   a:hover { text-decoration: underline; text-underline-offset: 3px; }
-  a:focus-visible { outline: 2px solid #a9331f; outline-offset: 3px; border-radius: 2px; }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
 
   h1 { font-family: "Lora", Georgia, serif; font-weight: 600; font-size: 2.1rem; margin: 14px 0; color: #22201d; }
   h2 { font-family: "Lora", Georgia, serif; font-weight: 600; font-size: 1.6rem; margin: 0 0 6px; color: #22201d; }
@@ -51,7 +52,7 @@
   .maths .row { display: flex; flex-direction: column; gap: 3px; }
   .maths code {
     font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    font-size: 0.78rem; color: #a9331f; font-variant-numeric: tabular-nums;
+    font-size: 0.78rem; color: var(--accent); font-variant-numeric: tabular-nums;
   }
   .maths .why { font-size: 0.9rem; color: #5f5b52; max-width: 58ch; }
 
@@ -135,5 +136,12 @@
     Most of this is in private repos — happy to walk through any of it, dead ends included. <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a> · <a href="index.html">back to the projects</a>
   </footer>
 </div>
+<script>
+  // carry the record the visitor chose across to this page (Nielsen #4: consistency)
+  try {
+    var a = localStorage.getItem('cw-accent');
+    if (a) document.documentElement.style.setProperty('--accent', a);
+  } catch (e) {}
+</script>
 </body>
 </html>
