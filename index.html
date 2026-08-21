@@ -291,6 +291,38 @@
   }
   .quiet-in:hover { color: var(--accent); border-color: var(--accent); }
 
+
+  /* ---------- the deck: record, platter, tonearm ---------- */
+  .deck { position: relative; display: inline-block; }
+  .deck .vinyl {
+    position: relative; z-index: 2;
+    transform: translateY(-16px) scale(0.96);
+    transition: transform 0.85s cubic-bezier(0.65, 0, 0.25, 1);
+  }
+  .platter {
+    position: absolute; left: 50%; top: 50%;
+    width: 104%; height: 104%; border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0.55);
+    background: #e9e7db;
+    box-shadow: inset 0 0 0 1px rgba(34,32,29,0.16);
+    opacity: 0; z-index: 1;
+    transition: opacity 0.6s ease, transform 0.85s cubic-bezier(0.65, 0, 0.25, 1);
+  }
+  .tonearm {
+    position: absolute; right: -4%; top: -7%;
+    width: 54%; height: auto; z-index: 3;
+    transform-origin: 82.5% 17.5%;
+    transform: rotate(-26deg);
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 1s cubic-bezier(0.5, 0, 0.2, 1);
+  }
+  .deck.cueing .platter { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  .deck.cueing .vinyl { transform: translateY(0) scale(1); }
+  .deck.cueing .tonearm { opacity: 1; transform: rotate(10deg); }
+  @media (prefers-reduced-motion: reduce) {
+    .deck .vinyl, .platter, .tonearm { transition: none; }
+  }
+
   /* ---------- corner record ---------- */
   .mini {
     position: fixed; left: 22px; bottom: 22px; z-index: 40;
@@ -426,6 +458,14 @@
 <div class="gate" id="gate">
   <div class="gate-mast"><span>CHARLIE WUYTACK</span><span>PORTFOLIO — 2026</span></div>
   <div class="gate-mid">
+    <div class="deck" id="deck">
+      <span class="platter" aria-hidden="true"></span>
+      <svg class="tonearm" viewBox="0 0 120 120" aria-hidden="true">
+        <circle cx="99" cy="21" r="9" fill="#22201d"/>
+        <circle cx="99" cy="21" r="3.4" fill="#f7f7ef"/>
+        <rect x="95.5" y="24" width="7" height="58" rx="3.5" fill="#22201d"/>
+        <rect class="head" x="90" y="78" width="18" height="13" rx="2.4" fill="#22201d"/>
+      </svg>
 <svg class="vinyl" viewBox="0 0 200 200" aria-hidden="true">
       <circle cx="100" cy="100" r="97" fill="#17140f"/>
       <g fill="none" stroke="rgba(247,247,239,0.07)" stroke-width="1">
@@ -440,6 +480,7 @@
       <text x="100" y="112" text-anchor="middle" font-family="Arial, sans-serif" font-size="5.5" letter-spacing="1.5" fill="rgba(247,247,239,0.8)">SIDE A · 45 RPM</text>
       <circle cx="100" cy="100" r="3.2" fill="#f7f7ef"/>
     </svg>
+    </div>
     <p class="needle">Drop the needle</p>
     <div class="picks">
       <button class="pick" type="button" data-src="media/bang.mp3" data-a="74.05168" data-b="85.03454" data-accent="#a9331f">
@@ -837,7 +878,7 @@
     }
     function flyVinyl() {
       if (reduce || !mini) return 0;
-      var gv = document.querySelector('.gate .vinyl');
+      var gv = document.querySelector('.gate .deck') || document.querySelector('.gate .vinyl');
       if (!gv) return 0;
       var from = gv.getBoundingClientRect();
       var to = mini.getBoundingClientRect();
@@ -915,9 +956,28 @@
         var b = parseFloat(btn.getAttribute('data-b')) || null;
         var accent = btn.getAttribute('data-accent');
         if (accent) document.documentElement.style.setProperty('--accent', accent);
-        audio = makeAudio(src, a, b);
-        if (audio) { audio.start(); setPlaying(true); }
-        enter(false);
+
+        var deck = document.getElementById('deck');
+        picks.forEach(function (o) { o.disabled = true; });
+
+        // 1. record settles onto the platter, tonearm swings down
+        if (deck && !reduce) {
+          deck.classList.add('cueing');
+          var picksBox = document.querySelector('.picks');
+          var needleLbl = document.querySelector('.needle');
+          if (picksBox) { picksBox.style.transition = 'opacity 0.45s ease'; picksBox.style.opacity = '0'; }
+          if (needleLbl) { needleLbl.style.transition = 'opacity 0.45s ease'; needleLbl.style.opacity = '0'; }
+          if (qb) { qb.style.transition = 'opacity 0.45s ease'; qb.style.opacity = '0'; }
+        }
+
+        // 2. needle lands -> sound starts
+        setTimeout(function () {
+          audio = makeAudio(src, a, b);
+          if (audio) { audio.start(); setPlaying(true); }
+        }, reduce ? 0 : 950);
+
+        // 3. the whole player retreats to the corner
+        setTimeout(function () { enter(false); }, reduce ? 0 : 1350);
       });
     });
     var qb = document.getElementById('quietBtn');
