@@ -113,6 +113,8 @@
     padding: 0 0.04em;
   }
   .mk-u { border-bottom: 2px solid #a9331f; padding-bottom: 1px; }
+  .num-r { color: #a9331f; }
+
 
   /* ---------- work ---------- */
   .work { position: relative; padding-bottom: 12vh; }
@@ -136,7 +138,11 @@
     text-transform: uppercase;
     margin: 0;
   }
-  .head .eyebrow { margin: 10px 0 0; }
+  .head .eyebrow { margin: 10px 0 0; position: relative; display: inline-block; padding-bottom: 9px; }
+  .head .eyebrow::after {
+    content: ""; position: absolute; left: 50%; transform: translateX(-50%); bottom: 0;
+    width: 34px; height: 2px; background: #a9331f;
+  }
   .stream { position: relative; z-index: 5; }
   .frame {
     width: min(100%, 1060px);
@@ -208,6 +214,7 @@
   /* ---------- close ---------- */
   .close { padding: 14vh 32px 12vh; text-align: center; border-top: 1px solid #e2dfd0; margin-top: 8vh; }
   .close .mail {
+    border-bottom: 2px solid #a9331f;
     font-family: "Lora", Georgia, serif;
     font-size: clamp(1.6rem, 3.4vw, 2.2rem);
   }
@@ -507,7 +514,7 @@
       </video>
     </div>
     <p class="say rise">One only flies to get from point A to point B. But I found that websites such as flightscanner did not account for <span class="mk">the prices and time taken to get to and from the airport on either side</span>.</p>
-    <p class="say rise">For example, a flight from Heathrow may cost £120 and from City £130. Of which normal flight trackers would recommend Heathrow as it is cheaper. However, taking into account where you live, at least for me, City would end up being cheaper.</p>
+    <p class="say rise">For example, a flight from Heathrow may cost <span class="num-r">£120</span> and from City <span class="num-r">£130</span>. Of which normal flight trackers would recommend Heathrow as it is cheaper. However, taking into account where you live, at least for me, City would end up being cheaper.</p>
     <div class="doing-row rise">
       <a class="go" href="doorly/">Try the demo</a>
       <span class="note">Demo fares, labelled as such — the real thing pulls live prices.</span>
@@ -562,7 +569,7 @@
       </video>
     </div>
     <p class="say rise">Simply I think it would be fun to live bet on chess games.</p>
-    <p class="say rise">I am a fan of poker - it being <span class="mk">about half skill and half luck</span> - and I feel chess exchange would be more of an 80/20 split, with the luck landing on whether a player plays what you think is the best move.</p>
+    <p class="say rise">I am a fan of poker - it being <span class="mk">about half skill and half luck</span> - and I feel chess exchange would be more of an <span class="num-r">80/20</span> split, with the luck landing on whether a player plays what you think is the best move.</p>
     <p class="say small rise">Runs as a live server, so there is no hosted demo yet — this is it running on my machine.</p>
     <p class="todo-label rise">Where it's at</p>
     <ul class="todo rise">
@@ -583,8 +590,8 @@
   </div>
   <div class="stream">
     <p class="say rise">A custom low power mode. Apple's native low power mode made macOS feel sluggish: the cursor was slow and laggy and the movements felt off.</p>
-    <p class="say rise">I also only have a charger of 45W on a Mac that can draw much more than that: I was losing battery working on heavy tasks while on charge.</p>
-    <p class="say rise">I found out the reason LPM was sluggish was because <span class="mk">it killed the CPU by about 40%</span>.</p>
+    <p class="say rise">I also only have a charger of <span class="num-r">45W</span> on a Mac that can draw much more than that: I was losing battery working on heavy tasks while on charge.</p>
+    <p class="say rise">I found out the reason LPM was sluggish was because <span class="mk">it killed the CPU by about <span class="num-r">40%</span></span>.</p>
     <p class="say rise">Eco Mode is my own low power mode, moving all background apps to efficiency cores leaving the foreground untouched. Match Charger capped my total draw by what I could supply.</p>
     <div class="panel rise">
       <div class="panel-in">
