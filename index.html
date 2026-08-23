@@ -507,20 +507,34 @@
   }
 
   /* ---------- reveal ---------- */
-  /* the thread between projects — narrator voice, quieter than .say */
+  /* the thread between projects — a groove drawn between one record and the next */
   .bridge {
-    max-width: 34ch; margin: 0 auto; padding: 13vh 22px 15vh;
-    text-align: center;
-    font-family: "Lora", Georgia, serif; font-style: italic;
-    font-size: clamp(1rem, 1.5vw, 1.16rem);
-    line-height: 1.6; color: #5f5b52;
+    max-width: 33ch; margin: 0 auto; padding: 15vh 22px 16vh;
+    text-align: center; text-wrap: pretty;
+    font-family: "Lora", Georgia, serif;
+    font-size: clamp(1.02rem, 1.45vw, 1.2rem);
+    line-height: 1.72;
+    color: #22201d;
   }
+  /* hairline in the same language as the scroll hint, drawn downward on entry */
   .bridge::before {
-    content: ""; display: block; width: 34px; height: 2px;
-    background: var(--accent); margin: 0 auto 26px;
-    transition: background 0.6s ease;
+    content: ""; display: block;
+    width: 1px; height: 48px; margin: 0 auto 32px;
+    background: linear-gradient(to bottom, transparent, var(--accent));
+    transform: scaleY(0); transform-origin: top center;
+    transition: transform 1.15s cubic-bezier(0.22, 1, 0.36, 1) 0.06s, background 0.6s ease;
   }
-  @media (max-width: 760px) { .bridge { padding: 9vh 22px 10vh; } }
+  .bridge.in::before { transform: scaleY(1); }
+  /* what came before sits back; the turn sits forward */
+  .bridge .from { color: #5f5b52; font-style: italic; }
+  .bridge .to { color: #22201d; }
+  @media (prefers-reduced-motion: reduce) {
+    .bridge::before { transform: none; transition: background 0.6s ease; }
+  }
+  @media (max-width: 760px) {
+    .bridge { padding: 10vh 26px 11vh; font-size: 1.02rem; }
+    .bridge::before { height: 36px; margin-bottom: 26px; }
+  }
 
   .rise { opacity: 0; transform: translateY(20px); transition: opacity 0.9s ease, transform 1s cubic-bezier(0.22,1,0.36,1); }
   .rise.in { opacity: 1; transform: none; }
@@ -657,6 +671,7 @@
 </section>
 
 <!-- POWERLEASH -->
+<p class="bridge rise"><span class="from">That started with a trip I did not want to overpay for.</span> <span class="to">This one started with the laptop I was building it on.</span></p>
 
 <section class="work" id="powerleash">
   <div class="head">
@@ -730,6 +745,7 @@
 </section>
 
 <!-- CHESS EXCHANGE -->
+<p class="bridge rise"><span class="from">Both of those were a price being wrong.</span> <span class="to">Here the price is the whole product.</span></p>
 
 <section class="work" id="chess">
   <div class="head">
@@ -757,6 +773,7 @@
 </section>
 
 <!-- TRADING RESEARCH -->
+<p class="bridge rise"><span class="from">That one runs on play money.</span> <span class="to">This is what happened when I tried it on real markets.</span></p>
 
 <section class="work" id="research">
   <div class="head">
@@ -796,6 +813,7 @@
 </section>
 
 <!-- EXETER AUTO BUYS -->
+<p class="bridge rise"><span class="to">So I stopped hunting for an edge in the price and looked for one in speed instead.</span></p>
 
 <section class="work" id="exeter">
   <div class="head">
@@ -824,6 +842,7 @@
 </section>
 
 <!-- CHELSEA BIKES -->
+<p class="bridge rise"><span class="from">Everything up to here I built for myself.</span> <span class="to">This one is for somebody else, and they had not asked.</span></p>
 
 <section class="work" id="chelsea">
   <div class="head">
@@ -853,6 +872,7 @@
 </section>
 
 <!-- ABYSS WARDEN -->
+<p class="bridge rise"><span class="to">And this is what I build when nobody has asked at all.</span></p>
 
 <section class="work" id="abyss">
   <div class="head">

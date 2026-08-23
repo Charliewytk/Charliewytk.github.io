@@ -14,10 +14,10 @@ def _flag(name):
 
 MATHS = _flag('MATHS')
 
-# The italic linking lines between projects. Claude drafted them, so they stay
-# out of the published page until Charlie has read them. Preview: STORY=1
+# The linking lines between projects. Approved 23 Aug 2026, so they ship by
+# default now. Build with STORY=0 to publish without them.
 
-STORY = _flag('STORY')
+STORY = os.environ.get('STORY', '1') not in ('0', 'false', 'False')
 
 def strip_maths(html):
     return re.sub(r'\s*<div class="maths">.*?</div>\s*</div>\s*', '\n    ', html, flags=re.S)
