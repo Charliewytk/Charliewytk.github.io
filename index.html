@@ -507,6 +507,21 @@
   }
 
   /* ---------- reveal ---------- */
+  /* the thread between projects — narrator voice, quieter than .say */
+  .bridge {
+    max-width: 34ch; margin: 0 auto; padding: 13vh 22px 15vh;
+    text-align: center;
+    font-family: "Lora", Georgia, serif; font-style: italic;
+    font-size: clamp(1rem, 1.5vw, 1.16rem);
+    line-height: 1.6; color: #5f5b52;
+  }
+  .bridge::before {
+    content: ""; display: block; width: 34px; height: 2px;
+    background: var(--accent); margin: 0 auto 26px;
+    transition: background 0.6s ease;
+  }
+  @media (max-width: 760px) { .bridge { padding: 9vh 22px 10vh; } }
+
   .rise { opacity: 0; transform: translateY(20px); transition: opacity 0.9s ease, transform 1s cubic-bezier(0.22,1,0.36,1); }
   .rise.in { opacity: 1; transform: none; }
 
@@ -589,13 +604,13 @@
 </button>
 
 <nav class="rail" aria-label="sections">
-  <a href="#abyss" data-t="Abyss Warden"></a>
   <a href="#doorly" data-t="Doorly"></a>
-  <a href="#chelsea" data-t="Chelsea Bikes"></a>
-  <a href="#chess" data-t="Chess Exchange"></a>
   <a href="#powerleash" data-t="PowerLeash"></a>
+  <a href="#chess" data-t="Chess Exchange"></a>
   <a href="#research" data-t="Trading research"></a>
   <a href="#exeter" data-t="Exeter auto buys"></a>
+  <a href="#chelsea" data-t="Chelsea Bikes"></a>
+  <a href="#abyss" data-t="Abyss Warden"></a>
 </nav>
 
 <div class="masthead">
@@ -612,35 +627,7 @@
     <p class="under">Games, macOS tools, flight search, prediction markets and trading research. Most of it works right here on this page.</p>
   </div>
 </header>
-<div class="ticker" aria-hidden="true"><div class="belt"><span>SONAR PICKING UP SOMETHING WITH… OPINIONS. ★ HOLD THE TRENCH. KEEP THE LIGHTS ON. ★ THE CHEAPEST FLIGHT ISN'T ALWAYS THE CHEAPEST TRIP. ★ 90 HYPOTHESES, ZERO EDGES. ★ 717 → 210 MOPS/S, RESTORED CLEAN. ★ RANK ~12 OF 13,534. ★ </span><span>SONAR PICKING UP SOMETHING WITH… OPINIONS. ★ HOLD THE TRENCH. KEEP THE LIGHTS ON. ★ THE CHEAPEST FLIGHT ISN'T ALWAYS THE CHEAPEST TRIP. ★ 90 HYPOTHESES, ZERO EDGES. ★ 717 → 210 MOPS/S, RESTORED CLEAN. ★ RANK ~12 OF 13,534. ★ </span></div></div>
-
-<!-- ABYSS WARDEN -->
-<section class="work" id="abyss">
-  <div class="head">
-    <h2>Abyss Warden</h2>
-    <p class="eyebrow">A personalised version of my favourite strategy game</p>
-  </div>
-  <div class="stream">
-    <div class="frame rise">
-      <video muted loop playsinline preload="none" poster="media/abyss-poster.jpg">
-        <source src="media/abyss.mp4" type="video/mp4">
-      </video>
-    </div>
-    <p class="say rise">My favourite video game of all time is Kingdom Rush. It is a niche indie strategy tower defence game.</p>
-    <p class="say rise">Here is my attempt at making something similar - but with a deep sea theme.</p>
-    <div class="doing-row rise">
-      <a class="go" href="abyss-warden/" target="_blank" rel="noopener">Play it in your browser</a>
-      
-    </div>
-    <p class="todo-label rise">Where it's at</p>
-    <ul class="todo rise">
-      <li class="done"><span>Finished — all 15 levels, 5 bosses, balance passed</span></li>
-      <li class="done"><span>Builds packaged for itch.io, Newgrounds, Poki and four other portals</span></li>
-      <li class="doing"><span>Submitting them to the portals</span></li>
-      <li><span>Nudge level 2 starting gold if 3-star rates run high</span></li>
-    </ul>
-  </div>
-</section>
+<div class="ticker" aria-hidden="true"><div class="belt"><span>THE CHEAPEST FLIGHT ISN'T ALWAYS THE CHEAPEST TRIP. ★ 64W DRAW, HELD AT A 42.8W CAP. ★ ALWAYS A PRICE, NEVER A COUNTERPARTY. ★ 90 HYPOTHESES, ZERO EDGES. ★ RANK ~12 OF 13,534. ★ HOLD THE TRENCH. KEEP THE LIGHTS ON. ★ </span><span>THE CHEAPEST FLIGHT ISN'T ALWAYS THE CHEAPEST TRIP. ★ 64W DRAW, HELD AT A 42.8W CAP. ★ ALWAYS A PRICE, NEVER A COUNTERPARTY. ★ 90 HYPOTHESES, ZERO EDGES. ★ RANK ~12 OF 13,534. ★ HOLD THE TRENCH. KEEP THE LIGHTS ON. ★ </span></div></div>
 
 <!-- DOORLY -->
 <section class="work" id="doorly">
@@ -669,61 +656,8 @@
   </div>
 </section>
 
-<!-- CHELSEA BIKES -->
-<section class="work" id="chelsea">
-  <div class="head">
-    <h2>Chelsea Bikes</h2>
-    <p class="eyebrow">Rebuilding my local bike shop, unasked</p>
-  </div>
-  <div class="stream">
-    <div class="frame rise">
-      <video muted loop playsinline preload="none" poster="media/chelsea.jpg">
-        <source src="media/chelsea-demo.mp4" type="video/mp4">
-      </video>
-    </div>
-    <p class="say rise">My local bike shop. I bought my bike there (second hand as I think most things are better value for money second hand). I also do some repairs there.</p>
-    <p class="say rise">However, sometimes I found using the website to not be very good and clean, potentially reducing customers and so revenue and so profits. Hence, I have created a website, that is yet to be pitched, <span class="mk">that should increase customers</span> and so forth.</p>
-    <div class="doing-row rise">
-      <a class="go" href="chelsea-bikes/compare.html" target="_blank" rel="noopener">See before and after</a>
-      <span class="note"><a href="chelsea-bikes/" target="_blank" rel="noopener">Or browse the full prototype</a> — eleven pages, works offline.</span>
-    </div>
-    <p class="todo-label rise">Where it's at</p>
-    <ul class="todo rise">
-      <li class="done"><span>Prototype finished — 11 pages, accessibility pass, works offline</span></li>
-      <li class="done"><span>Pitch materials: before/after tool, one-page leave-behind, quote template</span></li>
-      <li class="done"><span>Photo-drop system, so real shop photos replace the illustrations instantly</span></li>
-      <li><span>Pitch it to the owner</span></li>
-    </ul>
-  </div>
-</section>
-
-<!-- CHESS EXCHANGE -->
-<section class="work" id="chess">
-  <div class="head">
-    <h2>Chess Exchange</h2>
-    <p class="eyebrow">Betting on live chess, with play money</p>
-  </div>
-  <div class="stream">
-    <div class="frame rise">
-      <video muted loop playsinline preload="none" poster="media/chess.jpg">
-        <source src="media/chess-demo.mp4" type="video/mp4">
-      </video>
-    </div>
-    <p class="say rise">Simply I think it would be fun to live bet on chess games.</p>
-    <p class="say rise">I am a fan of poker - it being <span class="mk">about half skill and half luck</span> - and I feel chess exchange would be more of an <span class="num-r">80/20</span> split, with the luck landing on whether a player plays what you think is the best move.</p>
-    <p class="say small rise">Runs as a live server, so there is no hosted demo yet — this is it running on my machine.</p>
-    <p class="todo-label rise">Where it's at</p>
-    <ul class="todo rise">
-      <li class="done"><span>Live boards from lichess TV, markets on chess.com titled games</span></li>
-      <li class="done"><span>LMSR market maker, six liquidity bots, replays at true clock speed</span></li>
-      <li><span>Host it so it is playable rather than a video</span></li>
-      <li><span>Draw pricing is an Elo prior — no engine evaluation anywhere yet</span></li>
-      <li><span>Long term: real players betting against each other, not bots</span></li>
-    </ul>
-  </div>
-</section>
-
 <!-- POWERLEASH -->
+
 <section class="work" id="powerleash">
   <div class="head">
     <h2>PowerLeash</h2>
@@ -795,6 +729,35 @@
   </div>
 </section>
 
+<!-- CHESS EXCHANGE -->
+
+<section class="work" id="chess">
+  <div class="head">
+    <h2>Chess Exchange</h2>
+    <p class="eyebrow">Betting on live chess, with play money</p>
+  </div>
+  <div class="stream">
+    <div class="frame rise">
+      <video muted loop playsinline preload="none" poster="media/chess.jpg">
+        <source src="media/chess-demo.mp4" type="video/mp4">
+      </video>
+    </div>
+    <p class="say rise">Simply I think it would be fun to live bet on chess games.</p>
+    <p class="say rise">I am a fan of poker - it being <span class="mk">about half skill and half luck</span> - and I feel chess exchange would be more of an <span class="num-r">80/20</span> split, with the luck landing on whether a player plays what you think is the best move.</p>
+    <p class="say small rise">Runs as a live server, so there is no hosted demo yet — this is it running on my machine.</p>
+    <p class="todo-label rise">Where it's at</p>
+    <ul class="todo rise">
+      <li class="done"><span>Live boards from lichess TV, markets on chess.com titled games</span></li>
+      <li class="done"><span>LMSR market maker, six liquidity bots, replays at true clock speed</span></li>
+      <li><span>Host it so it is playable rather than a video</span></li>
+      <li><span>Draw pricing is an Elo prior — no engine evaluation anywhere yet</span></li>
+      <li><span>Long term: real players betting against each other, not bots</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- TRADING RESEARCH -->
+
 <section class="work" id="research">
   <div class="head">
     <h2>Trading Research</h2>
@@ -832,6 +795,8 @@
   </div>
 </section>
 
+<!-- EXETER AUTO BUYS -->
+
 <section class="work" id="exeter">
   <div class="head">
     <h2>Exeter Auto Buys</h2>
@@ -855,6 +820,64 @@
       </div>
     </div>
     <p class="say rise">I may be going to the University of Exeter to study economics in September. To prepare I built a bot that watches the events that sell out fastest and <span class="mk">alerts me the second tickets appear</span>.</p>
+  </div>
+</section>
+
+<!-- CHELSEA BIKES -->
+
+<section class="work" id="chelsea">
+  <div class="head">
+    <h2>Chelsea Bikes</h2>
+    <p class="eyebrow">Rebuilding my local bike shop, unasked</p>
+  </div>
+  <div class="stream">
+    <div class="frame rise">
+      <video muted loop playsinline preload="none" poster="media/chelsea.jpg">
+        <source src="media/chelsea-demo.mp4" type="video/mp4">
+      </video>
+    </div>
+    <p class="say rise">My local bike shop. I bought my bike there (second hand as I think most things are better value for money second hand). I also do some repairs there.</p>
+    <p class="say rise">However, sometimes I found using the website to not be very good and clean, potentially reducing customers and so revenue and so profits. Hence, I have created a website, that is yet to be pitched, <span class="mk">that should increase customers</span> and so forth.</p>
+    <div class="doing-row rise">
+      <a class="go" href="chelsea-bikes/compare.html" target="_blank" rel="noopener">See before and after</a>
+      <span class="note"><a href="chelsea-bikes/" target="_blank" rel="noopener">Or browse the full prototype</a> — eleven pages, works offline.</span>
+    </div>
+    <p class="todo-label rise">Where it's at</p>
+    <ul class="todo rise">
+      <li class="done"><span>Prototype finished — 11 pages, accessibility pass, works offline</span></li>
+      <li class="done"><span>Pitch materials: before/after tool, one-page leave-behind, quote template</span></li>
+      <li class="done"><span>Photo-drop system, so real shop photos replace the illustrations instantly</span></li>
+      <li><span>Pitch it to the owner</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ABYSS WARDEN -->
+
+<section class="work" id="abyss">
+  <div class="head">
+    <h2>Abyss Warden</h2>
+    <p class="eyebrow">A personalised version of my favourite strategy game</p>
+  </div>
+  <div class="stream">
+    <div class="frame rise">
+      <video muted loop playsinline preload="none" poster="media/abyss-poster.jpg">
+        <source src="media/abyss.mp4" type="video/mp4">
+      </video>
+    </div>
+    <p class="say rise">My favourite video game of all time is Kingdom Rush. It is a niche indie strategy tower defence game.</p>
+    <p class="say rise">Here is my attempt at making something similar - but with a deep sea theme.</p>
+    <div class="doing-row rise">
+      <a class="go" href="abyss-warden/" target="_blank" rel="noopener">Play it in your browser</a>
+      
+    </div>
+    <p class="todo-label rise">Where it's at</p>
+    <ul class="todo rise">
+      <li class="done"><span>Finished — all 15 levels, 5 bosses, balance passed</span></li>
+      <li class="done"><span>Builds packaged for itch.io, Newgrounds, Poki and four other portals</span></li>
+      <li class="doing"><span>Submitting them to the portals</span></li>
+      <li><span>Nudge level 2 starting gold if 3-star rates run high</span></li>
+    </ul>
   </div>
 </section>
 

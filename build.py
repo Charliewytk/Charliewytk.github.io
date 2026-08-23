@@ -4,12 +4,26 @@
 MATHS = False publishes without the formula blocks (kept in source, just not shipped).
 Flip to True and re-run when you're ready to explain them.
 """
+import os
 import re
 
-MATHS = False
+# Held back by default so the published page never ships maths by accident.
+# Preview them locally with:  MATHS=1 python3 build.py
+def _flag(name):
+    return os.environ.get(name, '') not in ('', '0', 'false', 'False')
+
+MATHS = _flag('MATHS')
+
+# The italic linking lines between projects. Claude drafted them, so they stay
+# out of the published page until Charlie has read them. Preview: STORY=1
+
+STORY = _flag('STORY')
 
 def strip_maths(html):
     return re.sub(r'\s*<div class="maths">.*?</div>\s*</div>\s*', '\n    ', html, flags=re.S)
+
+def strip_bridges(html):
+    return re.sub(r'\s*<p class="bridge rise">.*?</p>\s*', '\n\n', html, flags=re.S)
 
 # --- homepage: fragment.html -> index.html ---
 frag = open('fragment.html').read()
@@ -17,6 +31,8 @@ i = frag.index('</style>') + len('</style>')
 head, body = frag[:i], frag[i:]
 if not MATHS:
     body = strip_maths(body)
+if not STORY:
+    body = strip_bridges(body)
 open('index.html', 'w').write(f'''<!doctype html>
 <html lang="en">
 <head>
@@ -49,4 +65,5 @@ if not MATHS:
     res = strip_maths(res)
 open('research.html', 'w').write(res)
 
-print('built · maths blocks:', 'included' if MATHS else 'held back')
+print('built · maths:', 'included' if MATHS else 'held back',
+      '· story lines:', 'included' if STORY else 'held back')
