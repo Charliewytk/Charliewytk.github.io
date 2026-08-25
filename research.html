@@ -71,6 +71,7 @@
   <p class="back"><a href="index.html">← charliewytk.github.io</a></p>
   <h1>Research notes</h1>
   <p class="lede">The maths and machine learning behind what I build, and how I stopped trusting my own backtests.</p>
+  <p class="meta">updated 25 aug 2026 &middot; every number below says what kind of number it is &mdash; live, holdout, or backtest</p>
 
   <section>
     <h2>The problem</h2>
@@ -89,26 +90,35 @@
       <li>Parameter fishing is refused. Three versions of an idea count as three tests.</li>
     </ul>
     <p>Ninety ideas went through it. None survived — written up as <a href="essays/90-Hypotheses-Zero-Edges-short.pdf">90 Hypotheses, Zero Edges (pdf)</a>.</p>
+    <p>That was the strategy-validation era. The ledger has since been restarted as a running record across the competition platforms I now enter — one row per hypothesis tested, failures especially, never reset, 32 rows so far and climbing. A post-mortem across the whole record found the deaths stack into three causes: most ideas die on <b>economics, not statistics</b> (the effect is real and roughly the size of its own trading costs); the next batch die of <b>identification failure</b> (the "signal" turns out to be market beta or cash yield wearing an alpha label); and event-driven ideas on free data hit an <b>observability wall</b> — free data deletes exactly the observations that would falsify the thesis.</p>
   </section>
 
   <section>
     <h2>Machine learning, scored publicly</h2>
-    <p class="meta">datacrunch · adia · numerai</p>
-    <p>The one place I get an honest scoreboard: same data for everyone, thousands of entrants, no marking my own homework.</p>
+    <p class="meta">datacrunch · adia · numerai classic / signals / crypto · synth</p>
+    <p>The one place I get an honest scoreboard: same data for everyone, thousands of entrants, no marking my own homework. Six entries are live.</p>
 
-    <h3>DataCrunch — about 12th</h3>
+    <h3>DataCrunch — about 12th of 13,534</h3>
     <div class="tw"><table>
-      <tr><th>Generation</th><th>Score</th><th></th></tr>
+      <tr><th>Generation</th><th>Cloud score</th><th></th></tr>
       <tr><td>v1</td><td class="num">0.0394</td><td>first attempt</td></tr>
       <tr><td>v2</td><td class="num">0.0491</td><td>big jump</td></tr>
       <tr><td>v3</td><td class="num">0.0443</td><td>went backwards, left in the log</td></tr>
       <tr><td>v4</td><td class="num">0.0535</td><td></td></tr>
-      <tr><td>v5</td><td class="num">0.05682</td><td>current, about 12th</td></tr>
+      <tr><td>v5</td><td class="num">—</td><td>retired before it was ever submitted</td></tr>
+      <tr><td>v6</td><td class="num">0.05682</td><td>current, about 12th as of 23 Aug</td></tr>
+      <tr><td>v7</td><td class="num">0.0484</td><td>lost to v6, left in the log</td></tr>
     </table></div>
+    <p>The leader scores 0.0868, so the gap is real and the log says so. A screening session after v7 tested six more ideas locally; none beat the live model, so nothing was submitted.</p>
     <h3>ADIA structural break challenge</h3>
-    <p>Spotting the moment a time series changes behaviour. My entry is a recurrent network — one that reads the data in order and remembers what came before — trained five separate times and averaged. It scores 0.5714 on the live leaderboard — rank 246 of 13,161 — where 0.5 would be a coin flip.</p>
-    <h3>Numerai</h3>
-    <p>Full pipeline in one file. Nothing staked yet — live scores build the record first.</p>
+    <p>Spotting the moment a time series changes behaviour. My first scored entry — a recurrent network trained five separate times and averaged — reached 0.5714 on the live leaderboard, rank 246 of 13,161 at the last check (23 Aug), where 0.5 would be a coin flip. A later run scored 0.5746. The account has had two successful live runs so far; the leaders have had ninety-plus. A rebuilt model has been verified at 0.598 on a sealed local holdout — that is a holdout number, not a live one, and it stays in that sentence until the platform scores it.</p>
+    <h3>Numerai — three tournaments, all live, nothing staked</h3>
+    <p><b>Classic.</b> The model now lives on Numerai's servers and submits itself: five rounds out of five since going live on 21 Aug, no gaps, no laptop involved. Zero live rounds have resolved yet — the first lands 21 September — so the only performance number that exists is a local validation score, and staking waits on a policy written before any result came in: at least ten resolved rounds, a checklist that must pass in full, earliest around November.</p>
+    <p><b>Signals.</b> A model over Numerai's own features submits automatically five days a week — 7,267 tickers in the latest round. In walk-forward validation it scores +0.071 where Numerai's shipped example scores −0.002. The interesting finding was methodological: scoring only the tickers a free data source still covers inflates recent-era results, because delisted losers vanish from free data — so every external-data idea gets tested against that bias, and so far every one has died.</p>
+    <p><b>Crypto.</b> Two models submit daily, deliberately different (full history vs recent year) to learn which philosophy wins. The recency idea has now lost on two separate evaluation windows, and the one statistically solid finding is that refitting monthly beats leaving the model fixed. No live scores until mid-September.</p>
+
+    <h3>Synth — submitted, first scores pending</h3>
+    <p>CrunchDAO's synthetic-price competition: forecast the full probability distribution of 24-hour returns for four assets on 5-minute bars, scored on how well the whole distribution matches reality (CRPS — lower is better). My ~100-line forecaster beats the shipped baseline in local backtests; its first live scores are due any day, and until they land that is all the claim there is.</p>
   </section>
 
   <section>
@@ -118,18 +128,32 @@
       <tr><th>Strategy</th><th>Verdict</th><th>What decided it</th></tr>
       <tr><td>Closed-end fund discounts</td><td>upper bound</td><td>44% of the profit was market drift, not timing</td></tr>
       <tr><td>Odd-lot tenders</td><td>small but real</td><td>~£200/yr, capped at 99 shares per deal no matter the bankroll</td></tr>
-      <tr><td>Polymarket orphans</td><td>dead</td><td>nowhere near enough money could be placed</td></tr>
+      <tr><td>Polymarket orphans</td><td>dead</td><td>90 days of resolved markets gave no usable evidence cell; 0 for 8 on paper</td></tr>
       <tr><td>Copying activist investors</td><td>dead</td><td>45-day disclosure lag; you pay fees to trail the index</td></tr>
       <tr><td>Index addition trades</td><td>dead</td><td>decayed, and confirming it needs paid data</td></tr>
     </table></div>
-    <p>The survivor got execution tooling: broker preflights, and a test suite whose only job is stopping the code placing an order the strategy never asked for.</p>
+    <p>The survivor got execution tooling: broker preflights, and a test suite whose only job is stopping the code placing an order the strategy never asked for. Two paper books now run against a real broker to measure execution honestly — the measured median effective spread came in at 3.5 basis points against the 10 the models had been assuming, which is the polite way of finding out your cost model was a third too pessimistic.</p>
+    <p>The 13F thread did not end with the activist verdict: 19,077 filings and 21 million positions collected, three more approaches measured dead, and exactly one candidate signal still standing — parked behind a data-quality decision rather than pushed because the backtest looks nice.</p>
   </section>
 
   <section>
-    <h2>Two things that failed usefully</h2>
-    <p class="meta">the bot, and the tool that won't answer</p>
+    <h2>Things that failed usefully</h2>
+    <p class="meta">the bot, the market maker, and the tool that won't answer</p>
     <p><b>A trading bot.</b> Its backtests looked wonderful because I had assumed prices I could not really trade at. Recalculated honestly, the profit vanished. I retired it and turned each lesson into a rule in the rig above.</p>
+    <p><b>A market maker.</b> Its projection rested on a fill model, so the fill model got a pre-declared test: one honest week of resting real quotes. Zero fills in 71 attempts against 3.7 expected — the projection was voided by its own audit, which is exactly what the audit was for. Two sibling strategies died the same way, by counting: one found 2 usable events in 98,079 observations, the other 2 in six million.</p>
     <p><b>An ETF cost comparison.</b> It ranks nothing on purpose: two cost components are not available free, so ranking would just promote whichever fund has the least data. It reports what is missing instead.</p>
+  </section>
+
+  <section>
+    <h2>The operation, now</h2>
+    <p class="meta">ten programmes · self-verifying · nothing at stake until the evidence gates pass</p>
+    <p>What started as one backtesting rig is now a small operation: the six scored entries above, plus live alphas on WorldQuant BRAIN, the broker paper books, and two paper-only research daemons. The engineering matters as much as the models:</p>
+    <ul>
+      <li>Every automated submission runs preflights first — is the data actually fresh, are the predictions sane and non-degenerate, does the model file match the code — and a network-retry wrapper that has already saved one live round from a failed connection.</li>
+      <li>Nightly unattended sessions re-verify the stack and commit a digest: 1,500+ tests across three suites, green before I wake up.</li>
+      <li>One cumulative hypothesis ledger across everything, 32 rows, failures first-class. New ideas test against the survivorship bias measured above before they are believed.</li>
+      <li>Real money is the last step, not the first: every book is paper, every model unstaked, each behind its own pre-committed evidence checklist written before results existed.</li>
+    </ul>
   </section>
 
   <footer>

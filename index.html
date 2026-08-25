@@ -466,9 +466,9 @@
   .loadchart { width: 100%; height: auto; display: block; }
   .chart .cap {
     font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
-    color: rgba(34,32,29,0.5); margin: 0 0 20px;
+    color: rgba(34,32,29,0.5); margin: 0 0 34px;
   }
-  .bars { display: flex; align-items: stretch; gap: 2px; height: 210px; }
+  .bars { display: flex; align-items: stretch; gap: 6px; height: 240px; }
   .bar { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; }
   .bar .stalk { flex: none; }
   .bar .stalk {
@@ -486,6 +486,14 @@
     font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase;
     color: rgba(34,32,29,0.45); border-top: 1px solid rgba(34,32,29,0.25); padding-top: 8px;
   }
+  @media (max-width: 760px) {
+    .chart .cap { margin-bottom: 26px; }
+    .bars { height: 220px; gap: 3px; }
+    .bar { gap: 6px; }
+    .bar .val { font-size: 0.58rem; }
+    .bar .gen { font-size: 0.5rem; letter-spacing: 0.06em; white-space: nowrap; padding-top: 6px; }
+  }
+
   .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin: 7vh 0 0; }
   .facts div { border-top: 1px solid rgba(34,32,29,0.25); padding-top: 14px; }
   .facts b {
@@ -787,24 +795,25 @@
         <p class="hero-sub">DataCrunch · of 13,534 entrants · live leaderboard</p>
 
         <div class="chart">
-          <p class="cap">Score by model generation — v3 went backwards and stayed in the log</p>
+          <p class="cap">Cloud score by generation — the ones that went backwards stayed in the log</p>
           <div class="bars" id="bars">
-            <div class="bar" style="--grow:0"><span class="val">0.0394</span><div class="stalk" style="height:44%"></div><span class="gen">v1</span></div>
-            <div class="bar" style="--grow:0"><span class="val">0.0491</span><div class="stalk" style="height:69%"></div><span class="gen">v2</span></div>
-            <div class="bar" style="--grow:0"><span class="val">0.0443</span><div class="stalk" style="height:56%"></div><span class="gen">v3</span></div>
-            <div class="bar" style="--grow:0"><span class="val">0.0535</span><div class="stalk" style="height:83%"></div><span class="gen">v4</span></div>
-            <div class="bar now" style="--grow:0"><span class="val">0.05682</span><div class="stalk" style="height:100%"></div><span class="gen">v5 · now</span></div>
+            <div class="bar" style="--grow:0"><span class="val">0.0394</span><div class="stalk" style="height:51.3%"></div><span class="gen">v1</span></div>
+            <div class="bar" style="--grow:0"><span class="val">0.0491</span><div class="stalk" style="height:63.9%"></div><span class="gen">v2</span></div>
+            <div class="bar" style="--grow:0"><span class="val">0.0443</span><div class="stalk" style="height:57.7%"></div><span class="gen">v3</span></div>
+            <div class="bar" style="--grow:0"><span class="val">0.0535</span><div class="stalk" style="height:69.7%"></div><span class="gen">v4</span></div>
+            <div class="bar now" style="--grow:0"><span class="val">0.05682</span><div class="stalk" style="height:74.0%"></div><span class="gen">v6 · live</span></div>
+            <div class="bar" style="--grow:0"><span class="val">0.0484</span><div class="stalk" style="height:63.0%"></div><span class="gen">v7</span></div>
           </div>
         </div>
 
         <div class="facts">
           <div><b>90 / 0</b><span>hypotheses pre-registered, edges found. The rig worked.</span></div>
-          <div><b>0.5714</b><span>structural-break score, rank 246 of 13,161</span></div>
+          <div><b>0.5746</b><span>best live structural-break run, up from 0.5714 at rank 246 of 13,161</span></div>
           <div><b>3 of 5</b><span>strategies killed by their own numbers</span></div>
         </div>
       </div>
     </div>
-    <p class="say small rise">Still writing this one up properly — more tomorrow.</p>
+    <p class="say small rise">This has grown into ten parallel programmes — six scored entries live, everything paper and unstaked until its evidence gate passes. Updated 25 Aug.</p>
     <div class="doing-row rise">
       <a class="go" href="research.html">Read the research notes</a>
       <span class="note"><a href="essays/90-Hypotheses-Zero-Edges-short.pdf">90 Hypotheses, Zero Edges (pdf)</a></span>
