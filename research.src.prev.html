@@ -8,15 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap">
 <style>
-  :root {
-    --ink:   #22201d;   /* 15.1:1 — headings, primary prose            */
-    --ink2:  #3b3833;   /* 10.8:1 — secondary prose                    */
-    --muted: #5f5b52;   /*  6.3:1 — captions, notes, muted body        */
-    --faint: #6f6a60;   /*  5.0:1 — micro-labels; lightest text allowed */
-    --rule:  rgba(34,32,29,0.16);
-    --rule2: rgba(34,32,29,0.26);
-  }
-
+  :root { --accent: #a9331f; }
   body {
     margin: 0;
     background: #f7f7ef;
@@ -27,7 +19,7 @@
     -webkit-font-smoothing: antialiased;
   }
   ::selection { background: #e4e2d4; color: #22201d; }
-  .page { max-width: 580px; margin: 0 auto; padding: 56px 22px 100px; }
+  .page { max-width: 700px; margin: 0 auto; padding: 56px 22px 100px; }
 
   a { color: #22201d; text-decoration: none; border-bottom: 1px solid #c9c6b4; }
   a:hover { color: var(--accent); border-color: var(--accent); }
@@ -39,15 +31,15 @@
   h3 { font-size: 1rem; margin: 30px 0 8px; color: #22201d; }
   .meta {
     font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    font-size: 0.72rem; letter-spacing: 0.06em; color: var(--faint); margin: 0 0 16px;
+    font-size: 0.72rem; letter-spacing: 0.06em; color: #8a8478; margin: 0 0 16px;
   }
-  p { margin: 0 0 15px; text-wrap: pretty; }
-  .lede { font-family: "Lora", Georgia, serif; font-style: italic; font-size: 1.2rem; color: var(--ink2); text-wrap: balance; }
-  ul { margin: 0 0 15px; padding-left: 22px; }
-  li { margin-bottom: 11px; text-wrap: pretty; }
+  p { margin: 0 0 14px; max-width: 64ch; }
+  .lede { font-family: "Lora", Georgia, serif; font-style: italic; font-size: 1.2rem; color: #4a463f; }
+  ul { margin: 0 0 14px; padding-left: 22px; max-width: 62ch; }
+  li { margin-bottom: 10px; }
   .back { font-size: 0.88rem; }
 
-  section { margin-top: 72px; padding-top: 32px; border-top: 1px solid var(--rule); }
+  section { margin-top: 76px; padding-top: 30px; border-top: 1px solid #e2dfd0; }
 
   .maths {
     border-left: 1px solid #d6d3c2;
@@ -62,16 +54,16 @@
     font-family: ui-monospace, "SF Mono", Menlo, monospace;
     font-size: 0.78rem; color: var(--accent); font-variant-numeric: tabular-nums;
   }
-  .maths .why { font-size: 0.9rem; color: var(--muted); max-width: 58ch; }
+  .maths .why { font-size: 0.9rem; color: #5f5b52; max-width: 58ch; }
 
   .tw { overflow-x: auto; margin: 18px 0; border: 1px solid #e2dfd0; border-radius: 8px; }
   table { border-collapse: collapse; width: 100%; font-size: 0.87rem; }
   th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid #e2dfd0; vertical-align: top; }
   tr:last-child td { border-bottom: none; }
-  th { background: #efeee4; font-weight: 600; color: var(--ink2); }
+  th { background: #efeee4; font-weight: 600; color: #4a463f; }
   td.num { font-variant-numeric: tabular-nums; white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 0.82rem; }
-  footer { margin-top: 80px; padding-top: 26px; border-top: 1px solid #e2dfd0; color: var(--muted); font-size: 0.88rem; }
-  footer a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #c9c6b4; }
+  footer { margin-top: 80px; padding-top: 26px; border-top: 1px solid #e2dfd0; color: #5f5b52; font-size: 0.88rem; }
+  footer a { color: #5f5b52; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #c9c6b4; }
 </style>
 </head>
 <body>
@@ -87,7 +79,17 @@
     <p>The result everyone expects from this kind of work is "nothing worked". That is not what happened. Nine anomalies came back real and measurable — and each was approximately the size of the costs required to trade it. The edge exists; it is spent getting to it. Separately, four findings survived independent replication, and none of them is a tradeable edge — which is the point.</p>
     <p>That distinction matters, because it changes what to do next. A null says stop looking. A friction-sized edge says the search space is fine and the problem is execution, capacity or the cost base — which are things you can attack.</p>
     <p>The second reason for the rig below: test enough ideas and some look brilliant purely by luck. They are not fakes — that is just what randomness looks like when you go hunting for patterns.</p>
-    </section>
+    <div class="maths">
+      <div class="row">
+        <code>expected false winners = m · α  →  100 × 0.05 = 5</code>
+        <span class="why">Test 100 useless strategies at the usual 5% threshold and about five pass anyway. So how many things you tried is part of the result.</span>
+      </div>
+      <div class="row">
+        <code>reject H₍ᵢ₎ iff p₍ᵢ₎ ≤ (i / m) · α</code>
+        <span class="why">Benjamini-Hochberg: the bar gets tougher the more tests you have run. Mine recomputes across everything I have ever tested, so old failures still count against new claims.</span>
+      </div>
+    </div>
+  </section>
 
   <section>
     <h2>The rig</h2>
