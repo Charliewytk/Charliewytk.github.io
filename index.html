@@ -675,6 +675,15 @@
   <a href="#powerleash" data-t="PowerLeash"></a>
   <a href="#chess" data-t="Chess Exchange"></a>
   <a href="#research" data-t="Trading research"></a>
+  <a href="#merger" data-t="Merger Monitor"></a>
+  <a href="#quantiacs" data-t="Quantiacs"></a>
+  <a href="#numerai" data-t="Numerai"></a>
+  <a href="#brain" data-t="WorldQuant BRAIN"></a>
+  <a href="#sbreak" data-t="Structural Break"></a>
+  <a href="#almach" data-t="The almach audit"></a>
+  <a href="#killlog" data-t="The kill log"></a>
+  <a href="#rig" data-t="How the rig works"></a>
+  <a href="#unstaked" data-t="Running now"></a>
   <a href="#exeter" data-t="Exeter auto buys"></a>
   <a href="#chelsea" data-t="Chelsea Bikes"></a>
   <a href="#abyss" data-t="Abyss Warden"></a>
@@ -828,14 +837,25 @@
 <!-- TRADING RESEARCH -->
 <p class="bridge rise"><span class="from">That one runs on play money.</span> <span class="to">This is what happened when I tried it on real markets.</span></p>
 
+<!-- TRADING RESEARCH -->
 <section class="work" id="research">
   <div class="head">
     <h2>Trading Research</h2>
     <p class="eyebrow">The edges are real. They're just the size of their own costs.</p>
   </div>
   <div class="stream">
-    <p class="say rise">Ninety pre-registered hypotheses did not produce zero anomalies. They produced <span class="mk">nine real ones</span> — and every one was about the size of the friction needed to trade it.</p>
-    <p class="say rise">That is a finding, not a null. It is also the most useful thing I know, because it tells me in advance which strategies are not worth building.</p>
+    <p class="say rise">Around 110 hypotheses tested. Nine produced a real, measurable anomaly. <span class="mk">Zero</span> produced one bigger than the cost of trading it.</p>
+    <p class="say rise">Separately, four findings survived independent replication — none of them a tradeable edge, which is the point.</p>
+
+    <div class="panel rise">
+      <div class="panel-in">
+        <div class="facts">
+          <div><b>~110 → 9 → 0</b><span>tested → real anomalies → ones that beat their own costs</span></div>
+          <div><b>4</b><span>findings that survived independent replication</span></div>
+          <div><b>£0</b><span>revenue to date. Nothing staked until its evidence gate passes.</span></div>
+        </div>
+      </div>
+    </div>
 
     <div class="ledger rise">
       <div class="ledger-head"><span>The edge</span><span>What eats it</span></div>
@@ -850,6 +870,26 @@
       <div class="ledger-row"><span class="e">13F cloning, 19,000 filings</span><span class="c">survivorship, plus a single regime</span></div>
     </div>
 
+    <div class="doing-row rise">
+      <a class="go" href="research.html">Read the research notes</a>
+      <span class="note"><a href="essays/90-Hypotheses-Zero-Edges-short.pdf">90 Hypotheses, Zero Edges (pdf)</a> — written at an earlier count</span>
+    </div>
+  </div>
+</section>
+
+<!-- MERGER MONITOR -->
+<p class="bridge rise"><span class="to">The only one of those with a price attached is this.</span></p>
+
+<section class="work" id="merger">
+  <div class="head">
+    <h2>Merger Monitor</h2>
+    <p class="eyebrow">The one with a price on it</p>
+  </div>
+  <div class="stream">
+    <p class="say rise">Every US cash merger that has reached a definitive proxy, priced against the live market, carrying the sentence from the SEC filing the deal price came from.</p>
+    <p class="say rise">Break-even is <span class="mk">1.59%</span> today and eleven of the sixteen live deals clear it. The rest are published anyway, because a wide spread and a thin one look identical until you price the break risk.</p>
+    <p class="say small rise">Base rate 2.4% — 39 breaks in 1,606 settled outcomes. A floor, not a ceiling: deals that die before reaching a definitive proxy never enter the sample.</p>
+
     <div class="worked rise">
       <h3>Annualising flatters everything. Here is the one I sell, done properly.</h3>
       <p>A 3% merger spread held to the median 49-day close annualises to <b>24.6% a year</b>. That number is worthless, and it is the number this whole business would normally be sold on.</p>
@@ -861,44 +901,149 @@
       <p>That is the whole method in one line: the annualised number is marketing, the expected value is the trade.</p>
     </div>
 
-    <div class="panel rise">
-      <div class="panel-in">
-        <p class="hero-num">RANK <span class="accent">12</span></p>
-        <p class="hero-sub">DataCrunch · of 13,534 entrants · live leaderboard</p>
-
-        <div class="chart">
-          <p class="cap">Cloud score by generation — the ones that went backwards stayed in the log</p>
-          <div class="bars" id="bars">
-            <div class="bar" style="--grow:0"><span class="val">0.0394</span><div class="stalk" style="height:51.3%"></div><span class="gen">v1</span></div>
-            <div class="bar" style="--grow:0"><span class="val">0.0491</span><div class="stalk" style="height:63.9%"></div><span class="gen">v2</span></div>
-            <div class="bar" style="--grow:0"><span class="val">0.0443</span><div class="stalk" style="height:57.7%"></div><span class="gen">v3</span></div>
-            <div class="bar" style="--grow:0"><span class="val">0.0535</span><div class="stalk" style="height:69.7%"></div><span class="gen">v4</span></div>
-            <div class="bar now" style="--grow:0"><span class="val">0.05682</span><div class="stalk" style="height:74.0%"></div><span class="gen">v6 · live</span></div>
-            <div class="bar" style="--grow:0"><span class="val">0.0484</span><div class="stalk" style="height:63.0%"></div><span class="gen">v7</span></div>
-          </div>
-        </div>
-
-        <div class="facts">
-          <div><b>~110 / 4</b><span>hypotheses tested, confirmed positives that survived replication</span></div>
-          <div><b>1.22</b><span>Sharpe on the Quantiacs contest entry — submitted, selected, live 1 Oct</span></div>
-          <div><b>0 for 2</b><span>holdout gains that transferred to a live leaderboard</span></div>
-        </div>
-      </div>
-    </div>
-
-    <p class="say rise">The one with a price on it: <span class="mk">Merger Monitor</span>. Sixteen live cash deals repriced nightly, every figure carrying the sentence from the SEC filing it came from. Eleven of the sixteen clear break-even today; the rest are published anyway, because a wide spread and a thin one look identical until you price the break risk.</p>
-    <p class="say small rise">Base rate 2.4% — 39 breaks in 1,606 settled outcomes. That is a floor, not a ceiling: deals that die before reaching a definitive proxy never enter the sample.</p>
     <div class="doing-row rise">
       <a class="go" href="https://wuytackcharlie.gumroad.com/l/mergerweekly" target="_blank" rel="noopener">Get the free weekly digest</a>
       <span class="note"><a href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Or the daily edition, £5/month</a></span>
     </div>
-    <p class="say rise">The one that paid: I pulled 478,021 events off-chain to audit a Polymarket account that turned $2,895 into <span class="mk">+$221,120</span> in 97 days. The profit was real. The mechanism everyone assumed was wrong.</p>
-    <p class="say rise">And the one that taught me most: two shipped improvements gained <span class="mk">+0.0144 on holdout</span> and <span class="mk">−0.0003 live</span>. Matching levels licenses nothing about improvements.</p>
-    <p class="say small rise">Ten parallel programmes — seven live alphas on WorldQuant BRAIN, three Numerai tournaments submitting themselves, two paper books at a real broker. Nothing staked until its evidence gate passes. Updated 27 Aug.</p>
-    <div class="doing-row rise">
-      <a class="go" href="research.html">Read the research notes</a>
-      <span class="note"><a href="essays/90-Hypotheses-Zero-Edges-short.pdf">90 Hypotheses, Zero Edges (pdf)</a></span>
+  </div>
+</section>
+
+<!-- QUANTIACS -->
+<p class="bridge rise"><span class="from">That one I sell.</span> <span class="to">These I compete in.</span></p>
+
+<section class="work" id="quantiacs">
+  <div class="head">
+    <h2>Quantiacs</h2>
+    <p class="eyebrow">Q25 defended dual momentum</p>
+  </div>
+  <div class="stream">
+    <p class="say rise">In-sample Sharpe <span class="mk">1.22</span>, maximum drawdown 23.6%.</p>
+    <p class="say rise">The platform's drawdown figure matched my from-source engine exactly, which is the only validation available before live trading starts.</p>
+    <p class="say rise">Selected, one of fifteen. Trades 1 October to 31 January.</p>
+    <p class="todo-label rise">Where it's at</p>
+    <ul class="todo rise">
+      <li class="done"><span>Submitted, passed the contest filters, selected</span></li>
+      <li class="done"><span>Engine validated against the platform</span></li>
+    </ul>
+    <p class="say small rise">Correct further work before October: none. Leave it alone.</p>
+  </div>
+</section>
+
+<!-- NUMERAI -->
+<p class="bridge rise"><span class="to">The next one taught me more about my own logging than about markets.</span></p>
+
+<section class="work" id="numerai">
+  <div class="head">
+    <h2>Numerai</h2>
+    <p class="eyebrow">Two tournaments, running without me</p>
+  </div>
+  <div class="stream">
+    <p class="say rise">Classic and Crypto both submitting on schedule. Crypto correlation <span class="mk">+0.116</span> neutralised.</p>
+    <p class="say rise">The interesting part is not the model. Every Crypto submission was silently payout-ineligible for months: the deadline drifts, and my own log recorded success while the platform recorded late.</p>
+    <p class="say rise">Fixed. The first ever on-time round was R1341.</p>
+  </div>
+</section>
+
+<!-- BRAIN -->
+<p class="bridge rise"><span class="to">The same lesson in a different shape: the thing blocking me was the shape of what I was submitting, not its quality.</span></p>
+
+<section class="work" id="brain">
+  <div class="head">
+    <h2>WorldQuant BRAIN</h2>
+    <p class="eyebrow">Seven alphas live</p>
+  </div>
+  <div class="stream">
+    <p class="say rise">Three days stuck at zero accepted from five submissions. It broke when I dropped single expressions for two-term combinations.</p>
+    <p class="say rise">Correlation fell <span class="mk">0.79 to 0.51</span>. Fitness rose <span class="mk">1.04 to 1.68</span>.</p>
+    <p class="say small rise">A 416-simulation sweep; 16 clear every gate. The best is Sharpe 2.05 at fitness 1.68. The components that made it work had all failed on their own and would have been filed as dead ends.</p>
+  </div>
+</section>
+
+<!-- STRUCTURAL BREAK -->
+<p class="bridge rise"><span class="to">That is what happens when the measurement is right. This is what happens when it is not.</span></p>
+
+<section class="work" id="sbreak">
+  <div class="head">
+    <h2>Structural Break</h2>
+    <p class="eyebrow">263rd of 1,332, and why that's the interesting part</p>
+  </div>
+  <div class="stream">
+    <p class="say rise">Live 57.43%. Two shipped improvements gained <span class="mk">+0.0144</span> on my own holdout and moved live by <span class="mk">−0.0003</span>. Zero for two.</p>
+    <p class="say rise">My holdout matched live almost exactly in level, and I used that to justify believing a delta.</p>
+    <p class="say rise">Levels agreeing tells you nothing about whether improvements transfer. Read as deltas, the evidence had been arguing against me the whole time.</p>
+  </div>
+</section>
+
+<!-- ALMACH -->
+<p class="bridge rise"><span class="from">That is my own measurement failing.</span> <span class="to">This is what happened when I checked someone else's.</span></p>
+
+<section class="work" id="almach">
+  <div class="head">
+    <h2>The almach audit</h2>
+    <p class="eyebrow">$2,895 to $257,000, checked</p>
+  </div>
+  <div class="stream">
+    <p class="say rise">A Polymarket trader turned $2,895 into $257,000 and an article explained how. I pulled 478,021 of their on-chain events and checked.</p>
+    <p class="say rise">The profit was real: <span class="mk">+$221,120</span> over 97 days, t = 7.52. The mechanism everyone assumed was wrong.</p>
+    <p class="say rise">A third wallet in the same study looked profitable until the same filter took <span class="mk">$176,266</span> out of it — 72% of its apparent profit, nearly all of it in one day that had presented as its biggest. Those were redemptions of positions opened before my measurement window. An artifact I had to catch before it fooled me too.</p>
+    <p class="say small rise">A paper clone now tests the real mechanism forward, evaluator sealed before starting. It will not report a number until it has 1,000 windows and 14 days. It is at 161.</p>
+  </div>
+</section>
+
+<!-- KILL LOG -->
+<p class="bridge rise"><span class="to">Most of what follows did not survive contact with its own numbers.</span></p>
+
+<section class="work" id="killlog">
+  <div class="head">
+    <h2>The kill log</h2>
+    <p class="eyebrow">Every closed door, with the measurement that closed it</p>
+  </div>
+  <div class="stream">
+    <p class="say rise">The nine friction-sized anomalies are in the table at the top. These are the ones that died for other reasons — and this is most of the work.</p>
+    <ul class="todo rise">
+      <li class="done"><span>Numerai hyperparameter sweeps, seven variants — six within 0.0008 correlation. Noise.</span></li>
+      <li class="done"><span>Feature subsets beating all 3,555 — breadth is monotonic. There is no clever subset.</span></li>
+      <li class="done"><span>Shorter training windows — longer wins on both metrics. Recency loses.</span></li>
+      <li class="done"><span>Crypto monthly refit, "+0.00951, t 2.57" — reproduced exactly, then died on three disjoint years at +0.00007. Refitting is hygiene, not alpha.</span></li>
+      <li class="done"><span>Structural-break ensembling as a family — below its own detection floor, confirmed by two methods.</span></li>
+      <li class="done"><span>Reversal sweep, 503 stocks and 90 ETFs — +20bp in 2016–21 down to +2bp in 2021–26, below costs.</span></li>
+      <li class="done"><span>A market maker — its projection rested on a fill model, so the fill model got a pre-declared test. Zero fills in 71 attempts against 3.7 expected.</span></li>
+      <li class="done"><span>An ETF cost tool that ranks nothing on purpose — two cost components are not available free, so ranking would just promote whichever fund has the least data.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- THE RIG -->
+<p class="bridge rise"><span class="to">None of that is impressive on its own. The way I killed them is.</span></p>
+
+<section class="work" id="rig">
+  <div class="head">
+    <h2>How the rig works</h2>
+    <p class="eyebrow">Measure the instrument before you trust it</p>
+  </div>
+  <div class="stream">
+    <p class="say rise">Before searching for an effect I measure the smallest effect the data could detect. If what I am hunting is below that floor, I do not run the search.</p>
+    <p class="say rise">Thresholds frozen before the run. Evaluators hashed and sealed so they cannot be adjusted after seeing results. Every book with a coin-flip control running beside it. Sample size counted in independent events rather than trades.</p>
+    <p class="say rise">And when the method itself fails, that gets logged too.</p>
+    <ul class="todo rise">
+      <li class="done"><span>Filtering on cumulative volume leaked the outcome into the filter and flipped a result from −8¢ to +4¢</span></li>
+      <li class="done"><span>Reusing one holdout inflated measured gains 3.2× and suppressed the small negatives that would have closed a project months earlier</span></li>
+      <li class="done"><span>Normalisation layers over a time axis are silent lookahead</span></li>
+    </ul>
     </div>
+</section>
+
+<!-- RUNNING NOW -->
+<p class="bridge rise"><span class="to">All of which is why none of it has money on it.</span></p>
+
+<section class="work" id="unstaked">
+  <div class="head">
+    <h2>Running now, unstaked</h2>
+    <p class="eyebrow">Nothing has money on it until its gate passes</p>
+  </div>
+  <div class="stream">
+    <p class="say rise">A 40-name value and quality book on Alpaca paper since 20 August. The almach clone. A meme-token desk with rug-pull gates.</p>
+    <p class="say rise">Nothing is staked until its evidence gate passes — not caution about money, just that a staked book and an unstaked one produce the same data.</p>
   </div>
 </section>
 
