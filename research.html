@@ -70,13 +70,15 @@
 <div class="page">
   <p class="back"><a href="index.html">← charliewytk.github.io</a></p>
   <h1>Research notes</h1>
-  <p class="lede">The maths and machine learning behind what I build, and how I stopped trusting my own backtests.</p>
-  <p class="meta">updated 25 aug 2026 &middot; every number below says what kind of number it is &mdash; live, holdout, or backtest</p>
+  <p class="lede">Around 110 ideas tested. Nine anomalies came back real — and every one was roughly the size of the friction needed to trade it.</p>
+  <p class="meta">updated 27 aug 2026 &middot; every number below says what kind of number it is &mdash; live, holdout, or backtest</p>
 
   <section>
-    <h2>The problem</h2>
-    <p class="meta">why the rest of this exists</p>
-    <p>Test enough ideas and some look brilliant purely by luck. They are not fakes — that is just what randomness looks like when you go hunting for patterns.</p>
+    <h2>The finding</h2>
+    <p class="meta">what ~110 tests actually established</p>
+    <p>The result everyone expects from this kind of work is "nothing worked". That is not what happened. Nine anomalies came back real and measurable — and each was approximately the size of the costs required to trade it. The edge exists; it is spent getting to it.</p>
+    <p>That distinction matters, because it changes what to do next. A null says stop looking. A friction-sized edge says the search space is fine and the problem is execution, capacity or the cost base — which are things you can attack.</p>
+    <p>The second reason for the rig below: test enough ideas and some look brilliant purely by luck. They are not fakes — that is just what randomness looks like when you go hunting for patterns.</p>
     </section>
 
   <section>
@@ -94,9 +96,24 @@
   </section>
 
   <section>
+    <h2>Where it pays, and what it pays</h2>
+    <p class="meta">merger monitor · the only thing with a price on it</p>
+    <p>A nightly job pulls every deal that has reached a definitive proxy, prices the spread, and publishes the break-even and expected value derived from 757 settled outcomes. 44 deals in the universe today, median 47 days to close. Every figure carries the filing sentence it came from, so a subscriber can check the source rather than trust me.</p>
+    <p>The base rate is 3.2% break from the definitive proxy onward — 24 of 757 — and the page says out loud that this is a floor, not a ceiling, because deals that collapse before that stage never enter the sample. Free weekly tier, £5/month for the same maths a week earlier. No position, no execution, no tips.</p>
+    <ul>
+      <li>Live product, free and paid tiers, send path built and firing nightly at 22:30.</li>
+      <li>Open: the break rate has three different numbers attached to it and they need reconciling before any of them goes on a sales page.</li>
+      <li>Zero subscribers so far. Revenue to date across the whole programme: £0.</li>
+    </ul>
+  </section>
+
+  <section>
     <h2>Machine learning, scored publicly</h2>
-    <p class="meta">datacrunch · adia · numerai classic / signals / crypto · synth</p>
-    <p>The one place I get an honest scoreboard: same data for everyone, thousands of entrants, no marking my own homework. Six entries are live.</p>
+    <p class="meta">datacrunch · adia · numerai · quantiacs · worldquant brain</p>
+    <p>The one place I get an honest scoreboard: same data for everyone, thousands of entrants, no marking my own homework.</p>
+
+    <h3>Quantiacs Q25 — submitted and selected</h3>
+    <p>A defended dual-momentum entry to the Q25 Crypto Top-10 contest: Sharpe 1.22, maximum drawdown 23.6%, both verified on the platform, and a from-source engine that reproduces the platform's numbers exactly. Selected as 1 of 15. It runs live 1 October to 31 January against a $2M pool, strategy locked, no downside.</p>
 
     <h3>DataCrunch — about 12th of 13,534</h3>
     <div class="tw"><table>
@@ -106,54 +123,76 @@
       <tr><td>v3</td><td class="num">0.0443</td><td>went backwards, left in the log</td></tr>
       <tr><td>v4</td><td class="num">0.0535</td><td></td></tr>
       <tr><td>v5</td><td class="num">—</td><td>retired before it was ever submitted</td></tr>
-      <tr><td>v6</td><td class="num">0.05682</td><td>current, about 12th as of 23 Aug</td></tr>
+      <tr><td>v6</td><td class="num">0.05682</td><td>current, about 12th</td></tr>
       <tr><td>v7</td><td class="num">0.0484</td><td>lost to v6, left in the log</td></tr>
     </table></div>
-    <p>The leader scores 0.0868, so the gap is real and the log says so. A screening session after v7 tested six more ideas locally; none beat the live model, so nothing was submitted.</p>
-    <h3>ADIA structural break challenge</h3>
-    <p>Spotting the moment a time series changes behaviour. My first scored entry — a recurrent network trained five separate times and averaged — reached 0.5714 on the live leaderboard, rank 246 of 13,161 at the last check (23 Aug), where 0.5 would be a coin flip. A later run scored 0.5746. The account has had two successful live runs so far; the leaders have had ninety-plus. A rebuilt model has been verified at 0.598 on a sealed local holdout — that is a holdout number, not a live one, and it stays in that sentence until the platform scores it.</p>
+    <p>The leader scores 0.0868, so the gap is real and the log says so. Six further ideas were screened locally after v7; none beat the live model, so nothing was submitted.</p>
+
+    <h3>Structural break — 263rd of 1,332, and why that is the interesting part</h3>
+    <p>57.43% live, against a leader at 65.24%. But the rank is not the finding. Two shipped improvements gained <b>+0.0144 on holdout</b> and delivered <b>−0.0003 live</b>. No holdout gain has ever transferred on this competition: zero for two.</p>
+    <p>The reasoning error is written down verbatim in my own submission note. Holdout levels had matched live levels twice before, and I used that to justify confidence in a holdout <i>improvement</i>. Those are different claims. The two prior live points were in fact evidence against delta transfer and I read them as evidence for it. The data to falsify that existed before I spent the quota. About 69% of the headline turned out to be selection inflation on a reused holdout.</p>
+
     <h3>Numerai — three tournaments, all live, nothing staked</h3>
-    <p><b>Classic.</b> The model now lives on Numerai's servers and submits itself: five rounds out of five since going live on 21 Aug, no gaps, no laptop involved. Zero live rounds have resolved yet — the first lands 21 September — so the only performance number that exists is a local validation score, and staking waits on a policy written before any result came in: at least ten resolved rounds, a checklist that must pass in full, earliest around November.</p>
-    <p><b>Signals.</b> A model over Numerai's own features submits automatically five days a week — 7,267 tickers in the latest round. In walk-forward validation it scores +0.071 where Numerai's shipped example scores −0.002. The interesting finding was methodological: scoring only the tickers a free data source still covers inflates recent-era results, because delisted losers vanish from free data — so every external-data idea gets tested against that bias, and so far every one has died.</p>
-    <p><b>Crypto.</b> Two models submit daily, deliberately different (full history vs recent year) to learn which philosophy wins. The recency idea has now lost on two separate evaluation windows, and the one statistically solid finding is that refitting monthly beats leaving the model fixed. No live scores until mid-September.</p>
+    <p>Classic, Signals and Crypto all submit on schedule without a laptop involved. Crypto scores +0.116 market-cap-neutralised in validation. A late-submission bug was caught and fixed that had left the margin at 3.7 minutes — October's clock change would have made every round late, and therefore payout-ineligible, without anything appearing to break. Staking is pre-registered for a November decision, after at least ten resolved rounds.</p>
 
-    <h3>Synth — submitted, first scores pending</h3>
-    <p>CrunchDAO's synthetic-price competition: forecast the full probability distribution of 24-hour returns for four assets on 5-minute bars, scored on how well the whole distribution matches reality (CRPS — lower is better). My ~100-line forecaster beats the shipped baseline in local backtests; its first live scores are due any day, and until they land that is all the claim there is.</p>
+    <h3>WorldQuant BRAIN — seven alphas live</h3>
+    <p>Three days and 308 single-term simulations produced a 0-for-5 rejection queue. Every candidate strong enough to clear the performance gates was a fast price/volume signal already in my book, so each one drew self-correlation around 0.79 against a 0.70 limit. Searching harder inside that class could not fix it, because the class was the problem.</p>
+    <p>Pairing each strong-but-crowded fast term with a weak, orthogonal slow one cleared 14 of 30 combinations, against 2 of 308 singles. Correlation fell 0.79 → 0.51 and fitness rose 1.04 → 1.68. The components that made it work had all failed on their own and would have been filed as dead ends.</p>
   </section>
 
   <section>
-    <h2>Five strategies, five verdicts</h2>
-    <p class="meta">what survives real costs</p>
+    <h2>The Almach study</h2>
+    <p class="meta">$2,895 → +$221,120, audited from the chain</p>
+    <p>A Polymarket account was posting returns that looked impossible. Rather than guess, I pulled its complete on-chain ledger — 478,021 events over 97 days — and reconstructed every position.</p>
+    <p>The profit is real: <b>+$221,120 from $2,895 of peak capital, t = 7.52</b>. A second account independently returned +$291,481 at t = 10.15. Both win about half their bets at a median entry around 45–46¢, which is the tell: this is directional value betting on five-minute markets, not the market-making everyone assumed it was.</p>
+    <p>Knowing the mechanism is not the same as being able to run it, so there is now a paper clone with a sealed evaluator and a verdict due around 10 September. Nothing real is staked on it.</p>
+  </section>
+
+  <section>
+    <h2>The kill log</h2>
+    <p class="meta">each one a genuinely closed door</p>
     <div class="tw"><table>
-      <tr><th>Strategy</th><th>Verdict</th><th>What decided it</th></tr>
-      <tr><td>Closed-end fund discounts</td><td>upper bound</td><td>44% of the profit was market drift, not timing</td></tr>
-      <tr><td>Odd-lot tenders</td><td>small but real</td><td>~£200/yr, capped at 99 shares per deal no matter the bankroll</td></tr>
-      <tr><td>Polymarket orphans</td><td>dead</td><td>90 days of resolved markets gave no usable evidence cell; 0 for 8 on paper</td></tr>
-      <tr><td>Copying activist investors</td><td>dead</td><td>45-day disclosure lag; you pay fees to trail the index</td></tr>
-      <tr><td>Index addition trades</td><td>dead</td><td>decayed, and confirming it needs paid data</td></tr>
+      <tr><th>Idea</th><th>What killed it</th></tr>
+      <tr><td>Polymarket longshot bias</td><td>the bias is real at about 2¢ — under a 1.5–3¢ spread</td></tr>
+      <tr><td>Factor zoo, 25 equity signals</td><td>29 "FDR survivors" turned out to be one levered bet on beta</td></tr>
+      <tr><td>13F cloning</td><td>survivorship, plus a single regime doing the work</td></tr>
+      <tr><td>Analyst upgrades</td><td>the reaction lands in the untradeable gap; firm track record barely persists, ρ = 0.005</td></tr>
+      <tr><td>FCA short register</td><td>the information is the standing short, not the disclosure</td></tr>
+      <tr><td>Intraday dip-buying</td><td>dips continue rather than revert, −4bp over the next 30 minutes</td></tr>
     </table></div>
-    <p>The survivor got execution tooling: broker preflights, and a test suite whose only job is stopping the code placing an order the strategy never asked for. Two paper books now run against a real broker to measure execution honestly — the measured median effective spread came in at 3.5 basis points against the 10 the models had been assuming, which is the polite way of finding out your cost model was a third too pessimistic.</p>
-    <p>The 13F thread did not end with the activist verdict: 19,077 filings and 21 million positions collected, three more approaches measured dead, and exactly one candidate signal still standing — parked behind a data-quality decision rather than pushed because the backtest looks nice.</p>
   </section>
 
   <section>
-    <h2>Things that failed usefully</h2>
-    <p class="meta">the bot, the market maker, and the tool that won't answer</p>
-    <p><b>A trading bot.</b> Its backtests looked wonderful because I had assumed prices I could not really trade at. Recalculated honestly, the profit vanished. I retired it and turned each lesson into a rule in the rig above.</p>
-    <p><b>A market maker.</b> Its projection rested on a fill model, so the fill model got a pre-declared test: one honest week of resting real quotes. Zero fills in 71 attempts against 3.7 expected — the projection was voided by its own audit, which is exactly what the audit was for. Two sibling strategies died the same way, by counting: one found 2 usable events in 98,079 observations, the other 2 in six million.</p>
-    <p><b>An ETF cost comparison.</b> It ranks nothing on purpose: two cost components are not available free, so ranking would just promote whichever fund has the least data. It reports what is missing instead.</p>
+    <h2>Two that failed usefully</h2>
+    <p class="meta">the audit that voided its own projection</p>
+    <p><b>A market maker.</b> Its projection rested entirely on a fill model, so the fill model got a pre-declared test: one honest week of resting real quotes. Zero fills in 71 attempts against 3.7 expected. The projection was voided by its own audit, which is exactly what the audit was for. Two sibling strategies died the same way, by counting: one found 2 usable events in 98,079 observations, the other 2 in six million.</p>
+    <p><b>An ETF cost comparison.</b> It ranks nothing on purpose. Two cost components are not available free, so ranking would just promote whichever fund has the least data. It reports what is missing instead.</p>
   </section>
 
   <section>
-    <h2>The operation, now</h2>
-    <p class="meta">ten programmes · self-verifying · nothing at stake until the evidence gates pass</p>
-    <p>What started as one backtesting rig is now a small operation: the six scored entries above, plus live alphas on WorldQuant BRAIN, the broker paper books, and two paper-only research daemons. The engineering matters as much as the models:</p>
+    <h2>How the rig works</h2>
+    <p class="meta">the part nobody else publishes</p>
+    <p>Every trading blog has results. Almost none can tell you what they could have detected. That is the difference, and it is the part I would defend hardest:</p>
     <ul>
-      <li>Every automated submission runs preflights first — is the data actually fresh, are the predictions sane and non-degenerate, does the model file match the code — and a network-retry wrapper that has already saved one live round from a failed connection.</li>
-      <li>Nightly unattended sessions re-verify the stack and commit a digest: 1,500+ tests across three suites, green before I wake up.</li>
-      <li>One cumulative hypothesis ledger across everything, 32 rows, failures first-class. New ideas test against the survivorship bias measured above before they are believed.</li>
-      <li>Real money is the last step, not the first: every book is paper, every model unstaked, each behind its own pre-committed evidence checklist written before results existed.</li>
+      <li><b>The detection floor is measured before the search runs.</b> On Quantiacs the floor was 0.68 while the real effects were 0.1–0.2 — and taking the best of a hundred tries manufactured a +0.30 that was pure selection. Knowing the floor first is what stops that being written up as a finding.</li>
+      <li><b>Thresholds are pre-registered</b> and the evaluator is sealed. One attempt per idea, recorded before the test runs, so a crash still spends it.</li>
+      <li><b>Null control books run alongside the real ones.</b> If the null scores, the instrument is broken, not the market.</li>
+      <li><b>Effective sample size, not trade counts.</b> Sixty games from thirty seeds are not sixty samples, and row counts flatter entities by three to eight times across the whole record.</li>
+      <li><b>Traps are logged when the method fails</b>, not just when the idea does: volume filters that introduced lookahead, a reused holdout that inflated results 3.2×, normalisation leaking across time.</li>
     </ul>
+    <p>Three findings from that discipline outrank any single strategy. Edges are friction-sized. Reproducibility is not relevance — four platforms shipped locally reproducible gains that scored roughly zero live. And matching levels licenses nothing about improvements.</p>
+  </section>
+
+  <section>
+    <h2>What is running right now, unstaked</h2>
+    <p class="meta">nothing has money on it until its gate passes</p>
+    <ul>
+      <li>A 40-name value and quality book, paper, at a real broker since 20 August — there to measure execution honestly rather than to make money. Measured median effective spread came in at 3.5 basis points against the 10 the models had assumed.</li>
+      <li>The paper Almach clone, accruing toward its September verdict behind a sealed evaluator.</li>
+      <li>A meme-coin desk running paper-only against a frozen pre-registration, first evaluation 8 September.</li>
+      <li>Numerai staking, gated on ten resolved rounds and a checklist, earliest November.</li>
+    </ul>
+    <p>Every automated submission runs preflights first — is the data fresh, are the predictions sane and non-degenerate, does the model file match the code — behind a retry wrapper that has already saved one live round from a dropped connection. Nightly unattended sessions re-verify the stack and commit a digest: 1,500+ tests across three suites, green before I wake up.</p>
   </section>
 
   <footer>
