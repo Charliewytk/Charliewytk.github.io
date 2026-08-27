@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Every anomaly I found was the size of its own trading costs</title>
+<meta name="description" content="Around 110 pre-registered market hypotheses. Nine produced a real anomaly. Zero produced one bigger than the cost of trading it — with the number that killed each, and the three times the method itself was wrong.">
+<link rel="canonical" href="https://charliewytk.github.io/essays/friction-sized-edges.html">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="Every anomaly I found was the size of its own trading costs">
+<meta property="og:type" content="article">
+<style>
+:root{--bg:#f7f7ef;--ink:#22201d;--muted:#5c5850;--line:#c9c6b4;--accent:#a9331f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-size:16px;line-height:1.72;
+ font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.shell{max-width:680px;margin:0 auto;padding:64px 24px 96px}
+a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
+a:hover{color:var(--accent);border-color:var(--accent)}
+.eyebrow{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+h1{font-size:clamp(1.9rem,4.6vw,2.7rem);line-height:1.15;letter-spacing:-.02em;margin:0 0 28px;font-weight:700}
+h2{font-size:1.22rem;margin:44px 0 12px;letter-spacing:-.01em}
+h3{font-size:1.02rem;margin:30px 0 8px}
+p{margin:0 0 18px}
+.note{color:var(--muted);font-size:.92rem;font-style:italic}
+hr{border:0;border-top:1px solid var(--line);margin:38px 0}
+blockquote{margin:20px 0;padding:12px 18px;border-left:3px solid var(--accent);color:var(--muted)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;background:#efeee4;padding:1px 5px;border-radius:3px}
+.tw{overflow-x:auto;margin:22px 0}
+table{border-collapse:collapse;width:100%;font-size:.9rem;min-width:520px}
+th{text-align:left;padding:9px 10px;border-bottom:2px solid var(--ink);font-size:.7rem;
+ letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+.foot{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);font-size:.88rem;color:var(--muted)}
+</style></head><body><div class="shell">
+<div class="eyebrow"><a href="/">Charlie Wuytack</a> &middot; 28 Aug 2026</div>
+<h1>Every anomaly I found was the size of its own trading costs</h1>
+<p>I spent a year pre-registering hypotheses about markets and testing them. Around 110 of them. Nine produced a real, measurable anomaly. Zero produced one bigger than the cost of trading it.</p>
+<p>That is not a story about markets being efficient. It is a story about a specific, boring, repeatable size: <strong>the edge and the friction turn out to be the same order of magnitude, over and over, in unrelated places.</strong> Once you have seen it nine times you can predict in advance which searches will fail, which is worth more than any of the individual results.</p>
+<p>Here is the whole list, with the number that killed each one.</p>
+<div class='tw'><table><thead><tr><th>the edge</th><th>what eats it</th></tr></thead><tbody><tr><td>Polymarket longshot bias — real, ~2¢</td><td>the spread is 1.5–3¢</td></tr><tr><td>Dip-buying, 503 stocks + 90 ETFs — +20bp in 2016–21</td><td>+2bp in 2021–26, below costs</td></tr><tr><td>The same trade, intraday</td><td>−4bp before any costs at all</td></tr><tr><td>Polymarket liquidity provision, liquid markets</td><td>−$102.59/day per $1,000, <em>after</em> rewards</td></tr><tr><td>Buying both sides to hedge</td><td>−8% locked in at entry</td></tr><tr><td>Following analyst upgrades</td><td>the whole reaction is in the untradeable gap</td></tr><tr><td>A firm&#x27;s track record as a signal</td><td>ρ = 0.005. Three domains, nothing in any</td></tr><tr><td>25 equity factors, 29 &quot;survivors&quot; of multiple-testing correction</td><td>one levered beta bet wearing 29 hats</td></tr><tr><td>13F cloning, 19,000 filings</td><td>survivorship, plus a single regime</td></tr></tbody></table></div>
+<h2>The part that actually cost me</h2>
+<p>The failures I care about are not the strategies. They are the three times my <em>method</em> was wrong in a way that produced a confident, reproducible, completely false number.</p>
+<p><strong>Filtering on cumulative volume.</strong> I filtered a sample on trading volume to remove illiquid names. Cumulative volume is partly <em>caused by</em> the outcome being measured. That single filter flipped a result from −8bp to +4bp. It was reproducible. It was stable. It was lookahead.</p>
+<p><strong>Reusing one holdout.</strong> I evaluated many candidates against the same holdout set and shipped the winner. The measured improvement was inflated 3.2×. Worse than the inflation: reusing the surface <em>suppressed the small negative results</em> that would have closed the whole project months earlier. A contaminated holdout does not just flatter your winner, it hides the evidence that would have stopped you.</p>
+<p><strong>Level agreement is not delta transfer.</strong> My local score matched the live leaderboard to three decimal places. I used that to justify believing a local <em>improvement</em> would transfer. Two shipped improvements gained +0.0144 locally and moved the live score by −0.0003. Zero for two. Read as deltas rather than levels, the same evidence I cited in support had been arguing against me the whole time.</p>
+<h2>What I do now instead</h2>
+<p>Before searching for an effect, I measure the smallest effect the data could detect. If the thing I am hunting is below that floor, the search cannot succeed and I do not run it. This one habit retired more projects than any result did.</p>
+<p>Thresholds are frozen before the run. Evaluators are hashed and sealed so they cannot be quietly adjusted after seeing an answer. Every book has a coin-flip version of itself running alongside it. Sample size is counted in independent events, not in trades — a rolling window that re-counts the same five episodes is not 4,284 observations.</p>
+<p>And when the method fails, that gets written down as carefully as when a strategy fails. The trap log is more useful to me than the results log.</p>
+<h2>Two things did survive</h2>
+<p><strong>One trader&#x27;s profit was real.</strong> I pulled 478,021 on-chain events to audit a Polymarket account that turned $2,895 into $257,000. The profit checked out: +$221,120 over 97 days, t = 7.52. The mechanism everyone assumed was wrong. A second wallet in the same study looked like it had made $176,266 that turned out to be redemptions of positions opened before my measurement window started — an artifact I nearly published before catching.</p>
+<p><strong>And one thing I can actually sell.</strong> Merger arbitrage spreads, where the deal price is contractual and printed in an SEC filing rather than inferred. Sixteen live cash deals, every figure carrying the sentence from the filing it came from. A 3% spread over the median 49-day close annualises to 24.6% a year — which is exactly the kind of number this business is normally sold on, and it is worthless. Price it properly, against a 2.4% break rate measured over 1,606 settled deals, a 27% median loss when one breaks, round-trip costs and forgone T-bill carry, and it is worth +1.38% per deal. A 1% spread, which still annualises to something respectable, is −0.57%. Break-even sits at 1.59%.</p>
+<p>That gap — 24.6% versus +1.38% — is the whole thing in one line. The annualised number is marketing. The expected value is the trade.</p>
+<hr>
+<p class='note'>Everything above is measured, and the measurements are wrong in ways I have tried hard to find. If you spot one I missed, I would genuinely rather know.</p>
+<div class="foot">
+The live merger table this ends on is published weekly at
+<a href="/merger-monitor/">charliewytk.github.io/merger-monitor</a>, one week
+behind the daily edition. The longer write-up is
+<a href="/essays/90-Hypotheses-Zero-Edges.pdf">here as a PDF</a>, written at an
+earlier count.
+</div>
+</div></body></html>
