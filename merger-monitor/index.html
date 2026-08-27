@@ -1,0 +1,444 @@
+
+<div style="max-width:900px;margin:0 auto 28px;padding:14px 18px;border:1px solid #d8d4c4;
+ border-radius:8px;background:#fbf9f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
+ Helvetica,Arial,sans-serif;font-size:14px;line-height:1.6;color:#3b382f">
+<strong>This table is from 2026-08-19 and is published one week late, on purpose.</strong>
+A merger spread narrows as the deal approaches its close, so a week-old table is
+systematically the worse entry on deals that complete &mdash; and no help at all on
+the ones that break. Nothing is withheld: the free weekly email is this same table,
+and the paid daily edition is the same arithmetic the evening it is built.
+<div style="margin-top:12px">
+<a href="https://wuytackcharlie.gumroad.com/l/mergerweekly" style="display:inline-block;background:#0f6f4d;color:#fff;text-decoration:none;
+ padding:9px 16px;border-radius:6px;font-weight:600">Get it free by email</a>
+<a href="https://wuytackcharlie.gumroad.com/l/mergermonitor" style="display:inline-block;margin-left:10px;color:#3b382f;text-decoration:none;
+ border-bottom:1px solid #b9b4a2;padding-bottom:1px">Or the daily edition</a>
+</div></div>
+<title>US deal terms, read from the filing</title>
+<style>
+:root{
+ --paper:#f6f7f9; --card:#fff; --ink:#15181d; --mute:#5d6572; --faint:#878f9c;
+ --rule:#dde2e8; --accent:#1d5c49; --accent-soft:#e7f0ec; --amber:#7d5a12;
+}
+@media (prefers-color-scheme:dark){:root{
+ --paper:#0f1216; --card:#161a20; --ink:#e7eaef; --mute:#98a1af; --faint:#727b8a;
+ --rule:#232932; --accent:#6cbfa1; --accent-soft:#16241f; --amber:#c9a24e;
+}}
+:root[data-theme="dark"]{
+ --paper:#0f1216; --card:#161a20; --ink:#e7eaef; --mute:#98a1af; --faint:#727b8a;
+ --rule:#232932; --accent:#6cbfa1; --accent-soft:#16241f; --amber:#c9a24e;
+}
+:root[data-theme="light"]{
+ --paper:#f6f7f9; --card:#fff; --ink:#15181d; --mute:#5d6572; --faint:#878f9c;
+ --rule:#dde2e8; --accent:#1d5c49; --accent-soft:#e7f0ec; --amber:#7d5a12;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+ font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
+ font-size:16px;line-height:1.5;padding:3rem 1.25rem 6rem;
+ -webkit-font-smoothing:antialiased}
+.wrap{max-width:54rem;margin:0 auto}
+
+/* --- masthead --- */
+.eyebrow{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+ color:var(--faint);margin:0 0 .8rem}
+h1{font-family:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+ font-size:clamp(1.9rem,4.4vw,2.7rem);line-height:1.12;font-weight:600;
+ letter-spacing:-.015em;margin:0 0 .7rem;text-wrap:balance}
+.deck{color:var(--mute);font-size:1.02rem;max-width:38rem;margin:0 0 2.2rem}
+
+.terms{display:grid;gap:.9rem;border:1px solid var(--rule);border-radius:4px;
+ background:var(--card);padding:1.1rem 1.2rem;margin:0 0 2.2rem;font-size:.9rem}
+.terms p{margin:0;color:var(--mute)}
+.terms b{color:var(--ink);font-weight:600}
+
+/* --- figures --- */
+.stats{display:flex;flex-wrap:wrap;gap:2.4rem;margin:0 0 2.6rem;
+ padding:1.15rem 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.stat .n{font-family:ui-monospace,'SF Mono',Menlo,monospace;
+ font-size:1.6rem;font-variant-numeric:tabular-nums;line-height:1}
+.stat .l{font-size:.68rem;letter-spacing:.11em;text-transform:uppercase;
+ color:var(--faint);margin-top:.4rem}
+
+/* --- casebook entries --- */
+.entry{border-top:1px solid var(--rule);padding:1.5rem 0}
+.entry:last-of-type{border-bottom:1px solid var(--rule)}
+.hd{display:flex;flex-wrap:wrap;align-items:baseline;gap:.55rem;margin-bottom:.2rem}
+.tk{font-family:ui-monospace,'SF Mono',Menlo,monospace;
+ font-size:1.12rem;font-weight:600;letter-spacing:.04em}
+.co{color:var(--mute);font-size:.9rem}
+.chip{font-size:.63rem;letter-spacing:.09em;text-transform:uppercase;
+ border:1px solid var(--rule);border-radius:2px;padding:.13rem .42rem;color:var(--faint)}
+.chip.cash{color:var(--accent);border-color:var(--accent)}
+.chip.nocash{color:var(--amber);border-color:var(--amber)}
+.nums{margin-left:auto;display:flex;align-items:baseline;gap:.85rem;
+ font-family:ui-monospace,'SF Mono',Menlo,monospace;font-variant-numeric:tabular-nums}
+.px{color:var(--faint);font-size:.82rem}
+.sp{font-size:1.02rem;font-weight:600}
+
+/* the quotation is the point of the page, so it is the largest thing here */
+blockquote{margin:.9rem 0 0;padding:.1rem 0 .1rem 1.15rem;
+ border-left:2px solid var(--rule);
+ font-family:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+ font-size:1.04rem;line-height:1.6;color:var(--ink)}
+blockquote.corroborated{border-left-color:var(--accent);background:var(--accent-soft);
+ border-radius:0 3px 3px 0;padding-top:.55rem;padding-bottom:.55rem}
+.facts{margin:.6rem 0 0;font-size:.76rem;color:var(--faint);
+ font-family:ui-monospace,'SF Mono',Menlo,monospace;letter-spacing:.01em}
+.cite{margin:.45rem 0 0;font-size:.79rem;color:var(--faint)}
+.cite a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--rule)}
+.cite a:hover,.cite a:focus-visible{border-bottom-color:var(--accent)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+.unpriced{font-size:.86rem;color:var(--mute);margin:.75rem 0 0;font-style:italic}
+
+footer{margin-top:3rem;font-size:.79rem;color:var(--faint);line-height:1.65}
+footer p{margin:0 0 .5rem;max-width:42rem}
+@media (max-width:34rem){.nums{margin-left:0;width:100%}}
+</style>
+<div class="wrap">
+<p class="eyebrow">SEC EDGAR &middot; last 180 days</p>
+<h1>US deal terms, read from the filing</h1>
+<p class="deck">Every live merger, tender offer and going-private deal I can find, with the offer price taken from the primary filing &mdash; and the sentence it came from, so you can check it.</p>
+<div class="terms"><p><b>What this is.</b> Facts extracted from SEC filings. Each price links to the document it was read from.</p><p><b>What it is not.</b> Advice, or a recommendation to buy anything. Where a deal pays stock or lets holders elect their consideration there is no single cash number, so none is shown. Spreads move; these were computed when the page was built.</p></div>
+<div class="stats"><div class="stat"><div class="n">36</div><div class="l">deals</div></div><div class="stat"><div class="n">17</div><div class="l">cash price</div></div><div class="stat"><div class="n">17</div><div class="l">corroborated</div></div><div class="stat"><div class="n">3</div><div class="l">filing types</div></div><div class="stat"><div class="n">2026-08-19</div><div class="l">built</div></div></div>
+<article class="entry"><div class="hd">
+<span class="tk">WBD</span>
+<span class="co">Warner Bros. Discovery, Inc.</span>
+<span class="chip cash">ALL_CASH</span>
+<span class="chip">DEFM14A</span>
+<span class="nums"><span class="px">$31.0 offer &middot; $28.48 now</span><span class="sp">+8.85%</span></span>
+</div>
+<blockquote class="q corroborated">&hellip;have been properly exercised) shall be converted into the right to receive an amount in cash equal to $31.00, without interest, plus, if the d&hellip;</blockquote>
+<p class="cite">DEFM14A, filed 2026-03-26 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1437107/000119312526125075/0001193125-26-125075-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">PERF</span>
+<span class="co">Perfect Corp.</span>
+<span class="chip cash">ALL_CASH</span>
+<span class="chip">SC 13E3</span>
+<span class="nums"><span class="px">$2.0 offer &middot; $1.88 now</span><span class="sp">+6.38%</span></span>
+</div>
+<blockquote class="q corroborated">&hellip;prior to the Effective Time will be cancelled and cease to exist in exchange for the right to receive US$2.00 in cash per Share without interest&hellip;</blockquote>
+<p class="cite">SC 13E3, filed 2026-07-31 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1899830/000110465926089222/0001104659-26-089222-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">SLAB</span>
+<span class="co">SILICON LABORATORIES INC.</span>
+<span class="chip cash">ALL_CASH</span>
+<span class="chip">DEFM14A</span>
+<span class="nums"><span class="px">$231.0 offer &middot; $219.29 now</span><span class="sp">+5.34%</span></span>
+</div>
+<blockquote class="q corroborated">&hellip;Special Meeting to approve the Merger Proposal. If the Merger is completed, you will be entitled to receive $231.00 in cash, without interest thereo&hellip;</blockquote>
+<p class="cite">DEFM14A, filed 2026-03-27 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1038074/000119312526128959/0001193125-26-128959-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">ACA</span>
+<span class="co">Arcosa, Inc.</span>
+<span class="chip cash">ALL_CASH</span>
+<span class="chip">DEFM14A</span>
+<span class="nums"><span class="px">$150.0 offer &middot; $145.01 now</span><span class="sp">+3.44%</span></span>
+</div>
+<blockquote class="q corroborated">&hellip;stock, par value $0.01 per share, of the Company (the “Company common stock”) will receive $150.00 in cash, without interest, less&hellip;</blockquote>
+<p class="cite">DEFM14A, filed 2026-08-03 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1739445/000114036126030551/0001140361-26-030551-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">RAMP</span>
+<span class="co">LiveRamp Holdings, Inc.</span>
+<span class="chip cash">ALL_CASH</span>
+<span class="chip">DEFM14A</span>
+<span class="nums"><span class="px">$38.5 offer &middot; $37.43 now</span><span class="sp">+2.86%</span></span>
+</div>
+<blockquote class="q corroborated">&hellip;subsidiary of Parent (other than Merger Sub) or of the Company) will be converted into the right to receive $38.50 in cash, without interest. After&hellip;</blockquote>
+<p class="cite">DEFM14A, filed 2026-07-06 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/733269/000110465926080505/0001104659-26-080505-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">CCO</span>
+<span class="co">Clear Channel Outdoor Holdings, Inc.</span>
+<span class="chip cash">ALL_CASH</span>
+<span class="chip">DEFM14A</span>
+<span class="nums"><span class="px">$2.43 offer &middot; $2.37 now</span><span class="sp">+2.53%</span></span>
+</div>
+<blockquote class="q corroborated">&hellip;Capital, the “Consortium”). If the Merger is completed, you will be entitled to receive $2.43 in cash, without interest thereon&hellip;</blockquote>
+<p class="cite">DEFM14A, filed 2026-04-13 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1334978/000121390026042721/0001213900-26-042721-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">OGN</span>
+<span class="co">Organon &amp; Co.</span>
+<span class="chip cash">ALL_CASH</span>
+<span class="chip">DEFM14A</span>
+<span class="nums"><span class="px">$14.0 offer &middot; $13.68 now</span><span class="sp">+2.34%</span></span>
+</div>
+<blockquote class="q corroborated">&hellip;be automatically cancelled, extinguished and converted into the right to receive an amount in cash equal to $14.00, without interest. After careful&hellip;</blockquote>
+<p class="cite">DEFM14A, filed 2026-06-17 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1821825/000119312526273323/0001193125-26-273323-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">IHS</span>
+<span class="co">IHS Holding Ltd</span>
+<span class="chip cash">ALL_CASH</span>
+<span class="chip">SC 13E3</span>
+<span class="nums"><span class="px">$8.5 offer &middot; $8.33 now</span><span class="sp">+2.04%</span></span>
+</div>
+<blockquote class="q corroborated">&hellip;below) and the Holdings Shares (as defined below)) will be cancelled in exchange for the right to receive $8.50 in cash per Ordinary Share (the&hellip;</blockquote>
+<p class="cite">SC 13E3, filed 2026-07-10 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1876183/000110465926082643/0001104659-26-082643-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">AES</span>
+<span class="co">AES CORP</span>
+<span class="chip cash">ALL_CASH</span>
+<span class="chip">DEFM14A</span>
+<span class="nums"><span class="px">$15.0 offer &middot; $14.74 now</span><span class="sp">+1.76%</span></span>
+</div>
+<blockquote class="q corroborated">&hellip;be owned by the Investors, and for each share of our common stock you own, you will be entitled to receive $15.00 in cash, without interest, as des&hellip;</blockquote>
+<p class="cite">DEFM14A, filed 2026-05-15 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/874761/000114036126021662/0001140361-26-021662-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">FSEA</span>
+<span class="co">First Seacoast Bancorp, Inc.</span>
+<span class="chip cash">ALL_CASH</span>
+<span class="chip">DEFM14A</span>
+<span class="nums"><span class="px">$17.25 offer &middot; $17.07 now</span><span class="sp">+1.05%</span></span>
+</div>
+<blockquote class="q corroborated">&hellip;at closing, each of your shares of First Seacoast common stock will be converted into the right to receive $17.25 in cash, without interest. Upon c&hellip;</blockquote>
+<p class="cite">DEFM14A, filed 2026-07-23 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1943802/000119312526314200/0001193125-26-314200-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">SLP</span>
+<span class="co">Simulations Plus, Inc.</span>
+<span class="chip cash">ALL_CASH</span>
+<span class="chip">DEFM14A</span>
+<span class="nums"><span class="px">$18.5 offer &middot; $18.36 now</span><span class="sp">+0.76%</span></span>
+</div>
+<blockquote class="q corroborated">&hellip;“ Company Common Shares ”) that you own immediately prior to the effective time of the Merger, $18.50 in cash without interest (the&hellip;</blockquote>
+<p class="cite">DEFM14A, filed 2026-07-22 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1023459/000102345926000051/0001023459-26-000051-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">DBRG</span>
+<span class="co">DigitalBridge Group, Inc.</span>
+<span class="chip cash">ALL_CASH</span>
+<span class="chip">DEFM14A</span>
+<span class="nums"><span class="px">$16.0 offer &middot; $15.91 now</span><span class="sp">+0.57%</span></span>
+</div>
+<blockquote class="q corroborated">&hellip;If the mergers are completed, DigitalBridge stockholders will have the right to receive $16.00 in cash, without interest and sub&hellip;</blockquote>
+<p class="cite">DEFM14A, filed 2026-03-24 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1679688/000110465926033634/0001104659-26-033634-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">GBTG</span>
+<span class="co">Global Business Travel Group, Inc.</span>
+<span class="chip cash">ALL_CASH</span>
+<span class="chip">DEFM14A</span>
+<span class="nums"><span class="px">$9.5 offer &middot; $9.45 now</span><span class="sp">+0.53%</span></span>
+</div>
+<blockquote class="q corroborated">&hellip;Holdings Inc. (“Long Lake”). If the Merger is completed, you will be entitled to receive $9.50 in cash, without interest thereon&hellip;</blockquote>
+<p class="cite">DEFM14A, filed 2026-07-06 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1820872/000114036126027649/0001140361-26-027649-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">ALOT</span>
+<span class="co">AstroNova, Inc.</span>
+<span class="chip cash">ALL_CASH</span>
+<span class="chip">DEFM14A</span>
+<span class="nums"><span class="px">$29.0 offer &middot; $28.88 now</span><span class="sp">+0.42%</span></span>
+</div>
+<blockquote class="q corroborated">&hellip;stock and shares held by Parent or any of its subsidiaries) will be converted into the right to receive $29.00 per share in cash, without intere&hellip;</blockquote>
+<p class="cite">DEFM14A, filed 2026-07-31 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/8146/000119312526326441/0001193125-26-326441-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">APGE</span>
+<span class="co">Apogee Therapeutics, Inc.</span>
+<span class="chip cash">ALL_CASH</span>
+<span class="chip">DEFM14A</span>
+<span class="nums"><span class="px">$135.11 offer &middot; $134.57 now</span><span class="sp">+0.40%</span></span>
+</div>
+<blockquote class="q corroborated">&hellip;shares of Apogee common stock, par value $0.00001 per share, will be converted into the right to receive $135.11 per share, without interest and&hellip;</blockquote>
+<p class="cite">DEFM14A, filed 2026-07-13 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1974640/000114036126028341/0001140361-26-028341-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">CRNX</span>
+<span class="co">Crinetics Pharmaceuticals, Inc.</span>
+<span class="chip cash">ALL_CASH</span>
+<span class="chip">DEFM14A</span>
+<span class="nums"><span class="px">$85.0 offer &middot; $84.75 now</span><span class="sp">+0.29%</span></span>
+</div>
+<blockquote class="q corroborated">&hellip;, par value $0.001, of Crinetics (the “common stock”) will be converted into the right to receive $85.00 per share, in cash, without inter&hellip;</blockquote>
+<p class="cite">DEFM14A, filed 2026-07-31 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1658247/000114036126030500/0001140361-26-030500-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">FBRX</span>
+<span class="co">Forte Biosciences, Inc.</span>
+<span class="chip cash">ALL_CASH</span>
+<span class="chip">SC 14D9</span>
+<span class="nums"><span class="px">$77.0 offer &middot; $76.88 now</span><span class="sp">+0.16%</span></span>
+</div>
+<blockquote class="q corroborated">&hellip;(“Parent”), for all of the Company’s issued and outstanding Shares, at a price per Share of $77.00 per Share net to the seller in ca&hellip;</blockquote>
+<p class="cite">SC 14D9, filed 2026-08-06 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1419041/000114036126031507/0001140361-26-031507-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">WBS</span>
+<span class="co">WEBSTER FINANCIAL CORP</span>
+<span class="chip nocash">ALL_CASH</span>
+<span class="chip">DEFM14A</span>
+</div>
+<p class="unpriced">No single cash figure is stated for this deal, so none is shown.</p>
+<p class="cite">DEFM14A, filed 2026-04-23 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/801337/000114036126016415/0001140361-26-016415-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">PEN</span>
+<span class="co">Penumbra Inc</span>
+<span class="chip nocash">ELECTION</span>
+<span class="chip">DEFM14A</span>
+</div>
+<p class="unpriced">No single cash figure is stated for this deal, so none is shown.</p>
+<p class="cite">DEFM14A, filed 2026-04-01 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1321732/000114036126012785/0001140361-26-012785-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">NATL</span>
+<span class="co">NCR Atleos Corp</span>
+<span class="chip nocash">ALL_CASH</span>
+<span class="chip">DEFM14A</span>
+</div>
+<p class="unpriced">No single cash figure is stated for this deal, so none is shown.</p>
+<p class="cite">DEFM14A, filed 2026-05-27 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1974138/000114036126022937/0001140361-26-022937-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">DVN</span>
+<span class="co">DEVON ENERGY CORP/DE</span>
+<span class="chip nocash">STOCK</span>
+<span class="chip">DEFM14A</span>
+</div>
+<p class="unpriced">No single cash figure is stated for this deal, so none is shown.</p>
+<p class="cite">DEFM14A, filed 2026-03-30 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1090012/000110465926036909/0001104659-26-036909-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">TWO</span>
+<span class="co">TWO HARBORS INVESTMENT CORP.</span>
+<span class="chip nocash">ELECTION</span>
+<span class="chip">DEFM14A</span>
+</div>
+<p class="unpriced">No single cash figure is stated for this deal, so none is shown.</p>
+<p class="cite">DEFM14A, filed 2026-04-20 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1465740/000114036126015481/0001140361-26-015481-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">UNF</span>
+<span class="co">UNIFIRST CORP</span>
+<span class="chip nocash">ALL_CASH</span>
+<span class="chip">DEFM14A</span>
+</div>
+<p class="unpriced">No single cash figure is stated for this deal, so none is shown.</p>
+<p class="cite">DEFM14A, filed 2026-05-11 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/717954/000114036126020380/0001140361-26-020380-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">HUN</span>
+<span class="co">Huntsman CORP</span>
+<span class="chip nocash">STOCK</span>
+<span class="chip">DEFM14A</span>
+</div>
+<p class="unpriced">No single cash figure is stated for this deal, so none is shown.</p>
+<p class="cite">DEFM14A, filed 2026-07-13 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1307954/000119312526302130/0001193125-26-302130-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">D</span>
+<span class="co">DOMINION ENERGY, INC</span>
+<span class="chip nocash">STOCK</span>
+<span class="chip">DEFM14A</span>
+</div>
+<p class="unpriced">No single cash figure is stated for this deal, so none is shown.</p>
+<p class="cite">DEFM14A, filed 2026-07-28 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/715957/000110465926087585/0001104659-26-087585-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">GDOT</span>
+<span class="co">GREEN DOT CORP</span>
+<span class="chip nocash">STOCK</span>
+<span class="chip">DEFM14A</span>
+</div>
+<p class="unpriced">No single cash figure is stated for this deal, so none is shown.</p>
+<p class="cite">DEFM14A, filed 2026-05-08 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1386278/000114036126020056/0001140361-26-020056-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">RMAX</span>
+<span class="co">RE/MAX Holdings, Inc.</span>
+<span class="chip nocash">ELECTION</span>
+<span class="chip">DEFM14A</span>
+</div>
+<p class="unpriced">No single cash figure is stated for this deal, so none is shown.</p>
+<p class="cite">DEFM14A, filed 2026-07-09 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1581091/000110465926082291/0001104659-26-082291-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">GNK</span>
+<span class="co">GENCO SHIPPING &amp; TRADING LTD</span>
+<span class="chip nocash">UNKNOWN</span>
+<span class="chip">SC 14D9</span>
+</div>
+<p class="unpriced">No single cash figure is stated for this deal, so none is shown.</p>
+<p class="cite">SC 14D9, filed 2026-07-23 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1326200/000114036126029428/0001140361-26-029428-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">RGR</span>
+<span class="co">STURM RUGER &amp; CO INC</span>
+<span class="chip nocash">UNKNOWN</span>
+<span class="chip">SC 14D9</span>
+</div>
+<p class="unpriced">No single cash figure is stated for this deal, so none is shown.</p>
+<p class="cite">SC 14D9, filed 2026-03-26 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/95029/000117494726000424/0001174947-26-000424-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">LSTA</span>
+<span class="co">LISATA THERAPEUTICS, INC.</span>
+<span class="chip nocash">ALL_CASH</span>
+<span class="chip">SC 14D9</span>
+</div>
+<p class="unpriced">No single cash figure is stated for this deal, so none is shown.</p>
+<p class="cite">SC 14D9, filed 2026-07-21 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/320017/000114036126029022/0001140361-26-029022-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">DXLG</span>
+<span class="co">DESTINATION XL GROUP, INC.</span>
+<span class="chip nocash">UNKNOWN</span>
+<span class="chip">SC 14D9</span>
+</div>
+<p class="unpriced">No single cash figure is stated for this deal, so none is shown.</p>
+<p class="cite">SC 14D9, filed 2026-08-06 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/813298/000119312526338473/0001193125-26-338473-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">FSK</span>
+<span class="co">FS KKR Capital Corp</span>
+<span class="chip nocash">UNKNOWN</span>
+<span class="chip">SC 14D9</span>
+</div>
+<p class="unpriced">No single cash figure is stated for this deal, so none is shown.</p>
+<p class="cite">SC 14D9, filed 2026-06-15 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1422183/000110465926074031/0001104659-26-074031-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">LE</span>
+<span class="co">LANDS&#x27; END, INC.</span>
+<span class="chip nocash">UNKNOWN</span>
+<span class="chip">SC 14D9</span>
+</div>
+<p class="unpriced">No single cash figure is stated for this deal, so none is shown.</p>
+<p class="cite">SC 14D9, filed 2026-04-01 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/799288/000110465926038287/0001104659-26-038287-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">SWDR</span>
+<span class="co">Starwood Real Estate Income Trust, Inc.</span>
+<span class="chip nocash">UNKNOWN</span>
+<span class="chip">SC 14D9</span>
+</div>
+<p class="unpriced">No single cash figure is stated for this deal, so none is shown.</p>
+<p class="cite">SC 14D9, filed 2026-03-06 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1711929/000119312526096287/0001193125-26-096287-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">LGMK</span>
+<span class="co">LogicMark, Inc.</span>
+<span class="chip nocash">UNKNOWN</span>
+<span class="chip">SC 13E3</span>
+</div>
+<p class="unpriced">No single cash figure is stated for this deal, so none is shown.</p>
+<p class="cite">SC 13E3, filed 2026-08-14 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1566826/000121390026089426/0001213900-26-089426-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<article class="entry"><div class="hd">
+<span class="tk">RAASY</span>
+<span class="co">Cloopen Group Holding Ltd</span>
+<span class="chip nocash">UNKNOWN</span>
+<span class="chip">SC 13E3</span>
+</div>
+<p class="unpriced">No single cash figure is stated for this deal, so none is shown.</p>
+<p class="cite">SC 13E3, filed 2026-08-11 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1804583/000149315226036959/0001493152-26-036959-index.htm" rel="noopener">read the filing</a></p>
+</article>
+<footer><p>Built from SEC EDGAR primary filings; prices from Yahoo Finance at build time. Deals whose shares have already been delisted (Form 25 or Form 15) are removed before pricing.</p><p>A price is marked corroborated when an independent search of the filing found that exact figure in a per-share cash context &mdash; not merely when the extractor produced it twice.</p><p>No position is held in anything listed here. Nothing on this page is investment advice.</p></footer></div>
