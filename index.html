@@ -539,6 +539,28 @@
   .twoup span { font-size: 0.78rem; color: #5f5b52; line-height: 1.4; display: block; }
   @media (max-width: 760px) { .twoup { grid-template-columns: 1fr; } }
 
+  /* measured figures — one per programme */
+  .figure { width: min(100%, 1060px); margin: 0 auto 9vh; }
+  .figure .cap {
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(34,32,29,0.5); margin: 0 0 22px;
+  }
+  .fig { width: 100%; height: auto; display: block; }
+  .fig text { font-family: ui-monospace, Menlo, monospace; }
+  .fig .t-s { font-size: 12px; }
+  .fig .t-m { font-size: 13.5px; }
+  .key { display: flex; flex-wrap: wrap; gap: 20px; margin: 16px 0 0; }
+  .key span { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: #5f5b52; }
+  .key i { width: 22px; height: 0; border-top: 2.5px solid #22201d; display: block; }
+  .key i.dash { border-top-style: dashed; border-color: var(--accent); }
+  .fig-note { font-size: 0.78rem; line-height: 1.5; color: #5f5b52; margin: 14px 0 0; max-width: 62ch; }
+  @media (max-width: 760px) {
+    .figure { margin-bottom: 7vh; }
+    .figure .cap { margin-bottom: 16px; font-size: 0.62rem; letter-spacing: 0.16em; }
+    .fig .t-s { font-size: 26px; }
+    .fig .t-m { font-size: 30px; }
+  }
+
   .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin: 7vh 0 0; }
   .facts div { border-top: 1px solid rgba(34,32,29,0.25); padding-top: 14px; }
   .facts b {
@@ -926,6 +948,32 @@
       <li class="done"><span>Engine validated against the platform</span></li>
     </ul>
     <p class="say small rise">Correct further work before October: none. Leave it alone.</p>
+    <div class="figure rise">
+      <p class="cap">£100 through the strategy, 2014–2025</p>
+      <svg class="fig" viewBox="0 0 1000 300" role="img" aria-label="Equity curve: 100 grows to 654 between 2014 and 2025, with most of the gain in 2017 and 2021" xmlns="http://www.w3.org/2000/svg">
+  <line x1="64" y1="258.0" x2="948" y2="258.0" stroke="rgba(34,32,29,0.18)" stroke-width="1"/>
+  <text class="t-s" x="54" y="262.0" text-anchor="end" fill="#5f5b52">0</text>
+  <line x1="64" y1="197.4" x2="948" y2="197.4" stroke="rgba(34,32,29,0.18)" stroke-width="1"/>
+  <text class="t-s" x="54" y="201.4" text-anchor="end" fill="#5f5b52">200</text>
+  <line x1="64" y1="136.9" x2="948" y2="136.9" stroke="rgba(34,32,29,0.18)" stroke-width="1"/>
+  <text class="t-s" x="54" y="140.9" text-anchor="end" fill="#5f5b52">400</text>
+  <line x1="64" y1="76.3" x2="948" y2="76.3" stroke="rgba(34,32,29,0.18)" stroke-width="1"/>
+  <text class="t-s" x="54" y="80.3" text-anchor="end" fill="#5f5b52">600</text>
+  <path d="M64.0 227.7 L137.7 227.1 L211.3 227.3 L285.0 223.6 L358.7 172.1 L432.3 180.0 L506.0 176.1 L579.7 164.5 L653.3 116.1 L727.0 124.8 L800.7 87.0 L874.3 58.9 L948.0 59.9" fill="none" stroke="#22201d" stroke-width="2.4" stroke-linejoin="round"/>
+  <text class="t-s" x="64.0" y="286" text-anchor="start" fill="#5f5b52">2013</text>
+  <text class="t-s" x="358.7" y="286" text-anchor="middle" fill="#5f5b52">2017</text>
+  <circle cx="358.7" cy="172.1" r="5" fill="var(--accent)"/>
+  <text class="t-m" x="358.7" y="158.1" text-anchor="middle" fill="var(--accent)">284</text>
+  <text class="t-s" x="653.3" y="286" text-anchor="middle" fill="#5f5b52">2021</text>
+  <circle cx="653.3" cy="116.1" r="5" fill="var(--accent)"/>
+  <text class="t-m" x="653.3" y="102.1" text-anchor="middle" fill="var(--accent)">469</text>
+  <text class="t-s" x="948.0" y="286" text-anchor="end" fill="#5f5b52">2025</text>
+  <circle cx="948.0" cy="59.9" r="5" fill="var(--accent)"/>
+  <text class="t-m" x="948.0" y="45.9" text-anchor="end" fill="var(--accent)">654</text>
+</svg>
+      <p class="fig-note">Compounded through the annual net returns, slippage included. Two years carry it — 2017 and 2021 — and the rest is defence. 2026 is excluded as a partial year.</p>
+    </div>
+
   </div>
 </section>
 
@@ -941,6 +989,32 @@
     <p class="say rise">Classic and Crypto both submitting on schedule. Crypto correlation <span class="mk">+0.116</span> neutralised.</p>
     <p class="say rise">The interesting part is not the model. Every Crypto submission was silently payout-ineligible for months: the deadline drifts, and my own log recorded success while the platform recorded late.</p>
     <p class="say rise">Fixed. The first ever on-time round was R1341.</p>
+    <div class="figure rise">
+      <p class="cap">Where the submission landed against a deadline that moves</p>
+      <svg class="fig" viewBox="0 0 1000 250" role="img" aria-label="Timeline: the old job fired at 13:10Z, after a deadline band of 13:03 to 13:07; the fixed job now uploads at 12:21:50Z, 41 minutes inside" xmlns="http://www.w3.org/2000/svg">
+  <rect x="761.6" y="84" width="35.2" height="88" fill="rgba(34,32,29,0.12)"/>
+  <line x1="761.6" y1="84" x2="761.6" y2="172" stroke="#5f5b52" stroke-width="1" stroke-dasharray="2 3"/>
+  <line x1="796.8" y1="84" x2="796.8" y2="172" stroke="#5f5b52" stroke-width="1" stroke-dasharray="2 3"/>
+  <line x1="64" y1="128" x2="944" y2="128" stroke="#22201d" stroke-width="1.8"/>
+  <line x1="64.0" y1="122" x2="64.0" y2="134" stroke="#22201d" stroke-width="1.8"/>
+  <text class="t-s" x="64.0" y="236" text-anchor="start" fill="#5f5b52">12:00Z</text>
+  <line x1="394.0" y1="122" x2="394.0" y2="134" stroke="#22201d" stroke-width="1.8"/>
+  <text class="t-s" x="394.0" y="236" text-anchor="middle" fill="#5f5b52">12:30</text>
+  <line x1="724.0" y1="122" x2="724.0" y2="134" stroke="#22201d" stroke-width="1.8"/>
+  <text class="t-s" x="724.0" y="236" text-anchor="middle" fill="#5f5b52">13:00</text>
+  <line x1="944.0" y1="122" x2="944.0" y2="134" stroke="#22201d" stroke-width="1.8"/>
+  <text class="t-s" x="944.0" y="236" text-anchor="end" fill="#5f5b52">13:20</text>
+  <line x1="304.2" y1="128" x2="304.2" y2="80.0" stroke="var(--accent)" stroke-width="1.6" stroke-dasharray="3 3"/>
+  <circle cx="304.2" cy="128.0" r="6" fill="var(--accent)"/>
+  <text class="t-m" x="304.2" y="70.0" text-anchor="middle" fill="var(--accent)">12:21:50Z</text>
+  <line x1="834.0" y1="128" x2="834.0" y2="184.0" stroke="#22201d" stroke-width="1.6" stroke-dasharray="3 3"/>
+  <circle cx="834.0" cy="128.0" r="6" fill="#22201d"/>
+  <text class="t-m" x="834.0" y="200.0" text-anchor="end" fill="#22201d">13:10Z</text>
+</svg>
+      <div class="key"><span><i style="border-color:var(--accent)"></i>now — 41 min inside</span><span><i></i>old job — late every weekday</span><span><i style="border:none;width:22px;height:12px;background:rgba(34,32,29,0.12)"></i>deadline, drifting 3m12s</span></div>
+      <p class="fig-note">Measured <code>closeStakingTime</code>: 13:03:25Z (R1341), 13:06:01Z (R1340), 13:06:14Z (R1336), 13:06:37Z (R1338). The old job fired at a fixed local time, which is why a moving UTC deadline caught it every weekday.</p>
+    </div>
+
   </div>
 </section>
 
@@ -971,6 +1045,33 @@
     <p class="say rise">Live 57.43%. Two shipped improvements gained <span class="mk">+0.0144</span> on my own holdout and moved live by <span class="mk">−0.0003</span>. Zero for two.</p>
     <p class="say rise">My holdout matched live almost exactly in level, and I used that to justify believing a delta.</p>
     <p class="say rise">Levels agreeing tells you nothing about whether improvements transfer. Read as deltas, the evidence had been arguing against me the whole time.</p>
+    <div class="figure rise">
+      <p class="cap">Two lines that should move together, and do not</p>
+      <svg class="fig" viewBox="0 0 1000 300" role="img" aria-label="Holdout score climbs from 57.31 to 58.75 while the live score stays flat, ending at 57.43" xmlns="http://www.w3.org/2000/svg">
+  <line x1="74" y1="216.8" x2="944" y2="216.8" stroke="rgba(34,32,29,0.18)" stroke-width="1"/>
+  <text class="t-s" x="64" y="220.8" text-anchor="end" fill="#5f5b52">57.5</text>
+  <line x1="74" y1="157.9" x2="944" y2="157.9" stroke="rgba(34,32,29,0.18)" stroke-width="1"/>
+  <text class="t-s" x="64" y="161.9" text-anchor="end" fill="#5f5b52">58.0</text>
+  <line x1="74" y1="99.0" x2="944" y2="99.0" stroke="rgba(34,32,29,0.18)" stroke-width="1"/>
+  <text class="t-s" x="64" y="103.0" text-anchor="end" fill="#5f5b52">58.5</text>
+  <path d="M74.0 239.2 L509.0 227.4 L944.0 69.6" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-dasharray="8 5"/>
+  <path d="M74.0 221.5 L509.0 223.8 L944.0 225.0" fill="none" stroke="#22201d" stroke-width="2.6"/>
+  <circle cx="74.0" cy="239.2" r="5" fill="var(--accent)"/>
+  <circle cx="74.0" cy="221.5" r="5" fill="#22201d"/>
+  <text class="t-s" x="74.0" y="286" text-anchor="start" fill="#5f5b52">v5</text>
+  <circle cx="509.0" cy="227.4" r="5" fill="var(--accent)"/>
+  <circle cx="509.0" cy="223.8" r="5" fill="#22201d"/>
+  <text class="t-s" x="509.0" y="286" text-anchor="middle" fill="#5f5b52">v6</text>
+  <circle cx="944.0" cy="69.6" r="5" fill="var(--accent)"/>
+  <circle cx="944.0" cy="225.0" r="5" fill="#22201d"/>
+  <text class="t-s" x="944.0" y="286" text-anchor="end" fill="#5f5b52">v11</text>
+  <text class="t-m" x="944.0" y="54.6" text-anchor="end" fill="var(--accent)">58.75</text>
+  <text class="t-m" x="944.0" y="251.0" text-anchor="end" fill="#22201d">57.43</text>
+</svg>
+      <div class="key"><span><i class="dash"></i>my holdout</span><span><i></i>live leaderboard</span></div>
+      <p class="fig-note">Three shipped models, same metric, same axis. Both start around 57.3–57.5. The holdout climbs 1.44 points; live moves −0.03.</p>
+    </div>
+
   </div>
 </section>
 
