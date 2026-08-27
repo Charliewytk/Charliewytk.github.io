@@ -494,6 +494,51 @@
     .bar .gen { font-size: 0.5rem; letter-spacing: 0.06em; white-space: nowrap; padding-top: 6px; }
   }
 
+  /* edge vs cost — the finding, as a ledger */
+  .ledger { width: min(100%, 1060px); margin: 0 auto 9vh; }
+  .ledger-head {
+    display: grid; grid-template-columns: 1.15fr 1fr; gap: 26px;
+    font-size: 0.66rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(34,32,29,0.45); padding-bottom: 12px; border-bottom: 1px solid #22201d;
+  }
+  .ledger-row {
+    display: grid; grid-template-columns: 1.15fr 1fr; gap: 26px;
+    padding: 15px 0; border-bottom: 1px solid rgba(34,32,29,0.16);
+    font-size: 0.94rem; line-height: 1.45;
+  }
+  .ledger-row .e { color: #22201d; }
+  .ledger-row .c { color: #5f5b52; }
+  .ledger-row .n {
+    font-family: ui-monospace, Menlo, monospace; font-size: 0.86rem;
+    font-variant-numeric: tabular-nums; color: var(--accent);
+  }
+  @media (max-width: 760px) {
+    .ledger-head { display: none; }
+    .ledger-row { grid-template-columns: 1fr; gap: 5px; padding: 14px 0; font-size: 0.9rem; }
+    .ledger-row .c::before {
+      content: "eaten by "; font-size: 0.62rem; letter-spacing: 0.16em;
+      text-transform: uppercase; color: rgba(34,32,29,0.4);
+    }
+  }
+
+  /* the worked example: annualised vs actual */
+  .worked { width: min(100%, 720px); margin: 0 auto 9vh; }
+  .worked h3 {
+    font-family: "Lora", Georgia, serif; font-weight: 600; font-style: italic;
+    font-size: 1.15rem; margin: 0 0 18px; color: #22201d;
+  }
+  .worked p { font-size: 0.96rem; line-height: 1.62; color: #3b3833; margin: 0 0 14px; }
+  .twoup { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin: 22px 0; }
+  .twoup div { padding: 18px 20px; background: rgba(34,32,29,0.04); }
+  .twoup b {
+    display: block; font-family: "Anton", "Arial Narrow", sans-serif;
+    font-weight: 400; font-size: 1.9rem; letter-spacing: 0.01em; margin-bottom: 5px;
+  }
+  .twoup .bad b { color: rgba(34,32,29,0.42); }
+  .twoup .real b { color: var(--accent); }
+  .twoup span { font-size: 0.78rem; color: #5f5b52; line-height: 1.4; display: block; }
+  @media (max-width: 760px) { .twoup { grid-template-columns: 1fr; } }
+
   .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin: 7vh 0 0; }
   .facts div { border-top: 1px solid rgba(34,32,29,0.25); padding-top: 14px; }
   .facts b {
@@ -789,8 +834,32 @@
     <p class="eyebrow">The edges are real. They're just the size of their own costs.</p>
   </div>
   <div class="stream">
-    <p class="say rise">Around 110 ideas tested. Nine anomalies came back <span class="mk">real</span> — and every one was roughly the size of the friction needed to trade it.</p>
-    <p class="say rise">That is a result, not a null. It is also why nothing here has money on it yet.</p>
+    <p class="say rise">Ninety pre-registered hypotheses did not produce zero anomalies. They produced <span class="mk">nine real ones</span> — and every one was about the size of the friction needed to trade it.</p>
+    <p class="say rise">That is a finding, not a null. It is also the most useful thing I know, because it tells me in advance which strategies are not worth building.</p>
+
+    <div class="ledger rise">
+      <div class="ledger-head"><span>The edge</span><span>What eats it</span></div>
+      <div class="ledger-row"><span class="e">Polymarket longshot bias — real, <span class="n">~2¢</span></span><span class="c">the spread is <span class="n">1.5–3¢</span></span></div>
+      <div class="ledger-row"><span class="e">Dip-buying, 503 stocks + 90 ETFs — <span class="n">+20bp</span> in 2016–21</span><span class="c"><span class="n">+2bp</span> in 2021–26, below costs</span></div>
+      <div class="ledger-row"><span class="e">The same trade, intraday</span><span class="c"><span class="n">−4bp</span> before any costs at all</span></div>
+      <div class="ledger-row"><span class="e">Polymarket liquidity provision, liquid markets</span><span class="c"><span class="n">−$102.59</span>/day per $1,000, <i>after</i> rewards</span></div>
+      <div class="ledger-row"><span class="e">Buying both sides to hedge</span><span class="c"><span class="n">−8%</span> locked in at entry</span></div>
+      <div class="ledger-row"><span class="e">Following analyst upgrades</span><span class="c">the whole reaction is in the untradeable gap</span></div>
+      <div class="ledger-row"><span class="e">A firm's track record as a signal</span><span class="c"><span class="n">ρ = 0.005</span>. Three domains, nothing in any of them</span></div>
+      <div class="ledger-row"><span class="e">25 equity factors, 29 survivors of multiple-testing correction</span><span class="c">one levered beta bet wearing 29 hats</span></div>
+      <div class="ledger-row"><span class="e">13F cloning, 19,000 filings</span><span class="c">survivorship, plus a single regime</span></div>
+    </div>
+
+    <div class="worked rise">
+      <h3>Annualising flatters everything. Here is the one I sell, done properly.</h3>
+      <p>A 3% merger spread held to the median 49-day close annualises to <b>24.6% a year</b>. That number is worthless, and it is the number this whole business would normally be sold on.</p>
+      <div class="twoup">
+        <div class="bad"><b>24.6%</b><span>a year — what a 3% spread over 49 days looks like when you annualise it</span></div>
+        <div class="real"><b>+1.38%</b><span>per deal — the same trade after a 2.4% break rate, a 27% median loss when one breaks, 0.40% round-trip cost and 0.49% of forgone T-bill carry</span></div>
+      </div>
+      <p>Price a 1% spread the same way — still a healthy-looking annualised number — and it is <span class="mk">−0.57%</span> per deal. Break-even sits at <span class="mk">1.59%</span>.</p>
+      <p>That is the whole method in one line: the annualised number is marketing, the expected value is the trade.</p>
+    </div>
 
     <div class="panel rise">
       <div class="panel-in">
@@ -817,7 +886,12 @@
       </div>
     </div>
 
-    <p class="say rise">The one with a price on it: <span class="mk">Merger Monitor</span>. 44 live deals repriced nightly, every figure carrying the filing sentence it came from.</p>
+    <p class="say rise">The one with a price on it: <span class="mk">Merger Monitor</span>. Sixteen live cash deals repriced nightly, every figure carrying the sentence from the SEC filing it came from. Eleven of the sixteen clear break-even today; the rest are published anyway, because a wide spread and a thin one look identical until you price the break risk.</p>
+    <p class="say small rise">Base rate 2.4% — 39 breaks in 1,606 settled outcomes. That is a floor, not a ceiling: deals that die before reaching a definitive proxy never enter the sample.</p>
+    <div class="doing-row rise">
+      <a class="go" href="https://wuytackcharlie.gumroad.com/l/mergerweekly" target="_blank" rel="noopener">Get the free weekly digest</a>
+      <span class="note"><a href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Or the daily edition, £5/month</a></span>
+    </div>
     <p class="say rise">The one that paid: I pulled 478,021 events off-chain to audit a Polymarket account that turned $2,895 into <span class="mk">+$221,120</span> in 97 days. The profit was real. The mechanism everyone assumed was wrong.</p>
     <p class="say rise">And the one that taught me most: two shipped improvements gained <span class="mk">+0.0144 on holdout</span> and <span class="mk">−0.0003 live</span>. Matching levels licenses nothing about improvements.</p>
     <p class="say small rise">Ten parallel programmes — seven live alphas on WorldQuant BRAIN, three Numerai tournaments submitting themselves, two paper books at a real broker. Nothing staked until its evidence gate passes. Updated 27 Aug.</p>
