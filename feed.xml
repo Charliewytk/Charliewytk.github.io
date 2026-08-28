@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+<title>Merger Monitor</title>
+<link>https://charliewytk.github.io/merger-monitor/</link>
+<description>US merger-arbitrage spreads read from SEC filings. Free weekly, one week behind the daily edition.</description>
+  <item><title>Merger arbitrage spreads &#8212; 2026-08-19</title><link>https://charliewytk.github.io/merger-monitor/2026-08-19.html</link><guid>https://charliewytk.github.io/merger-monitor/2026-08-19.html</guid><pubDate>Wed, 19 Aug 2026 22:00:00 +0000</pubDate><description>Every US cash merger past a definitive proxy, priced against the market, with the SEC filing sentence for each deal price. Published one week behind the daily edition.</description></item>
+</channel>
+</rss>
