@@ -1,0 +1,18 @@
+{
+ "generated": "2026-08-31",
+ "deals": 49,
+ "priced": 0,
+ "corroborated": 0,
+ "filing_types": 4,
+ "digest_date": "2026-08-31",
+ "publishable": 19,
+ "clears_breakeven": 12,
+ "breakeven_pct": 1.62,
+ "break_rate_pct": 2.5,
+ "median_days_to_close": 49,
+ "p90_days_to_close": 220,
+ "break_loss_median_pct": 27,
+ "carry_pct": 0.5,
+ "cost_pct": 0.4,
+ "risk_free_pct": 3.71
+}
