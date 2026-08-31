@@ -425,5 +425,68 @@ class KillLogConversionPath(unittest.TestCase):
         self.assertIn("https://charliewytk.github.io/kill-log/", sitemap)
 
 
+class HomepageAndKillLogPayPath(unittest.TestCase):
+    """Next conversion pass: pay from the homepage MM section and /kill-log/.
+
+    PR #7 / #8 own /subscribe/ (fold, first Gumroad, sticky bar). Those stay.
+    The leftover hop is homepage → /subscribe/ → Gumroad, and /kill-log/ has
+    no sticky pay control after the named deaths. Same SKU only.
+    """
+
+    def test_homepage_merger_offers_gumroad_after_the_offer(self) -> None:
+        block = _merger_block()
+        gos = re.findall(r'<a class="go(?:\s+pay)?" href="([^"]+)"', block)
+        self.assertGreaterEqual(len(gos), 2, f"need subscribe then Gumroad, got {gos!r}")
+        self.assertTrue(
+            gos[0].rstrip("/").endswith("subscribe") or gos[0].endswith("subscribe/"),
+            f"first .go stays /subscribe/, got {gos[0]!r}",
+        )
+        self.assertEqual(gos[1], GUMROAD)
+        self.assertIn(GUMROAD, block)
+        self.assertNotIn("<form", block.lower())
+        self.assertNotIn("haircut", block.lower())
+        self.assertNotIn("companion product", block.lower())
+        self.assertNotIn("i trade this", block.lower())
+        self.assertIsNone(re.search(r"\bict\b", block.lower()))
+
+    def test_homepage_first_row_names_gumroad_without_replacing_subscribe(self) -> None:
+        """Already-decided readers can pay from the first doing-row, not only /subscribe/."""
+        block = _merger_block()
+        first_row = block.split('<div class="doing-row', 1)[1].split("</div>", 1)[0]
+        self.assertIn("subscribe/", first_row)
+        self.assertIn(GUMROAD, first_row)
+        self.assertIn("merger-monitor", first_row)
+
+    def test_kill_log_has_sticky_paybar_to_existing_sku(self) -> None:
+        html = (ROOT / "kill-log" / "index.html").read_text(encoding="utf-8")
+        self.assertIn('class="paybar"', html)
+        bar = html.split('class="paybar"', 1)[1]
+        self.assertIn(GUMROAD, bar)
+        btn = re.search(r'<a class="btn" href="([^"]+)"', html)
+        self.assertIsNotNone(btn)
+        self.assertEqual(btn.group(1), GUMROAD)
+        self.assertNotIn("<form", html.lower())
+        self.assertNotIn("haircut", html.lower())
+        self.assertNotIn("companion product", html.lower())
+        gumroad = re.findall(r"https://wuytackcharlie\.gumroad\.com/l/[a-z0-9]+", html.lower())
+        self.assertTrue(all(u in {GUMROAD, WEEKLY} for u in gumroad), gumroad)
+
+    def test_subscribe_fold_first_gumroad_and_sticky_untouched(self) -> None:
+        html = SUBSCRIBE.read_text(encoding="utf-8")
+        btn = re.search(r'<a class="btn" href="([^"]+)"', html)
+        self.assertIsNotNone(btn)
+        self.assertEqual(btn.group(1), GUMROAD)
+        first_cta = html.split('<div class="cta">', 1)[1].split("</div>", 1)[0]
+        self.assertIn(GUMROAD, first_cta)
+        self.assertNotIn("mergerweekly", first_cta)
+        self.assertNotIn("kill-log", first_cta)
+        self.assertIn('class="paybar"', html)
+        self.assertIn(GUMROAD, html.split('class="paybar"', 1)[1])
+        hero = html.split('<div class="cta">', 1)[0]
+        self.assertIn("24.6%", hero)
+        self.assertIn("+1.38%", hero)
+        self.assertIn("1.59%", hero)
+
+
 if __name__ == "__main__":
     unittest.main()
