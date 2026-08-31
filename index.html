@@ -549,7 +549,9 @@
   }
   .twoup .bad b { color: rgba(34,32,29,0.42); }
   .twoup .real b { color: var(--accent); }
-  .twoup span { font-size: 0.78rem; color: var(--muted); line-height: 1.4; display: block; }
+  /* Direct child only. The caption is one block; the live figures inside it are
+     spans too, and a descendant selector broke each one onto its own line. */
+  .twoup > div > span { font-size: 0.78rem; color: var(--muted); line-height: 1.4; display: block; }
   @media (max-width: 760px) { .twoup { grid-template-columns: 1fr; } }
 
   /* measured figures — one per programme */
@@ -921,18 +923,27 @@
     <p class="eyebrow">The one with a price on it</p>
   </div>
   <div class="stream">
-    <p class="say rise">Every US cash merger that has reached a definitive proxy, priced against the live market, carrying the sentence from the SEC filing the deal price came from.</p>
-    <p class="say rise">Every US cash merger that has reached a definitive proxy, priced against the live market, carrying the sentence from the SEC filing the deal price came from. <span data-merger-live-copy>Break-even is 1.59% today and eleven of the sixteen live deals clear it.</span> The rest are published anyway, because a wide spread and a thin one look identical until you price the break risk.</p>
-    <p class="say small rise">Base rate <span data-merger-break-rate>2.4%</span> — 39 breaks in 1,606 settled outcomes. A floor, not a ceiling: deals that die before reaching a definitive proxy never enter the sample.</p>
+    <!--
+      Every figure below is filled at load by /assets/js/merger-stats.js from
+      /merger-monitor/feed_summary.json, which the digest pipeline writes. The
+      hardcoded text is the FALLBACK for a failed fetch, so it has to be the
+      last real value rather than a number that reads well: this section stood
+      at a 1.59% break-even, "39 breaks in 1,606", "24.6% a year" and "eleven of
+      the sixteen live deals" long after the pipeline underneath had moved to
+      1.62%, 41/1,636 and twelve of nineteen. A stat with no data-merger-*
+      binding cannot be updated by anything and will go stale again.
+    -->
+    <p class="say rise">Every US cash merger that has reached a definitive proxy, priced against the live market, carrying the sentence from the SEC filing the deal price came from. <span data-merger-live-copy>Break-even is 1.62% today and 12 of the 19 live deals clear it.</span> The rest are published anyway, because a wide spread and a thin one look identical until you price the break risk.</p>
+    <p class="say small rise">Base rate <span data-merger-break-rate>2.5%</span> — <span data-merger-breaks>41</span> breaks in <span data-merger-settled>1,636</span> settled outcomes. A floor, not a ceiling: deals that die before reaching a definitive proxy never enter the sample.</p>
 
     <div class="worked rise">
       <h3>Annualising flatters everything. Here is the one I sell, done properly.</h3>
-      <p>A 3% merger spread held to the median 49-day close annualises to <b>24.6% a year</b>. That number is worthless, and it is the number this whole business would normally be sold on.</p>
+      <p>A 3% merger spread held to the median <span data-merger-median-days>49</span>-day close annualises to <b><span data-merger-annualised-3pct>24.6%</span> a year</b>. That number is worthless, and it is the number this whole business would normally be sold on.</p>
       <div class="twoup">
-        <div class="bad"><b>24.6%</b><span>a year — what a 3% spread over 49 days looks like when you annualise it</span></div>
-        <div class="real"><b data-merger-ev-3pct>+1.38%</b><span>per deal — the same trade after a <span data-merger-break-rate>2.4%</span> break rate, a 27% median loss when one breaks, 0.40% round-trip cost and 0.49% of forgone T-bill carry</span></div>
+        <div class="bad"><b data-merger-annualised-3pct>24.6%</b><span>a year — what a 3% spread over <span data-merger-median-days>49</span> days looks like when you annualise it</span></div>
+        <div class="real"><b data-merger-ev-3pct>+1.35%</b><span>per deal — the same trade after a <span data-merger-break-rate>2.5%</span> break rate, a <span data-merger-break-loss>27%</span> median loss when one breaks, <span data-merger-cost>0.40%</span> round-trip cost and <span data-merger-carry>0.50%</span> of forgone T-bill carry</span></div>
       </div>
-      <p>Price a 1% spread the same way — still a healthy-looking annualised number — and it is <span class="mk" data-merger-ev-1pct>−0.57%</span> per deal. Break-even sits at <span class="mk" data-merger-breakeven>1.59%</span>.</p>
+      <p>Price a 1% spread the same way — still a healthy-looking annualised number — and it is <span class="mk" data-merger-ev-1pct>−0.60%</span> per deal. Break-even sits at <span class="mk" data-merger-breakeven>1.62%</span>.</p>
       <p>That is the whole method in one line: the annualised number is marketing, the expected value is the trade.</p>
     </div>
 

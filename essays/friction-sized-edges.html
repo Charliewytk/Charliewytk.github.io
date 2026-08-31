@@ -50,8 +50,8 @@ tr:last-child td{border-bottom:0}
 <p>And when the method fails, that gets written down as carefully as when a strategy fails. The trap log is more useful to me than the results log.</p>
 <h2>Two things did survive</h2>
 <p><strong>One trader&#x27;s profit was real.</strong> I pulled 478,021 on-chain events to audit a Polymarket account that turned $2,895 into $257,000. The profit checked out: +$221,120 over 97 days, t = 7.52. The mechanism everyone assumed was wrong. A second wallet in the same study looked like it had made $176,266 that turned out to be redemptions of positions opened before my measurement window started — an artifact I nearly published before catching.</p>
-<p><strong>And one thing I can actually sell.</strong> Merger arbitrage spreads, where the deal price is contractual and printed in an SEC filing rather than inferred. Live cash deals (see the table for today's count), every figure carrying the sentence from the filing it came from. A 3% spread over the median 49-day close annualises to 24.6% a year — which is exactly the kind of number this business is normally sold on, and it is worthless. Price it properly, against a 2.4% break rate measured over 1,606 settled deals, a 27% median loss when one breaks, round-trip costs and forgone T-bill carry, and it is worth +1.38% per deal. A 1% spread, which still annualises to something respectable, is −0.57%. Break-even sits at <span data-merger-breakeven>1.59%</span>.</p>
-<p>That gap — 24.6% versus +1.38% — is the whole thing in one line. The annualised number is marketing. The expected value is the trade.</p>
+<p><strong>And one thing I can actually sell.</strong> Merger arbitrage spreads, where the deal price is contractual and printed in an SEC filing rather than inferred. Live cash deals (see the table for today's count), every figure carrying the sentence from the filing it came from. A 3% spread over the median <span data-merger-median-days>49</span>-day close annualises to <span data-merger-annualised-3pct>24.6%</span> a year — which is exactly the kind of number this business is normally sold on, and it is worthless. Price it properly, against a <span data-merger-break-rate>2.5%</span> break rate measured over <span data-merger-settled>1,636</span> settled deals, a <span data-merger-break-loss>27%</span> median loss when one breaks, round-trip costs and forgone T-bill carry, and it is worth <span data-merger-ev-3pct>+1.35%</span> per deal. A 1% spread, which still annualises to something respectable, is <span data-merger-ev-1pct>-0.60%</span>. Break-even sits at <span data-merger-breakeven>1.62%</span>.</p>
+<p>That gap — <span data-merger-annualised-3pct>24.6%</span> versus <span data-merger-ev-3pct>+1.35%</span> — is the whole thing in one line. The annualised number is marketing. The expected value is the trade.</p>
 <hr>
 <p class='note'>Everything above is measured, and the measurements are wrong in ways I have tried hard to find. If you spot one I missed, I would genuinely rather know.</p>
 <div class="foot">
@@ -61,4 +61,4 @@ behind the daily edition. The longer write-up is
 <a href="/essays/90-Hypotheses-Zero-Edges.pdf">here as a PDF</a>, written at an
 earlier count.
 </div>
-</div></body></html>
+</div><script src="/assets/js/merger-stats.js" defer></script></body></html>

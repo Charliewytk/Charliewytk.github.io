@@ -13,59 +13,73 @@
     return (v >= 0 ? '+' : '') + v.toFixed(2) + '%'
   }
 
+  function fmtCount(n) {
+    if (n == null || Number.isNaN(Number(n))) return null
+    return Number(n).toLocaleString('en-GB')
+  }
+
+  /**
+   * Bind one attribute to one value. Every stat goes through here so a missing
+   * key leaves the hardcoded fallback standing rather than writing "null" or an
+   * empty span into the page -- a blank number reads as a broken site, whereas
+   * the previous day's figure is merely a day old.
+   */
+  function set(attr, value) {
+    if (value == null) return
+    document.querySelectorAll('[data-merger-' + attr + ']').forEach((el) => {
+      el.textContent = value
+    })
+  }
+
   function apply(summary) {
     if (!summary || typeof summary !== 'object') return
 
     const publishable = summary.publishable
-    const totalDeals = summary.deals
     const clears = summary.clears_breakeven
     const be = summary.breakeven_pct
-    const breakRate = summary.break_rate_pct
-    const digestDate = summary.digest_date ?? summary.generated
 
-    document.querySelectorAll('[data-merger-breakeven]').forEach((el) => {
-      const v = fmtPct(be, 2)
-      if (v) el.textContent = v
-    })
-    document.querySelectorAll('[data-merger-break-rate]').forEach((el) => {
-      const v = fmtPct(breakRate, 1)
-      if (v) el.textContent = v
-    })
-    document.querySelectorAll('[data-merger-ev-3pct]').forEach((el) => {
-      const v = fmtSignedPct(summary.ev_3pct_per_deal)
-      if (v) el.textContent = v
-    })
-    document.querySelectorAll('[data-merger-ev-1pct]').forEach((el) => {
-      const v = fmtSignedPct(summary.ev_1pct_per_deal)
-      if (v) el.textContent = v
-    })
-    document.querySelectorAll('[data-merger-median-days]').forEach((el) => {
-      if (summary.median_days_to_close != null) {
-        el.textContent = String(summary.median_days_to_close)
-      }
-    })
-    document.querySelectorAll('[data-merger-live-copy]').forEach((el) => {
-      if (publishable == null || clears == null || be == null) return
-      el.textContent =
+    set('breakeven', fmtPct(be, 2))
+    set('break-rate', fmtPct(summary.break_rate_pct, 1))
+    set('ev-3pct', fmtSignedPct(summary.ev_3pct_per_deal))
+    set('ev-1pct', fmtSignedPct(summary.ev_1pct_per_deal))
+    set('median-days', summary.median_days_to_close == null
+      ? null : String(summary.median_days_to_close))
+    set('p90-days', summary.p90_days_to_close == null
+      ? null : String(summary.p90_days_to_close))
+    // The three cost terms the EV subtracts. Stated separately because a reader
+    // checking the arithmetic needs each one, and because the carry moves with
+    // the T-bill rate while the other two do not.
+    set('break-loss', fmtPct(summary.break_loss_median_pct, 0))
+    set('cost', fmtPct(summary.cost_pct, 2))
+    set('carry', fmtPct(summary.carry_pct, 2))
+    set('annualised-3pct', fmtPct(summary.annualised_3pct, 1))
+    // The denominator behind the break rate. The page used to state "39 breaks
+    // in 1,606" as literal text, with nothing able to update either number.
+    set('breaks', fmtCount(summary.breaks))
+    set('settled', fmtCount(summary.settled))
+    set('deals', fmtCount(summary.deals))
+    set('priced', fmtCount(summary.priced))
+    set('corroborated', fmtCount(summary.corroborated))
+    set('forms', fmtCount(summary.filing_types))
+    set('built', summary.digest_date ?? summary.generated)
+
+    if (publishable != null && clears != null && be != null) {
+      set('live-copy',
         'Break-even is ' + fmtPct(be, 2) + ' today and ' + clears + ' of the ' +
-        publishable + ' live deals clear it.'
-    })
-    document.querySelectorAll('[data-merger-deals]').forEach((el) => {
-      if (totalDeals != null) el.textContent = String(totalDeals)
-    })
-    document.querySelectorAll('[data-merger-priced]').forEach((el) => {
-      if (summary.priced != null) el.textContent = String(summary.priced)
-    })
-    document.querySelectorAll('[data-merger-corroborated]').forEach((el) => {
-      if (summary.corroborated != null) el.textContent = String(summary.corroborated)
-    })
-    document.querySelectorAll('[data-merger-forms]').forEach((el) => {
-      if (summary.filing_types != null) el.textContent = String(summary.filing_types)
-    })
-    document.querySelectorAll('[data-merger-built]').forEach((el) => {
-      if (digestDate) el.textContent = String(digestDate)
-    })
+        publishable + ' live deals clear it.')
+    }
   }
+
+  // NOT DONE HERE: patching the break rate inside the Dataset JSON-LD.
+  //
+  // That block exists only on /merger-monitor/ pages, and every one of those is
+  // a dated snapshot -- the table is published a week late on purpose, so its
+  // JSON-LD carries temporalCoverage of the build date. Rewriting it from
+  // today's summary would make an archived page describe a measurement taken
+  // after it was published, which is the same fabrication as the stale 2.4%
+  // figure, only harder to notice. The break rate in that block is emitted by
+  // render_page.py from the same derived base rates the digest prints, so it is
+  // correct at build time and stays correct for the date it claims.
 
   fetch(SUMMARY_URL, { cache: 'no-store' })
     .then((r) => (r.ok ? r.json() : null))

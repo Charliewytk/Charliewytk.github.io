@@ -1,8 +1,8 @@
 {
  "generated": "2026-08-31",
  "deals": 49,
- "priced": 0,
- "corroborated": 0,
+ "priced": 19,
+ "corroborated": 19,
  "filing_types": 4,
  "digest_date": "2026-08-31",
  "publishable": 19,
@@ -16,5 +16,14 @@
  "cost_pct": 0.4,
  "risk_free_pct": 3.71,
  "ev_3pct_per_deal": 1.35,
- "ev_1pct_per_deal": -0.6
+ "ev_1pct_per_deal": -0.6,
+ "break_loss_n": 28,
+ "breaks": 41,
+ "settled": 1636,
+ "annualised_3pct": 24.6,
+ "after_close_break_rate_pct": 8.8,
+ "after_close_breakeven_pct": 3.6,
+ "would_change_side": 6,
+ "spreads_suppressed_uncorroborated": 6,
+ "form_unknown": 30
 }

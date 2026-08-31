@@ -30,7 +30,7 @@
  "variableMeasured":[
   {"@type":"PropertyValue","name":"deal price","description":"Contractual consideration, extracted from the definitive proxy"},
   {"@type":"PropertyValue","name":"spread","description":"Deal price over current market price"},
-  {"@type":"PropertyValue","name":"expected value","description":"Spread priced against a measured 2.4% break rate, costs and carry"}
+  {"@type":"PropertyValue","name":"expected value","description":"Spread priced against a measured 2.5% break rate, costs and carry"}
  ]
 }
 </script>
@@ -137,7 +137,16 @@ footer p{margin:0 0 .5rem;max-width:42rem}
 <h1>US deal terms, read from the filing</h1>
 <p class="deck">Every live merger, tender offer and going-private deal I can find, with the offer price taken from the primary filing &mdash; and the sentence it came from, so you can check it.</p>
 <div class="terms"><p><b>What this is.</b> Facts extracted from SEC filings. Each price links to the document it was read from.</p><p><b>What it is not.</b> Advice, or a recommendation to buy anything. Where a deal pays stock or lets holders elect their consideration there is no single cash number, so none is shown. Spreads move; these were computed when the page was built.</p></div>
-<div class="stats"><div class="stat"><div class="n" data-merger-deals>36</div><div class="l">deals</div></div><div class="stat"><div class="n" data-merger-priced>17</div><div class="l">cash price</div></div><div class="stat"><div class="n" data-merger-corroborated>17</div><div class="l">corroborated</div></div><div class="stat"><div class="n" data-merger-forms>3</div><div class="l">filing types</div></div><div class="stat"><div class="n" data-merger-built>2026-08-19</div><div class="l">built</div></div></div>
+<!--
+  These five counts describe THE TABLE BELOW, which is the 2026-08-19 build
+  published a week late on purpose. They are deliberately NOT bound to
+  /merger-monitor/feed_summary.json: that file carries today's figures, so
+  binding them printed "49 deals / 19 cash price / built 2026-08-31" above a
+  list of 36 entries from 2026-08-19. A stat that contradicts the rows under it
+  is worse than a stale one. Whatever regenerates this page must rewrite these
+  numbers with the table.
+-->
+<div class="stats"><div class="stat"><div class="n">36</div><div class="l">deals</div></div><div class="stat"><div class="n">17</div><div class="l">cash price</div></div><div class="stat"><div class="n">17</div><div class="l">corroborated</div></div><div class="stat"><div class="n">3</div><div class="l">filing types</div></div><div class="stat"><div class="n">2026-08-19</div><div class="l">built</div></div></div>
 <article class="entry"><div class="hd">
 <span class="tk">WBD</span>
 <span class="co">Warner Bros. Discovery, Inc.</span>
@@ -480,6 +489,5 @@ footer p{margin:0 0 .5rem;max-width:42rem}
 <p class="cite">SC 13E3, filed 2026-08-11 &mdash; <a href="https://www.sec.gov/Archives/edgar/data/1804583/000149315226036959/0001493152-26-036959-index.htm" rel="noopener">read the filing</a></p>
 </article>
 <footer><p>Built from SEC EDGAR primary filings; prices from Yahoo Finance at build time. Deals whose shares have already been delisted (Form 25 or Form 15) are removed before pricing.</p><p>A price is marked corroborated when an independent search of the filing found that exact figure in a per-share cash context &mdash; not merely when the extractor produced it twice.</p><p>No position is held in anything listed here. Nothing on this page is investment advice.</p></footer></div>
-<script src="/assets/js/merger-stats.js" defer></script>
 </body>
 </html>
