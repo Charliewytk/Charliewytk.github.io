@@ -14,5 +14,7 @@
  "break_loss_median_pct": 27,
  "carry_pct": 0.5,
  "cost_pct": 0.4,
- "risk_free_pct": 3.71
+ "risk_free_pct": 3.71,
+ "ev_3pct_per_deal": 1.35,
+ "ev_1pct_per_deal": -0.6
 }
