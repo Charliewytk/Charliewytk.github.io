@@ -318,5 +318,112 @@ if (typeof sandbox.apply !== 'function') {
         self.assertEqual(written["settled"], "1,636")
 
 
+class KillLogConversionPath(unittest.TestCase):
+    """Public paper kill log that feeds the existing Merger Monitor SKU.
+
+    trading101 PR #10 shipped PaperMill/KILL_LOG.md. This page states that
+    record, lists a handful of named deaths, and sends one CTA to the
+    £5/month listing. It must not invent a second product or dump the CSV.
+    """
+
+    KILL_LOG = ROOT / "kill-log" / "index.html"
+
+    def _html(self) -> str:
+        self.assertTrue(self.KILL_LOG.is_file(), "/kill-log/ page is missing")
+        return self.KILL_LOG.read_text(encoding="utf-8")
+
+    def test_honest_paper_record_no_live_pnl(self) -> None:
+        html = self._html()
+        lowered = html.lower()
+        self.assertIn("110", html)
+        self.assertIn("paper", lowered)
+        self.assertTrue("died to cost" in lowered or "die to cost" in lowered)
+        self.assertTrue("no live" in lowered and "p&amp;l" in lowered)
+        self.assertIsNone(re.search(r"(?<!no )live p&amp;l", lowered))
+        self.assertNotIn("i trade this", lowered)
+        self.assertNotIn("i trade", lowered)
+        self.assertIn("not advice", lowered)
+
+    def test_primary_cta_is_existing_gumroad_sku(self) -> None:
+        html = self._html()
+        btn = re.search(r'<a class="btn" href="([^"]+)"', html)
+        self.assertIsNotNone(btn, "/kill-log/ has no primary .btn")
+        self.assertEqual(btn.group(1), GUMROAD)
+        self.assertIn("£5", html)
+        self.assertIn("merger monitor", html.lower())
+        gumroad = re.findall(r"https://wuytackcharlie\.gumroad\.com/l/[a-z0-9]+", html.lower())
+        self.assertTrue(all(u in {GUMROAD, WEEKLY} for u in gumroad), gumroad)
+        self.assertIn(GUMROAD, gumroad)
+        self.assertNotIn("<form", html.lower())
+        self.assertNotIn("haircut", html.lower())
+        self.assertNotIn("companion product", html.lower())
+
+    def test_employer_safe_extraction_only(self) -> None:
+        html = self._html().lower()
+        self.assertTrue("extract" in html or "filing" in html)
+        self.assertIn("not advice", html)
+        self.assertTrue("no position" in html or "no live book" in html)
+        for banned in (
+            "brain",
+            "codabench",
+            "launchd",
+            "live order",
+            "live orders",
+            "jane street",
+            "haircut",
+            "p&amp;l-advice",
+            "guaranteed",
+        ):
+            self.assertNotIn(banned, html)
+        self.assertIsNone(re.search(r"\bict\b", html))
+        self.assertIsNone(re.search(r"[1-9][\d,]*\s+subscribers?", html))
+
+    def test_short_named_kills_not_full_csv(self) -> None:
+        html = self._html()
+        rows = re.findall(r"<tbody>.*?</tbody>", html, re.S)
+        self.assertTrue(rows, "/kill-log/ has no kill table")
+        body = rows[0]
+        kills = re.findall(r"<tr>", body)
+        self.assertGreaterEqual(len(kills), 5)
+        self.assertLessEqual(len(kills), 8)
+        lowered = html.lower()
+        # Named deaths from the paper log — not a CSV dump.
+        for name in (
+            "turn-of-month",
+            "pre-holiday",
+            "dual-class",
+            "polymarket",
+            "fca",
+        ):
+            self.assertIn(name, lowered)
+        self.assertNotIn("hypothesis_id", html)
+        self.assertNotIn("cost_stack (spread+fees+borrow)", html)
+        self.assertNotIn("H0003", html)  # ids stay in trading101; names only here
+
+    def test_subscribe_links_quietly_without_wrecking_funnel(self) -> None:
+        subscribe = SUBSCRIBE.read_text(encoding="utf-8")
+        hrefs = _hrefs(subscribe, "kill-log")
+        self.assertTrue(
+            any(h.rstrip("/").endswith("kill-log") or "/kill-log/" in h or h.endswith("kill-log/")
+                for h in hrefs),
+            f"/subscribe/ has no /kill-log/ link, found {hrefs!r}",
+        )
+        # Existing funnel rails from PR #7 / #8 stay intact.
+        btn = re.search(r'<a class="btn" href="([^"]+)"', subscribe)
+        self.assertIsNotNone(btn)
+        self.assertEqual(btn.group(1), GUMROAD)
+        first_cta = subscribe.split('<div class="cta">', 1)[1].split("</div>", 1)[0]
+        self.assertNotIn("kill-log", first_cta)
+        self.assertNotIn("mergerweekly", first_cta)
+        lowered = subscribe.lower()
+        self.assertNotIn("edge", lowered)
+        self.assertNotIn("haircut", lowered)
+        self.assertIn(GUMROAD, subscribe.split('class="paybar"', 1)[1])
+
+    def test_sitemap_lists_kill_log(self) -> None:
+        sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
+        self.assertIn("https://charliewytk.github.io/kill-log/", sitemap)
+
+
 if __name__ == "__main__":
     unittest.main()
