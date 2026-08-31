@@ -106,6 +106,8 @@ class HomepageMoneyPath(unittest.TestCase):
         self.assertIn("£5", text)
         self.assertTrue("filing" in text or "filings" in text)
         self.assertTrue("not a tip sheet" in text or "not advice" in text)
+        self.assertIn("cash merger", text)
+        self.assertNotIn("every us merger that", text)
 
 
 class SubscribeAndTablePath(unittest.TestCase):
@@ -127,17 +129,30 @@ class SubscribeAndTablePath(unittest.TestCase):
         self.assertIn("extract", html)
 
     def test_table_banner_primary_is_subscribe(self) -> None:
-        html = TABLE.read_text(encoding="utf-8")
-        banner = html.split("<style>", 1)[0]
-        hrefs = re.findall(r'<a href="([^"]+)"', banner)
-        self.assertTrue(hrefs, "week-late table has no banner links")
+        for path in (TABLE, ROOT / "merger-monitor" / "2026-08-19.html"):
+            html = path.read_text(encoding="utf-8")
+            banner = html.split("<style>", 1)[0]
+            hrefs = re.findall(r'<a href="([^"]+)"', banner)
+            self.assertTrue(hrefs, f"{path.name} has no banner links")
+            self.assertTrue(
+                hrefs[0].rstrip("/").endswith("subscribe") or hrefs[0].endswith("/subscribe/"),
+                f"{path.name} primary CTA should be /subscribe/, got {hrefs[0]!r}",
+            )
+            self.assertNotEqual(hrefs[0], WEEKLY)
+            self.assertIn(WEEKLY, html)
+            self.assertNotIn("gumroad.com/l/", hrefs[0])
+
+    def test_research_leads_with_subscribe(self) -> None:
+        html = (ROOT / "research.html").read_text(encoding="utf-8")
+        self.assertIn("nine of the seventeen", html)
+        hrefs = _hrefs(html, "subscribe")
+        self.assertTrue(hrefs, "research notes have no /subscribe/ link")
+        first = re.search(r'<a href="([^"]+)"', html[html.find("Where it pays"):])
+        self.assertIsNotNone(first)
         self.assertTrue(
-            hrefs[0].rstrip("/").endswith("subscribe") or hrefs[0].endswith("/subscribe/"),
-            f"table primary CTA should be /subscribe/, got {hrefs[0]!r}",
+            first.group(1).rstrip("/").endswith("subscribe") or first.group(1).endswith("subscribe/"),
+            f"research money-path first link should be /subscribe/, got {first.group(1)!r}",
         )
-        self.assertNotEqual(hrefs[0], WEEKLY)
-        self.assertIn(WEEKLY, html)
-        self.assertNotIn("gumroad.com/l/", hrefs[0])
 
     def test_footer_does_not_kill_the_live_product(self) -> None:
         self.assertNotIn("merger-arbitrage newsletter", HOMEPAGE)
