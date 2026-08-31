@@ -200,6 +200,20 @@
     font-family: "Lora", Georgia, serif;
     font-size: 1.15rem; border-bottom-width: 1px;
   }
+  .doing-row .go.pay {
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.95rem;
+    background: #22201d;
+    color: #f7f7ef;
+    border: 1px solid #22201d;
+    padding: 11px 18px;
+  }
+  .doing-row .go.pay:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #f7f7ef;
+  }
   .doing-row .note { display: block; margin-top: 12px; font-size: 0.85rem; color: var(--faint); }
   .doing-row .note a { border-color: #c9c6b4; }
 
@@ -967,13 +981,18 @@
 <section class="work" id="merger">
   <div class="head">
     <h2>Merger Monitor</h2>
-    <p class="eyebrow">The one with a price on it</p>
+    <p class="eyebrow">Deal prices from SEC filings · £5/month · not advice</p>
   </div>
   <div class="stream">
-    <p class="say rise">Every US cash merger that has reached a definitive proxy, priced against the live market, carrying the sentence from the SEC filing the deal price came from.</p>
-    <p class="say rise">The public table is at <a href="merger-monitor/">/merger-monitor</a>. It is the same table as the paid daily, published one week late on purpose.</p>
-    <p class="say rise">Break-even is <span class="mk">1.59%</span>. On the 19 August table, nine of the seventeen cash-priced rows clear it. The rest are published anyway, because a wide spread and a thin one look identical until you price the break risk.</p>
-    <p class="say small rise">Base rate 2.4% — 39 breaks in 1,606 settled outcomes. A floor, not a ceiling: deals that die before reaching a definitive proxy never enter the sample.</p>
+    <p class="say rise">I extract the contractual cash price of every US merger that has reached a definitive proxy, and price it against the live market. Each figure carries the sentence from the filing it was read from.</p>
+    <p class="say rise">It is a table of filings, not a tip sheet. No position, no order, no claim the spread is yours. The paid edition is <span class="mk">£5/month</span>: the same table, emailed the evening it is built.</p>
+
+    <div class="doing-row rise">
+      <a class="go pay" href="subscribe/">Subscribe — £5/month</a>
+      <span class="note"><a href="merger-monitor/">Week-late public table</a></span>
+    </div>
+
+    <p class="say small rise">The public table at <a href="merger-monitor/">/merger-monitor</a> is that same product, published one week late on purpose. A week-old table is the worse entry on deals that complete.</p>
 
     <a class="mm-preview rise" href="merger-monitor/">
       <p class="cap">Week-late public table · 19 August 2026</p>
@@ -1025,12 +1044,13 @@
         <div class="real"><b>+1.38%</b><span>per deal — the same trade after a 2.4% break rate, a 27% median loss when one breaks, 0.40% round-trip cost and 0.49% of forgone T-bill carry</span></div>
       </div>
       <p>Price a 1% spread the same way — still a healthy-looking annualised number — and it is <span class="mk">−0.57%</span> per deal. Break-even sits at <span class="mk">1.59%</span>.</p>
+      <p>On the 19 August table, nine of the seventeen cash-priced rows clear that 1.59% break-even. The rest are published anyway, because a wide spread and a thin one look identical until you price the break risk. Base rate 2.4% — 39 breaks in 1,606 settled outcomes. A floor, not a ceiling: deals that die before a definitive proxy never enter the sample.</p>
       <p>That is the whole method in one line: the annualised number is marketing, the expected value is the trade. You pay £5/month for the evening the table is built, not for a secret.</p>
     </div>
 
     <div class="doing-row rise">
-      <a class="go" href="subscribe/">Merger Monitor — £5/month</a>
-      <span class="note"><a href="merger-monitor/">Week-late public table</a> · <a href="https://wuytackcharlie.gumroad.com/l/mergerweekly" target="_blank" rel="noopener">free weekly digest</a></span>
+      <a class="go pay" href="subscribe/">Subscribe — £5/month</a>
+      <span class="note"><a href="https://wuytackcharlie.gumroad.com/l/mergerweekly" target="_blank" rel="noopener">Free weekly digest</a> — same table, one week late</span>
     </div>
   </div>
 </section>
@@ -1315,7 +1335,7 @@
 
 <footer class="close">
   <p class="rise"><a class="mail" href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></p>
-  <p class="didnt rise">Also built, didn't make the cut: Resale Radar (resale margin maths with real fees and return rates), a trading bot retired after its own audit, an ETF cost tool that deliberately ranks nothing, fifteen programmatic SEO sites, a merger-arbitrage newsletter, and a strategy-validation project that killed three ideas out of five.</p>
+  <p class="didnt rise">Also built, didn't make the cut: Resale Radar (resale margin maths with real fees and return rates), a trading bot retired after its own audit, an ETF cost tool that deliberately ranks nothing, fifteen programmatic SEO sites, and a strategy-validation project that killed three ideas out of five.</p>
   <p class="stamp rise">21 aug 2026 · <a href="https://github.com/Charliewytk">github</a></p>
 </footer>
 
