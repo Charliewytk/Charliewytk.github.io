@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Homepage money-path rails for Merger Monitor.
 
-This PR makes /merger-monitor obvious on the homepage.
-It must not invent subscribers, reintroduce Exeter Auto Buys,
-or smash the /subscribe/ page owned by PR #2.
+PR #6 makes /merger-monitor obvious on the homepage (masthead + week-late
+preview). PR #2 owns the paid button once /subscribe/ exists. Together they
+must not invent subscribers, reintroduce Exeter Auto Buys, or make the
+primary CTA the free weekly.
 """
 from __future__ import annotations
 
@@ -13,11 +14,19 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 HOMEPAGE = (ROOT / "index.html").read_text(encoding="utf-8")
+SUBSCRIBE = ROOT / "subscribe" / "index.html"
 GUMROAD = "https://wuytackcharlie.gumroad.com/l/mergermonitor"
+WEEKLY = "https://wuytackcharlie.gumroad.com/l/mergerweekly"
 
 
 def _hrefs(html: str, needle: str) -> list[str]:
     return re.findall(r'href="([^"]*%s[^"]*)"' % re.escape(needle), html)
+
+
+def _merger_block() -> str:
+    merger = re.search(r'<section class="work" id="merger">.*?</section>', HOMEPAGE, re.S)
+    assert merger is not None, "homepage has no Merger Monitor section"
+    return merger.group(0)
 
 
 class HomepageMoneyPath(unittest.TestCase):
@@ -30,22 +39,40 @@ class HomepageMoneyPath(unittest.TestCase):
         )
 
     def test_merger_monitor_link_is_obvious(self) -> None:
-        """Masthead plus a section CTA — not a footnote-only href."""
+        """Masthead plus a clickable week-late preview — not a footnote-only href."""
         mast = re.search(r'<div class="masthead">.*?</div>', HOMEPAGE, re.S)
         self.assertIsNotNone(mast)
         self.assertIn("merger-monitor", mast.group(0))
 
-        merger = re.search(r'<section class="work" id="merger">.*?</section>', HOMEPAGE, re.S)
-        self.assertIsNotNone(merger)
-        block = merger.group(0)
-        go = re.search(r'<a class="go" href="([^"]+)"', block)
-        self.assertIsNotNone(go, "Merger Monitor section has no primary .go link")
-        self.assertIn("merger-monitor", go.group(1))
+        block = _merger_block()
+        preview = re.search(r'<a class="mm-preview[^"]*" href="([^"]+)"', block)
+        self.assertIsNotNone(preview, "Merger Monitor section has no clickable week-late preview")
+        self.assertIn("merger-monitor", preview.group(1))
         self.assertIn("mm-preview", block)
         self.assertIn("merger-monitor", block)
 
-    def test_paid_path_is_the_live_gumroad_listing(self) -> None:
-        self.assertIn(GUMROAD, HOMEPAGE)
+    def test_primary_paid_cta_is_subscribe(self) -> None:
+        """Once /subscribe/ exists, the paid button owns that path — not the free weekly."""
+        block = _merger_block()
+        go = re.search(r'<a class="go" href="([^"]+)"', block)
+        self.assertIsNotNone(go, "Merger Monitor section has no primary .go link")
+        href = go.group(1)
+        self.assertTrue(
+            href.rstrip("/").endswith("subscribe") or href.endswith("subscribe/"),
+            f"primary CTA should be /subscribe/, got {href!r}",
+        )
+        self.assertNotIn("mergerweekly", href)
+        self.assertNotEqual(href, WEEKLY)
+
+    def test_paid_path_is_subscribe_plus_gumroad(self) -> None:
+        self.assertTrue(SUBSCRIBE.is_file(), "/subscribe/ page from PR #2 is missing")
+        subscribe = SUBSCRIBE.read_text(encoding="utf-8")
+        hrefs = _hrefs(HOMEPAGE, "subscribe")
+        self.assertTrue(
+            any(h.rstrip("/").endswith("subscribe") or h.endswith("subscribe/") for h in hrefs),
+            f"homepage has no /subscribe/ link, found {hrefs!r}",
+        )
+        self.assertIn(GUMROAD, subscribe)
 
     def test_exeter_auto_buys_is_out(self) -> None:
         self.assertNotIn('id="exeter"', HOMEPAGE)
@@ -62,17 +89,16 @@ class HomepageMoneyPath(unittest.TestCase):
         self.assertIsNone(re.search(r"\d[\d,]*\s+customers", lowered))
 
     def test_paid_checkout_is_gumroad_not_a_new_form(self) -> None:
-        merger = re.search(r'<section class="work" id="merger">.*?</section>', HOMEPAGE, re.S)
-        self.assertIsNotNone(merger)
-        block = merger.group(0)
-        self.assertIn(GUMROAD, block)
+        block = _merger_block()
         self.assertNotIn("<form", block.lower())
         self.assertNotRegex(block, r"href=\"[^\"]*checkout", re.I)
+        self.assertTrue(SUBSCRIBE.is_file())
+        subscribe = SUBSCRIBE.read_text(encoding="utf-8")
+        self.assertIn(GUMROAD, subscribe)
+        self.assertNotIn("<form", subscribe.lower())
 
     def test_honest_week_late_copy(self) -> None:
-        merger = re.search(r'<section class="work" id="merger">.*?</section>', HOMEPAGE, re.S)
-        self.assertIsNotNone(merger)
-        text = merger.group(0).lower()
+        text = _merger_block().lower()
         self.assertTrue("week" in text and "late" in text)
         self.assertNotIn("guaranteed", text)
         self.assertNotIn("live trading", text)
