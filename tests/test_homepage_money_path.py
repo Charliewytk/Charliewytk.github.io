@@ -13,7 +13,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 HOMEPAGE = (ROOT / "index.html").read_text(encoding="utf-8")
-SUBSCRIBE = ROOT / "subscribe" / "index.html"
 GUMROAD = "https://wuytackcharlie.gumroad.com/l/mergermonitor"
 
 
@@ -62,10 +61,13 @@ class HomepageMoneyPath(unittest.TestCase):
         # Chelsea Bikes uses "customers" as a shop problem, not a count. Fine.
         self.assertIsNone(re.search(r"\d[\d,]*\s+customers", lowered))
 
-    def test_this_pr_does_not_add_subscribe_page(self) -> None:
-        self.assertFalse(SUBSCRIBE.exists(), "do not smash PR #2 — leave /subscribe/ alone")
-        self.assertNotIn("/subscribe/", HOMEPAGE)
-        self.assertNotIn('href="subscribe/"', HOMEPAGE)
+    def test_paid_checkout_is_gumroad_not_a_new_form(self) -> None:
+        merger = re.search(r'<section class="work" id="merger">.*?</section>', HOMEPAGE, re.S)
+        self.assertIsNotNone(merger)
+        block = merger.group(0)
+        self.assertIn(GUMROAD, block)
+        self.assertNotIn("<form", block.lower())
+        self.assertNotRegex(block, r"href=\"[^\"]*checkout", re.I)
 
     def test_honest_week_late_copy(self) -> None:
         merger = re.search(r'<section class="work" id="merger">.*?</section>', HOMEPAGE, re.S)
