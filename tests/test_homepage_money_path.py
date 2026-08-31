@@ -122,11 +122,26 @@ class SubscribeAndTablePath(unittest.TestCase):
         self.assertNotIn("guaranteed edge", html.lower())
 
     def test_subscribe_says_the_offer_in_ten_seconds(self) -> None:
-        html = SUBSCRIBE.read_text(encoding="utf-8").lower()
-        self.assertIn("filing", html)
-        self.assertIn("not advice", html)
+        html = SUBSCRIBE.read_text(encoding="utf-8")
+        lowered = html.lower()
+        self.assertIn("filing", lowered)
+        self.assertIn("not advice", lowered)
         self.assertIn("£5", html)
-        self.assertIn("extract", html)
+        self.assertIn("extract", lowered)
+        # Honest cost-sizing sits above the first paid button.
+        hero = html.split('<div class="cta">', 1)[0]
+        self.assertIn("24.6%", hero)
+        self.assertIn("+1.38%", hero)
+        self.assertIn("1.59%", hero)
+        self.assertTrue("−0.57%" in hero or "&minus;0.57%" in hero or "-0.57%" in hero)
+        self.assertNotIn("edge", lowered)
+        self.assertNotIn("p&amp;l-advice", lowered)
+        self.assertNotIn("ict", lowered)
+        # Free weekly stays in the footer, not beside the first CTA.
+        first_cta = html.split('<div class="cta">', 1)[1].split("</div>", 1)[0]
+        self.assertNotIn("mergerweekly", first_cta)
+        self.assertIn('class="paybar"', html)
+        self.assertIn(GUMROAD, html.split('class="paybar"', 1)[1])
 
     def test_table_banner_primary_is_subscribe(self) -> None:
         for path in (TABLE, ROOT / "merger-monitor" / "2026-08-19.html"):
