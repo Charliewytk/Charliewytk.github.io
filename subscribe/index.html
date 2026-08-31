@@ -17,9 +17,6 @@
 <meta name="twitter:title" content="Merger Monitor — daily deal spreads, £5/month">
 <meta name="twitter:description" content="Most thin merger spreads die after costs. Break-even is 1.59%. Daily at 22:30, £5/month. Not advice.">
 <meta name="twitter:image" content="https://charliewytk.github.io/media/preview.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Anton&display=swap">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -79,14 +76,14 @@
   .mast .who { font-weight: 700; }
   .mast .pay { font-weight: 700; }
 
-  .shell { max-width: 720px; margin: 0 auto; padding: 48px 24px 96px; }
+  .shell { max-width: 720px; margin: 0 auto; padding: 48px 24px 88px; }
 
   .eyebrow {
     font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
     color: var(--faint); margin: 0 0 16px;
   }
   h1 {
-    font-family: "Lora", Georgia, serif;
+    font-family: Georgia, "Times New Roman", serif;
     font-weight: 600;
     font-size: clamp(1.85rem, 5.4vw, 2.55rem);
     line-height: 1.12;
@@ -101,7 +98,7 @@
     max-width: 40rem;
   }
   h2 {
-    font-family: "Lora", Georgia, serif;
+    font-family: Georgia, "Times New Roman", serif;
     font-weight: 600;
     font-size: 1.28rem;
     margin: 0 0 12px;
@@ -148,8 +145,8 @@
   .twoup div { padding: 18px 20px; background: rgba(34,32,29,0.04); }
   .twoup b {
     display: block;
-    font-family: "Anton", "Arial Narrow", sans-serif;
-    font-weight: 400;
+    font-family: "Arial Narrow", Arial, sans-serif;
+    font-weight: 700;
     font-size: 1.85rem;
     letter-spacing: 0.01em;
     margin-bottom: 6px;
@@ -186,11 +183,34 @@
     margin: 0 0 8px;
     padding: 0 0 0 12px;
     border-left: 2px solid var(--rule);
-    font-family: "Lora", Georgia, serif;
+    font-family: Georgia, "Times New Roman", serif;
     font-size: 0.95rem;
     color: var(--ink2);
   }
   .cite { font-size: 0.8rem; color: var(--faint); margin: 0 0 22px; }
+
+  .faq details {
+    border-bottom: 1px solid var(--rule);
+    padding: 11px 0;
+  }
+  .faq details:first-of-type { border-top: 1px solid var(--rule); }
+  .faq summary {
+    cursor: pointer;
+    font-weight: 600;
+    list-style: none;
+    padding: 2px 22px 2px 0;
+    position: relative;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after {
+    content: "+";
+    position: absolute;
+    right: 0; top: 2px;
+    color: var(--faint);
+    font-weight: 400;
+  }
+  .faq details[open] summary::after { content: "–"; }
+  .faq details p { margin: 10px 0 2px; color: var(--ink2); }
 
   footer {
     margin-top: 56px;
@@ -204,23 +224,41 @@
   .paybar { display: none; }
 
   @media (max-width: 640px) {
-    .mast { padding: 14px 16px; }
-    .shell { padding: 28px 16px 96px; }
-    h1 { font-size: 1.7rem; }
-    .lede { font-size: 1rem; margin-bottom: 18px; }
+    .mast { padding: 12px 14px; }
+    .shell { padding: 24px 16px 118px; }
+    .faq { scroll-margin-bottom: 110px; padding-bottom: 8px; }
+    .faq details[open] { scroll-margin-bottom: 110px; }
+    h1 { font-size: 1.62rem; }
+    .lede { font-size: 0.98rem; margin-bottom: 16px; }
     .twoup, .split, .offer { grid-template-columns: 1fr; }
+    .twoup div { padding: 14px 16px; }
     .sample th:nth-child(2), .sample td:nth-child(2) { display: none; }
     .cta .btn { display: block; width: 100%; }
     .paybar {
-      display: block;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
       position: fixed;
       left: 0; right: 0; bottom: 0;
       z-index: 30;
-      padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
+      padding: 6px 12px calc(6px + env(safe-area-inset-bottom, 0px));
       background: var(--paper);
       border-top: 1px solid var(--ink);
     }
-    .paybar .btn { display: block; width: 100%; }
+    .paybar .hint {
+      font-size: 0.64rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-align: center;
+      color: var(--faint);
+    }
+    .paybar .btn {
+      display: block;
+      width: 100%;
+      padding: 11px 16px;
+      min-height: 44px;
+      font-size: 0.95rem;
+    }
   }
 </style>
 </head>
@@ -233,11 +271,11 @@
 <main class="shell">
   <p class="eyebrow">Merger Monitor &middot; £5/month &middot; not advice</p>
   <h1>A 3% spread is not 24.6% a year. After costs, most thin ones die.</h1>
-  <p class="lede">Held to the median 49-day close, 3% annualises to 24.6% &mdash; the number this is usually sold on. After a 2.4% break rate, 0.40% round-trip cost and T-bill carry it is <b>+1.38% a deal</b>. A 1% spread is <b>&minus;0.57%</b>. Break-even is <b>1.59%</b>.</p>
+  <p class="lede">Held to the median <span data-merger-median-days>49</span>-day close, 3% annualises to <span data-merger-annualised-3pct>24.6%</span> &mdash; the number this is usually sold on. After a <span data-merger-break-rate>2.4%</span> break rate, <span data-merger-cost>0.40%</span> round-trip cost and T-bill carry it is <b data-merger-ev-3pct>+1.38%</b> a deal. A 1% spread is <b data-merger-ev-1pct>&minus;0.57%</b>. Break-even is <b data-merger-breakeven>1.59%</b>.</p>
 
   <div class="twoup">
-    <div class="bad"><b>24.6%</b><span>a year — what a 3% spread over 49 days looks like when you annualise it</span></div>
-    <div class="real"><b>+1.38%</b><span>per deal — after a 2.4% break rate, a 27% median loss when one breaks, 0.40% round-trip cost and 0.49% of forgone T-bill carry</span></div>
+    <div class="bad"><b data-merger-annualised-3pct>24.6%</b><span>a year — what a 3% spread over <span data-merger-median-days>49</span> days looks like when you annualise it</span></div>
+    <div class="real"><b data-merger-ev-3pct>+1.38%</b><span>per deal — after a <span data-merger-break-rate>2.4%</span> break rate, a <span data-merger-break-loss>27%</span> median loss when one breaks, <span data-merger-cost>0.40%</span> round-trip cost and <span data-merger-carry>0.49%</span> of forgone T-bill carry</span></div>
   </div>
 
   <div class="offer">
@@ -251,6 +289,7 @@
     <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Subscribe on Gumroad &mdash; £5/month</a>
   </div>
   <p class="note">You pay for the evening the table is built, not a secret method. On the 19 August table, nine of seventeen cash-priced rows clear 1.59%. The rest are published anyway.</p>
+  <p class="note">Live book: <b data-merger-clears>12</b> of <b data-merger-priced>19</b> cash-priced rows currently clear <b data-merger-breakeven>1.62%</b>. Take: £0. Zero subscribers.</p>
 
   <section>
     <h2>In the daily mail, 22:30</h2>
@@ -277,7 +316,7 @@
 
   <section>
     <h2>Why a 1% spread dies</h2>
-    <p>The break rate is <b>2.4% after a definitive proxy — 39 of 1,606 settled outcomes</b>. It is a floor, not a ceiling: deals that die before that stage never enter the sample. Carry is the 13-week bill, fetched rather than assumed. US/GBP round-trip FX and spread are charged in the same pass.</p>
+    <p>The break rate is <b><span data-merger-break-rate>2.4%</span> after a definitive proxy — <span data-merger-breaks>39</span> of <span data-merger-settled>1,606</span> settled outcomes</b>. It is a floor, not a ceiling: deals that die before that stage never enter the sample. Carry is the 13-week bill, fetched rather than assumed. US/GBP round-trip FX and spread are charged in the same pass.</p>
     <p>That is the whole method: the annualised number is marketing. The expected value is the trade. Nothing here is investment advice. No position is held in anything listed.</p>
   </section>
 
@@ -326,6 +365,30 @@
     <p>ACA at +3.44% is the 3% case in the wild. CRNX at +0.29% is the thin one that dies after costs. Both are published. <a href="../merger-monitor/">Full 19 August table</a></p>
   </section>
 
+  <section class="faq" id="faq">
+    <h2>Questions before you pay</h2>
+    <details>
+      <summary>Why pay if the same table is free a week late?</summary>
+      <p>The free Sunday mail is the public table, seven days late. You pay £5/month for the evening the rows are built. Same extractor. Same arithmetic. One product.</p>
+    </details>
+    <details>
+      <summary>Is this investment advice?</summary>
+      <p>No. Filings and a measured break rate. Not advice, not a recommendation, not a tip sheet.</p>
+    </details>
+    <details>
+      <summary>Do you take a position in these deals?</summary>
+      <p>No. No position is held in anything listed, and nothing is executed on your behalf.</p>
+    </details>
+    <details>
+      <summary>What if I want the money back?</summary>
+      <p>Gumroad’s 7-day refund. Cancel there. Charles still clicks checkout; there is no second form on this site.</p>
+    </details>
+    <details>
+      <summary>How many people already pay?</summary>
+      <p>Zero subscribers. The take is £0. That is the real count, not a launch story.</p>
+    </details>
+  </section>
+
   <div class="cta">
     <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Subscribe on Gumroad &mdash; £5/month</a>
   </div>
@@ -338,7 +401,27 @@
 </main>
 
 <div class="paybar">
+  <span class="hint">Daily 22:30 · not advice · £0</span>
   <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Subscribe on Gumroad &mdash; £5/month</a>
 </div>
+<script src="/assets/js/merger-stats.js" defer></script>
+<script>
+(function () {
+  var faq = document.querySelector(".faq");
+  if (!faq) return;
+  faq.addEventListener("toggle", function (e) {
+    var d = e.target;
+    if (!d || !d.open) return;
+    var bar = document.querySelector(".paybar");
+    var reserve = 12;
+    if (bar && getComputedStyle(bar).display !== "none") {
+      reserve += bar.getBoundingClientRect().height;
+    }
+    var bottom = d.getBoundingClientRect().bottom;
+    var limit = window.innerHeight - reserve;
+    if (bottom > limit) window.scrollBy(0, bottom - limit);
+  }, true);
+})();
+</script>
 </body>
 </html>
