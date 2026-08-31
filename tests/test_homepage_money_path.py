@@ -8,7 +8,9 @@ primary CTA the free weekly.
 """
 from __future__ import annotations
 
+import json
 import re
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -173,6 +175,147 @@ class SubscribeAndTablePath(unittest.TestCase):
         self.assertNotIn("merger-arbitrage newsletter", HOMEPAGE)
         self.assertIn("Resale Radar", HOMEPAGE)
         self.assertNotIn("Clothes", HOMEPAGE)
+
+
+class SubscribeConversionPass(unittest.TestCase):
+    """Further conversion work on the live /subscribe/ path after PR #7."""
+
+    def test_no_second_sku_or_haircut(self) -> None:
+        html = SUBSCRIBE.read_text(encoding="utf-8").lower()
+        self.assertNotIn("haircut", html)
+        self.assertNotIn("companion product", html)
+        self.assertNotIn("scanner", html)
+        gumroad = re.findall(r"https://wuytackcharlie\.gumroad\.com/l/[a-z0-9]+", html)
+        self.assertTrue(all(u in {GUMROAD, WEEKLY} for u in gumroad), gumroad)
+        self.assertIn(GUMROAD, gumroad)
+
+    def test_faq_covers_objections(self) -> None:
+        html = SUBSCRIBE.read_text(encoding="utf-8").lower()
+        self.assertIn("<details", html)
+        self.assertIn("faq", html)
+        for needle in ("refund", "advice", "week", "position", "free"):
+            self.assertIn(needle, html)
+
+    def test_subscribe_skips_webfonts(self) -> None:
+        html = SUBSCRIBE.read_text(encoding="utf-8")
+        self.assertNotIn("fonts.googleapis.com", html)
+        self.assertNotIn("fonts.gstatic.com", html)
+
+    def test_honest_zero_ledger_not_fake_counts(self) -> None:
+        html = SUBSCRIBE.read_text(encoding="utf-8")
+        lowered = html.lower()
+        self.assertIsNone(re.search(r"[1-9][\d,]*\s+subscribers?", lowered))
+        self.assertNotIn("join ", lowered)
+        self.assertIn("£0", html)
+
+    def test_feed_summary_exists_and_is_numeric(self) -> None:
+        path = ROOT / "merger-monitor" / "feed_summary.json"
+        self.assertTrue(path.is_file(), "merger-monitor/feed_summary.json is missing")
+        data = json.loads(path.read_text(encoding="utf-8"))
+        required = (
+            "annualised_3pct",
+            "ev_3pct_per_deal",
+            "ev_1pct_per_deal",
+            "breakeven_pct",
+            "break_rate_pct",
+            "breaks",
+            "settled",
+            "publishable",
+            "clears_breakeven",
+            "median_days_to_close",
+            "break_loss_median_pct",
+            "cost_pct",
+            "carry_pct",
+            "digest_date",
+        )
+        for key in required:
+            self.assertIn(key, data)
+            if key != "digest_date":
+                self.assertIsInstance(data[key], (int, float), key)
+
+    def test_subscribe_binds_feed_not_invented_copy(self) -> None:
+        html = SUBSCRIBE.read_text(encoding="utf-8")
+        js = (ROOT / "assets" / "js" / "merger-stats.js").read_text(encoding="utf-8")
+        self.assertIn("feed_summary.json", js)
+        self.assertIn("merger-stats.js", html)
+        for attr in (
+            "annualised-3pct",
+            "ev-3pct",
+            "ev-1pct",
+            "breakeven",
+            "break-rate",
+            "breaks",
+            "settled",
+            "median-days",
+            "break-loss",
+            "cost",
+            "carry",
+            "clears",
+            "priced",
+        ):
+            self.assertIn(f'data-merger-{attr}', html)
+        # Dated week-late sample stays dated — do not overwrite it with today's feed.
+        sample = html.lower().split("week-late sample", 1)[-1]
+        self.assertIn("19 august", sample)
+        self.assertNotIn("data-merger-clears", sample)
+        self.assertNotIn("data-merger-priced", sample)
+
+    def test_apply_writes_feed_values(self) -> None:
+        js_path = ROOT / "assets" / "js" / "merger-stats.js"
+        self.assertTrue(js_path.is_file())
+        summary = json.loads((ROOT / "merger-monitor" / "feed_summary.json").read_text(encoding="utf-8"))
+        html = SUBSCRIBE.read_text(encoding="utf-8")
+        # Minimal DOM stand-in: node applies the same file against a fixture.
+        script = r"""
+const fs = require('fs');
+const vm = require('vm');
+const html = fs.readFileSync(process.argv[1], 'utf8');
+const summary = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+const js = fs.readFileSync(process.argv[3], 'utf8');
+const store = {};
+const document = {
+  querySelectorAll(sel) {
+    const m = sel.match(/\[data-merger-([^\]]+)\]/);
+    if (!m) return [];
+    const attr = m[1];
+    if (!store[attr]) store[attr] = { textContent: 'FALLBACK' };
+    return [store[attr]];
+  }
+};
+const sandbox = { document, fetch: () => Promise.reject(new Error('no net')), console };
+vm.createContext(sandbox);
+vm.runInContext(js.replace(/fetch\([\s\S]*$/, 'true\n'), sandbox);
+if (typeof sandbox.apply !== 'function') {
+  // IIFE — eval apply by exporting it
+}
+"""
+        # Prefer an exported apply(); if missing this test fails until the script exports one.
+        self.assertIn("function apply(", js_path.read_text(encoding="utf-8"))
+        self.assertIn("module.exports", js_path.read_text(encoding="utf-8"))
+        node = (
+            "const apply = require('./assets/js/merger-stats.js').apply;\n"
+            "const summary = " + json.dumps(summary) + ";\n"
+            "const store = {};\n"
+            "global.document = { querySelectorAll: (sel) => {\n"
+            "  const m = sel.match(/\\[data-merger-([^\\]]+)\\]/);\n"
+            "  if (!m) return [];\n"
+            "  const k = m[1];\n"
+            "  if (!store[k]) store[k] = { textContent: 'FALLBACK' };\n"
+            "  return [store[k]];\n"
+            "}};\n"
+            "apply(summary);\n"
+            "process.stdout.write(JSON.stringify(Object.fromEntries(Object.entries(store).map(([k,v]) => [k, v.textContent]))));\n"
+        )
+        proc = subprocess.run(["node", "-e", node], cwd=str(ROOT), capture_output=True, text=True)
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        written = json.loads(proc.stdout)
+        self.assertEqual(written["annualised-3pct"], "24.6%")
+        self.assertEqual(written["ev-3pct"], "+1.35%")
+        self.assertEqual(written["ev-1pct"], "-0.60%")
+        self.assertEqual(written["breakeven"], "1.62%")
+        self.assertEqual(written["break-rate"], "2.5%")
+        self.assertEqual(written["breaks"], "41")
+        self.assertEqual(written["settled"], "1,636")
 
 
 if __name__ == "__main__":
