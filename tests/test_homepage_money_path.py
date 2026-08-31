@@ -15,6 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 HOMEPAGE = (ROOT / "index.html").read_text(encoding="utf-8")
 SUBSCRIBE = ROOT / "subscribe" / "index.html"
+TABLE = ROOT / "merger-monitor" / "index.html"
 GUMROAD = "https://wuytackcharlie.gumroad.com/l/mergermonitor"
 WEEKLY = "https://wuytackcharlie.gumroad.com/l/mergerweekly"
 
@@ -54,7 +55,7 @@ class HomepageMoneyPath(unittest.TestCase):
     def test_primary_paid_cta_is_subscribe(self) -> None:
         """Once /subscribe/ exists, the paid button owns that path — not the free weekly."""
         block = _merger_block()
-        go = re.search(r'<a class="go" href="([^"]+)"', block)
+        go = re.search(r'<a class="go(?:\s+pay)?" href="([^"]+)"', block)
         self.assertIsNotNone(go, "Merger Monitor section has no primary .go link")
         href = go.group(1)
         self.assertTrue(
@@ -102,6 +103,76 @@ class HomepageMoneyPath(unittest.TestCase):
         self.assertTrue("week" in text and "late" in text)
         self.assertNotIn("guaranteed", text)
         self.assertNotIn("live trading", text)
+        self.assertIn("£5", text)
+        self.assertTrue("filing" in text or "filings" in text)
+        self.assertTrue("not a tip sheet" in text or "not advice" in text)
+        self.assertIn("cash merger", text)
+        self.assertNotIn("every us merger that", text)
+
+
+class SubscribeAndTablePath(unittest.TestCase):
+    def test_subscribe_primary_button_is_gumroad(self) -> None:
+        html = SUBSCRIBE.read_text(encoding="utf-8")
+        btn = re.search(r'<a class="btn" href="([^"]+)"', html)
+        self.assertIsNotNone(btn, "/subscribe/ has no primary .btn")
+        self.assertEqual(btn.group(1), GUMROAD)
+        self.assertEqual(html.count(GUMROAD), html.lower().count("wuytackcharlie.gumroad.com/l/mergermonitor"))
+        self.assertNotIn("<form", html.lower())
+        self.assertIsNone(re.search(r"\d[\d,]*\s+subscribers?", html.lower()))
+        self.assertNotIn("guaranteed edge", html.lower())
+
+    def test_subscribe_says_the_offer_in_ten_seconds(self) -> None:
+        html = SUBSCRIBE.read_text(encoding="utf-8")
+        lowered = html.lower()
+        self.assertIn("filing", lowered)
+        self.assertIn("not advice", lowered)
+        self.assertIn("£5", html)
+        self.assertIn("extract", lowered)
+        # Honest cost-sizing sits above the first paid button.
+        hero = html.split('<div class="cta">', 1)[0]
+        self.assertIn("24.6%", hero)
+        self.assertIn("+1.38%", hero)
+        self.assertIn("1.59%", hero)
+        self.assertTrue("−0.57%" in hero or "&minus;0.57%" in hero or "-0.57%" in hero)
+        self.assertNotIn("edge", lowered)
+        self.assertNotIn("p&amp;l-advice", lowered)
+        self.assertNotIn("ict", lowered)
+        # Free weekly stays in the footer, not beside the first CTA.
+        first_cta = html.split('<div class="cta">', 1)[1].split("</div>", 1)[0]
+        self.assertNotIn("mergerweekly", first_cta)
+        self.assertIn('class="paybar"', html)
+        self.assertIn(GUMROAD, html.split('class="paybar"', 1)[1])
+
+    def test_table_banner_primary_is_subscribe(self) -> None:
+        for path in (TABLE, ROOT / "merger-monitor" / "2026-08-19.html"):
+            html = path.read_text(encoding="utf-8")
+            banner = html.split("<style>", 1)[0]
+            hrefs = re.findall(r'<a href="([^"]+)"', banner)
+            self.assertTrue(hrefs, f"{path.name} has no banner links")
+            self.assertTrue(
+                hrefs[0].rstrip("/").endswith("subscribe") or hrefs[0].endswith("/subscribe/"),
+                f"{path.name} primary CTA should be /subscribe/, got {hrefs[0]!r}",
+            )
+            self.assertNotEqual(hrefs[0], WEEKLY)
+            self.assertIn(WEEKLY, html)
+            self.assertNotIn("gumroad.com/l/", hrefs[0])
+
+    def test_research_leads_with_subscribe(self) -> None:
+        html = (ROOT / "research.html").read_text(encoding="utf-8")
+        self.assertIn("nine of the seventeen", html)
+        hrefs = _hrefs(html, "subscribe")
+        self.assertTrue(hrefs, "research notes have no /subscribe/ link")
+        first = re.search(r'<a href="([^"]+)"', html[html.find("Where it pays"):])
+        self.assertIsNotNone(first)
+        self.assertTrue(
+            first.group(1).rstrip("/").endswith("subscribe") or first.group(1).endswith("subscribe/"),
+            f"research money-path first link should be /subscribe/, got {first.group(1)!r}",
+        )
+
+    def test_footer_does_not_kill_the_live_product(self) -> None:
+        self.assertNotIn("merger-arbitrage newsletter", HOMEPAGE)
+        self.assertIn("Resale Radar", HOMEPAGE)
+        self.assertNotIn("Clothes", HOMEPAGE)
 
 
 if __name__ == "__main__":
