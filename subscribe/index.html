@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Merger Monitor — daily deal spreads, £5/month</title>
+<meta name="description" content="Every US cash merger past a definitive proxy, priced nightly against the market, with the SEC filing sentence for each price. Same table as the free weekly digest; the paid edition is just faster. £5/month on Gumroad. Not advice.">
+<link rel="canonical" href="https://charliewytk.github.io/subscribe/">
+<link rel="icon" href="../media/favicon.svg" type="image/svg+xml">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://charliewytk.github.io/subscribe/">
+<meta property="og:title" content="Merger Monitor — daily deal spreads, £5/month">
+<meta property="og:description" content="Contractual deal prices from SEC filings, priced against the market. Same maths as the free weekly table; you pay for the evening it is built, not a secret.">
+<meta property="og:image" content="https://charliewytk.github.io/media/preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Merger Monitor — daily deal spreads, £5/month">
+<meta name="twitter:description" content="US cash-merger spreads read from SEC filings. Daily at 22:30, £5/month. Not advice.">
+<meta name="twitter:image" content="https://charliewytk.github.io/media/preview.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Anton&display=swap">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Merger Monitor",
+  "description": "Daily table of US cash mergers past a definitive proxy, with the contractual price taken from the SEC filing and priced against the live market. Same arithmetic as the free weekly digest; the paid edition is delivered the evening it is built.",
+  "url": "https://charliewytk.github.io/subscribe/",
+  "brand": {"@type": "Person", "name": "Charlie Wuytack", "url": "https://charliewytk.github.io/"},
+  "offers": {
+    "@type": "Offer",
+    "url": "https://wuytackcharlie.gumroad.com/l/mergermonitor",
+    "price": "5.00",
+    "priceCurrency": "GBP",
+    "availability": "https://schema.org/InStock",
+    "priceSpecification": {
+      "@type": "UnitPriceSpecification",
+      "price": "5.00",
+      "priceCurrency": "GBP",
+      "billingDuration": "P1M"
+    }
+  }
+}
+</script>
+<style>
+  :root {
+    --ink: #22201d;
+    --ink2: #3b3833;
+    --muted: #5f5b52;
+    --faint: #6f6a60;
+    --rule: #c9c6b4;
+    --paper: #f7f7ef;
+    --accent: #a9331f;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16.5px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: #e4e2d4; }
+  a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); padding-bottom: 1px; }
+  a:hover { color: var(--accent); border-color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+  .mast {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 18px 28px;
+    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+    border-bottom: 1px solid var(--ink);
+  }
+  .mast a { border: none; font-weight: 700; }
+  .mast .who { font-weight: 700; }
+
+  .shell { max-width: 720px; margin: 0 auto; padding: 56px 24px 96px; }
+
+  .eyebrow {
+    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--faint); margin: 0 0 18px;
+  }
+  h1 {
+    font-family: "Lora", Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(1.9rem, 4.6vw, 2.7rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin: 0 0 16px;
+  }
+  .lede {
+    font-family: "Lora", Georgia, serif;
+    font-style: italic;
+    font-size: 1.18rem;
+    line-height: 1.45;
+    color: var(--ink2);
+    margin: 0 0 28px;
+    max-width: 38rem;
+  }
+  h2 {
+    font-family: "Lora", Georgia, serif;
+    font-weight: 600;
+    font-size: 1.28rem;
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+  h3 {
+    font-size: 0.95rem;
+    margin: 0 0 10px;
+  }
+  p { margin: 0 0 16px; text-wrap: pretty; }
+  .note { color: var(--muted); font-size: 0.92rem; }
+
+  section { margin-top: 52px; padding-top: 28px; border-top: 1px solid var(--rule); }
+
+  .cta {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px;
+    margin: 28px 0 8px;
+  }
+  .btn {
+    display: inline-block;
+    background: var(--ink);
+    color: var(--paper);
+    border: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 11px 18px;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .btn:hover { background: var(--accent); border-color: var(--accent); color: var(--paper); }
+  .btn:focus-visible { outline-offset: 3px; }
+  .cta .alt { font-size: 0.9rem; color: var(--muted); }
+
+  .twoup { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin: 20px 0 22px; }
+  .twoup div { padding: 18px 20px; background: rgba(34,32,29,0.04); }
+  .twoup b {
+    display: block;
+    font-family: "Anton", "Arial Narrow", sans-serif;
+    font-weight: 400;
+    font-size: 1.85rem;
+    letter-spacing: 0.01em;
+    margin-bottom: 6px;
+  }
+  .twoup .bad b { color: rgba(34,32,29,0.42); }
+  .twoup .real b { color: var(--accent); }
+  .twoup span { font-size: 0.8rem; color: var(--muted); line-height: 1.4; display: block; }
+
+  ul { margin: 0 0 16px; padding-left: 20px; }
+  li { margin-bottom: 10px; text-wrap: pretty; }
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .split ul { margin-bottom: 0; }
+
+  .sample { width: 100%; border-collapse: collapse; font-size: 0.86rem; margin: 8px 0 14px; }
+  .sample th {
+    text-align: left;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--faint);
+    font-weight: 600;
+    padding: 8px 10px 8px 0;
+    border-bottom: 1px solid var(--ink);
+  }
+  .sample td {
+    padding: 11px 10px 11px 0;
+    border-bottom: 1px solid rgba(34,32,29,0.14);
+    vertical-align: top;
+  }
+  .sample .tk { font-family: ui-monospace, Menlo, monospace; font-weight: 600; letter-spacing: 0.03em; }
+  .sample .num { font-family: ui-monospace, Menlo, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .sample .co { color: var(--muted); }
+  .quote {
+    margin: 0 0 8px;
+    padding: 0 0 0 12px;
+    border-left: 2px solid var(--rule);
+    font-family: "Lora", Georgia, serif;
+    font-size: 0.95rem;
+    color: var(--ink2);
+  }
+  .cite { font-size: 0.8rem; color: var(--faint); margin: 0 0 22px; }
+
+  footer {
+    margin-top: 64px;
+    padding-top: 22px;
+    border-top: 1px solid var(--rule);
+    font-size: 0.86rem;
+    color: var(--muted);
+  }
+  footer p { margin: 0 0 8px; }
+
+  @media (max-width: 640px) {
+    .mast { padding: 16px 18px; }
+    .shell { padding: 40px 18px 72px; }
+    .twoup, .split { grid-template-columns: 1fr; }
+    .sample th:nth-child(2), .sample td:nth-child(2) { display: none; }
+  }
+</style>
+</head>
+<body>
+<header class="mast">
+  <a class="who" href="../">Charlie Wuytack</a>
+  <a href="mailto:charlie@wuytack.net">Get in touch</a>
+</header>
+
+<main class="shell">
+  <p class="eyebrow">Merger Monitor &middot; £5/month</p>
+  <h1>The deal price is in the filing. The rest is arithmetic.</h1>
+  <p class="lede">Every US cash merger that has reached a definitive proxy, priced against the live market, with the sentence from the SEC filing each price was read from.</p>
+  <p>It is a table. Not a tip sheet, not a position, not a claim that the spread is yours if you take it. The paid edition is the same table as the <a href="https://wuytackcharlie.gumroad.com/l/mergerweekly">free Sunday digest</a>, sent the evening it is built instead of a week later.</p>
+
+  <div class="cta">
+    <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Subscribe on Gumroad &mdash; £5/month</a>
+    <span class="alt"><a href="https://wuytackcharlie.gumroad.com/l/mergerweekly" target="_blank" rel="noopener">Or the free weekly, one week late</a></span>
+  </div>
+  <p class="note">Checkout is the existing Gumroad listing. Cancel there. No new payment form on this site.</p>
+
+  <section>
+    <h2>What £5 buys</h2>
+    <p>Speed. A merger spread narrows as the deal approaches its close, so a week-old table is systematically the worse entry on deals that complete, and no help at all on the ones that break. You are not paying for a secret method.</p>
+    <div class="split">
+      <div>
+        <h3>In the daily mail, 22:30</h3>
+        <ul>
+          <li>Every live US cash deal past a definitive proxy (DEFM14A), plus tenders and going-privates the extractor can price.</li>
+          <li>The contractual consideration, taken from the primary filing, with the sentence it came from and the SEC accession so you can check a row in about thirty seconds.</li>
+          <li>The spread against the market at build time, and an expected value that already charges a measured break rate, round-trip cost, and T-bill carry.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Not in it</h3>
+        <ul>
+          <li>Advice, or a recommendation to buy anything.</li>
+          <li>A position, an order, or anyone executing on your behalf.</li>
+          <li>A guaranteed return, an “edge”, or a P&amp;L.</li>
+          <li>Stock-election deals dressed up as a single cash number. If the filing does not state one, the row says so.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Why the annualised number is the wrong number</h2>
+    <p>A 3% spread held to the median 49-day close annualises to <b>24.6% a year</b>. That is how this kind of thing is normally sold, and it is worthless.</p>
+    <div class="twoup">
+      <div class="bad"><b>24.6%</b><span>a year — what a 3% spread over 49 days looks like when you annualise it</span></div>
+      <div class="real"><b>+1.38%</b><span>per deal — after a 2.4% break rate, a 27% median loss when one breaks, 0.40% round-trip cost and 0.49% of forgone T-bill carry</span></div>
+    </div>
+    <p>Price a 1% spread the same way and it is <b>−0.57%</b> per deal. Break-even sits at <b>1.59%</b>. That is the number the product publishes, not the annualised one.</p>
+    <p>The break rate is <b>2.4% after a definitive proxy — 39 of 1,606 settled outcomes</b>. It is a floor, not a ceiling: deals that die before that stage never enter the sample, so risk from announcement is higher. Carry is the 13-week bill, fetched rather than assumed. US/GBP round-trip FX and spread are charged in the same pass.</p>
+  </section>
+
+  <section>
+    <h2>A week-late sample, on purpose</h2>
+    <p>The public table is the same product, published seven days late. Figures below are from the 19 August 2026 build. Spreads move; these were computed when that page was built.</p>
+    <table class="sample">
+      <thead>
+        <tr><th>Deal</th><th>Company</th><th>Offer / market</th><th>Spread</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tk">WBD</td>
+          <td class="co">Warner Bros. Discovery</td>
+          <td class="num">$31.00 / $28.48</td>
+          <td class="num">+8.85%</td>
+        </tr>
+        <tr>
+          <td class="tk">SLAB</td>
+          <td class="co">Silicon Laboratories</td>
+          <td class="num">$231.00 / $219.29</td>
+          <td class="num">+5.34%</td>
+        </tr>
+        <tr>
+          <td class="tk">ACA</td>
+          <td class="co">Arcosa</td>
+          <td class="num">$150.00 / $145.01</td>
+          <td class="num">+3.44%</td>
+        </tr>
+        <tr>
+          <td class="tk">AES</td>
+          <td class="co">AES Corp</td>
+          <td class="num">$15.00 / $14.74</td>
+          <td class="num">+1.76%</td>
+        </tr>
+        <tr>
+          <td class="tk">CRNX</td>
+          <td class="co">Crinetics</td>
+          <td class="num">$85.00 / $84.75</td>
+          <td class="num">+0.29%</td>
+        </tr>
+      </tbody>
+    </table>
+    <blockquote class="quote">&hellip;have been properly exercised) shall be converted into the right to receive an amount in cash equal to $31.00, without interest&hellip;</blockquote>
+    <p class="cite">WBD · DEFM14A, filed 2026-03-26 — <a href="https://www.sec.gov/Archives/edgar/data/1437107/000119312526125075/0001193125-26-125075-index.htm" rel="noopener">read the filing</a></p>
+    <p>A wide row and a thin one look identical until you price the break. Both are published. <a href="../merger-monitor/">See the full 19 August table</a> · <a href="../merger-monitor/archive.html">archive</a> · <a href="../feed.xml">RSS</a></p>
+  </section>
+
+  <section>
+    <h2>What this is, said once</h2>
+    <ul>
+      <li>Facts extracted from SEC filings and priced at build time. Each cash figure links to the document it was read from.</li>
+      <li>A price is marked corroborated when an independent search of the filing found that exact figure in a per-share cash context — not merely when the extractor produced it twice.</li>
+      <li>Several deals have no options chain. Even complete options data would cover only part of the list, and would refine the base rate rather than replace it.</li>
+      <li>No position is held in anything listed. Nothing here is investment advice.</li>
+    </ul>
+  </section>
+
+  <div class="cta">
+    <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Subscribe on Gumroad &mdash; £5/month</a>
+    <span class="alt"><a href="https://wuytackcharlie.gumroad.com/l/mergerweekly" target="_blank" rel="noopener">Free weekly digest</a></span>
+  </div>
+
+  <footer>
+    <p>Merger Monitor is the only thing on this site with a price on it. Checkout stays on <a href="https://wuytackcharlie.gumroad.com/l/mergermonitor">Gumroad</a>.</p>
+    <p><a href="../">charliewytk.github.io</a> · <a href="../research.html">research notes</a> · <a href="../essays/friction-sized-edges.html">the longer write-up</a></p>
+  </footer>
+</main>
+</body>
+</html>
