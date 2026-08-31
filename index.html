@@ -63,6 +63,8 @@
   .masthead a, .masthead .who { pointer-events: auto; }
   .masthead a { border: none; }
   .masthead .who { font-weight: 700; }
+  .masthead .mast-end { display: flex; gap: 22px; align-items: baseline; pointer-events: auto; }
+  .masthead .mast-end a.mm { font-weight: 700; }
 
   /* ---------- opening statement ---------- */
   .opening { height: 170vh; position: relative; }
@@ -552,6 +554,51 @@
   .twoup span { font-size: 0.78rem; color: var(--muted); line-height: 1.4; display: block; }
   @media (max-width: 760px) { .twoup { grid-template-columns: 1fr; } }
 
+  /* week-late table preview — the product, not a teaser graphic */
+  a.mm-preview {
+    display: block;
+    width: min(100%, 720px);
+    margin: 0 auto 9vh;
+    padding: 22px 24px 18px;
+    background: #f7f7ef;
+    border: 1px solid #22201d;
+    color: #22201d;
+    text-decoration: none;
+  }
+  a.mm-preview:hover {
+    color: #22201d;
+    border-color: #22201d;
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+  a.mm-preview .cap {
+    font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--faint); margin: 0 0 16px;
+  }
+  a.mm-preview table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  a.mm-preview th {
+    text-align: left; font-size: 0.62rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--faint); font-weight: 600;
+    padding: 0 10px 8px 0; border-bottom: 1px solid #22201d;
+  }
+  a.mm-preview td {
+    padding: 11px 10px 11px 0;
+    border-bottom: 1px solid rgba(34,32,29,0.14);
+    vertical-align: top;
+  }
+  a.mm-preview .tk { font-family: ui-monospace, Menlo, monospace; font-weight: 600; letter-spacing: 0.03em; }
+  a.mm-preview .co { color: var(--muted); }
+  a.mm-preview .num { font-family: ui-monospace, Menlo, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  a.mm-preview .go-row {
+    margin: 14px 0 0;
+    font-family: "Lora", Georgia, serif;
+    font-size: 1.02rem;
+  }
+  @media (max-width: 640px) {
+    a.mm-preview { padding: 18px 16px 14px; }
+    a.mm-preview th:nth-child(2), a.mm-preview td:nth-child(2) { display: none; }
+    .masthead .mast-end { gap: 14px; }
+  }
+
   /* measured figures — one per programme */
   .figure { width: min(100%, 1060px); margin: 0 auto 9vh; }
   .figure .cap {
@@ -719,14 +766,16 @@
   <a href="#killlog" data-t="The kill log"></a>
   <a href="#rig" data-t="How the rig works"></a>
   <a href="#unstaked" data-t="Running now"></a>
-  <a href="#exeter" data-t="Exeter auto buys"></a>
   <a href="#chelsea" data-t="Chelsea Bikes"></a>
   <a href="#abyss" data-t="Abyss Warden"></a>
 </nav>
 
 <div class="masthead">
   <span class="who">Charlie Wuytack</span>
-  <a href="mailto:charlie@wuytack.net">Get in touch</a>
+  <span class="mast-end">
+    <a class="mm" href="merger-monitor/">Merger Monitor</a>
+    <a href="mailto:charlie@wuytack.net">Get in touch</a>
+  </span>
 </div>
 
 <header class="opening">
@@ -922,8 +971,51 @@
   </div>
   <div class="stream">
     <p class="say rise">Every US cash merger that has reached a definitive proxy, priced against the live market, carrying the sentence from the SEC filing the deal price came from.</p>
+    <p class="say rise">The public table is at <a href="merger-monitor/">/merger-monitor</a>. It is the same table as the paid daily, published one week late on purpose.</p>
     <p class="say rise">Break-even is <span class="mk">1.59%</span> today and eleven of the sixteen live deals clear it. The rest are published anyway, because a wide spread and a thin one look identical until you price the break risk.</p>
     <p class="say small rise">Base rate 2.4% — 39 breaks in 1,606 settled outcomes. A floor, not a ceiling: deals that die before reaching a definitive proxy never enter the sample.</p>
+
+    <a class="mm-preview rise" href="merger-monitor/">
+      <p class="cap">Week-late public table · 19 August 2026</p>
+      <table>
+        <thead>
+          <tr><th>Deal</th><th>Company</th><th>Offer / market</th><th>Spread</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="tk">WBD</td>
+            <td class="co">Warner Bros. Discovery</td>
+            <td class="num">$31.00 / $28.48</td>
+            <td class="num">+8.85%</td>
+          </tr>
+          <tr>
+            <td class="tk">SLAB</td>
+            <td class="co">Silicon Laboratories</td>
+            <td class="num">$231.00 / $219.29</td>
+            <td class="num">+5.34%</td>
+          </tr>
+          <tr>
+            <td class="tk">ACA</td>
+            <td class="co">Arcosa</td>
+            <td class="num">$150.00 / $145.01</td>
+            <td class="num">+3.44%</td>
+          </tr>
+          <tr>
+            <td class="tk">AES</td>
+            <td class="co">AES Corp</td>
+            <td class="num">$15.00 / $14.74</td>
+            <td class="num">+1.76%</td>
+          </tr>
+          <tr>
+            <td class="tk">CRNX</td>
+            <td class="co">Crinetics</td>
+            <td class="num">$85.00 / $84.75</td>
+            <td class="num">+0.29%</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="go-row">See every deal, with the filing sentence</p>
+    </a>
 
     <div class="worked rise">
       <h3>Annualising flatters everything. Here is the one I sell, done properly.</h3>
@@ -933,12 +1025,12 @@
         <div class="real"><b>+1.38%</b><span>per deal — the same trade after a 2.4% break rate, a 27% median loss when one breaks, 0.40% round-trip cost and 0.49% of forgone T-bill carry</span></div>
       </div>
       <p>Price a 1% spread the same way — still a healthy-looking annualised number — and it is <span class="mk">−0.57%</span> per deal. Break-even sits at <span class="mk">1.59%</span>.</p>
-      <p>That is the whole method in one line: the annualised number is marketing, the expected value is the trade.</p>
+      <p>That is the whole method in one line: the annualised number is marketing, the expected value is the trade. You pay £5/month for the evening the table is built, not for a secret.</p>
     </div>
 
     <div class="doing-row rise">
-      <a class="go" href="https://wuytackcharlie.gumroad.com/l/mergerweekly" target="_blank" rel="noopener">Get the free weekly digest</a>
-      <span class="note"><a href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Or the daily edition, £5/month</a></span>
+      <a class="go" href="merger-monitor/">See the week-late table</a>
+      <span class="note"><a href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Daily edition, £5/month on Gumroad</a> · <a href="https://wuytackcharlie.gumroad.com/l/mergerweekly" target="_blank" rel="noopener">free weekly digest</a></span>
     </div>
   </div>
 </section>
@@ -1158,35 +1250,6 @@
   <div class="stream">
     <p class="say rise">A 40-name value and quality book on Alpaca paper since 20 August. The almach clone. A meme-token desk with rug-pull gates.</p>
     <p class="say rise">Nothing is staked until its evidence gate passes — not caution about money, just that a staked book and an unstaked one produce the same data.</p>
-  </div>
-</section>
-
-<!-- EXETER AUTO BUYS -->
-<p class="bridge rise"><span class="to">So I stopped hunting for an edge in the price and looked for one in speed instead.</span></p>
-
-<section class="work" id="exeter">
-  <div class="head">
-    <h2>Exeter Auto Buys</h2>
-    <p class="eyebrow">A bot that watches for tickets so I do not have to</p>
-  </div>
-  <div class="stream">
-    <div class="panel rise">
-      <div class="panel-in">
-        <p class="cap" style="margin-bottom:26px">Real alerts from the log — including the night it caught itself dying</p>
-        <div class="feed">
-          <div class="row"><time>2026-08-16 21:24 UTC</time><span>self-test — if this reached your phone, the alert path works</span></div>
-          <div class="row"><time>2026-08-17 03:05 UTC</time><span class="down">TP WATCH IS DOWN — no sweep in 34 minutes (expected every ~20). You are NOT being watched right now.</span></div>
-          <div class="row"><time>2026-08-17 11:08 UTC</time><span class="down">NOTIFIER FAILING — watcher alive, last off-machine send failed. The fallback worked.</span></div>
-          <div class="row"><time>2026-08-18 11:54 UTC</time><span>mac_alert — persistent alert spawned (detached) · ok</span></div>
-        </div>
-        <div class="facts">
-          <div><b>~20s</b><span>sweep interval on the Mac, jittered</span></div>
-          <div><b>2 halves</b><span>laptop for speed, cloud for 3am</span></div>
-          <div><b>deadman</b><span>it alerts when the watcher itself stops</span></div>
-        </div>
-      </div>
-    </div>
-    <p class="say rise">I may be going to the University of Exeter to study economics in September. To prepare I built a bot that watches the events that sell out fastest and <span class="mk">alerts me the second tickets appear</span>.</p>
   </div>
 </section>
 
