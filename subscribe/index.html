@@ -80,7 +80,7 @@
   .mast .who { font-weight: 700; }
   .mast .pay { font-weight: 700; }
 
-  .shell { max-width: 720px; margin: 0 auto; padding: 48px 24px 110px; }
+  .shell { max-width: 720px; margin: 0 auto; padding: 48px 24px calc(110px + env(safe-area-inset-bottom, 0px)); }
 
   .eyebrow {
     font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
@@ -255,7 +255,7 @@
 
   @media (max-width: 640px) {
     .mast { padding: 12px 14px; }
-    .shell { padding: 24px 16px 118px; }
+    .shell { padding: 24px 16px calc(118px + env(safe-area-inset-bottom, 0px)); }
     .faq { scroll-margin-bottom: 110px; padding-bottom: 8px; }
     .faq details[open] { scroll-margin-bottom: 110px; }
     h1 { font-size: 1.62rem; }
@@ -280,7 +280,7 @@
 <body>
 <header class="mast">
   <a class="who" href="../">Charlie Wuytack</a>
-  <a class="pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Tonight's table · £5</a>
+  <a class="pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Tonight's table · £5/month</a>
 </header>
 
 <main class="shell">
