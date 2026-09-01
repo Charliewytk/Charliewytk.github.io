@@ -233,6 +233,22 @@ class SizerPage(unittest.TestCase):
         self.assertIn(GUMROAD, gumroad)
         self.assertNotIn("new sku", html.lower())
 
+    def test_homepage_index_contains_sizer_href(self) -> None:
+        """Homepage notes point at the public calculator. Not a new hero."""
+        homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+        self.assertIn('href="sizer/"', homepage)
+        block = re.search(r'<section class="work" id="merger">.*?</section>', homepage, re.S)
+        self.assertIsNotNone(block)
+        notes = re.search(
+            r'<div class="worked rise">(.*)</div>\s*<div class="doing-row',
+            block.group(0),
+            re.S,
+        )
+        self.assertIsNotNone(notes, "merger-monitor notes block missing")
+        self.assertIn('href="sizer/"', notes.group(1))
+        self.assertIn('href="example/"', notes.group(1))
+        self.assertNotIn("share/", homepage.lower())
+
     def test_does_not_replace_paid_path_on_homepage_or_subscribe(self) -> None:
         homepage = (ROOT / "index.html").read_text(encoding="utf-8")
         fold = re.search(r'<header class="opening">.*?</header>', homepage, re.S)
