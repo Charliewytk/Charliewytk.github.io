@@ -94,6 +94,7 @@ class ShareDraftsPage(unittest.TestCase):
         self.assertIn("body", _fields(html, "x"))
         hn_title = _fields(html, "hn")["title"]
         self.assertTrue(hn_title.startswith("Show HN"), hn_title)
+        self.assertLessEqual(len(hn_title), 80, f"HN title is {len(hn_title)} chars; field max is 80")
         investing = _draft_text(html, "reddit-investing")
         security = _draft_text(html, "reddit-sa")
         self.assertLess(len(investing), len(security))
@@ -166,6 +167,17 @@ class ShareDraftsPage(unittest.TestCase):
         self.assertNotIn('class="btn"', html)
         self.assertNotIn("<form", lowered)
         self.assertIn("noindex", html.lower())
+        robots = (ROOT / "robots.txt").read_text(encoding="utf-8")
+        self.assertIn("Disallow: /share/", robots)
+        sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
+        self.assertNotIn("/share/", sitemap)
+
+    def test_x_post_fits_weighted_280(self) -> None:
+        text = _fields(_page(), "x")["body"]
+        weighted = text
+        for url in re.findall(r"https?://\S+", text):
+            weighted = weighted.replace(url, "x" * 23)
+        self.assertLessEqual(len(weighted), 280, f"X weighted length {len(weighted)}")
 
 
 if __name__ == "__main__":
