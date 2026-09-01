@@ -65,6 +65,19 @@
   .masthead .who { font-weight: 700; }
   .masthead .mast-end { display: flex; gap: 22px; align-items: baseline; pointer-events: auto; }
   .masthead .mast-end a.mm { font-weight: 700; }
+  .masthead a.pay {
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    background: #22201d;
+    color: #f7f7ef;
+    border: none;
+    padding: 5px 9px;
+  }
+  .masthead a.pay:hover {
+    background: var(--accent);
+    color: #f7f7ef;
+    border: none;
+  }
 
   /* ---------- opening statement ---------- */
   .opening { height: 170vh; position: relative; }
@@ -633,7 +646,9 @@
   @media (max-width: 640px) {
     a.mm-preview { padding: 18px 16px 14px; }
     a.mm-preview th:nth-child(2), a.mm-preview td:nth-child(2) { display: none; }
-    .masthead .mast-end { gap: 14px; }
+    .masthead .mast-end { gap: 10px; flex-wrap: nowrap; justify-content: flex-end; }
+    .masthead a.pay { letter-spacing: 0.08em; padding: 4px 8px; }
+    .masthead .mail-mast { display: none; }
   }
 
   /* measured figures — one per programme */
@@ -716,6 +731,8 @@
     .frame { margin-bottom: 7vh; width: 100%; }
     .say, .mono-stat, .todo, .maths { margin-bottom: 7vh; }
     .masthead { padding: 18px 22px; font-size: 0.7rem; }
+    .masthead .mast-end { gap: 12px; }
+    .masthead .mail-mast { display: none; }
     .pin-hero { padding: 64px 18px 24px; }
     .fold-sell { margin-top: 18px; }
     .fold-sell .fold-nums { font-size: 0.92rem; }
@@ -816,7 +833,8 @@
   <span class="who">Charlie Wuytack</span>
   <span class="mast-end">
     <a class="mm" href="merger-monitor/">Merger Monitor</a>
-    <a href="mailto:charlie@wuytack.net">Get in touch</a>
+    <a class="pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener" aria-label="Get tonight's table — £5/month">£5/month</a>
+    <a class="mail-mast" href="mailto:charlie@wuytack.net">Get in touch</a>
   </span>
 </div>
 
@@ -952,13 +970,16 @@
     </div>
     <p class="say rise">Simply I think it would be fun to live bet on chess games.</p>
     <p class="say rise">I am a fan of poker - it being <span class="mk">about half skill and half luck</span> - and I feel chess exchange would be more of an <span class="num-r">80/20</span> split, with the luck landing on whether a player plays what you think is the best move.</p>
-    <p class="say small rise">Runs as a live server, so there is no hosted demo yet — this is it running on my machine.</p>
+    <div class="doing-row rise">
+      <a class="go" href="https://charliewytk.github.io/chess-exchange/" target="_blank" rel="noopener">Try the FEN → WDL demo</a>
+      <span class="note">Play money. Paste a FEN, see White / Draw / Black. Not a book, not advice. Demo goes live after Pages click.</span>
+    </div>
     <p class="todo-label rise">Where it's at</p>
     <ul class="todo rise">
       <li class="done"><span>Live boards from lichess TV, markets on chess.com titled games</span></li>
       <li class="done"><span>LMSR market maker, six liquidity bots, replays at true clock speed</span></li>
       <li class="done"><span>Compact in-process alpha-beta engine: White/Draw/Black from WDL when a FEN exists; Elo is the no-board fallback</span></li>
-      <li><span>Host it so it is playable rather than a video</span></li>
+      <li class="doing"><span>Static FEN→WDL demo on GitHub Pages — live after the Pages click</span></li>
       <li><span>Long term: real players betting against each other, not bots</span></li>
     </ul>
   </div>

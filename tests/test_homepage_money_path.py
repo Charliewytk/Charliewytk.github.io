@@ -1246,5 +1246,109 @@ class WeeklyFreeEditionPage(unittest.TestCase):
             self.assertNotEqual(path.read_bytes(), other.read_bytes())
 
 
+class ChessExchangeDemoCard(unittest.TestCase):
+    """Static FEN→WDL demo just merged in chess-exchange PR #3.
+
+    The homepage must link the intended Pages URL with honest play-money
+    copy. Pages may not be live yet — say so. Not a book, not advice.
+    """
+
+    DEMO = "https://charliewytk.github.io/chess-exchange/"
+
+    def _chess(self) -> str:
+        block = re.search(r'<section class="work" id="chess">.*?</section>', HOMEPAGE, re.S)
+        self.assertIsNotNone(block, "homepage has no Chess Exchange section")
+        return block.group(0)
+
+    def test_chess_section_links_the_pages_demo(self) -> None:
+        block = self._chess()
+        self.assertIn(self.DEMO, block)
+        hrefs = _hrefs(block, "chess-exchange")
+        self.assertTrue(
+            any(h.rstrip("/") == self.DEMO.rstrip("/") for h in hrefs),
+            f"Chess section has no Pages demo href, found {hrefs!r}",
+        )
+        go = re.search(r'<a class="go[^"]*" href="([^"]+)"', block)
+        self.assertIsNotNone(go, "Chess section has no .go demo link")
+        self.assertEqual(go.group(1).rstrip("/"), self.DEMO.rstrip("/"))
+
+    def test_chess_demo_copy_is_play_money_not_a_book(self) -> None:
+        block = self._chess().lower()
+        self.assertIn("play money", block)
+        self.assertIn("not a book", block)
+        self.assertTrue("not advice" in block or "not a tip sheet" in block)
+        self.assertIn("demo goes live after pages click", block)
+        self.assertNotIn("no hosted demo yet", block)
+        self.assertNotIn("stockfish", block)
+        self.assertNotIn("wallet", block)
+        self.assertNotIn("real money", block)
+        self.assertNotIn("paywall", block)
+        self.assertNotIn("i trade", block)
+        self.assertNotIn("<form", block)
+        self.assertNotIn(GUMROAD, block)
+        self.assertNotIn("mergerweekly", block)
+        self.assertIsNone(re.search(r"\bict\b", block))
+
+    def test_chess_demo_does_not_invent_live_pages_or_wdl_stats(self) -> None:
+        """Link the intended URL. Do not invent engine percentages or claim Pages is on."""
+        block = self._chess()
+        lowered = block.lower()
+        self.assertNotIn("52.8%", block)
+        self.assertNotIn("97.0%", block)
+        self.assertNotIn("pages is live", lowered)
+        self.assertNotIn("pages is on", lowered)
+        self.assertIn("fen", lowered)
+        self.assertTrue("wdl" in lowered or "white / draw / black" in lowered)
+
+
+class HomepageStickyPayPath(unittest.TestCase):
+    """After the first fold, pay disappears until #merger. A small sticky CTA.
+
+    Same SKU only. Fold still has exactly one Gumroad link. Zero / £0 stay
+    honest. Clothes stays out.
+    """
+
+    def test_masthead_has_sticky_gumroad_cta(self) -> None:
+        mast = re.search(r'<div class="masthead">.*?</div>', HOMEPAGE, re.S)
+        self.assertIsNotNone(mast, "homepage has no masthead")
+        html = mast.group(0)
+        self.assertIn(GUMROAD, html)
+        self.assertIn("£5", html)
+        self.assertIn("tonight", html.lower())
+        self.assertIn("merger-monitor", html)
+        self.assertNotIn("mergerweekly", html.lower())
+        self.assertNotIn("<form", html.lower())
+        pay = re.search(r'<a class="[^"]*pay[^"]*" href="([^"]+)"[^>]*>([^<]+)</a>', html)
+        self.assertIsNotNone(pay, "masthead has no .pay Gumroad link")
+        self.assertEqual(pay.group(1), GUMROAD)
+        self.assertIn("£5", pay.group(2))
+
+    def test_sticky_pay_stays_outside_the_first_fold(self) -> None:
+        opening = re.search(r'<header class="opening">.*?</header>', HOMEPAGE, re.S)
+        self.assertIsNotNone(opening)
+        self.assertEqual(opening.group(0).count(GUMROAD), 1)
+        self.assertGreaterEqual(HOMEPAGE.count(GUMROAD), 5)
+
+    def test_sticky_pay_css_is_always_on(self) -> None:
+        css = HOMEPAGE.split("</style>", 1)[0]
+        self.assertRegex(css, r"\.masthead\s*\{[^}]*position:\s*fixed")
+        self.assertIsNone(re.search(r"\.masthead\s+a\.pay\s*\{[^}]*display:\s*none", css))
+        self.assertIsNone(re.search(r"\.masthead\s*\{[^}]*display:\s*none", css))
+
+    def test_zero_ledger_and_no_new_sku(self) -> None:
+        lowered = HOMEPAGE.lower()
+        self.assertIn("zero subscribers", lowered)
+        self.assertIn("£0", HOMEPAGE)
+        self.assertIsNone(re.search(r"[1-9][\d,]*\s+subscribers?", lowered))
+        self.assertNotIn("Clothes", HOMEPAGE)
+        gumroad = re.findall(r"https://wuytackcharlie\.gumroad\.com/l/[a-z0-9]+", lowered)
+        self.assertTrue(all(u in {GUMROAD, WEEKLY} for u in gumroad), gumroad)
+        self.assertIn(GUMROAD, gumroad)
+        self.assertNotIn("haircut", lowered)
+        self.assertNotIn("companion product", lowered)
+        self.assertNotIn("p&amp;l-advice", lowered)
+        self.assertIsNone(re.search(r"\bict\b", lowered))
+
+
 if __name__ == "__main__":
     unittest.main()
