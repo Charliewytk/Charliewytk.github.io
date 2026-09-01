@@ -1073,12 +1073,31 @@ class WeeklyFreeEditionPage(unittest.TestCase):
             self.assertIn(market, table)
         self.assertIn("Arcosa", html)
         self.assertIn("Arcosa", table)
-        # Every ticker the weekly table names must already live on the public list.
+        # Every weekly row is one public-table article: ticker + that spread + that market.
         body = html.split("<tbody>", 1)[-1].split("</tbody>", 1)[0]
-        tickers = re.findall(r'<td class="tk">([A-Z]{1,5})</td>', body)
-        self.assertGreaterEqual(len(tickers), 5, f"weekly table too thin: {tickers!r}")
-        for ticker in tickers:
-            self.assertIn(f'<span class="tk">{ticker}</span>', table)
+        rows = re.findall(
+            r'<td class="tk">([A-Z]{1,5})</td>\s*'
+            r'<td class="co">[^<]+</td>\s*'
+            r'<td class="num">(\$[0-9.]+) / (\$[0-9.]+)</td>\s*'
+            r'<td class="num">(\+[0-9.]+%)</td>',
+            body,
+        )
+        self.assertGreaterEqual(len(rows), 17, f"weekly table too thin: {rows!r}")
+        for ticker, offer, market, spread in rows:
+            article = re.search(
+                rf'<span class="tk">{re.escape(ticker)}</span>.*?</article>',
+                table,
+                re.S,
+            )
+            self.assertIsNotNone(article, f"{ticker} is not on the public table")
+            block = article.group(0)
+            self.assertIn(spread, block, ticker)
+            self.assertIn(market, block, ticker)
+            offer_stem = offer.rstrip("0").rstrip(".")
+            self.assertTrue(
+                offer in block or offer_stem in block,
+                f"{ticker} offer {offer} missing from public row",
+            )
 
     def test_does_not_invent_filings(self) -> None:
         html = self._html()
