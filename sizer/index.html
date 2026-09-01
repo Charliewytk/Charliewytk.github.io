@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cost sizer — same method, frozen 3% case</title>
+<meta name="description" content="Paste an offer and a market. A 3% spread annualises to 24.6%; after a 2.4% break rate and 0.40% costs it is +1.38%. Filings, not advice. Zero subscribers. £0.">
+<link rel="canonical" href="https://charliewytk.github.io/sizer/">
+<link rel="icon" href="../media/favicon.svg" type="image/svg+xml">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://charliewytk.github.io/sizer/">
+<meta property="og:title" content="Cost sizer — same method, frozen 3% case">
+<meta property="og:description" content="Paste an offer and a market. A 3% spread annualises to 24.6%; after a 2.4% break rate and 0.40% costs it is +1.38%. Filings, not advice. Zero subscribers. £0.">
+<meta property="og:image" content="https://charliewytk.github.io/media/og-sizer.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Cost sizer: 3% case. 24.6% annualises; after a 2.4% break rate and 0.40% costs it is +1.38%. Filings, not advice.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cost sizer — same method, frozen 3% case">
+<meta name="twitter:description" content="Paste an offer and a market. A 3% spread annualises to 24.6%; after a 2.4% break rate and 0.40% costs it is +1.38%. Filings, not advice. Zero subscribers. £0.">
+<meta name="twitter:image" content="https://charliewytk.github.io/media/og-sizer.png">
+<meta name="twitter:image:alt" content="Cost sizer: 3% case. 24.6% annualises; after a 2.4% break rate and 0.40% costs it is +1.38%. Filings, not advice.">
+<style>
+  :root {
+    --ink: #22201d;
+    --ink2: #3b3833;
+    --muted: #5f5b52;
+    --faint: #6f6a60;
+    --rule: #c9c6b4;
+    --paper: #f7f7ef;
+    --accent: #a9331f;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16.5px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); padding-bottom: 1px; }
+  a:hover { color: var(--accent); border-color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+  .mast {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 18px 28px;
+    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+    border-bottom: 1px solid var(--ink);
+  }
+  .mast a { border: none; font-weight: 700; }
+
+  .shell { max-width: 720px; margin: 0 auto; padding: 48px 24px 88px; }
+  .eyebrow {
+    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--faint); margin: 0 0 16px;
+  }
+  h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 600;
+    font-size: clamp(1.85rem, 5.4vw, 2.55rem);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    margin: 0 0 14px;
+  }
+  h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 600;
+    font-size: 1.28rem;
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+  .lede {
+    font-size: 1.05rem;
+    line-height: 1.5;
+    color: var(--ink2);
+    margin: 0 0 22px;
+    max-width: 40rem;
+  }
+  p { margin: 0 0 16px; text-wrap: pretty; }
+  .note { color: var(--muted); font-size: 0.9rem; }
+  section { margin-top: 44px; padding-top: 24px; border-top: 1px solid var(--rule); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 18px;
+    margin: 0 0 22px;
+  }
+  label {
+    display: block;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--faint);
+    font-weight: 600;
+    margin: 0 0 6px;
+  }
+  input {
+    width: 100%;
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 1.05rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+    background: #fffcf4;
+    border: 1px solid var(--rule);
+    padding: 11px 12px;
+    min-height: 48px;
+  }
+  input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .out { margin: 0 0 10px; }
+  .out .k { color: var(--muted); font-size: 0.8rem; }
+  .out .v {
+    font-family: "Arial Narrow", Arial, sans-serif;
+    font-weight: 700;
+    font-size: 1.85rem;
+    letter-spacing: 0.01em;
+    font-variant-numeric: tabular-nums;
+  }
+  .out .net .v { color: var(--accent); }
+  .opt { font-weight: 500; letter-spacing: 0; text-transform: none; }
+  .stated { margin: 8px 0 0; }
+  .twoup { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin: 0 0 18px; }
+  .twoup > div { padding: 18px 20px; background: rgba(34,32,29,0.04); }
+  .err { color: var(--accent); font-size: 0.95rem; min-height: 1.4em; }
+
+  footer {
+    margin-top: 56px;
+    padding-top: 22px;
+    border-top: 1px solid var(--rule);
+    font-size: 0.86rem;
+    color: var(--muted);
+  }
+  footer p { margin: 0 0 8px; }
+
+  @media (max-width: 640px) {
+    .mast { padding: 12px 14px; }
+    .shell { padding: 24px 16px 72px; }
+    h1 { font-size: 1.62rem; }
+    .grid, .twoup { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<header class="mast">
+  <a class="who" href="../">Charlie Wuytack</a>
+  <a href="../example/">Worked example</a>
+</header>
+
+<main class="shell">
+  <p class="eyebrow">Cost sizer &middot; extraction + cost-sizing &middot; not advice</p>
+  <h1>Paste an offer and a market. The 3% case is already filled in.</h1>
+  <p class="lede">Same method as <a href="../example/">/example/</a> and <a href="../subscribe/">/subscribe/</a>. A 3% spread annualises to 24.6%. After a 2.4% break rate and 0.40% round-trip costs it is +1.38% a deal. Defaults are those frozen figures. Nothing here is a recommendation.</p>
+
+  <form id="sizer" action="#" method="get">
+    <div class="grid">
+      <div>
+        <label for="offer">Offer</label>
+        <input id="offer" name="offer" type="text" inputmode="decimal" value="103" autocomplete="off">
+      </div>
+      <div>
+        <label for="market">Market</label>
+        <input id="market" name="market" type="text" inputmode="decimal" value="100" autocomplete="off">
+      </div>
+      <div>
+        <label for="break-rate">Break rate % <span class="opt">(optional)</span></label>
+        <input id="break-rate" name="break-rate" type="text" inputmode="decimal" value="2.4" autocomplete="off">
+      </div>
+      <div>
+        <label for="cost">Round-trip cost % <span class="opt">(optional)</span></label>
+        <input id="cost" name="cost" type="text" inputmode="decimal" value="0.40" autocomplete="off">
+      </div>
+    </div>
+  </form>
+
+  <div class="twoup">
+    <div class="out ann">
+      <div class="k">Spread</div>
+      <div class="v" data-out="spread">+3.00%</div>
+    </div>
+    <div class="out">
+      <div class="k">Annualised gross</div>
+      <div class="v" data-out="annualised">24.6%</div>
+    </div>
+    <div class="out net">
+      <div class="k">Net after stated break rate and costs</div>
+      <div class="v" data-out="net">+1.38%</div>
+    </div>
+    <div class="out">
+      <div class="k">Stated inputs</div>
+      <div class="note stated">Break <span data-out="break-rate">2.4%</span> · round-trip <span data-out="cost">0.40%</span> · 27% median break loss · 0.49% T-bill carry · 49-day close.</div>
+    </div>
+  </div>
+  <p class="err" data-out="error" hidden></p>
+  <p class="note">Annualised is marketing: the published 3% case over 49 days is 24.6%. The net charges the stated break rate, the 27% median loss when one breaks, round-trip cost, and 0.49% of forgone T-bill carry. The 2.4% default is 39 of 1,606 settled outcomes. A 1% spread on that pass is &minus;0.57%. Break-even is 1.59%.</p>
+
+  <section>
+    <h2>What this is not</h2>
+    <p>Not advice, not a recommendation, not a tip sheet, and not an order. Cost-sizing only. No position is held in anything you paste. Nothing here is a P&amp;L. Figures are not pulled from a live book. The page exists so a stranger can run the same pass already published on this site.</p>
+  </section>
+
+  <footer>
+    <p>Defaults are the 3% case already used on this site. Zero subscribers. Take: £0.</p>
+    <p><a href="../example/">worked example</a> · <a href="../weekly/">free weekly</a> · <a href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">£5/month on Gumroad</a> · <a href="../">charliewytk.github.io</a></p>
+  </footer>
+</main>
+<script src="../assets/js/merger-sizer.js"></script>
+<script>
+(function () {
+  var form = document.getElementById("sizer");
+  var ids = ["offer", "market", "break-rate", "cost"];
+
+  function set(name, text, isError) {
+    var el = document.querySelector('[data-out="' + name + '"]');
+    if (!el) return;
+    if (isError) {
+      el.hidden = !text;
+      el.textContent = text || "";
+      return;
+    }
+    el.textContent = text;
+  }
+
+  function render() {
+    if (!window.MergerSizer) return;
+    var out = window.MergerSizer.size({
+      offer: document.getElementById("offer").value,
+      market: document.getElementById("market").value,
+      breakRatePct: document.getElementById("break-rate").value,
+      costPct: document.getElementById("cost").value
+    });
+    if (out.error) {
+      set("error", out.error, true);
+      return;
+    }
+    set("error", "", true);
+    set("spread", out.spreadLabel);
+    set("annualised", out.annualisedLabel);
+    set("net", out.netLabel);
+    set("break-rate", out.breakRateLabel);
+    set("cost", out.costLabel);
+  }
+
+  form.addEventListener("submit", function (e) { e.preventDefault(); render(); });
+  ids.forEach(function (id) {
+    document.getElementById(id).addEventListener("input", render);
+  });
+  render();
+})();
+</script>
+</body>
+</html>
