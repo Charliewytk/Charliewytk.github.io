@@ -1000,5 +1000,251 @@ class WorkedExamplePage(unittest.TestCase):
         self.assertNotEqual(path.read_bytes(), (ROOT / "media" / "preview.png").read_bytes())
 
 
+class WeeklyFreeEditionPage(unittest.TestCase):
+    """Public weekly free edition a stranger can read without hitting £5 first.
+
+    Method first (link /example/), then this week's in-repo table, then the
+    existing Gumroad free SKU only. Do not invent filings or subscriber
+    counts. Do not replace the £5 path on homepage / subscribe.
+    """
+
+    WEEKLY_PAGE = ROOT / "weekly" / "index.html"
+    TABLE = ROOT / "merger-monitor" / "index.html"
+    PUBLISHED_ROWS = (
+        ("WBD", "+8.85%", "$31", "$28.48"),
+        ("SLAB", "+5.34%", "$231", "$219.29"),
+        ("ACA", "+3.44%", "$150", "$145.01"),
+        ("AES", "+1.76%", "$15", "$14.74"),
+        ("CRNX", "+0.29%", "$85", "$84.75"),
+    )
+
+    def _html(self) -> str:
+        self.assertTrue(self.WEEKLY_PAGE.is_file(), "/weekly/ page is missing")
+        return self.WEEKLY_PAGE.read_text(encoding="utf-8")
+
+    def test_asks_for_nothing_first(self) -> None:
+        html = self._html()
+        first_gumroad = min(
+            (i for i in (html.lower().find(WEEKLY), html.lower().find(GUMROAD)) if i >= 0),
+            default=-1,
+        )
+        self.assertGreater(first_gumroad, 0, "page never names a Gumroad SKU")
+        before = html[:first_gumroad]
+        self.assertIn("24.6%", before)
+        self.assertIn("+1.38%", before)
+        self.assertIn("1.59%", before)
+        self.assertIn("example/", before.lower())
+        self.assertTrue("WBD" in before or "ACA" in before)
+        self.assertNotIn("Get tonight", before)
+        self.assertNotIn("£5", before.split("<body", 1)[-1] if "<body" in before else before)
+        self.assertNotIn("<form", html.lower())
+        self.assertNotIn('class="paybar"', html)
+
+    def test_leads_with_method_and_example_link(self) -> None:
+        html = self._html()
+        hrefs = _hrefs(html, "example")
+        self.assertTrue(
+            any(h.rstrip("/").endswith("example") or "/example/" in h or h.endswith("example/")
+                for h in hrefs),
+            f"/weekly/ has no /example/ link, found {hrefs!r}",
+        )
+        hero = html.split("</h1>", 1)[0] + html.split("</h1>", 1)[1].split("<table", 1)[0]
+        self.assertIn("24.6%", hero)
+        self.assertIn("+1.38%", hero)
+        self.assertIn("1.59%", hero)
+        self.assertIn("method", hero.lower())
+        self.assertTrue("extract" in html.lower() or "filing" in html.lower())
+        self.assertNotIn("merger-stats.js", html)
+        self.assertNotIn("data-merger-", html)
+
+    def test_table_rows_are_already_on_the_public_table(self) -> None:
+        html = self._html()
+        table = self.TABLE.read_text(encoding="utf-8")
+        self.assertIn("19 August", html)
+        self.assertTrue("week" in html.lower() and "late" in html.lower())
+        for ticker, spread, offer, market in self.PUBLISHED_ROWS:
+            self.assertIn(ticker, html)
+            self.assertIn(spread, html)
+            self.assertIn(offer, html)
+            self.assertIn(market, html)
+            self.assertIn(ticker, table)
+            self.assertIn(spread, table)
+            self.assertIn(offer, table)
+            self.assertIn(market, table)
+        self.assertIn("Arcosa", html)
+        self.assertIn("Arcosa", table)
+        # Every weekly row is one public-table article: ticker + that spread + that market.
+        body = html.split("<tbody>", 1)[-1].split("</tbody>", 1)[0]
+        rows = re.findall(
+            r'<td class="tk">([A-Z]{1,5})</td>\s*'
+            r'<td class="co">[^<]+</td>\s*'
+            r'<td class="num">(\$[0-9.]+) / (\$[0-9.]+)</td>\s*'
+            r'<td class="num">(\+[0-9.]+%)</td>',
+            body,
+        )
+        self.assertGreaterEqual(len(rows), 17, f"weekly table too thin: {rows!r}")
+        for ticker, offer, market, spread in rows:
+            article = re.search(
+                rf'<span class="tk">{re.escape(ticker)}</span>.*?</article>',
+                table,
+                re.S,
+            )
+            self.assertIsNotNone(article, f"{ticker} is not on the public table")
+            block = article.group(0)
+            self.assertIn(spread, block, ticker)
+            self.assertIn(market, block, ticker)
+            offer_stem = offer.rstrip("0").rstrip(".")
+            self.assertTrue(
+                offer in block or offer_stem in block,
+                f"{ticker} offer {offer} missing from public row",
+            )
+
+    def test_does_not_invent_filings(self) -> None:
+        html = self._html()
+        table = self.TABLE.read_text(encoding="utf-8")
+        filings = re.findall(r'https://www\.sec\.gov/Archives/edgar/[^"\s]+', html)
+        for url in filings:
+            self.assertIn(url, table, f"invented filing not on the public table: {url}")
+
+    def test_free_cta_is_existing_weekly_sku_only(self) -> None:
+        html = self._html()
+        btns = re.findall(r'<a class="btn" href="([^"]+)"[^>]*>([^<]+)</a>', html)
+        self.assertTrue(btns, "/weekly/ has no end CTA")
+        self.assertTrue(all(href == WEEKLY for href, _ in btns), btns)
+        self.assertIn(WEEKLY, html)
+        gumroad = re.findall(r"https://wuytackcharlie\.gumroad\.com/l/[a-z0-9]+", html.lower())
+        self.assertTrue(all(u in {GUMROAD, WEEKLY} for u in gumroad), gumroad)
+        self.assertIn(WEEKLY, gumroad)
+        # Paid SKU may be named quietly after the free ask; it is not a .btn.
+        if GUMROAD in gumroad:
+            first_paid = html.lower().find(GUMROAD)
+            first_free = html.lower().find(WEEKLY)
+            self.assertGreater(first_paid, first_free)
+        cta_text = " ".join(label for _, label in btns).lower()
+        self.assertTrue("free" in cta_text or "sunday" in cta_text or "weekly" in cta_text)
+        self.assertNotIn("£5", " ".join(label for _, label in btns))
+
+    def test_zero_subscribers_stay_honest(self) -> None:
+        html = self._html()
+        lowered = html.lower()
+        self.assertIn("zero subscribers", lowered)
+        self.assertIn("£0", html)
+        self.assertIsNone(re.search(r"[1-9][\d,]*\s+subscribers?", lowered))
+        self.assertNotIn("join ", lowered)
+        self.assertNotIn("social proof", lowered)
+
+    def test_extraction_and_cost_sizing_only(self) -> None:
+        html = self._html().lower()
+        self.assertTrue("extract" in html or "filing" in html)
+        self.assertIn("not advice", html)
+        self.assertTrue("cost-sizing" in html or "cost sizing" in html or "after cost" in html)
+        for banned in (
+            "buy this deal",
+            "buy aca",
+            "buy arcosa",
+            "i trade this",
+            "i trade",
+            "p&amp;l-advice",
+            "p&l advice",
+            "guaranteed",
+            "haircut",
+            "companion product",
+            "brain",
+            "codabench",
+            "launchd",
+            "live order",
+        ):
+            self.assertNotIn(banned, html)
+        self.assertIsNone(re.search(r"\bict\b", html))
+        self.assertNotIn("<form", html)
+
+    def test_does_not_replace_paid_path_on_homepage_or_subscribe(self) -> None:
+        homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+        fold = re.search(r'<header class="opening">.*?</header>', homepage, re.S)
+        self.assertIsNotNone(fold)
+        self.assertIn(GUMROAD, fold.group(0))
+        self.assertNotIn("weekly/", fold.group(0).lower())
+        self.assertNotIn("mergerweekly", fold.group(0).lower())
+
+        subscribe = SUBSCRIBE.read_text(encoding="utf-8")
+        btn = re.search(r'<a class="btn" href="([^"]+)"', subscribe)
+        self.assertIsNotNone(btn)
+        self.assertEqual(btn.group(1), GUMROAD)
+        first_cta = subscribe.split('<div class="cta">', 1)[1].split("</div>", 1)[0]
+        self.assertNotIn("mergerweekly", first_cta)
+        self.assertNotIn("weekly/", first_cta)
+        self.assertIn(GUMROAD, subscribe.split('class="paybar"', 1)[1])
+
+    def _page_hrefs(self, html: str, name: str) -> list[str]:
+        hrefs = _hrefs(html, name)
+        return [
+            h
+            for h in hrefs
+            if re.search(rf"(?:^|/){name}/?$", h.rstrip("/"))
+            or f"/{name}/" in h
+        ]
+
+    def test_homepage_and_subscribe_link_quietly_to_weekly(self) -> None:
+        homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+        block = re.search(r'<section class="work" id="merger">.*?</section>', homepage, re.S)
+        self.assertIsNotNone(block)
+        hrefs = self._page_hrefs(block.group(0), "weekly")
+        self.assertTrue(hrefs, f"Merger Monitor section has no /weekly/ page link, found {_hrefs(block.group(0), 'weekly')!r}")
+
+        subscribe = SUBSCRIBE.read_text(encoding="utf-8")
+        hrefs = self._page_hrefs(subscribe, "weekly")
+        self.assertTrue(hrefs, f"/subscribe/ has no /weekly/ page link, found {_hrefs(subscribe, 'weekly')!r}")
+
+    def test_sitemap_lists_weekly(self) -> None:
+        sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
+        self.assertIn("https://charliewytk.github.io/weekly/", sitemap)
+
+    def test_share_card_is_not_the_homepage_or_a_paid_cta(self) -> None:
+        html = self._html()
+        title = re.search(r'<meta property="og:title" content="([^"]*)"', html)
+        desc = re.search(r'<meta property="og:description" content="([^"]*)"', html)
+        image = re.search(r'<meta property="og:image" content="([^"]*)"', html)
+        self.assertIsNotNone(title)
+        self.assertIsNotNone(desc)
+        self.assertIsNotNone(image)
+        self.assertNotEqual(title.group(1), UniqueShareCards.HOME_TITLE)
+        self.assertNotIn(UniqueShareCards.HOME_DESC, desc.group(1))
+        self.assertNotEqual(image.group(1), UniqueShareCards.HOME)
+        self.assertNotEqual(image.group(1), "https://charliewytk.github.io/media/og-example.png")
+        self.assertNotEqual(image.group(1), "https://charliewytk.github.io/media/og-subscribe.png")
+        card = title.group(1) + " " + desc.group(1)
+        self.assertIn("free", card.lower())
+        self.assertIn("weekly", card.lower())
+        self.assertTrue("filing" in desc.group(1).lower() or "not advice" in desc.group(1).lower())
+        self.assertIn("method", card.lower())
+        self.assertNotIn("£5", title.group(1))
+        twitter = re.search(r'<meta name="twitter:card" content="([^"]*)"', html)
+        self.assertIsNotNone(twitter)
+        self.assertEqual(twitter.group(1), "summary_large_image")
+        tw_desc = re.search(r'<meta name="twitter:description" content="([^"]*)"', html)
+        self.assertIsNotNone(tw_desc)
+        self.assertEqual(tw_desc.group(1), desc.group(1))
+        tw_img = re.search(r'<meta name="twitter:image" content="([^"]*)"', html)
+        self.assertIsNotNone(tw_img)
+        self.assertEqual(tw_img.group(1), image.group(1))
+        rel = image.group(1).removeprefix("https://charliewytk.github.io/")
+        path = ROOT / rel
+        self.assertTrue(path.is_file(), f"og image missing: {path}")
+        data = path.read_bytes()
+        self.assertTrue(data.startswith(b"\x89PNG\r\n\x1a\n"))
+        self.assertEqual(
+            (int.from_bytes(data[16:20], "big"), int.from_bytes(data[20:24], "big")),
+            (1200, 630),
+        )
+        self.assertGreater(path.stat().st_size, 8_000)
+        for other in (
+            ROOT / "media" / "og-example.png",
+            ROOT / "media" / "og-subscribe.png",
+            ROOT / "media" / "og-kill-log.png",
+            ROOT / "media" / "preview.png",
+        ):
+            self.assertNotEqual(path.read_bytes(), other.read_bytes())
+
+
 if __name__ == "__main__":
     unittest.main()
