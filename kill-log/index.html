@@ -53,7 +53,7 @@
   }
   .mast a { border: none; font-weight: 700; }
 
-  .shell { max-width: 720px; margin: 0 auto; padding: 48px 24px 88px; }
+  .shell { max-width: 720px; margin: 0 auto; padding: 48px 24px 110px; }
   .eyebrow {
     font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
     color: var(--faint); margin: 0 0 16px;
@@ -126,7 +126,31 @@
   }
   footer p { margin: 0 0 8px; }
 
-  .paybar { display: none; }
+  .paybar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 30;
+    padding: 8px 24px calc(8px + env(safe-area-inset-bottom, 0px));
+    background: var(--paper);
+    border-top: 1px solid var(--ink);
+  }
+  .paybar .hint {
+    font-size: 0.64rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--faint);
+  }
+  .paybar .btn {
+    padding: 11px 18px;
+    min-height: 44px;
+    font-size: 0.95rem;
+  }
 
   @media (max-width: 640px) {
     .mast { padding: 12px 14px; }
@@ -135,29 +159,14 @@
     .cta .btn { display: block; width: 100%; }
     .kills th:nth-child(2), .kills td:nth-child(2) { display: none; }
     .paybar {
-      display: flex;
       flex-direction: column;
       gap: 4px;
-      position: fixed;
-      left: 0; right: 0; bottom: 0;
-      z-index: 30;
       padding: 6px 12px calc(6px + env(safe-area-inset-bottom, 0px));
-      background: var(--paper);
-      border-top: 1px solid var(--ink);
-    }
-    .paybar .hint {
-      font-size: 0.64rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      text-align: center;
-      color: var(--faint);
     }
     .paybar .btn {
       display: block;
       width: 100%;
       padding: 11px 16px;
-      min-height: 44px;
-      font-size: 0.95rem;
     }
   }
 </style>
@@ -165,18 +174,18 @@
 <body>
 <header class="mast">
   <a class="who" href="../">Charlie Wuytack</a>
-  <a class="pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">£5/month</a>
+  <a class="pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Tonight's table · £5</a>
 </header>
 
 <main class="shell">
   <p class="eyebrow">Paper book &middot; not advice &middot; no live P&amp;L</p>
   <h1>110 paper hypotheses. They died to costs.</h1>
   <p class="lede">Around 110 market hypotheses were written down before they were tested. Nine produced a measurable anomaly. Those nine died to costs &mdash; the residual was the size of the spread, the fee, or the borrow. This is a paper book. No live P&amp;L is claimed. No live book is implied.</p>
+  <p class="note">Merger Monitor is the product that already exists: tonight's cash-deal table from SEC filings, emailed at 22:30. £5/month. Filings, not advice. No position is held in anything listed. Checkout is that listing. There is no second form.</p>
 
   <div class="cta">
-    <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Pay on Gumroad &mdash; £5/month</a>
+    <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table &mdash; £5/month</a>
   </div>
-  <p class="note">Merger Monitor is the product that already exists: contractual cash prices extracted from SEC filings, then the spread against the market. Filings, not advice. No position is held in anything listed. Checkout is that listing. There is no second form.</p>
 
   <section>
     <h2>Seven named deaths, from the paper log</h2>
@@ -233,7 +242,7 @@
   </section>
 
   <div class="cta">
-    <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Pay on Gumroad &mdash; £5/month</a>
+    <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table &mdash; £5/month</a>
   </div>
   <p class="note">£5/month for the evening the table is built. Cancel on Gumroad. 7-day refund. Zero subscribers. Take: £0.</p>
 
@@ -245,8 +254,8 @@
 </main>
 
 <div class="paybar">
-  <span class="hint">Paper book · not advice · £5/month</span>
-  <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Pay on Gumroad &mdash; £5/month</a>
+  <span class="hint">Tonight's table · £5/month · not advice</span>
+  <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table &mdash; £5/month</a>
 </div>
 </body>
 </html>

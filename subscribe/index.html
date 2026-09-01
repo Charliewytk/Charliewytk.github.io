@@ -80,7 +80,7 @@
   .mast .who { font-weight: 700; }
   .mast .pay { font-weight: 700; }
 
-  .shell { max-width: 720px; margin: 0 auto; padding: 48px 24px 88px; }
+  .shell { max-width: 720px; margin: 0 auto; padding: 48px 24px 110px; }
 
   .eyebrow {
     font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
@@ -225,7 +225,33 @@
   }
   footer p { margin: 0 0 8px; }
 
-  .paybar { display: none; }
+  .paybar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 30;
+    padding: 8px 24px calc(8px + env(safe-area-inset-bottom, 0px));
+    background: var(--paper);
+    border-top: 1px solid var(--ink);
+  }
+  .paybar .hint {
+    font-size: 0.64rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--faint);
+  }
+  .paybar .btn {
+    padding: 11px 18px;
+    min-height: 44px;
+    font-size: 0.95rem;
+  }
+  .faq { scroll-margin-bottom: 88px; }
+  .faq details[open] { scroll-margin-bottom: 88px; }
 
   @media (max-width: 640px) {
     .mast { padding: 12px 14px; }
@@ -239,29 +265,14 @@
     .sample th:nth-child(2), .sample td:nth-child(2) { display: none; }
     .cta .btn { display: block; width: 100%; }
     .paybar {
-      display: flex;
       flex-direction: column;
       gap: 4px;
-      position: fixed;
-      left: 0; right: 0; bottom: 0;
-      z-index: 30;
       padding: 6px 12px calc(6px + env(safe-area-inset-bottom, 0px));
-      background: var(--paper);
-      border-top: 1px solid var(--ink);
-    }
-    .paybar .hint {
-      font-size: 0.64rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      text-align: center;
-      color: var(--faint);
     }
     .paybar .btn {
       display: block;
       width: 100%;
       padding: 11px 16px;
-      min-height: 44px;
-      font-size: 0.95rem;
     }
   }
 </style>
@@ -269,7 +280,7 @@
 <body>
 <header class="mast">
   <a class="who" href="../">Charlie Wuytack</a>
-  <a class="pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">£5/month</a>
+  <a class="pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Tonight's table · £5</a>
 </header>
 
 <main class="shell">
@@ -282,18 +293,18 @@
     <div class="real"><b data-merger-ev-3pct>+1.38%</b><span>per deal — after a <span data-merger-break-rate>2.4%</span> break rate, a <span data-merger-break-loss>27%</span> median loss when one breaks, <span data-merger-cost>0.40%</span> round-trip cost and <span data-merger-carry>0.49%</span> of forgone T-bill carry</span></div>
   </div>
 
+  <div class="cta">
+    <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table &mdash; £5/month</a>
+  </div>
+  <p class="note">Tonight's table, emailed at 22:30. Same extractor as the week-late public list. You pay for the evening, not a secret. On the 19 August table, nine of seventeen cash-priced rows clear 1.59%. The rest are published anyway.</p>
+  <p class="note">Live book: <b data-merger-clears>12</b> of <b data-merger-priced>19</b> cash-priced rows currently clear <b data-merger-breakeven>1.62%</b>. Take: £0. Zero subscribers.</p>
+
   <div class="offer">
     <div><b>What it extracts</b><span>Contractual cash prices from SEC filings, then the spread against the live market.</span></div>
     <div><b>What you get</b><span>That table, emailed at 22:30 the evening it is built. Same rows as the week-late public list.</span></div>
     <div><b>What it is not</b><span>Advice, a position, an order, or a P&amp;L. Filings, not a tip sheet.</span></div>
     <div><b>What it costs</b><span>£5/month on Gumroad. Cancel there. 7-day refund. An email — nothing to install.</span></div>
   </div>
-
-  <div class="cta">
-    <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Subscribe on Gumroad &mdash; £5/month</a>
-  </div>
-  <p class="note">You pay for the evening the table is built, not a secret method. On the 19 August table, nine of seventeen cash-priced rows clear 1.59%. The rest are published anyway.</p>
-  <p class="note">Live book: <b data-merger-clears>12</b> of <b data-merger-priced>19</b> cash-priced rows currently clear <b data-merger-breakeven>1.62%</b>. Take: £0. Zero subscribers.</p>
 
   <section>
     <h2>In the daily mail, 22:30</h2>
@@ -398,7 +409,7 @@
   </section>
 
   <div class="cta">
-    <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Subscribe on Gumroad &mdash; £5/month</a>
+    <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table &mdash; £5/month</a>
   </div>
 
   <footer>
@@ -409,8 +420,8 @@
 </main>
 
 <div class="paybar">
-  <span class="hint">Daily 22:30 · not advice · £0</span>
-  <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Subscribe on Gumroad &mdash; £5/month</a>
+  <span class="hint">Tonight's table · £5/month · not advice</span>
+  <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table &mdash; £5/month</a>
 </div>
 <script src="/assets/js/merger-stats.js" defer></script>
 <script>
