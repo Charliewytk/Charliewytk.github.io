@@ -130,7 +130,7 @@ class PublishedThreePercentCase(unittest.TestCase):
 
 
 class SizerPage(unittest.TestCase):
-    """Public tool. No paywall. Quiet SKU at the bottom only."""
+    """Public tool. No paywall. One Gumroad CTA after the arithmetic."""
 
     def _html(self) -> str:
         self.assertTrue(SIZER.is_file(), "/sizer/ page is missing")
@@ -232,6 +232,30 @@ class SizerPage(unittest.TestCase):
         self.assertTrue(all(u in {GUMROAD, WEEKLY} for u in gumroad), gumroad)
         self.assertIn(GUMROAD, gumroad)
         self.assertNotIn("new sku", html.lower())
+
+    def test_pay_path_cta_contains_gumroad_url(self) -> None:
+        """Sizer HTML names the existing SKU. One CTA, subscribe/kill-log voice."""
+        html = self._html()
+        self.assertIn(GUMROAD, html)
+        btns = re.findall(r'<a class="btn" href="([^"]+)"[^>]*>([^<]+)</a>', html)
+        self.assertTrue(btns, "/sizer/ has no pay-path CTA")
+        self.assertEqual(btns[0][0], GUMROAD)
+        self.assertIn("Get tonight's table", btns[0][1])
+        self.assertIn("£5", btns[0][1])
+        self.assertEqual(len(btns), 1)
+        self.assertNotIn("weekly", btns[0][0])
+        self.assertNotIn("weekly", btns[0][1].lower())
+        hrefs_wk = _hrefs(html, "weekly")
+        self.assertTrue(
+            any(
+                h.rstrip("/").endswith("weekly") or "/weekly/" in h or h.endswith("weekly/")
+                for h in hrefs_wk
+            ),
+            f"/sizer/ missing quieter /weekly/, found {hrefs_wk!r}",
+        )
+        self.assertRegex(html.lower(), r"week[-\s]?late")
+        self.assertNotIn("share/", html.lower())
+        self.assertNotIn('class="paybar"', html)
 
     def test_homepage_index_contains_sizer_href(self) -> None:
         """Homepage notes point at the public calculator. Not a new hero."""
