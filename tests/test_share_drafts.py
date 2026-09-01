@@ -20,6 +20,8 @@ SUBSCRIBE = ROOT / "subscribe" / "index.html"
 
 EXAMPLE_URL = "https://charliewytk.github.io/example/"
 WEEKLY_URL = "https://charliewytk.github.io/weekly/"
+SIZER_URL = "https://charliewytk.github.io/sizer/"
+GUMROAD = "https://wuytackcharlie.gumroad.com/l/mergermonitor"
 
 # Advice words defined for these drafts. Word-boundary only — "sold" and
 # "resale" stay allowed; "buy ACA" / "alpha" do not.
@@ -126,6 +128,17 @@ class ShareDraftsPage(unittest.TestCase):
             text = _draft_text(html, key)
             self.assertIn(EXAMPLE_URL, text, key)
             self.assertIn(WEEKLY_URL, text, key)
+            self.assertIn(SIZER_URL, text, key)
+            self.assertIn(GUMROAD, text, key)
+
+    def test_share_page_html_names_sizer_and_existing_sku(self) -> None:
+        html = _page()
+        self.assertIn("sizer/", html)
+        self.assertIn(GUMROAD, html)
+        self.assertIn(SIZER_URL, html)
+        gumroad = re.findall(r"https://wuytackcharlie\.gumroad\.com/l/[a-z0-9]+", html.lower())
+        self.assertTrue(gumroad)
+        self.assertTrue(all(u == GUMROAD for u in gumroad), gumroad)
 
     def test_drafts_do_not_contain_defined_advice_words(self) -> None:
         html = _page()
@@ -161,8 +174,7 @@ class ShareDraftsPage(unittest.TestCase):
         self.assertIsNone(re.search(r"\bict\b", lowered))
         self.assertIsNone(re.search(r"[1-9][\d,]*\s+subscribers?", lowered))
         self.assertNotIn("join ", lowered)
-        # Not another page of CTAs.
-        self.assertNotIn("gumroad.com", lowered)
+        # Clipboard may name the existing SKU. It is still not another page of CTAs.
         self.assertNotIn('class="paybar"', html)
         self.assertNotIn('class="btn"', html)
         self.assertNotIn("<form", lowered)
