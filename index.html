@@ -71,7 +71,7 @@
   .pin-hero {
     position: sticky; top: 0; height: 100vh; overflow: hidden;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center; padding: 0 32px;
+    text-align: center; padding: 72px 32px 32px;
   }
   .stage { position: relative; width: 100%; }
   .opening h1 { margin: 0; }
@@ -79,7 +79,7 @@
     display: block;
     font-family: "Anton", "Arial Narrow", sans-serif;
     font-weight: 400;
-    font-size: clamp(4.2rem, 16vw, 12.5rem);
+    font-size: clamp(2.6rem, 11vw, 7.2rem);
     line-height: 0.9;
     letter-spacing: 0.005em;
     color: #22201d;
@@ -89,9 +89,42 @@
     font-family: "Lora", Georgia, serif;
     font-style: italic;
     font-weight: 500;
-    font-size: clamp(2rem, 6.2vw, 4.6rem);
-    margin-top: -0.52em;
+    font-size: clamp(1.35rem, 4.2vw, 2.8rem);
+    margin-top: -0.42em;
     color: #22201d;
+  }
+
+  /* first fold: cost-sizing then pay — always visible, not the scroll-gated .under */
+  .fold-sell {
+    margin: 26px 0 0;
+    max-width: 38rem;
+  }
+  .fold-sell .fold-nums {
+    margin: 0 0 16px;
+    font-size: 1.02rem;
+    line-height: 1.45;
+    color: var(--ink2);
+    text-wrap: pretty;
+  }
+  .fold-sell .go.pay {
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.95rem;
+    background: #22201d;
+    color: #f7f7ef;
+    border: 1px solid #22201d;
+    padding: 11px 18px;
+  }
+  .fold-sell .go.pay:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #f7f7ef;
+  }
+  .fold-sell .fold-ledger {
+    display: block;
+    margin: 12px 0 0;
+    font-size: 0.82rem;
+    color: var(--faint);
   }
 
   .scroll-hint {
@@ -333,6 +366,11 @@
   .pick:hover { background: #22201d; color: #f7f7ef; transform: translateY(-2px); }
   .pick:hover .track { color: rgba(247,247,239,0.7); }
   .pick.missing { display: none; }
+  .gate-pay {
+    margin: 0;
+    font-size: 0.78rem;
+  }
+  .gate-pay a { border-bottom-width: 1px; }
 
 
 
@@ -348,16 +386,17 @@
   /* ---------- the gate arrives from nothing ---------- */
   @keyframes gate-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
   @keyframes record-in { from { opacity: 0; transform: translateY(-42px) scale(0.9); } to { opacity: 1; transform: translateY(-16px) scale(0.96); } }
-  .gate-mast, .deck, .needle, .picks { opacity: 0; }
+  .gate-mast, .deck, .needle, .picks, .gate-pay { opacity: 0; }
   .gate-mast { animation: gate-in 0.8s ease 0.55s both; }
   .deck .vinyl { animation: record-in 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0.9s both; }
   .deck { animation: gate-in 0.01s linear 0.9s both; }
   .needle { animation: gate-in 0.7s ease 1.85s both; }
   .picks { animation: gate-in 0.7s ease 2.05s both; }
+  .gate-pay { animation: gate-in 0.7s ease 2.2s both; }
   /* once a record is cueing, the settle transition takes over from the intro */
   .deck.cueing .vinyl { animation: none; }
   @media (prefers-reduced-motion: reduce) {
-    .gate-mast, .deck, .deck .vinyl, .needle, .picks { animation: none; opacity: 1; }
+    .gate-mast, .deck, .deck .vinyl, .needle, .picks, .gate-pay { animation: none; opacity: 1; }
   }
 
 
@@ -693,6 +732,10 @@
     .frame { margin-bottom: 7vh; width: 100%; }
     .say, .mono-stat, .todo, .maths { margin-bottom: 7vh; }
     .masthead { padding: 18px 22px; font-size: 0.7rem; }
+    .pin-hero { padding: 64px 18px 24px; }
+    .fold-sell { margin-top: 18px; }
+    .fold-sell .fold-nums { font-size: 0.92rem; }
+    .fold-sell .go.pay { display: inline-block; }
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
@@ -746,6 +789,7 @@
         <span class="mood">Sunday</span><span class="track">Bossa nova</span>
       </button>
     </div>
+    <p class="gate-pay"><a href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table — £5/month</a></p>
   </div>
 </div>
 <span class="now-playing" id="nowPlaying" aria-live="polite"></span>
@@ -797,6 +841,11 @@
     <div class="stage">
       <p class="scroll-hint" id="scrollHint">Scroll</p>
       <h1 class="veil"><span class="slab">I'D RATHER BUILD</span><span class="ital">than consume.</span></h1>
+    </div>
+    <div class="fold-sell">
+      <p class="fold-nums">A 3% spread is not <span data-merger-annualised-3pct>24.6%</span> a year. After costs it is <span data-merger-ev-3pct>+1.38%</span> a deal. Break-even is <span data-merger-breakeven>1.59%</span>.</p>
+      <a class="go pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table — £5/month</a>
+      <p class="fold-ledger">Zero subscribers. Take: £0. Filings, not advice.</p>
     </div>
     <p class="under">Games, macOS tools, flight search, prediction markets and trading research. Most of it works right here on this page.</p>
   </div>
