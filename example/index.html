@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Worked example — ACA, method not returns</title>
+<meta name="description" content="ACA +3.44% on the week-late table, used as the site’s 3% case. Method first: 24.6% annualises; after the break rate and costs it is +1.38%, the net already on this site. Filings, not advice. £5/month.">
+<link rel="canonical" href="https://charliewytk.github.io/example/">
+<link rel="icon" href="../media/favicon.svg" type="image/svg+xml">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://charliewytk.github.io/example/">
+<meta property="og:title" content="Worked example — ACA, method not returns">
+<meta property="og:description" content="ACA +3.44% on the week-late table, used as the site’s 3% case. Method first: 24.6% annualises; after the break rate and costs it is +1.38%, the net already on this site. Filings, not advice. £5/month.">
+<meta property="og:image" content="https://charliewytk.github.io/media/og-example.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Worked example: ACA is the 3% case. 24.6% annualises; after costs it is +1.38%. Filings, not advice.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Worked example — ACA, method not returns">
+<meta name="twitter:description" content="ACA +3.44% on the week-late table, used as the site’s 3% case. Method first: 24.6% annualises; after the break rate and costs it is +1.38%, the net already on this site. Filings, not advice. £5/month.">
+<meta name="twitter:image" content="https://charliewytk.github.io/media/og-example.png">
+<meta name="twitter:image:alt" content="Worked example: ACA is the 3% case. 24.6% annualises; after costs it is +1.38%. Filings, not advice.">
+<style>
+  :root {
+    --ink: #22201d;
+    --ink2: #3b3833;
+    --muted: #5f5b52;
+    --faint: #6f6a60;
+    --rule: #c9c6b4;
+    --paper: #f7f7ef;
+    --accent: #a9331f;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16.5px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); padding-bottom: 1px; }
+  a:hover { color: var(--accent); border-color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+  .mast {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 18px 28px;
+    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+    border-bottom: 1px solid var(--ink);
+  }
+  .mast a { border: none; font-weight: 700; }
+
+  .shell { max-width: 720px; margin: 0 auto; padding: 48px 24px 88px; }
+  .eyebrow {
+    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--faint); margin: 0 0 16px;
+  }
+  h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 600;
+    font-size: clamp(1.85rem, 5.4vw, 2.55rem);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    margin: 0 0 14px;
+  }
+  h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 600;
+    font-size: 1.28rem;
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+  .lede {
+    font-size: 1.05rem;
+    line-height: 1.5;
+    color: var(--ink2);
+    margin: 0 0 22px;
+    max-width: 40rem;
+  }
+  p { margin: 0 0 16px; text-wrap: pretty; }
+  .note { color: var(--muted); font-size: 0.9rem; }
+  section { margin-top: 44px; padding-top: 24px; border-top: 1px solid var(--rule); }
+
+  .facts { width: 100%; border-collapse: collapse; font-size: 0.92rem; margin: 0 0 18px; }
+  .facts th {
+    text-align: left;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--faint);
+    font-weight: 600;
+    padding: 8px 10px 8px 0;
+    border-bottom: 1px solid var(--ink);
+  }
+  .facts td {
+    padding: 11px 10px 11px 0;
+    border-bottom: 1px solid rgba(34,32,29,0.14);
+    vertical-align: top;
+  }
+  .facts .k { color: var(--muted); width: 42%; }
+  .facts .num { font-family: ui-monospace, Menlo, monospace; font-variant-numeric: tabular-nums; }
+
+  .steps { margin: 0 0 18px; padding-left: 22px; }
+  .steps li { margin-bottom: 12px; text-wrap: pretty; }
+
+  .twoup { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin: 0 0 22px; }
+  .twoup div { padding: 18px 20px; background: rgba(34,32,29,0.04); }
+  .twoup b {
+    display: block;
+    font-family: "Arial Narrow", Arial, sans-serif;
+    font-weight: 700;
+    font-size: 1.85rem;
+    letter-spacing: 0.01em;
+    margin-bottom: 6px;
+  }
+  .twoup .bad b { color: rgba(34,32,29,0.42); }
+  .twoup .real b { color: var(--accent); }
+  .twoup span { font-size: 0.8rem; color: var(--muted); line-height: 1.4; display: block; }
+
+  .quote {
+    margin: 0 0 8px;
+    padding: 0 0 0 12px;
+    border-left: 2px solid var(--rule);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 0.95rem;
+    color: var(--ink2);
+  }
+  .cite { font-size: 0.8rem; color: var(--faint); margin: 0 0 22px; }
+
+  .cta { margin: 0 0 10px; }
+  .btn {
+    display: inline-block;
+    background: var(--ink);
+    color: var(--paper);
+    border: 1px solid var(--ink);
+    padding: 14px 22px;
+    font-weight: 600;
+    font-size: 1.02rem;
+    min-height: 48px;
+    line-height: 1.2;
+    text-align: center;
+  }
+  .btn:hover { background: var(--accent); border-color: var(--accent); color: var(--paper); }
+
+  footer {
+    margin-top: 56px;
+    padding-top: 22px;
+    border-top: 1px solid var(--rule);
+    font-size: 0.86rem;
+    color: var(--muted);
+  }
+  footer p { margin: 0 0 8px; }
+
+  @media (max-width: 640px) {
+    .mast { padding: 12px 14px; }
+    .shell { padding: 24px 16px 72px; }
+    h1 { font-size: 1.62rem; }
+    .twoup { grid-template-columns: 1fr; }
+    .cta .btn { display: block; width: 100%; }
+  }
+</style>
+</head>
+<body>
+<header class="mast">
+  <a class="who" href="../">Charlie Wuytack</a>
+  <a href="../merger-monitor/">Week-late table</a>
+</header>
+
+<main class="shell">
+  <p class="eyebrow">Worked example &middot; extraction + cost-sizing &middot; not advice</p>
+  <h1>A named cash spread annualises. After the break rate and costs, it is the net already on this site.</h1>
+  <p class="lede">Method first, not a return. On the 19 August 2026 week-late table, ACA &mdash; Arcosa, Inc. &mdash; is the 3% case in the wild. The extractor read a contractual $150.00 cash price. The market that day was $145.01. The spread is +3.44%. That is a filing and a price. It is not a recommendation.</p>
+
+  <table class="facts">
+    <thead>
+      <tr><th>What was read</th><th>From the 19 August table</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="k">Deal</td><td>ACA &middot; Arcosa, Inc.</td></tr>
+      <tr><td class="k">Contractual cash</td><td class="num">$150.00</td></tr>
+      <tr><td class="k">Market, at build</td><td class="num">$145.01</td></tr>
+      <tr><td class="k">Spread</td><td class="num">+3.44%</td></tr>
+      <tr><td class="k">Filing</td><td>DEFM14A, filed 2026-08-03</td></tr>
+    </tbody>
+  </table>
+  <p class="note">Figures are copied from the public week-late table already on this site. Spreads move; these were computed when that page was built. No new ticker is introduced here.</p>
+
+  <section>
+    <h2>The method, in order</h2>
+    <ol class="steps">
+      <li><b>Extract.</b> Read the cash figure from the definitive proxy. The sentence is below. If the filing does not state one cash number, the row says so and stops.</li>
+      <li><b>Price.</b> Divide offer by the market at build time. ACA is +3.44% on that dated table.</li>
+      <li><b>Annualise a 3% spread.</b> Held to the median 49-day close, 3% looks like 24.6% a year. That is the number this is usually sold on. ACA is that 3% case in the wild; the published arithmetic stays the 3% case already used on <a href="../subscribe/">/subscribe/</a> and the homepage. A new expected value is not invented for +3.44%.</li>
+      <li><b>Charge the stated break rate and costs.</b> A 2.4% break rate, a 27% median loss when one breaks, 0.40% round-trip cost, and 0.49% of forgone T-bill carry.</li>
+      <li><b>The net already on this site.</b> After that pass the same 3% spread is <b>+1.38%</b> a deal. A 1% spread is <b>&minus;0.57%</b>. Break-even is <b>1.59%</b>.</li>
+    </ol>
+
+    <div class="twoup">
+      <div class="bad"><b>24.6%</b><span>a year — a 3% spread over 49 days, annualised. Marketing.</span></div>
+      <div class="real"><b>+1.38%</b><span>per deal — after the stated break rate, break loss, round-trip cost and carry. The net already published.</span></div>
+    </div>
+    <p>CRNX on the same 19 August table is +0.29%. Price it the same way and it dies after costs. Both rows are published, because a wide spread and a thin one look identical until you do this pass.</p>
+  </section>
+
+  <section>
+    <h2>The sentence the cash figure came from</h2>
+    <blockquote class="quote">&hellip;stock, par value $0.01 per share, of the Company (the “Company common stock”) will receive $150.00 in cash, without interest, less&hellip;</blockquote>
+    <p class="cite">ACA &middot; DEFM14A, filed 2026-08-03 — <a href="https://www.sec.gov/Archives/edgar/data/1739445/000114036126030551/0001140361-26-030551-index.htm" rel="noopener">read the filing</a></p>
+    <p>That quotation is already on the <a href="../merger-monitor/">week-late public table</a>. The accession is not new.</p>
+  </section>
+
+  <section>
+    <h2>What this is not</h2>
+    <p>Not advice, not a recommendation, not a tip sheet, and not an order. Extraction and cost-sizing only. No position is held in ACA or anything else listed. Nothing here is a P&amp;L. The page exists so a stranger can share the method without paying.</p>
+  </section>
+
+  <div class="cta">
+    <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Tonight's table on Gumroad — £5/month</a>
+  </div>
+  <p class="note">Same SKU as the rest of the site. The evening the table is built, not a secret. Cancel on Gumroad. 7-day refund. Zero subscribers. Take: £0.</p>
+
+  <footer>
+    <p>Source row: ACA on the 19 August 2026 week-late table. Method numbers are the 3% case already used on this site.</p>
+    <p><a href="../subscribe/">The offer</a> · <a href="../merger-monitor/">week-late table</a> · <a href="../kill-log/">paper kill log</a> · <a href="../">charliewytk.github.io</a></p>
+  </footer>
+</main>
+</body>
+</html>
