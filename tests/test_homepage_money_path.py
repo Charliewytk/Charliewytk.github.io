@@ -569,6 +569,7 @@ class UniqueShareCards(unittest.TestCase):
         pages = (
             SUBSCRIBE.read_text(encoding="utf-8"),
             (ROOT / "kill-log" / "index.html").read_text(encoding="utf-8"),
+            (ROOT / "example" / "index.html").read_text(encoding="utf-8"),
         )
         for html in pages:
             head = html.split("</head>", 1)[0].lower()
@@ -828,6 +829,7 @@ class WorkedExamplePage(unittest.TestCase):
         self.assertIn("Arcosa", table)
         self.assertIn("+3.44%", table)
         self.assertIn("$150", table)
+        self.assertIn("$145.01", table)
         self.assertIn("19 August", html)
         self.assertTrue("week" in html.lower() and "late" in html.lower())
 
@@ -862,10 +864,9 @@ class WorkedExamplePage(unittest.TestCase):
         self.assertIn("+1.38%", hero)
         self.assertIn("1.59%", hero)
         self.assertTrue("−0.57%" in hero or "&minus;0.57%" in hero or "-0.57%" in hero)
-        # Same fallbacks as /subscribe/ and the homepage fold.
-        for attr in ("annualised-3pct", "ev-3pct", "breakeven", "break-rate", "cost", "carry"):
-            self.assertIn(f"data-merger-{attr}", html)
-        self.assertIn("merger-stats.js", html)
+        # Dated walkthrough: do not let feed_summary overwrite 24.6 / +1.38 / 1.59.
+        self.assertNotIn("merger-stats.js", html)
+        self.assertNotIn("data-merger-", html)
 
     def test_states_break_rate_and_costs(self) -> None:
         html = self._html().lower()
@@ -938,6 +939,20 @@ class WorkedExamplePage(unittest.TestCase):
         self.assertNotIn("mergerweekly", first_cta)
         self.assertIn(GUMROAD, subscribe.split('class="paybar"', 1)[1])
 
+    def test_homepage_links_quietly_from_the_worked_block(self) -> None:
+        homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+        block = re.search(r'<section class="work" id="merger">.*?</section>', homepage, re.S)
+        self.assertIsNotNone(block)
+        hrefs = _hrefs(block.group(0), "example")
+        self.assertTrue(
+            any(h.rstrip("/").endswith("example") or "/example/" in h or h.endswith("example/")
+                for h in hrefs),
+            f"Merger Monitor section has no /example/ link, found {hrefs!r}",
+        )
+        fold = re.search(r'<header class="opening">.*?</header>', homepage, re.S)
+        self.assertIsNotNone(fold)
+        self.assertNotIn("example/", fold.group(0).lower())
+
     def test_sitemap_lists_example(self) -> None:
         sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
         self.assertIn("https://charliewytk.github.io/example/", sitemap)
@@ -960,9 +975,13 @@ class WorkedExamplePage(unittest.TestCase):
         lowered = desc.group(1).lower()
         self.assertTrue("filing" in lowered or "not advice" in lowered)
         self.assertIn("method", (title.group(1) + " " + desc.group(1)).lower())
+        self.assertIn("+3.44%", desc.group(1))
         twitter = re.search(r'<meta name="twitter:card" content="([^"]*)"', html)
         self.assertIsNotNone(twitter)
         self.assertEqual(twitter.group(1), "summary_large_image")
+        tw_desc = re.search(r'<meta name="twitter:description" content="([^"]*)"', html)
+        self.assertIsNotNone(tw_desc)
+        self.assertEqual(tw_desc.group(1), desc.group(1))
         tw_img = re.search(r'<meta name="twitter:image" content="([^"]*)"', html)
         self.assertIsNotNone(tw_img)
         self.assertEqual(tw_img.group(1), image.group(1))
