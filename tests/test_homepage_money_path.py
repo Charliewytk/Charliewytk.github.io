@@ -721,6 +721,8 @@ class HomepageFirstFoldSell(unittest.TestCase):
         self.assertIn("24.6%", fold)
         self.assertIn("+1.38%", fold)
         self.assertIn("1.59%", fold)
+        for attr in ("annualised-3pct", "ev-3pct", "breakeven"):
+            self.assertIn(f"data-merger-{attr}", fold)
 
     def test_first_fold_cta_is_get_tonights_table_on_gumroad(self) -> None:
         fold = self._fold()
@@ -761,15 +763,22 @@ class HomepageFirstFoldSell(unittest.TestCase):
     def test_first_fold_sell_is_in_the_pin_hero_not_scroll_gated(self) -> None:
         """Pay has to sit in the sticky first viewport, not the scroll-revealed .under."""
         fold = self._fold()
-        pin = re.search(r'<div class="pin-hero">.*', fold, re.S)
-        self.assertIsNotNone(pin, "opening has no .pin-hero")
-        pin_html = pin.group(0)
+        pin = re.search(r'<div class="pin-hero">(.*)</div>\s*</header>', fold, re.S)
+        self.assertIsNotNone(pin, "opening has no closed .pin-hero")
+        pin_html = pin.group(1)
+        self.assertIn('class="fold-sell"', pin_html)
         self.assertIn(GUMROAD, pin_html)
         self.assertIn("24.6%", pin_html)
-        under = re.search(r'<p class="under"[^>]*>.*?</p>', fold, re.S)
+        veil = re.search(r'<h1 class="veil">.*?</h1>', pin_html, re.S)
+        self.assertIsNotNone(veil)
+        self.assertNotIn(GUMROAD, veil.group(0))
+        self.assertNotIn("24.6%", veil.group(0))
+        self.assertGreater(pin_html.find('class="fold-sell"'), pin_html.find("</h1>"))
+        under = re.search(r'<p class="under"[^>]*>.*?</p>', pin_html, re.S)
         if under:
             self.assertNotIn(GUMROAD, under.group(0))
             self.assertNotIn("Get tonight", under.group(0))
+        self.assertNotIn("scroll-hint", fold)
         css = HOMEPAGE.split("</style>", 1)[0]
         self.assertIn(".fold-sell", css)
         self.assertIsNone(re.search(r"\.fold-sell\s*\{[^}]*display:\s*none", css))
@@ -778,9 +787,11 @@ class HomepageFirstFoldSell(unittest.TestCase):
     def test_entry_gate_also_names_tonights_table(self) -> None:
         """First-time visitors see the vinyl gate, not the opening. Same SKU, same CTA."""
         gate = HOMEPAGE.split('<div class="gate"', 1)[1].split('<div class="masthead">', 1)[0]
-        self.assertIn(GUMROAD, gate)
-        self.assertIn("Get tonight's table", gate)
-        self.assertIn("£5", gate)
+        mast = re.search(r'<div class="gate-mast">.*?</div>', gate, re.S)
+        self.assertIsNotNone(mast, "vinyl gate has no .gate-mast")
+        self.assertIn(GUMROAD, mast.group(0))
+        self.assertIn("Get tonight's table", mast.group(0))
+        self.assertIn("£5", mast.group(0))
         self.assertNotIn("mergerweekly", gate.lower())
         self.assertNotIn("<form", gate.lower())
 

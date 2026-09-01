@@ -107,6 +107,7 @@
     text-wrap: pretty;
   }
   .fold-sell .go.pay {
+    display: inline-block;
     font-family: inherit;
     font-weight: 600;
     font-size: 0.95rem;
@@ -127,20 +128,8 @@
     color: var(--faint);
   }
 
-  .scroll-hint {
-    position: absolute; left: 50%; transform: translateX(-50%);
-    bottom: -12vh; margin: 0;
-    font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--faint); pointer-events: none;
-    opacity: var(--hint-op, 1); transition: opacity 0.5s ease;
-  }
-  .scroll-hint::after {
-    content: ""; display: block; width: 1px; height: 26px; margin: 10px auto 0;
-    background: linear-gradient(#8a8478, transparent);
-    animation: hint-drop 1.9s ease-in-out infinite;
-  }
-  @keyframes hint-drop { 0%,100% { opacity: 0.3; transform: translateY(-4px); } 50% { opacity: 1; transform: translateY(2px); } }
-  @media (prefers-reduced-motion: reduce) { .scroll-hint::after { animation: none; } }
+  /* leftover "Scroll" hint used to sit in empty space under the slab.
+     The fold sell now occupies that band — keep the hint out of the CTA. */
 
   .veil { clip-path: inset(0 calc(100% - var(--reveal, 0%)) 0 0); }
 
@@ -339,10 +328,11 @@
   }
   .gate.open { transform: translateY(-101%); }
   .gate-mast {
-    width: 100%; display: flex; justify-content: space-between;
+    width: 100%; display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
     padding: 18px 34px; border-bottom: 1px solid #22201d;
     font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700;
   }
+  .gate-mast a { border: none; font-weight: 700; }
   .gate-mid { display: flex; flex-direction: column; align-items: center; gap: 30px; }
   .vinyl { width: clamp(240px, 32vw, 360px); height: auto; display: block; }
   .spinning .vinyl, .mini.playing .vinyl { animation: spin 1.8s linear infinite; }
@@ -366,11 +356,6 @@
   .pick:hover { background: #22201d; color: #f7f7ef; transform: translateY(-2px); }
   .pick:hover .track { color: rgba(247,247,239,0.7); }
   .pick.missing { display: none; }
-  .gate-pay {
-    margin: 0;
-    font-size: 0.78rem;
-  }
-  .gate-pay a { border-bottom-width: 1px; }
 
 
 
@@ -386,17 +371,16 @@
   /* ---------- the gate arrives from nothing ---------- */
   @keyframes gate-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
   @keyframes record-in { from { opacity: 0; transform: translateY(-42px) scale(0.9); } to { opacity: 1; transform: translateY(-16px) scale(0.96); } }
-  .gate-mast, .deck, .needle, .picks, .gate-pay { opacity: 0; }
+  .gate-mast, .deck, .needle, .picks { opacity: 0; }
   .gate-mast { animation: gate-in 0.8s ease 0.55s both; }
   .deck .vinyl { animation: record-in 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0.9s both; }
   .deck { animation: gate-in 0.01s linear 0.9s both; }
   .needle { animation: gate-in 0.7s ease 1.85s both; }
   .picks { animation: gate-in 0.7s ease 2.05s both; }
-  .gate-pay { animation: gate-in 0.7s ease 2.2s both; }
   /* once a record is cueing, the settle transition takes over from the intro */
   .deck.cueing .vinyl { animation: none; }
   @media (prefers-reduced-motion: reduce) {
-    .gate-mast, .deck, .deck .vinyl, .needle, .picks, .gate-pay { animation: none; opacity: 1; }
+    .gate-mast, .deck, .deck .vinyl, .needle, .picks { animation: none; opacity: 1; }
   }
 
 
@@ -735,7 +719,8 @@
     .pin-hero { padding: 64px 18px 24px; }
     .fold-sell { margin-top: 18px; }
     .fold-sell .fold-nums { font-size: 0.92rem; }
-    .fold-sell .go.pay { display: inline-block; }
+    .gate-mast { padding: 12px 14px; font-size: 0.62rem; letter-spacing: 0.08em; }
+    .gate-mast .gate-pay { letter-spacing: 0.06em; text-align: right; }
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
@@ -752,7 +737,7 @@
 
 
 <div class="gate" id="gate">
-  <div class="gate-mast"><span>CHARLIE WUYTACK</span><span>PORTFOLIO — 2026</span></div>
+  <div class="gate-mast"><span>CHARLIE WUYTACK</span><a class="gate-pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table — £5/month</a></div>
   <div class="gate-mid">
     <div class="deck" id="deck">
       <span class="platter" aria-hidden="true"></span>
@@ -789,7 +774,6 @@
         <span class="mood">Sunday</span><span class="track">Bossa nova</span>
       </button>
     </div>
-    <p class="gate-pay"><a href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table — £5/month</a></p>
   </div>
 </div>
 <span class="now-playing" id="nowPlaying" aria-live="polite"></span>
@@ -839,7 +823,6 @@
 <header class="opening">
   <div class="pin-hero">
     <div class="stage">
-      <p class="scroll-hint" id="scrollHint">Scroll</p>
       <h1 class="veil"><span class="slab">I'D RATHER BUILD</span><span class="ital">than consume.</span></h1>
     </div>
     <div class="fold-sell">
