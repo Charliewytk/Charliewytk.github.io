@@ -646,8 +646,9 @@
   @media (max-width: 640px) {
     a.mm-preview { padding: 18px 16px 14px; }
     a.mm-preview th:nth-child(2), a.mm-preview td:nth-child(2) { display: none; }
-    .masthead .mast-end { gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+    .masthead .mast-end { gap: 10px; flex-wrap: nowrap; justify-content: flex-end; }
     .masthead a.pay { letter-spacing: 0.08em; padding: 4px 8px; }
+    .masthead .mail-mast { display: none; }
   }
 
   /* measured figures — one per programme */
@@ -730,6 +731,8 @@
     .frame { margin-bottom: 7vh; width: 100%; }
     .say, .mono-stat, .todo, .maths { margin-bottom: 7vh; }
     .masthead { padding: 18px 22px; font-size: 0.7rem; }
+    .masthead .mast-end { gap: 12px; }
+    .masthead .mail-mast { display: none; }
     .pin-hero { padding: 64px 18px 24px; }
     .fold-sell { margin-top: 18px; }
     .fold-sell .fold-nums { font-size: 0.92rem; }
@@ -831,7 +834,7 @@
   <span class="mast-end">
     <a class="mm" href="merger-monitor/">Merger Monitor</a>
     <a class="pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener" aria-label="Get tonight's table — £5/month">£5/month</a>
-    <a href="mailto:charlie@wuytack.net">Get in touch</a>
+    <a class="mail-mast" href="mailto:charlie@wuytack.net">Get in touch</a>
   </span>
 </div>
 
