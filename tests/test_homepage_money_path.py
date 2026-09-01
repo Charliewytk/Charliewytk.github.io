@@ -604,5 +604,104 @@ class UniqueShareCards(unittest.TestCase):
         self.assertNotEqual(paths[1].read_bytes(), (ROOT / "media" / "preview.png").read_bytes())
 
 
+class ChessExchangeCopy(unittest.TestCase):
+    """Public copy must match chess-exchange main: engine WDL when a FEN exists."""
+
+    def _chess(self) -> str:
+        block = re.search(r'<section class="work" id="chess">.*?</section>', HOMEPAGE, re.S)
+        self.assertIsNotNone(block, "homepage has no Chess Exchange section")
+        return block.group(0)
+
+    def test_engine_eval_is_stated_not_elo_only(self) -> None:
+        block = self._chess()
+        lowered = block.lower()
+        self.assertNotIn("no engine evaluation anywhere yet", lowered)
+        self.assertNotIn("draw pricing is an elo prior", lowered)
+        self.assertIn("engine", lowered)
+        self.assertTrue("wdl" in lowered or "alpha-beta" in lowered)
+        self.assertIn("fen", lowered)
+        self.assertIn("elo", lowered)
+        self.assertIn("fallback", lowered)
+
+    def test_engine_item_is_done_without_stockfish_or_a_wallet(self) -> None:
+        block = self._chess()
+        lowered = block.lower()
+        done = re.findall(r'<li class="done"><span>([^<]+)</span>', block)
+        self.assertTrue(
+            any("engine" in item.lower() for item in done),
+            f"engine eval should be a done item, got {done!r}",
+        )
+        self.assertNotIn("stockfish", lowered)
+        self.assertIn("play money", lowered)
+        self.assertNotIn("paywall", lowered)
+        self.assertNotIn("wallet", lowered)
+        self.assertNotIn("real money", lowered)
+
+
+class FirstPaidSubPath(unittest.TestCase):
+    """After PR #11 share cards: leftover is a clearer pay CTA, not more SKUs."""
+
+    def test_subscribe_cta_names_tonights_table(self) -> None:
+        html = SUBSCRIBE.read_text(encoding="utf-8")
+        btn = re.search(r'<a class="btn" href="([^"]+)"[^>]*>([^<]+)</a>', html)
+        self.assertIsNotNone(btn, "/subscribe/ has no primary .btn")
+        self.assertEqual(btn.group(1), GUMROAD)
+        text = btn.group(2)
+        self.assertIn("tonight", text.lower())
+        self.assertIn("£5", text)
+        self.assertNotIn("subscribe on gumroad", text.lower())
+
+    def test_subscribe_first_cta_follows_cost_sizing_not_the_offer_grid(self) -> None:
+        html = SUBSCRIBE.read_text(encoding="utf-8")
+        hero = html.split('<div class="cta">', 1)[0]
+        self.assertIn("24.6%", hero)
+        self.assertIn("+1.38%", hero)
+        self.assertIn("1.59%", hero)
+        self.assertIn("twoup", hero)
+        self.assertNotIn('class="offer"', hero)
+
+    def test_subscribe_paybar_does_not_read_as_free(self) -> None:
+        html = SUBSCRIBE.read_text(encoding="utf-8")
+        bar = html.split('class="paybar"', 1)[1]
+        hint = re.search(r'class="hint"[^>]*>([^<]+)', bar)
+        self.assertIsNotNone(hint, "paybar has no hint")
+        self.assertNotIn("£0", hint.group(1))
+        self.assertIn("£5", bar)
+        self.assertIn("not advice", hint.group(1).lower())
+        self.assertIn("£0", html)
+        self.assertIn("zero subscribers", html.lower())
+
+    def test_subscribe_paybar_is_visible_without_a_mobile_query(self) -> None:
+        html = SUBSCRIBE.read_text(encoding="utf-8")
+        css = html.split("</style>", 1)[0]
+        # Always-on sticky: default .paybar is flex, not display:none.
+        self.assertRegex(css, r"\.paybar\s*\{[^}]*display:\s*flex")
+        self.assertIsNone(re.search(r"\.paybar\s*\{[^}]*display:\s*none", css))
+
+    def test_kill_log_cta_names_tonights_table_after_the_product(self) -> None:
+        html = (ROOT / "kill-log" / "index.html").read_text(encoding="utf-8")
+        btn = re.search(r'<a class="btn" href="([^"]+)"[^>]*>([^<]+)</a>', html)
+        self.assertIsNotNone(btn, "/kill-log/ has no primary .btn")
+        self.assertEqual(btn.group(1), GUMROAD)
+        self.assertIn("tonight", btn.group(2).lower())
+        self.assertIn("£5", btn.group(2))
+        hero = html.split('<div class="cta">', 1)[0].lower()
+        self.assertIn("merger monitor", hero)
+        self.assertTrue("filing" in hero or "22:30" in hero or "tonight" in hero)
+
+    def test_kill_log_paybar_matches_and_is_always_on(self) -> None:
+        html = (ROOT / "kill-log" / "index.html").read_text(encoding="utf-8")
+        css = html.split("</style>", 1)[0]
+        self.assertRegex(css, r"\.paybar\s*\{[^}]*display:\s*flex")
+        self.assertIsNone(re.search(r"\.paybar\s*\{[^}]*display:\s*none", css))
+        bar = html.split('class="paybar"', 1)[1]
+        hint = re.search(r'class="hint"[^>]*>([^<]+)', bar)
+        self.assertIsNotNone(hint)
+        self.assertNotIn("£0", hint.group(1))
+        self.assertIn("not advice", hint.group(1).lower())
+        self.assertIn(GUMROAD, bar)
+        self.assertIn("tonight", bar.lower())
+
+
 if __name__ == "__main__":
     unittest.main()
