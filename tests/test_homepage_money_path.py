@@ -488,5 +488,121 @@ class HomepageAndKillLogPayPath(unittest.TestCase):
         self.assertIn("1.59%", hero)
 
 
+class UniqueShareCards(unittest.TestCase):
+    """A share of /subscribe/ or /kill-log/ must not look like the homepage.
+
+    Title, description, and image are unique per URL. Copy stays employer-safe.
+    The Gumroad listing is unchanged — this is traffic, not a second SKU.
+    """
+
+    HOME = "https://charliewytk.github.io/media/preview.png"
+    HOME_TITLE = "Charlie Wuytack — I'd rather build than consume"
+    HOME_DESC = "Games, flight search, prediction markets, macOS tools and trading research"
+
+    def _prop(self, html: str, key: str) -> str:
+        m = re.search(rf'<meta property="{re.escape(key)}" content="([^"]*)"', html)
+        self.assertIsNotNone(m, f"missing og property {key}")
+        return m.group(1)
+
+    def _name(self, html: str, key: str) -> str:
+        m = re.search(rf'<meta name="{re.escape(key)}" content="([^"]*)"', html)
+        self.assertIsNotNone(m, f"missing name {key}")
+        return m.group(1)
+
+    def _png_size(self, path: Path) -> tuple[int, int]:
+        data = path.read_bytes()
+        self.assertTrue(data.startswith(b"\x89PNG\r\n\x1a\n"), f"{path} is not a PNG")
+        return int.from_bytes(data[16:20], "big"), int.from_bytes(data[20:24], "big")
+
+    def _local_image(self, url: str) -> Path:
+        self.assertTrue(url.startswith("https://charliewytk.github.io/"), url)
+        rel = url.removeprefix("https://charliewytk.github.io/")
+        path = ROOT / rel
+        self.assertTrue(path.is_file(), f"og image missing: {path}")
+        return path
+
+    def test_subscribe_share_card_is_not_the_homepage(self) -> None:
+        html = SUBSCRIBE.read_text(encoding="utf-8")
+        title = self._prop(html, "og:title")
+        desc = self._prop(html, "og:description")
+        image = self._prop(html, "og:image")
+        self.assertNotEqual(title, self.HOME_TITLE)
+        self.assertNotIn(self.HOME_DESC, desc)
+        self.assertNotEqual(image, self.HOME)
+        self.assertIn("Merger Monitor", title)
+        self.assertIn("£5", title + desc)
+        self.assertTrue("filing" in desc.lower() or "not advice" in desc.lower())
+        self.assertEqual(self._name(html, "twitter:card"), "summary_large_image")
+        self.assertEqual(self._name(html, "twitter:title"), title)
+        twitter_desc = self._name(html, "twitter:description")
+        self.assertNotIn(self.HOME_DESC, twitter_desc)
+        self.assertNotEqual(twitter_desc, self._name(HOMEPAGE, "twitter:description"))
+        self.assertEqual(self._name(html, "twitter:image"), image)
+        self.assertNotEqual(self._name(html, "twitter:image"), self.HOME)
+
+    def test_kill_log_share_card_is_not_the_homepage(self) -> None:
+        html = (ROOT / "kill-log" / "index.html").read_text(encoding="utf-8")
+        title = self._prop(html, "og:title")
+        desc = self._prop(html, "og:description")
+        image = self._prop(html, "og:image")
+        self.assertNotEqual(title, self.HOME_TITLE)
+        self.assertNotIn(self.HOME_DESC, desc)
+        self.assertNotEqual(image, self.HOME)
+        self.assertTrue("kill" in title.lower() or "110" in title or "paper" in title.lower())
+        self.assertIn("paper", desc.lower())
+        self.assertIn("merger monitor", (title + " " + desc).lower())
+        self.assertEqual(self._name(html, "twitter:card"), "summary_large_image")
+        self.assertEqual(self._name(html, "twitter:title"), title)
+        self.assertEqual(self._name(html, "twitter:description"), desc)
+        self.assertEqual(self._name(html, "twitter:image"), image)
+        self.assertNotEqual(image, self.HOME)
+
+    def test_subscribe_and_kill_log_cards_are_distinct(self) -> None:
+        subscribe = SUBSCRIBE.read_text(encoding="utf-8")
+        kill = (ROOT / "kill-log" / "index.html").read_text(encoding="utf-8")
+        self.assertNotEqual(self._prop(subscribe, "og:title"), self._prop(kill, "og:title"))
+        self.assertNotEqual(self._prop(subscribe, "og:description"), self._prop(kill, "og:description"))
+        self.assertNotEqual(self._prop(subscribe, "og:image"), self._prop(kill, "og:image"))
+        self.assertNotEqual(self._name(subscribe, "twitter:image"), self._name(kill, "twitter:image"))
+
+    def test_share_copy_is_employer_safe(self) -> None:
+        pages = (
+            SUBSCRIBE.read_text(encoding="utf-8"),
+            (ROOT / "kill-log" / "index.html").read_text(encoding="utf-8"),
+        )
+        for html in pages:
+            head = html.split("</head>", 1)[0].lower()
+            for banned in (
+                "i trade this",
+                "i trade",
+                "p&amp;l-advice",
+                "p&l advice",
+                "live p&amp;l advice",
+                "guaranteed",
+                "codabench",
+                "haircut",
+                "companion product",
+            ):
+                self.assertNotIn(banned, head)
+            self.assertIsNone(re.search(r"\bict\b", head))
+            self.assertIsNone(re.search(r"[1-9][\d,]*\s+subscribers?", head))
+
+    def test_og_images_are_real_unique_pngs(self) -> None:
+        subscribe = SUBSCRIBE.read_text(encoding="utf-8")
+        kill = (ROOT / "kill-log" / "index.html").read_text(encoding="utf-8")
+        paths = []
+        for html in (subscribe, kill):
+            url = self._prop(html, "og:image")
+            self.assertEqual(self._name(html, "twitter:image"), url)
+            path = self._local_image(url)
+            self.assertNotEqual(path.resolve(), (ROOT / "media" / "preview.png").resolve())
+            self.assertEqual(self._png_size(path), (1200, 630))
+            self.assertGreater(path.stat().st_size, 8_000)
+            paths.append(path)
+        self.assertNotEqual(paths[0].read_bytes(), paths[1].read_bytes())
+        self.assertNotEqual(paths[0].read_bytes(), (ROOT / "media" / "preview.png").read_bytes())
+        self.assertNotEqual(paths[1].read_bytes(), (ROOT / "media" / "preview.png").read_bytes())
+
+
 if __name__ == "__main__":
     unittest.main()
