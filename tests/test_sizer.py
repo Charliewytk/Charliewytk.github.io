@@ -143,7 +143,7 @@ class SizerPage(unittest.TestCase):
         body = html.split("<body", 1)[-1].lower()
         self.assertNotIn("get tonight", body.split("gumroad.com", 1)[0] if "gumroad.com" in body else body)
         first_gumroad = html.lower().find("wuytackcharlie.gumroad.com/l/mergermonitor")
-        self.assertGreater(first_gumroad, 0, "quiet £5 SKU missing")
+        self.assertGreater(first_gumroad, 0, "existing £5 SKU missing")
         before = html[:first_gumroad]
         self.assertIn("24.6%", before)
         self.assertIn("+1.38%", before)
@@ -243,6 +243,13 @@ class SizerPage(unittest.TestCase):
         self.assertIn("Get tonight's table", btns[0][1])
         self.assertIn("£5", btns[0][1])
         self.assertEqual(len(btns), 1)
+        form_pos = html.find('id="sizer"')
+        btn_pos = html.find('class="btn"')
+        self.assertGreater(form_pos, 0)
+        self.assertGreater(btn_pos, form_pos, "CTA must follow the calculator, not lead it")
+        between = html[form_pos:btn_pos]
+        self.assertIn("24.6%", between)
+        self.assertIn("+1.38%", between)
         self.assertNotIn("weekly", btns[0][0])
         self.assertNotIn("weekly", btns[0][1].lower())
         hrefs_wk = _hrefs(html, "weekly")
