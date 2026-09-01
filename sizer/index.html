@@ -235,6 +235,9 @@
     });
     if (out.error) {
       set("error", out.error, true);
+      set("spread", "—");
+      set("annualised", "—");
+      set("net", "—");
       return;
     }
     set("error", "", true);

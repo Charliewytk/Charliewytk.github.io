@@ -38,9 +38,9 @@
   }
 
   function fmtSignedPct(n, digits) {
-    var fixed = Number(n).toFixed(digits);
-    var v = Number(fixed);
-    return (v >= 0 ? "+" : "") + fixed + "%";
+    var v = Number(n);
+    if (!Number.isFinite(v)) return "";
+    return (v >= 0 ? "+" : "") + v.toFixed(digits) + "%";
   }
 
   function breakProbability(breakRatePct) {
@@ -91,7 +91,7 @@
     };
   }
 
-  var api = { size: size };
+  var api = { size: size, fmtSignedPct: fmtSignedPct };
 
   if (typeof module !== "undefined" && module.exports) {
     module.exports = api;

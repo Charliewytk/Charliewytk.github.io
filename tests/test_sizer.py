@@ -104,6 +104,30 @@ class PublishedThreePercentCase(unittest.TestCase):
         self.assertEqual(out["netLabel"], PUBLISHED["net_label"])
         self.assertEqual(out["annualisedLabel"], PUBLISHED["annualised_label"])
 
+    def test_signed_pct_does_not_print_plus_minus_zero(self) -> None:
+        """Rounded −0.00 must not become +-0.00%."""
+        node = (
+            "const fmt = require('./assets/js/merger-sizer.js').fmtSignedPct;\n"
+            "process.stdout.write(JSON.stringify([\n"
+            "  fmt(-0.001, 2),\n"
+            "  fmt(0, 2),\n"
+            "  fmt(1.38148, 2)\n"
+            "]));\n"
+        )
+        proc = subprocess.run(["node", "-e", node], cwd=str(ROOT), capture_output=True, text=True)
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        minus_zero, zero, published = json.loads(proc.stdout)
+        self.assertNotIn("+-", minus_zero)
+        self.assertIn(minus_zero, ("-0.00%", "+0.00%"))
+        self.assertEqual(zero, "+0.00%")
+        self.assertEqual(published, "+1.38%")
+
+    def test_custom_break_and_cost_have_an_exact_net(self) -> None:
+        out = _run_sizer({"offer": 103, "market": 100, "breakRatePct": 5, "costPct": 1.0})
+        self.assertEqual(out["netLabel"], "+0.01%")
+        self.assertEqual(out["breakRateLabel"], "5.0%")
+        self.assertEqual(out["costLabel"], "1.00%")
+
 
 class SizerPage(unittest.TestCase):
     """Public tool. No paywall. Quiet SKU at the bottom only."""
