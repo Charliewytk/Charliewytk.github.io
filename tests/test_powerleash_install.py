@@ -51,13 +51,8 @@ class PowerLeashPublicZip(unittest.TestCase):
         go = re.search(r'<a class="go[^"]*" href="([^"]+)"', row)
         self.assertIsNotNone(go, "PowerLeash has no Download .go link")
         href = go.group(1)
-        self.assertTrue(
-            href in {PUBLIC_ZIP, "downloads/PowerLeash.zip"},
-            f"download must be the existing public zip, got {href!r}",
-        )
+        self.assertEqual(href, PUBLIC_ZIP)
         self.assertIn("Download for Mac", row)
-        # Canonical Pages URL so a copied link is the public file.
-        self.assertIn(PUBLIC_ZIP, row)
 
     def test_zip_file_is_still_on_disk(self) -> None:
         path = ROOT / "downloads" / "PowerLeash.zip"
@@ -68,11 +63,10 @@ class PowerLeashPublicZip(unittest.TestCase):
 class PowerLeashThreeSteps(unittest.TestCase):
     def test_stranger_sees_unzip_applications_right_click_open(self) -> None:
         compact = _compact(_install_row())
-        self.assertIn("unzip", compact)
-        self.assertIn("applications", compact)
-        self.assertTrue(
-            "right-click" in compact or "right click" in compact,
-            "install note must say right-click Open",
+        self.assertRegex(
+            compact,
+            r"unzip.*(?:/)?applications.*right[- ]click",
+            "install note must keep unzip → Applications → right-click order",
         )
         self.assertIn("open", compact)
         self.assertIn("unsigned", compact)
@@ -80,8 +74,9 @@ class PowerLeashThreeSteps(unittest.TestCase):
 
     def test_gatekeeper_block_is_expected_not_a_corrupt_zip(self) -> None:
         compact = _compact(_install_row())
+        self.assertIn("gatekeeper", compact)
         self.assertTrue(
-            "gatekeeper" in compact or "double-click" in compact or "double click" in compact,
+            "double-click" in compact or "double click" in compact,
             "install note must warn that double-click is blocked",
         )
 
