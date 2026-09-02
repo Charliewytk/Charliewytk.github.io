@@ -8,15 +8,19 @@ Reddit, X, or HN. Frozen method figures must match the published site
 from __future__ import annotations
 
 import html as html_lib
+import json
 import re
+import subprocess
 import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SHARE = ROOT / "share" / "index.html"
+SHARE_JS = ROOT / "assets" / "js" / "share-copy.js"
 EXAMPLE = ROOT / "example" / "index.html"
 WEEKLY = ROOT / "weekly" / "index.html"
 SUBSCRIBE = ROOT / "subscribe" / "index.html"
+HOMEPAGE = ROOT / "index.html"
 
 EXAMPLE_URL = "https://charliewytk.github.io/example/"
 WEEKLY_URL = "https://charliewytk.github.io/weekly/"
@@ -190,6 +194,147 @@ class ShareDraftsPage(unittest.TestCase):
         for url in re.findall(r"https?://\S+", text):
             weighted = weighted.replace(url, "x" * 23)
         self.assertLessEqual(len(weighted), 280, f"X weighted length {len(weighted)}")
+
+    def test_every_draft_names_five_pound_sku_and_sizer(self) -> None:
+        """Each paste payload must name £5 and /sizer/, not just the page chrome."""
+        html = _page()
+        for key in DRAFT_KEYS:
+            text = _draft_text(html, key)
+            self.assertIn("£5", text, f"{key} must name the £5 SKU")
+            self.assertIn(SIZER_URL, text, key)
+            self.assertIn(GUMROAD, text, key)
+
+    def test_each_draft_has_one_copy_post_button(self) -> None:
+        """iPhone: one tap copies the whole draft. Field copies may stay secondary."""
+        html = _page()
+        for key in DRAFT_KEYS:
+            block = _block(html, key)
+            posts = re.findall(
+                r"<button[^>]*data-copy-post=\"([^\"]+)\"[^>]*>",
+                block,
+            )
+            self.assertEqual(posts, [key], f"{key} needs one data-copy-post button")
+            label = re.search(
+                rf"<button[^>]*data-copy-post=\"{re.escape(key)}\"[^>]*>(.*?)</button>",
+                block,
+                re.S,
+            )
+            self.assertIsNotNone(label, key)
+            self.assertIn("copy", label.group(1).lower(), key)
+
+    def test_morning_bar_is_one_copy_for_the_09_draft(self) -> None:
+        html = _page()
+        self.assertIn('data-morning', html)
+        morning = re.search(r'<[^>]*data-morning[^>]*>(.*?)</(?:div|aside|section)>', html, re.S)
+        self.assertIsNotNone(morning, "missing data-morning one-copy control")
+        self.assertIn('data-copy-post="reddit-sa"', morning.group(0))
+        self.assertIn("copy", morning.group(0).lower())
+
+    def test_share_copy_script_is_loaded(self) -> None:
+        html = _page()
+        self.assertIn("share-copy.js", html)
+        self.assertTrue(SHARE_JS.is_file(), "assets/js/share-copy.js is missing")
+
+    def test_homepage_first_fold_and_clothes_untouched(self) -> None:
+        homepage = HOMEPAGE.read_text(encoding="utf-8")
+        self.assertIn('class="scroll-hint"', homepage)
+        self.assertIn("I'D RATHER BUILD", homepage)
+        self.assertNotIn("Clothes", homepage)
+        self.assertNotIn("share/", homepage.lower())
+
+
+def _run_share_js(script: str) -> dict:
+    proc = subprocess.run(
+        ["node", "-e", script],
+        cwd=str(ROOT),
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode != 0:
+        raise AssertionError(proc.stderr or proc.stdout or f"node exit {proc.returncode}")
+    return json.loads(proc.stdout)
+
+
+class ShareCopyModule(unittest.TestCase):
+    """iPhone one-copy: assemble the draft, then copy with an iOS-safe fallback."""
+
+    def test_assemble_post_joins_title_and_body(self) -> None:
+        out = _run_share_js(
+            "const { assemblePost } = require('./assets/js/share-copy.js');\n"
+            "process.stdout.write(JSON.stringify({\n"
+            "  both: assemblePost({ title: 'T', body: 'B' }),\n"
+            "  body: assemblePost({ body: 'B' }),\n"
+            "  title: assemblePost({ title: 'T' })\n"
+            "}));\n"
+        )
+        self.assertEqual(out["both"], "T\n\nB")
+        self.assertEqual(out["body"], "B")
+        self.assertEqual(out["title"], "T")
+
+    def test_assemble_post_from_share_page_includes_sku(self) -> None:
+        html = _page()
+        fields = _fields(html, "reddit-sa")
+        script = (
+            "const { assemblePost } = require('./assets/js/share-copy.js');\n"
+            "const text = assemblePost(" + json.dumps(fields) + ");\n"
+            "process.stdout.write(JSON.stringify({ text }));\n"
+        )
+        text = _run_share_js(script)["text"]
+        self.assertIn(fields["title"], text)
+        self.assertIn(fields["body"], text)
+        self.assertIn("£5", text)
+        self.assertIn(SIZER_URL, text)
+        self.assertIn(GUMROAD, text)
+
+    def test_copy_text_uses_clipboard_when_it_works(self) -> None:
+        out = _run_share_js(
+            "const { copyText } = require('./assets/js/share-copy.js');\n"
+            "let written = '';\n"
+            "const env = {\n"
+            "  clipboard: { writeText: (t) => { written = t; return Promise.resolve(); } },\n"
+            "  document: { createElement() { throw new Error('fallback should not run'); } }\n"
+            "};\n"
+            "copyText('hello', env).then((ok) => {\n"
+            "  process.stdout.write(JSON.stringify({ ok, written }));\n"
+            "});\n"
+        )
+        self.assertTrue(out["ok"])
+        self.assertEqual(out["written"], "hello")
+
+    def test_copy_text_ios_fallback_selects_and_execs_copy(self) -> None:
+        out = _run_share_js(
+            "const { copyText } = require('./assets/js/share-copy.js');\n"
+            "const calls = [];\n"
+            "const ta = {\n"
+            "  value: '',\n"
+            "  style: {},\n"
+            "  setAttribute(k, v) { calls.push(['setAttribute', k]); },\n"
+            "  removeAttribute(k) { calls.push(['removeAttribute', k]); },\n"
+            "  focus() { calls.push(['focus']); },\n"
+            "  select() { calls.push(['select']); },\n"
+            "  setSelectionRange(a, b) { calls.push(['setSelectionRange', a, b]); }\n"
+            "};\n"
+            "const env = {\n"
+            "  clipboard: { writeText() { return Promise.reject(new Error('denied')); } },\n"
+            "  document: {\n"
+            "    createElement(tag) { calls.push(['createElement', tag]); return ta; },\n"
+            "    body: {\n"
+            "      appendChild() { calls.push(['appendChild']); },\n"
+            "      removeChild() { calls.push(['removeChild']); }\n"
+            "    },\n"
+            "    execCommand(cmd) { calls.push(['execCommand', cmd]); return true; }\n"
+            "  }\n"
+            "};\n"
+            "copyText('hello', env).then((ok) => {\n"
+            "  process.stdout.write(JSON.stringify({ ok, value: ta.value, calls }));\n"
+            "});\n"
+        )
+        self.assertTrue(out["ok"])
+        self.assertEqual(out["value"], "hello")
+        self.assertIn(["createElement", "textarea"], out["calls"])
+        self.assertIn(["setSelectionRange", 0, 5], out["calls"])
+        self.assertIn(["execCommand", "copy"], out["calls"])
+        self.assertIn(["removeChild"], [c[:1] for c in out["calls"]])
 
 
 if __name__ == "__main__":
