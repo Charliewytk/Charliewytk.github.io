@@ -5,6 +5,11 @@ A stranger pastes offer and market (optional break-rate and round-trip cost).
 Output is the method already on /example/ and /subscribe/: spread, annualised
 gross, net after the stated break rate and costs.
 
+The applied bar fails closed the same way as strategy-validation PR #16:
+unknown stage stays the labelled 1.57% policy; known stage uses the
+measured 40bp GBP-funded round trip, not a restated sliver or a zero-cost
+floor. Paper / education only.
+
 Defaults are the frozen published figures, not feed_summary drift:
 3% → 24.6% / 2.4% break / 0.40% costs / +1.38%.
 No paywall, no second SKU, no live prices, no P&L advice.
@@ -264,6 +269,63 @@ class SizerPage(unittest.TestCase):
         self.assertNotIn("share/", html.lower())
         self.assertNotIn('class="paybar"', html)
 
+    def test_fail_closed_copy_and_stage_control_are_on_the_page(self) -> None:
+        """Unknown stage is the labelled 1.57% policy; known stage is the 40bp bar."""
+        html = self._html()
+        lowered = html.lower()
+        self.assertIn('id="stage"', html)
+        self.assertIn("1.57%", html)
+        self.assertTrue(
+            "unknown" in lowered and "stage" in lowered,
+            "page must name the unknown-stage policy",
+        )
+        self.assertTrue(
+            "40bp" in lowered or "0.40%" in html,
+            "page must name the measured 40bp / 0.40% costed bar",
+        )
+        self.assertTrue(
+            "gbp-funded" in lowered or "gbp funded" in lowered,
+            "the honest bar is the GBP-funded round trip",
+        )
+        self.assertTrue(
+            "zero-cost" in lowered or "zero cost" in lowered or "sliver" in lowered,
+            "page must say a restated sliver / zero-cost floor is not the bar",
+        )
+        self.assertIn("paper", lowered)
+        self.assertIn("education", lowered)
+        for attr in ("bar", "clears"):
+            self.assertIn(f'data-out="{attr}"', html)
+        # Default control is unknown stage — fail closed for a stranger.
+        self.assertRegex(
+            html,
+            r'<select[^>]*id="stage"[^>]*>[\s\S]*?<option[^>]*value="unknown"[^>]*selected',
+        )
+        self.assertIn('id="claimed-bar"', html)
+        self.assertIn("claimedBarPct", html)
+
+    def test_noindex_pages_stay_noindex_and_sizer_stays_indexable(self) -> None:
+        html = self._html()
+        robots = (ROOT / "robots.txt").read_text(encoding="utf-8")
+        share = (ROOT / "share" / "index.html").read_text(encoding="utf-8")
+        self.assertIn("noindex", share.lower())
+        self.assertIn("Disallow: /share/", robots)
+        self.assertNotIn("noindex", html.lower())
+        self.assertIn("index,follow", html.lower())
+        self.assertNotIn("twitter.com/intent", html.lower())
+        self.assertNotIn("reddit.com/submit", html.lower())
+        self.assertNotIn("news.ycombinator.com/submit", html.lower())
+
+    def test_homepage_first_fold_is_untouched(self) -> None:
+        """Do not replace Scroll / I'D RATHER BUILD. This leftover is /sizer/ only."""
+        homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+        fold = re.search(r'<header class="opening">.*?</header>', homepage, re.S)
+        self.assertIsNotNone(fold)
+        self.assertIn('id="scrollHint"', fold.group(0))
+        self.assertIn("Scroll", fold.group(0))
+        self.assertIn("I'D RATHER BUILD", fold.group(0))
+        self.assertNotIn("1.57%", fold.group(0))
+        self.assertNotIn("sizer/", fold.group(0).lower())
+
     def test_homepage_index_contains_sizer_href(self) -> None:
         """Homepage notes point at the public calculator. Not a new hero."""
         homepage = (ROOT / "index.html").read_text(encoding="utf-8")
@@ -335,6 +397,237 @@ class SizerPage(unittest.TestCase):
             ROOT / "media" / "preview.png",
         ):
             self.assertNotEqual(path.read_bytes(), other.read_bytes())
+
+
+def _run_expr(js_expr: str):
+    """Call a MergerSizer expression. Fails until the fail-closed gate exists."""
+    node = (
+        "const sizer = require('./assets/js/merger-sizer.js');\n"
+        "process.stdout.write(JSON.stringify(" + js_expr + "));\n"
+    )
+    proc = subprocess.run(["node", "-e", node], cwd=str(ROOT), capture_output=True, text=True)
+    if proc.returncode != 0:
+        raise AssertionError(proc.stderr or proc.stdout or f"node exit {proc.returncode}")
+    return json.loads(proc.stdout)
+
+
+class FailClosedBar(unittest.TestCase):
+    """After strategy-validation PR #16: the honest bar is the measured 40bp
+    GBP-funded round trip, not a restated sliver or a zero-cost floor.
+
+    Unknown stage stays the labelled 1.57% policy. Known stage uses the
+    costed bar. Paper / education only — no fill, no P&L.
+    """
+
+    def test_gate_exports_exist(self) -> None:
+        api = _run_expr(
+            "["
+            "typeof sizer.paperBar, "
+            "typeof sizer.shouldOpen, "
+            "typeof sizer.barChargesMeasuredCost, "
+            "typeof sizer.breakEvenPct, "
+            "typeof sizer.uncostedBreakEvenPct"
+            "]"
+        )
+        self.assertEqual(api, ["function"] * 5)
+
+    def test_unknown_stage_stays_the_labelled_157_policy(self) -> None:
+        for payload in (
+            {},
+            {"stage": "unknown"},
+            {"stage": ""},
+            {
+                "breakEvenPct": 1.594,
+                "breakEvenBasis": "stage-default-noform",
+                "breakEvenDays": 49,
+            },
+        ):
+            bar = _run_expr("sizer.paperBar(" + json.dumps(payload) + ")")
+            self.assertEqual(bar["barBasis"], "registered-flat", payload)
+            self.assertAlmostEqual(bar["barPct"], 1.57, places=6)
+            uncosted = _run_expr("sizer.uncostedBreakEvenPct(49)")
+            self.assertGreater(bar["barPct"], uncosted)
+
+    def test_known_stage_without_a_claimed_bar_uses_the_costed_bar(self) -> None:
+        bar = _run_expr('sizer.paperBar({stage: "DEFM14A"})')
+        costed = _run_expr("sizer.breakEvenPct(49)")
+        self.assertEqual(bar["barBasis"], "recomputed-costed")
+        self.assertAlmostEqual(bar["barPct"], costed, places=6)
+        self.assertGreater(bar["barPct"], 1.57)
+
+    def test_partial_cost_bar_does_not_open_a_spread_between_bars(self) -> None:
+        """PR #15 closed COST=0. A restated COST=0.0010 still ships 1.40%.
+
+        10bp of 49-day cost (~1.287%) sits above the zero-cost floor
+        (~1.184%). 1.40% clears that sliver and not the measured ~1.594%.
+        Sitting above zero is not charging the 40bp.
+        """
+        uncosted = _run_expr("sizer.uncostedBreakEvenPct(49)")
+        undercosted = _run_expr("sizer.breakEvenPct(49, 0.001)")
+        costed = _run_expr("sizer.breakEvenPct(49)")
+        self.assertGreater(undercosted, uncosted)
+        self.assertLess(1.40, costed)
+        self.assertGreater(1.40, undercosted)
+        self.assertTrue(_run_expr("sizer.barIncludesCosts(" + str(undercosted) + ", 49)"))
+        self.assertFalse(_run_expr("sizer.barChargesMeasuredCost(" + str(undercosted) + ", 49)"))
+        poisoned = {
+            "breakEvenPct": undercosted,
+            "breakEvenBasis": "stage-DEFM14A",
+            "breakEvenDays": 49,
+        }
+        self.assertFalse(
+            _run_expr("sizer.shouldOpen(1.40, " + json.dumps(poisoned) + ")"),
+            f"1.40% clears the 10bp-cost {undercosted:.3f}% bar but not "
+            f"the measured-cost {costed:.3f}% bar — must not ship",
+        )
+        replaced = _run_expr("sizer.paperBar(" + json.dumps(poisoned) + ")")
+        self.assertEqual(replaced["barBasis"], "recomputed-costed")
+        self.assertAlmostEqual(replaced["barPct"], costed, places=6)
+
+    def test_zero_cost_floor_is_not_the_gate(self) -> None:
+        """A 1.3% spread clears ~1.18% uncosted and not the measured 40bp bar."""
+        poisoned = {
+            "breakEvenPct": _run_expr("sizer.uncostedBreakEvenPct(49)"),
+            "breakEvenBasis": "stage-DEFM14A",
+            "breakEvenDays": 49,
+        }
+        self.assertFalse(_run_expr("sizer.shouldOpen(1.3, " + json.dumps(poisoned) + ")"))
+
+    def test_one_thousandth_below_the_costed_bar_is_replaced(self) -> None:
+        """The feed's 3 d.p. rule, not a 2 d.p. one. 1.593 is short."""
+        self.assertFalse(_run_expr("sizer.barChargesMeasuredCost(1.593, 49)"))
+        self.assertTrue(_run_expr("sizer.barChargesMeasuredCost(1.594, 49)"))
+        replaced = _run_expr(
+            "sizer.paperBar("
+            + json.dumps({
+                "breakEvenPct": 1.593,
+                "breakEvenBasis": "stage-DEFM14A",
+                "breakEvenDays": 49,
+            })
+            + ")"
+        )
+        self.assertEqual(replaced["barBasis"], "recomputed-costed")
+        self.assertGreater(replaced["barPct"], 1.593)
+
+    def test_honest_rounded_costed_bar_is_kept(self) -> None:
+        costed = _run_expr("Math.round(sizer.breakEvenPct(49) * 1000) / 1000")
+        kept = _run_expr(
+            "sizer.paperBar("
+            + json.dumps({
+                "breakEvenPct": costed,
+                "breakEvenBasis": "stage-DEFM14A",
+                "breakEvenDays": 49,
+            })
+            + ")"
+        )
+        self.assertAlmostEqual(kept["barPct"], costed, places=3)
+        self.assertEqual(kept["barBasis"], "stage-DEFM14A")
+
+    def test_unknown_stage_1_40_does_not_clear_the_157_policy(self) -> None:
+        self.assertFalse(_run_expr("sizer.shouldOpen(1.40, {stage: 'unknown'})"))
+        self.assertTrue(_run_expr("sizer.shouldOpen(3.0, {stage: 'unknown'})"))
+
+    def test_known_stage_3pct_still_clears_the_costed_bar(self) -> None:
+        self.assertTrue(_run_expr("sizer.shouldOpen(3.0, {stage: 'DEFM14A'})"))
+        self.assertFalse(_run_expr("sizer.shouldOpen(1.40, {stage: 'DEFM14A'})"))
+
+    def test_equal_to_the_bar_is_not_a_clear(self) -> None:
+        costed = _run_expr("sizer.breakEvenPct(49)")
+        honest = {
+            "breakEvenPct": costed,
+            "breakEvenBasis": "stage-DEFM14A",
+            "breakEvenDays": 49,
+        }
+        self.assertFalse(_run_expr("sizer.shouldOpen(" + str(costed) + ", " + json.dumps(honest) + ")"))
+        self.assertTrue(_run_expr("sizer.shouldOpen(" + str(costed + 0.10) + ", " + json.dumps(honest) + ")"))
+
+    def test_prem14a_uncosted_bar_mislabelled_as_49d_does_not_open(self) -> None:
+        """A 62-day uncosted bar (~1.319%) beats the 49-day zero-cost floor.
+
+        If days and basis disagree, the old detector treats that bar as
+        costed and a 1.40% spread ships against the measured 40bp 49d bar.
+        """
+        uncosted_62 = _run_expr("sizer.uncostedBreakEvenPct(62)")
+        poisoned = {
+            "breakEvenPct": uncosted_62,
+            "breakEvenBasis": "stage-DEFM14A",
+            "breakEvenDays": 49,
+        }
+        self.assertTrue(_run_expr("sizer.barIncludesCosts(" + str(uncosted_62) + ", 49)"))
+        self.assertFalse(_run_expr("sizer.shouldOpen(1.40, " + json.dumps(poisoned) + ")"))
+
+    def test_prem14a_uncosted_bar_without_days_does_not_open(self) -> None:
+        uncosted_62 = _run_expr("sizer.uncostedBreakEvenPct(62)")
+        self.assertFalse(
+            _run_expr(
+                "sizer.shouldOpen(1.40, "
+                + json.dumps({
+                    "breakEvenPct": uncosted_62,
+                    "breakEvenBasis": "stage-PREM14A",
+                })
+                + ")"
+            )
+        )
+
+    def test_sc14d9_uncosted_bar_does_not_open_a_1_10_spread(self) -> None:
+        uncosted = _run_expr("sizer.uncostedBreakEvenPct(27)")
+        costed = _run_expr("sizer.breakEvenPct(27)")
+        self.assertLess(uncosted, 1.10)
+        self.assertGreater(costed, 1.10)
+        self.assertFalse(
+            _run_expr(
+                "sizer.shouldOpen(1.10, "
+                + json.dumps({
+                    "breakEvenPct": uncosted,
+                    "breakEvenBasis": "stage-SC 14D9",
+                    "breakEvenDays": 27,
+                })
+                + ")"
+            )
+        )
+
+    def test_computed_expiry_partial_cost_bar_does_not_open(self) -> None:
+        undercosted = _run_expr("sizer.breakEvenPct(5, 0.001)")
+        costed = _run_expr("sizer.breakEvenPct(5)")
+        mid = (undercosted + costed) / 2
+        self.assertGreater(mid, undercosted)
+        self.assertLess(mid, costed)
+        self.assertFalse(
+            _run_expr(
+                "sizer.shouldOpen("
+                + str(mid)
+                + ", "
+                + json.dumps({
+                    "breakEvenPct": undercosted,
+                    "breakEvenBasis": "computed-from-expiry",
+                    "breakEvenDays": 5,
+                })
+                + ")"
+            )
+        )
+
+    def test_size_defaults_keep_published_net_and_add_the_unknown_stage_bar(self) -> None:
+        """The 3% EV case is unchanged. The new gate fails closed to 1.57%."""
+        out = _run_sizer({"offer": 103, "market": 100})
+        self.assertEqual(out["netLabel"], PUBLISHED["net_label"])
+        self.assertAlmostEqual(out["barPct"], 1.57, places=6)
+        self.assertEqual(out["barBasis"], "registered-flat")
+        self.assertTrue(out["clears"])
+
+    def test_size_known_stage_uses_costed_bar_not_typed_sliver(self) -> None:
+        """Typing 10bp into the EV cost field must not become the gate."""
+        out = _run_sizer({
+            "offer": 101.40,
+            "market": 100,
+            "costPct": 0.10,
+            "stage": "DEFM14A",
+        })
+        costed = _run_expr("sizer.breakEvenPct(49)")
+        self.assertAlmostEqual(out["barPct"], costed, places=6)
+        self.assertEqual(out["barBasis"], "recomputed-costed")
+        self.assertFalse(out["clears"])
+        self.assertLess(out["spreadPct"], costed)
+        self.assertGreater(out["spreadPct"], 1.28)
 
 
 if __name__ == "__main__":
