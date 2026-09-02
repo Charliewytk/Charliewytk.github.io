@@ -146,10 +146,13 @@ class ShareDraftsPage(unittest.TestCase):
         html = _page()
         self.assertIn("sizer/", html)
         self.assertIn(GUMROAD, html)
+        self.assertIn(WEEKLY_SKU, html)
         self.assertIn(SIZER_URL, html)
         gumroad = re.findall(r"https://wuytackcharlie\.gumroad\.com/l/[a-z0-9]+", html.lower())
         self.assertTrue(gumroad)
-        self.assertTrue(all(u == GUMROAD for u in gumroad), gumroad)
+        self.assertTrue(all(u in {GUMROAD, WEEKLY_SKU} for u in gumroad), gumroad)
+        self.assertIn(GUMROAD, gumroad)
+        self.assertIn(WEEKLY_SKU, gumroad)
 
     def test_drafts_do_not_contain_defined_advice_words(self) -> None:
         html = _page()
@@ -185,9 +188,7 @@ class ShareDraftsPage(unittest.TestCase):
         self.assertIsNone(re.search(r"\bict\b", lowered))
         self.assertIsNone(re.search(r"[1-9][\d,]*\s+subscribers?", lowered))
         self.assertNotIn("join ", lowered)
-        # Clipboard may name the existing SKU. It is still not another page of CTAs.
-        self.assertNotIn('class="paybar"', html)
-        self.assertNotIn('class="btn"', html)
+        # One-copy UI may show the existing SKUs. It is still not a new listing or a form.
         self.assertNotIn("<form", lowered)
         self.assertIn("noindex", html.lower())
         robots = (ROOT / "robots.txt").read_text(encoding="utf-8")
@@ -235,8 +236,43 @@ class ShareDraftsPage(unittest.TestCase):
         morning = re.search(r'<[^>]*data-morning[^>]*>(.*?)</(?:div|aside|section)>', html, re.S)
         self.assertIsNotNone(morning, "missing data-morning one-copy control")
         self.assertIn('data-copy-post="reddit-sa"', morning.group(0))
+        self.assertIn("Copy tomorrow", morning.group(0))
         self.assertIn("copy", morning.group(0).lower())
         self.assertIn("long-press", html.lower())
+
+    def test_one_copy_ui_has_obvious_existing_sku_path(self) -> None:
+        """iPhone sticky bar: copy stays, £5 and free weekly are tappable hrefs."""
+        html = _page()
+        morning = re.search(r'<[^>]*data-morning[^>]*>(.*?)</(?:div|aside|section)>', html, re.S)
+        self.assertIsNotNone(morning, "missing data-morning one-copy control")
+        bar = morning.group(0)
+        self.assertIn('data-copy-post="reddit-sa"', bar)
+        self.assertIn("Copy tomorrow", bar)
+        pay = re.search(
+            rf'<a[^>]+href="{re.escape(GUMROAD)}"[^>]*>(.*?)</a>',
+            bar,
+            re.S,
+        )
+        self.assertIsNotNone(pay, "morning bar needs a tappable £5 Gumroad link")
+        pay_label = html_lib.unescape(pay.group(1)).lower()
+        self.assertIn("£5", pay.group(1))
+        self.assertTrue(
+            "tonight" in pay_label or "table" in pay_label,
+            "£5 control must name tonight's table, not a new product",
+        )
+        weekly = re.search(
+            rf'<a[^>]+href="{re.escape(WEEKLY_SKU)}"[^>]*>(.*?)</a>',
+            bar,
+            re.S,
+        )
+        self.assertIsNotNone(weekly, "morning bar needs a tappable free-weekly Gumroad link")
+        self.assertIn("free", weekly.group(1).lower())
+        self.assertNotIn(WEEKLY_SKU, pay.group(0))
+        self.assertNotIn(GUMROAD, weekly.group(0))
+        self.assertIsNone(re.search(r"[1-9][\d,]*\s+subscribers?", html.lower()))
+        self.assertNotIn("twitter.com/intent", html.lower())
+        self.assertNotIn("reddit.com/submit", html.lower())
+        self.assertNotIn("news.ycombinator.com/submit", html.lower())
 
     def test_share_copy_script_is_loaded(self) -> None:
         html = _page()

@@ -57,7 +57,7 @@
   .banner p { margin: 0 0 8px; }
   .banner p:last-child { margin: 0; color: var(--ink2); font-size: 0.95rem; }
 
-  .shell { max-width: 720px; margin: 0 auto; padding: 28px 16px 210px; }
+  .shell { max-width: 720px; margin: 0 auto; padding: 28px 16px 300px; }
   h1 {
     font-family: Georgia, "Times New Roman", serif;
     font-weight: 600;
@@ -149,6 +149,38 @@
     background: #2d5a32;
     color: var(--paper);
     border-color: #2d5a32;
+  }
+  .morning .sku-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .morning a.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 48px;
+    padding: 12px 14px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border: 1px solid var(--paper);
+    color: var(--paper);
+    text-decoration: none;
+    flex: 1 1 140px;
+    touch-action: manipulation;
+  }
+  .morning a.btn.pay {
+    background: var(--accent);
+    border-color: var(--accent);
+    flex: 1 1 100%;
+  }
+  .morning a.btn.quiet {
+    background: transparent;
+    color: var(--paper);
+    font-weight: 600;
+    font-size: 0.88rem;
   }
 
   footer {
@@ -269,12 +301,16 @@ Filings, not advice. £5/month.</textarea>
 
   <footer>
     <p>Clipboard only. Not a listing, not a tip sheet, and not a submitted post. Figures match the published 3% case on this site.</p>
-    <p><a href="../sizer/">/sizer/</a> · <a href="../example/">/example/</a> · <a href="../weekly/">/weekly/</a> · <a href="https://wuytackcharlie.gumroad.com/l/mergermonitor">£5/month on Gumroad</a> · <a href="../">charliewytk.github.io</a></p>
+    <p><a href="../sizer/">/sizer/</a> · <a href="../example/">/example/</a> · <a href="../weekly/">/weekly/</a> · <a href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">£5/month on Gumroad</a> · <a href="https://wuytackcharlie.gumroad.com/l/mergerweekly" target="_blank" rel="noopener">free Sunday mail</a> · <a href="../">charliewytk.github.io</a></p>
   </footer>
 </main>
 <div class="morning" data-morning>
-  <p>09:00 — one copy. r/SecurityAnalysis. First line is the title. /sizer/ and the £5 SKU are in the paste. You still click Post.</p>
+  <p>09:00 — one copy. r/SecurityAnalysis. First line is the title. You still click Post. Existing listings only — not a new product.</p>
   <button type="button" class="copy post" data-copy-post="reddit-sa">Copy tomorrow's post</button>
+  <div class="sku-row">
+    <a class="btn pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table — £5/month</a>
+    <a class="btn quiet" href="https://wuytackcharlie.gumroad.com/l/mergerweekly" target="_blank" rel="noopener">Get the free Sunday mail</a>
+  </div>
 </div>
 <script src="../assets/js/share-copy.js"></script>
 <script>ShareCopy.bindSharePage(document);</script>
