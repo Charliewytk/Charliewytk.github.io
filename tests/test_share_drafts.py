@@ -26,6 +26,13 @@ EXAMPLE_URL = "https://charliewytk.github.io/example/"
 WEEKLY_URL = "https://charliewytk.github.io/weekly/"
 SIZER_URL = "https://charliewytk.github.io/sizer/"
 GUMROAD = "https://wuytackcharlie.gumroad.com/l/mergermonitor"
+WEEKLY_SKU = "https://wuytackcharlie.gumroad.com/l/mergerweekly"
+
+# Same sentence /example/ and /weekly/ already publish after PR #29.
+FAIL_CLOSED_SENTENCE = (
+    "The public calculator at /sizer/ now fails closed to the measured 40bp bar "
+    "— unknown stage stays the labelled 1.57% policy."
+)
 
 # Advice words defined for these drafts. Word-boundary only — "sold" and
 # "resale" stay allowed; "buy ACA" / "alpha" do not.
@@ -236,12 +243,62 @@ class ShareDraftsPage(unittest.TestCase):
         self.assertIn("share-copy.js", html)
         self.assertTrue(SHARE_JS.is_file(), "assets/js/share-copy.js is missing")
 
+    def test_one_copy_paste_names_fail_closed_sizer(self) -> None:
+        """Tomorrow's iPhone paste must name the same fail-closed fact as #29."""
+        html = _page()
+        sa_body = _fields(html, "reddit-sa")["body"]
+        self.assertIn(FAIL_CLOSED_SENTENCE, sa_body)
+        assembled = _run_share_js(
+            "const { assemblePost } = require('./assets/js/share-copy.js');\n"
+            "process.stdout.write(JSON.stringify({\n"
+            "  text: assemblePost(" + json.dumps(_fields(html, "reddit-sa")) + ")\n"
+            "}));\n"
+        )["text"]
+        self.assertIn(FAIL_CLOSED_SENTENCE, assembled)
+        for key in DRAFT_KEYS:
+            text = _draft_text(html, key)
+            self.assertRegex(
+                text.lower(),
+                r"fail(?:s|ed)?\s+closed",
+                f"{key} must say /sizer/ fails closed",
+            )
+            self.assertIn("40bp", text.lower(), f"{key} must name the measured 40bp bar")
+            self.assertIn("1.57%", text, f"{key} must keep unknown stage on labelled 1.57%")
+            self.assertTrue(
+                "unknown" in text.lower() and "stage" in text.lower(),
+                f"{key} must name the unknown-stage policy",
+            )
+            self.assertTrue(
+                "labelled" in text.lower() or "labeled" in text.lower(),
+                f"{key} must say the 1.57% policy is labelled",
+            )
+
+    def test_share_stays_clipboard_not_a_post_existing_sku_only(self) -> None:
+        html = _page()
+        lowered = html.lower()
+        self.assertNotIn("twitter.com/intent", lowered)
+        self.assertNotIn("reddit.com/submit", lowered)
+        self.assertNotIn("news.ycombinator.com/submit", lowered)
+        gumroad = re.findall(r"https://wuytackcharlie\.gumroad\.com/l/[a-z0-9]+", lowered)
+        self.assertTrue(gumroad)
+        self.assertTrue(all(u in {GUMROAD, WEEKLY_SKU} for u in gumroad), gumroad)
+        self.assertIn(GUMROAD, gumroad)
+
     def test_homepage_first_fold_and_clothes_untouched(self) -> None:
         homepage = HOMEPAGE.read_text(encoding="utf-8")
         self.assertIn('class="scroll-hint"', homepage)
         self.assertIn("I'D RATHER BUILD", homepage)
         self.assertNotIn("Clothes", homepage)
         self.assertNotIn("share/", homepage.lower())
+        fold = re.search(r'<header class="opening">.*?</header>', homepage, re.S)
+        self.assertIsNotNone(fold, "homepage has no opening header")
+        text = fold.group(0)
+        self.assertIn("I'D RATHER BUILD", text)
+        self.assertNotIn("1.57%", text)
+        self.assertNotIn("40bp", text.lower())
+        self.assertNotIn("sizer/", text.lower())
+        self.assertNotIn("fail closed", text.lower())
+        self.assertNotIn("fails closed", text.lower())
 
 
 def _run_share_js(script: str) -> dict:
