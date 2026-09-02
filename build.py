@@ -4,36 +4,50 @@
 MATHS = False publishes without the formula blocks (kept in source, just not shipped).
 Flip to True and re-run when you're ready to explain them.
 """
+from __future__ import annotations
+
 import os
 import re
+import sys
 
-# Held back by default so the published page never ships maths by accident.
-# Preview them locally with:  MATHS=1 python3 build.py
-def _flag(name):
+
+def _flag(name: str) -> bool:
     return os.environ.get(name, '') not in ('', '0', 'false', 'False')
+
 
 MATHS = _flag('MATHS')
 
 # The linking lines between projects. Approved 23 Aug 2026, so they ship by
 # default now. Build with STORY=0 to publish without them.
-
 STORY = os.environ.get('STORY', '1') not in ('0', 'false', 'False')
 
-def strip_maths(html):
+
+def strip_maths(html: str) -> str:
     return re.sub(r'\s*<div class="maths">.*?</div>\s*</div>\s*', '\n    ', html, flags=re.S)
 
-def strip_bridges(html):
+
+def strip_bridges(html: str) -> str:
     return re.sub(r'\s*<p class="bridge rise">.*?</p>\s*', '\n\n', html, flags=re.S)
 
-# --- homepage: fragment.html -> index.html ---
-frag = open('fragment.html').read()
-i = frag.index('</style>') + len('</style>')
-head, body = frag[:i], frag[i:]
-if not MATHS:
-    body = strip_maths(body)
-if not STORY:
-    body = strip_bridges(body)
-open('index.html', 'w').write(f'''<!doctype html>
+
+def _read(path: str) -> str:
+    try:
+        with open(path, encoding='utf-8') as f:
+            return f.read()
+    except FileNotFoundError:
+        sys.exit(f'build.py: missing {path} (source files are gitignored locally)')
+
+
+def build_homepage() -> None:
+    frag = _read('fragment.html')
+    i = frag.index('</style>') + len('</style>')
+    head, body = frag[:i], frag[i:]
+    if not MATHS:
+        body = strip_maths(body)
+    if not STORY:
+        body = strip_bridges(body)
+    with open('index.html', 'w', encoding='utf-8') as out:
+        out.write(f'''<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -59,11 +73,21 @@ open('index.html', 'w').write(f'''<!doctype html>
 </html>
 ''')
 
-# --- research: research.src.html -> research.html ---
-res = open('research.src.html').read()
-if not MATHS:
-    res = strip_maths(res)
-open('research.html', 'w').write(res)
 
-print('built · maths:', 'included' if MATHS else 'held back',
-      '· story lines:', 'included' if STORY else 'held back')
+def build_research() -> None:
+    res = _read('research.src.html')
+    if not MATHS:
+        res = strip_maths(res)
+    with open('research.html', 'w', encoding='utf-8') as out:
+        out.write(res)
+
+
+def main() -> None:
+    build_homepage()
+    build_research()
+    print('built · maths:', 'included' if MATHS else 'held back',
+          '· story lines:', 'included' if STORY else 'held back')
+
+
+if __name__ == '__main__':
+    main()

@@ -129,6 +129,10 @@ const MEASURE_JS = `
 `;
 
 const chromePath = findChrome();
+if (!chromePath) {
+  console.error("measure_mobile_fold.mjs: Chrome not found (set CHROME_PATH or install google-chrome-stable)");
+  process.exit(2);
+}
 const port = await freePort();
 const profile = `/tmp/cw-fold-chrome-${port}`;
 const chrome = spawn(
