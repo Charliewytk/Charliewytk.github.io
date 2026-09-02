@@ -99,7 +99,7 @@
     font-weight: 600;
     margin: 0 0 6px;
   }
-  input {
+  input, select {
     width: 100%;
     font-family: ui-monospace, Menlo, monospace;
     font-size: 1.05rem;
@@ -110,7 +110,8 @@
     padding: 11px 12px;
     min-height: 48px;
   }
-  input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  select { letter-spacing: 0; }
+  input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
   .out { margin: 0 0 10px; }
   .out .k { color: var(--muted); font-size: 0.8rem; }
@@ -191,6 +192,21 @@
         <label for="cost">Round-trip cost % <span class="opt">(optional)</span></label>
         <input id="cost" name="cost" type="text" inputmode="decimal" value="0.40" autocomplete="off">
       </div>
+      <div>
+        <label for="stage">Stage</label>
+        <select id="stage" name="stage">
+          <option value="unknown" selected>Unknown — labelled 1.57%</option>
+          <option value="DEFM14A">DEFM14A — 49-day costed bar</option>
+          <option value="DEFM14C">DEFM14C — 49-day costed bar</option>
+          <option value="PREM14A">PREM14A — 62-day costed bar</option>
+          <option value="PREM14C">PREM14C — 62-day costed bar</option>
+          <option value="SC 14D9">SC 14D9 — 27-day costed bar</option>
+        </select>
+      </div>
+      <div>
+        <label for="claimed-bar">Claimed bar % <span class="opt">(optional)</span></label>
+        <input id="claimed-bar" name="claimed-bar" type="text" inputmode="decimal" value="" autocomplete="off" placeholder="leave blank">
+      </div>
     </div>
   </form>
 
@@ -211,13 +227,23 @@
       <div class="k">Stated inputs</div>
       <div class="note stated">Break <span data-out="break-rate">2.4%</span> · round-trip <span data-out="cost">0.40%</span> · 27% median break loss · 0.49% T-bill carry · 49-day close.</div>
     </div>
+    <div class="out">
+      <div class="k">Applied bar</div>
+      <div class="v" data-out="bar">1.57%</div>
+    </div>
+    <div class="out">
+      <div class="k">Versus the bar</div>
+      <div class="v" data-out="clears">Clears</div>
+    </div>
   </div>
+  <p class="note stated" data-out="bar-basis">labelled 1.57% policy (unknown stage)</p>
   <p class="err" data-out="error" hidden></p>
   <p class="note">Annualised is marketing: the published 3% case over 49 days is 24.6%. The net charges the stated break rate, the 27% median loss when one breaks, round-trip cost, and 0.49% of forgone T-bill carry. The 2.4% default is 39 of 1,606 settled outcomes. A 1% spread on that pass is &minus;0.57%. Break-even is 1.59%.</p>
+  <p class="note">The bar fails closed. Unknown stage stays the labelled 1.57% policy. Known stage uses the measured 40bp GBP-funded round trip, not a restated sliver or a zero-cost floor. A claimed bar is kept only when it charges that 40bp. Paper / education only — not a recommendation.</p>
 
   <section>
     <h2>What this is not</h2>
-    <p>Not advice, not a recommendation, not a tip sheet, and not an order. Cost-sizing only. No position is held in anything you paste. Nothing here is a P&amp;L. Figures are not pulled from a live book. The page exists so a stranger can run the same pass already published on this site.</p>
+    <p>Not advice, not a recommendation, not a tip sheet, and not an order. Cost-sizing only. Paper / education only. No position is held in anything you paste. Nothing here is a P&amp;L. Figures are not pulled from a live book. The page exists so a stranger can run the same pass already published on this site.</p>
   </section>
 
   <div class="cta">
@@ -234,7 +260,7 @@
 <script>
 (function () {
   var form = document.getElementById("sizer");
-  var ids = ["offer", "market", "break-rate", "cost"];
+  var ids = ["offer", "market", "break-rate", "cost", "stage", "claimed-bar"];
 
   function set(name, text, isError) {
     var el = document.querySelector('[data-out="' + name + '"]');
@@ -253,13 +279,18 @@
       offer: document.getElementById("offer").value,
       market: document.getElementById("market").value,
       breakRatePct: document.getElementById("break-rate").value,
-      costPct: document.getElementById("cost").value
+      costPct: document.getElementById("cost").value,
+      stage: document.getElementById("stage").value,
+      claimedBarPct: document.getElementById("claimed-bar").value
     });
     if (out.error) {
       set("error", out.error, true);
       set("spread", "—");
       set("annualised", "—");
       set("net", "—");
+      set("bar", out.barLabel || "—");
+      set("bar-basis", out.barBasisLabel || "");
+      set("clears", "—");
       return;
     }
     set("error", "", true);
@@ -268,11 +299,16 @@
     set("net", out.netLabel);
     set("break-rate", out.breakRateLabel);
     set("cost", out.costLabel);
+    set("bar", out.barLabel);
+    set("bar-basis", out.barBasisLabel);
+    set("clears", out.clears ? "Clears" : "Does not clear");
   }
 
   form.addEventListener("submit", function (e) { e.preventDefault(); render(); });
   ids.forEach(function (id) {
-    document.getElementById(id).addEventListener("input", render);
+    var el = document.getElementById(id);
+    el.addEventListener("input", render);
+    el.addEventListener("change", render);
   });
   render();
 })();
