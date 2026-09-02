@@ -18,27 +18,39 @@
     return fields;
   }
 
+  function selectVisible(el) {
+    if (!el) return;
+    if (el.focus) el.focus();
+    if (el.select) el.select();
+    if (el.setSelectionRange && typeof el.value === "string") {
+      el.setSelectionRange(0, el.value.length);
+    }
+  }
+
   function legacyCopy(text, documentRef) {
     if (!documentRef || !documentRef.body || !documentRef.createElement) return false;
     var ta = documentRef.createElement("textarea");
     ta.value = text;
     ta.setAttribute("readonly", "");
     ta.setAttribute("aria-hidden", "true");
+    // iOS: keep readonly, keep the field large enough to select, 12pt avoids zoom.
+    ta.style.fontSize = "12pt";
     ta.style.position = "fixed";
     ta.style.top = "0";
     ta.style.left = "0";
-    ta.style.width = "1px";
-    ta.style.height = "1px";
+    ta.style.width = "2em";
+    ta.style.height = "2em";
     ta.style.padding = "0";
+    ta.style.margin = "0";
     ta.style.border = "none";
     ta.style.outline = "none";
     ta.style.boxShadow = "none";
     ta.style.background = "transparent";
+    ta.style.opacity = "0.01";
     documentRef.body.appendChild(ta);
     if (ta.focus) ta.focus();
-    ta.removeAttribute("readonly");
-    if (ta.select) ta.select();
     if (ta.setSelectionRange) ta.setSelectionRange(0, text.length);
+    if (ta.select) ta.select();
     var ok = false;
     try {
       ok = !!(documentRef.execCommand && documentRef.execCommand("copy"));
@@ -74,39 +86,60 @@
     return viaLegacy();
   }
 
-  function flash(btn) {
+  function flash(btn, ok) {
     if (!btn) return;
     var old = btn.textContent;
-    btn.classList.add("ok");
-    btn.textContent = "Copied";
+    if (ok) {
+      btn.classList.add("ok");
+      btn.textContent = "Copied";
+    } else {
+      btn.textContent = "Hold the box";
+    }
     setTimeout(function () {
       btn.classList.remove("ok");
       btn.textContent = old;
-    }, 1400);
+    }, 1600);
   }
 
-  function bindSharePage(root) {
+  function visibleField(section, id) {
+    if (id) {
+      var byId = section && section.ownerDocument
+        ? section.ownerDocument.getElementById(id)
+        : null;
+      if (byId) return byId;
+    }
+    if (!section || !section.querySelector) return null;
+    return section.querySelector('textarea[data-field="body"]')
+      || section.querySelector("textarea");
+  }
+
+  function bindSharePage(root, env) {
     root = root || (typeof document !== "undefined" ? document : null);
     if (!root || !root.querySelectorAll) return;
+    env = env || {};
 
     function lookup(id) {
+      if (!id) return null;
       if (root.getElementById) return root.getElementById(id);
-      return root.querySelector("#" + id);
+      return root.querySelector ? root.querySelector("#" + id) : null;
     }
 
     function onCopyPost(btn) {
       var key = btn.getAttribute("data-copy-post");
       var section = root.querySelector('section[data-draft="' + key + '"]');
-      copyText(assemblePost(fieldsFromSection(section))).then(function (ok) {
-        if (ok) flash(btn);
+      var text = assemblePost(fieldsFromSection(section));
+      copyText(text, env).then(function (ok) {
+        if (!ok) selectVisible(visibleField(section));
+        flash(btn, ok);
       });
     }
 
     function onCopyField(btn) {
       var el = lookup(btn.getAttribute("data-copy"));
       if (!el) return;
-      copyText(el.value).then(function (ok) {
-        if (ok) flash(btn);
+      copyText(el.value, env).then(function (ok) {
+        if (!ok) selectVisible(el);
+        flash(btn, ok);
       });
     }
 

@@ -229,6 +229,7 @@ class ShareDraftsPage(unittest.TestCase):
         self.assertIsNotNone(morning, "missing data-morning one-copy control")
         self.assertIn('data-copy-post="reddit-sa"', morning.group(0))
         self.assertIn("copy", morning.group(0).lower())
+        self.assertIn("long-press", html.lower())
 
     def test_share_copy_script_is_loaded(self) -> None:
         html = _page()
@@ -326,15 +327,65 @@ class ShareCopyModule(unittest.TestCase):
             "  }\n"
             "};\n"
             "copyText('hello', env).then((ok) => {\n"
-            "  process.stdout.write(JSON.stringify({ ok, value: ta.value, calls }));\n"
+            "  process.stdout.write(JSON.stringify({\n"
+            "    ok, value: ta.value, calls,\n"
+            "    fontSize: ta.style.fontSize,\n"
+            "    width: ta.style.width,\n"
+            "    height: ta.style.height\n"
+            "  }));\n"
             "});\n"
         )
         self.assertTrue(out["ok"])
         self.assertEqual(out["value"], "hello")
+        self.assertEqual(out["fontSize"], "12pt")
+        self.assertNotEqual(out["width"], "1px")
+        self.assertNotEqual(out["height"], "1px")
         self.assertIn(["createElement", "textarea"], out["calls"])
+        self.assertIn(["setAttribute", "readonly"], out["calls"])
+        self.assertNotIn(["removeAttribute", "readonly"], out["calls"])
         self.assertIn(["setSelectionRange", 0, 5], out["calls"])
         self.assertIn(["execCommand", "copy"], out["calls"])
         self.assertIn(["removeChild"], [c[:1] for c in out["calls"]])
+
+    def test_bind_share_page_copies_assembled_section(self) -> None:
+        fields = _fields(_page(), "reddit-sa")
+        out = _run_share_js(
+            "const { bindSharePage, assemblePost } = require('./assets/js/share-copy.js');\n"
+            "let written = '';\n"
+            "const title = { value: " + json.dumps(fields["title"]) + ", getAttribute: () => 'title' };\n"
+            "const body = { value: " + json.dumps(fields["body"]) + ", getAttribute: () => 'body' };\n"
+            "const section = { querySelectorAll: (sel) => sel.indexOf('textarea') >= 0 ? [title, body] : [] };\n"
+            "const handlers = {};\n"
+            "const btn = {\n"
+            "  getAttribute: (k) => k === 'data-copy-post' ? 'reddit-sa' : null,\n"
+            "  addEventListener: (ev, fn) => { handlers[ev] = fn; },\n"
+            "  classList: { add() {}, remove() {} },\n"
+            "  textContent: 'Copy post'\n"
+            "};\n"
+            "const root = {\n"
+            "  querySelectorAll: (sel) => {\n"
+            "    if (sel.indexOf('data-copy-post') >= 0) return [btn];\n"
+            "    return [];\n"
+            "  },\n"
+            "  querySelector: (sel) => sel.indexOf('reddit-sa') >= 0 ? section : null\n"
+            "};\n"
+            "bindSharePage(root, {\n"
+            "  clipboard: { writeText: (t) => { written = t; return Promise.resolve(); } },\n"
+            "  document: { createElement() { throw new Error('no fallback'); } }\n"
+            "});\n"
+            "handlers.click({ currentTarget: btn });\n"
+            "setTimeout(() => {\n"
+            "  process.stdout.write(JSON.stringify({\n"
+            "    written,\n"
+            "    expected: assemblePost(" + json.dumps(fields) + ")\n"
+            "  }));\n"
+            "}, 20);\n"
+        )
+        self.assertEqual(out["written"], out["expected"])
+        self.assertIn("£5", out["written"])
+        self.assertIn(SIZER_URL, out["written"])
+        self.assertIn(GUMROAD, out["written"])
+        self.assertIn(fields["title"], out["written"])
 
 
 if __name__ == "__main__":
