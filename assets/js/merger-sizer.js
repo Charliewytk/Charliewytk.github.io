@@ -59,7 +59,7 @@
     input = input || {};
     var offer = parseMoney(input.offer);
     var market = parseMoney(input.market);
-    if (offer == null || market == null || market <= 0) {
+    if (offer == null || market == null || offer <= 0 || market <= 0) {
       return { error: "Need an offer and a market above zero." };
     }
 

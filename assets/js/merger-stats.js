@@ -52,7 +52,7 @@
     set("clears", fmtCount(summary.clears_breakeven));
     set("corroborated", fmtCount(summary.corroborated));
     set("forms", fmtCount(summary.filing_types));
-    set("built", summary.digest_date || summary.generated);
+    set("built", summary.digest_date ?? summary.generated);
 
     if (publishable != null && clears != null && be != null) {
       set("live-copy",
@@ -65,7 +65,9 @@
     if (typeof fetch !== "function") return;
     fetch(SUMMARY_URL, { cache: "no-store" })
       .then(function (r) { return r.ok ? r.json() : null; })
-      .then(apply)
+      .then(function (data) {
+        if (data && typeof data === "object" && !Array.isArray(data)) apply(data);
+      })
       .catch(function () {});
   }
 

@@ -419,6 +419,14 @@ function money(n) {
   return "£" + (Number.isInteger(n) ? n.toLocaleString("en-GB") : n.toFixed(2));
 }
 
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 function productCard(p) {
   const badge = p.was ? '<span class="badge badge-sale">Offer</span>'
     : p.condition === "Used" ? '<span class="badge badge-used">Refurbished</span>'
@@ -662,7 +670,7 @@ function runSearch(q) {
           </a>`
         )
         .join("")
-    : `<p class="search-hint">Nothing matched “${q}”. Stock changes daily — call
+    : `<p class="search-hint">Nothing matched “${escapeHtml(q)}”. Stock changes daily — call
        <a href="${SHOP.phoneHref}">${SHOP.phone}</a> and we'll check the shop floor.</p>`;
   hydratePhotos(out);
 }

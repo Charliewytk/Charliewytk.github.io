@@ -1,5 +1,8 @@
 fragment.html
 .DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
 essays/short.html
 research.src.html
 fragment.prev.html
