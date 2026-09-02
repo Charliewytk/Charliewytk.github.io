@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Share drafts — you still click Post</title>
 <meta name="description" content="Drafts only. Method first: a 3% spread annualises to 24.6%; after a 2.4% break rate and costs it is +1.38% a deal. You still click Post. Agents never submit.">
 <meta name="robots" content="noindex,nofollow">
@@ -57,7 +57,7 @@
   .banner p { margin: 0 0 8px; }
   .banner p:last-child { margin: 0; color: var(--ink2); font-size: 0.95rem; }
 
-  .shell { max-width: 720px; margin: 0 auto; padding: 28px 16px 96px; }
+  .shell { max-width: 720px; margin: 0 auto; padding: 28px 16px 210px; }
   h1 {
     font-family: Georgia, "Times New Roman", serif;
     font-weight: 600;
@@ -103,12 +103,15 @@
     padding: 12px;
     resize: vertical;
     min-height: 7.5em;
+    -webkit-user-select: text;
+    user-select: text;
   }
   textarea.title { min-height: 5.2em; }
-  textarea.short { min-height: 13.5em; }
+  textarea.short { min-height: 20em; }
   .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
   button.copy {
     appearance: none;
+    -webkit-appearance: none;
     background: var(--ink);
     color: var(--paper);
     border: 1px solid var(--ink);
@@ -117,10 +120,36 @@
     font-weight: 700;
     font-size: 0.95rem;
     flex: 1 1 140px;
+    touch-action: manipulation;
   }
+  button.copy.post { flex: 1 1 100%; }
   button.copy:hover { background: var(--accent); border-color: var(--accent); }
   button.copy.ok { background: #2d5a32; border-color: #2d5a32; }
   .meta { color: var(--faint); font-size: 0.82rem; margin: 8px 0 0; }
+  .morning {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 5;
+    background: var(--ink);
+    color: var(--paper);
+    border-top: 2px solid var(--accent);
+    padding: 12px 16px calc(14px + env(safe-area-inset-bottom, 0px));
+  }
+  .morning p { margin: 0 0 10px; font-size: 0.92rem; }
+  .morning button.copy {
+    width: 100%;
+    flex: 1 1 100%;
+    background: var(--paper);
+    color: var(--ink);
+    border-color: var(--paper);
+  }
+  .morning button.copy.ok {
+    background: #2d5a32;
+    color: var(--paper);
+    border-color: #2d5a32;
+  }
 
   footer {
     margin-top: 12px;
@@ -145,11 +174,11 @@
 
 <main class="shell">
   <h1>Method first. Then the public calculator and the existing £5 listing. Nothing here is a post until you tap it.</h1>
-  <p class="lede">Frozen site figures, checked against /example/ and /weekly/: a 3% spread annualises to 24.6%; after a 2.4% break rate and costs it is +1.38% a deal. The public calculator is /sizer/. Pay stays on the existing Gumroad listing. Long-press a box if Copy fails.</p>
+  <p class="lede">Frozen site figures, checked against /example/ and /weekly/: a 3% spread annualises to 24.6%; after a 2.4% break rate and costs it is +1.38% a deal. The public calculator is /sizer/. Pay stays on the existing £5 Gumroad listing. One Copy post tap on iPhone. First line is the title; Title / Body are backup. Long-press a box if Copy fails. You still click Post.</p>
 
   <section data-draft="reddit-sa">
     <h2>1. Reddit &mdash; r/SecurityAnalysis</h2>
-    <p class="where">Self-post. Title, then body. You still click Post as u/charliequantack.</p>
+    <p class="where">09:00 pick. One copy: first line is the title, rest is the body. You still click Post as u/charliequantack.</p>
     <label for="sa-title">Title</label>
     <textarea id="sa-title" class="title" data-field="title" readonly>A 3% cash-merger spread annualises to 24.6%. After a 2.4% break rate and costs it is +1.38% a deal</textarea>
     <label for="sa-body">Body</label>
@@ -164,6 +193,7 @@ Tonight's table is £5/month on the existing listing: https://wuytackcharlie.gum
 
 Filings, not advice. Not a tip sheet.</textarea>
     <div class="row">
+      <button type="button" class="copy post" data-copy-post="reddit-sa">Copy post</button>
       <button type="button" class="copy" data-copy="sa-title">Copy title</button>
       <button type="button" class="copy" data-copy="sa-body">Copy body</button>
     </div>
@@ -184,6 +214,7 @@ Free weekly table: https://charliewytk.github.io/weekly/
 
 Filings and cost-sizing only. Not advice.</textarea>
     <div class="row">
+      <button type="button" class="copy post" data-copy-post="reddit-investing">Copy post</button>
       <button type="button" class="copy" data-copy="inv-title">Copy title</button>
       <button type="button" class="copy" data-copy="inv-body">Copy body</button>
     </div>
@@ -206,6 +237,7 @@ Tonight's table is £5/month on the existing listing: https://wuytackcharlie.gum
 
 Extraction and cost-sizing. Not advice.</textarea>
     <div class="row">
+      <button type="button" class="copy post" data-copy-post="hn">Copy post</button>
       <button type="button" class="copy" data-copy="hn-title">Copy title</button>
       <button type="button" class="copy" data-copy="hn-body">Copy comment</button>
     </div>
@@ -222,11 +254,11 @@ https://charliewytk.github.io/example/
 https://charliewytk.github.io/weekly/
 https://wuytackcharlie.gumroad.com/l/mergermonitor
 
-Filings, not advice.</textarea>
+Filings, not advice. £5/month.</textarea>
     <div class="row">
-      <button type="button" class="copy" data-copy="x-body">Copy post</button>
+      <button type="button" class="copy post" data-copy-post="x">Copy post</button>
     </div>
-    <p class="meta">~254 weighted characters (each URL counts as 23).</p>
+    <p class="meta">Weighted length stays under 280 (each URL counts as 23).</p>
   </section>
 
   <footer>
@@ -234,39 +266,11 @@ Filings, not advice.</textarea>
     <p><a href="../sizer/">/sizer/</a> · <a href="../example/">/example/</a> · <a href="../weekly/">/weekly/</a> · <a href="https://wuytackcharlie.gumroad.com/l/mergermonitor">£5/month on Gumroad</a> · <a href="../">charliewytk.github.io</a></p>
   </footer>
 </main>
-<script>
-(function () {
-  function flash(btn) {
-    var old = btn.textContent;
-    btn.classList.add("ok");
-    btn.textContent = "Copied";
-    setTimeout(function () {
-      btn.classList.remove("ok");
-      btn.textContent = old;
-    }, 1400);
-  }
-  function copyFrom(id, btn) {
-    var el = document.getElementById(id);
-    if (!el) return;
-    var text = el.value;
-    function fallback() {
-      el.focus();
-      el.select();
-      try { document.execCommand("copy"); flash(btn); } catch (e) {}
-    }
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(function () { flash(btn); }).catch(fallback);
-    } else {
-      fallback();
-    }
-  }
-  document.querySelectorAll("button.copy[data-copy]").forEach(function (btn) {
-    btn.addEventListener("click", function () { copyFrom(btn.getAttribute("data-copy"), btn); });
-  });
-  document.querySelectorAll("textarea").forEach(function (el) {
-    el.addEventListener("focus", function () { el.select(); });
-  });
-})();
-</script>
+<div class="morning" data-morning>
+  <p>09:00 — one copy. r/SecurityAnalysis. First line is the title. /sizer/ and the £5 SKU are in the paste. You still click Post.</p>
+  <button type="button" class="copy post" data-copy-post="reddit-sa">Copy tomorrow's post</button>
+</div>
+<script src="../assets/js/share-copy.js"></script>
+<script>ShareCopy.bindSharePage(document);</script>
 </body>
 </html>
