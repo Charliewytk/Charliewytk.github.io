@@ -177,9 +177,12 @@
     return round3(barPct) + 1e-9 >= round3(breakEvenPct(days));
   }
 
-  function barBasisLabel(basis) {
+  function barBasisLabel(basis, days) {
     if (basis === "registered-flat") return "labelled 1.57% policy (unknown stage)";
-    if (basis === "recomputed-costed") return "measured 40bp GBP-funded round trip";
+    var horizon = days ? (days + "-day ") : "";
+    if (basis === "recomputed-costed") {
+      return horizon + "measured 40bp GBP-funded round trip";
+    }
     return "kept (charges measured 40bp)";
   }
 
@@ -217,11 +220,12 @@
   function gateFields(input) {
     var gate = paperBar(input);
     var digits = gate.barBasis === "registered-flat" ? 2 : 3;
+    var days = daysFor(input);
     return {
       barPct: gate.barPct,
       barBasis: gate.barBasis,
       barLabel: fmtPct(gate.barPct, digits),
-      barBasisLabel: barBasisLabel(gate.barBasis),
+      barBasisLabel: barBasisLabel(gate.barBasis, days),
       measuredCostPct: COST_PCT
     };
   }

@@ -300,6 +300,8 @@ class SizerPage(unittest.TestCase):
             html,
             r'<select[^>]*id="stage"[^>]*>[\s\S]*?<option[^>]*value="unknown"[^>]*selected',
         )
+        self.assertIn('id="claimed-bar"', html)
+        self.assertIn("claimedBarPct", html)
 
     def test_noindex_pages_stay_noindex_and_sizer_stays_indexable(self) -> None:
         html = self._html()
@@ -538,6 +540,21 @@ class FailClosedBar(unittest.TestCase):
         }
         self.assertFalse(_run_expr("sizer.shouldOpen(" + str(costed) + ", " + json.dumps(honest) + ")"))
         self.assertTrue(_run_expr("sizer.shouldOpen(" + str(costed + 0.10) + ", " + json.dumps(honest) + ")"))
+
+    def test_prem14a_uncosted_bar_mislabelled_as_49d_does_not_open(self) -> None:
+        """A 62-day uncosted bar (~1.319%) beats the 49-day zero-cost floor.
+
+        If days and basis disagree, the old detector treats that bar as
+        costed and a 1.40% spread ships against the measured 40bp 49d bar.
+        """
+        uncosted_62 = _run_expr("sizer.uncostedBreakEvenPct(62)")
+        poisoned = {
+            "breakEvenPct": uncosted_62,
+            "breakEvenBasis": "stage-DEFM14A",
+            "breakEvenDays": 49,
+        }
+        self.assertTrue(_run_expr("sizer.barIncludesCosts(" + str(uncosted_62) + ", 49)"))
+        self.assertFalse(_run_expr("sizer.shouldOpen(1.40, " + json.dumps(poisoned) + ")"))
 
     def test_prem14a_uncosted_bar_without_days_does_not_open(self) -> None:
         uncosted_62 = _run_expr("sizer.uncostedBreakEvenPct(62)")
