@@ -79,7 +79,8 @@
   <p class="back"><a href="index.html">← charliewytk.github.io</a></p>
   <h1>Research notes</h1>
   <p class="lede">Around 110 hypotheses tested. Nine produced a real, measurable anomaly. Zero produced one bigger than the cost of trading it.</p>
-  <p class="meta">updated 27 aug 2026 &middot; every number below says what kind of number it is &mdash; live, holdout, or backtest</p>
+  <p>HyperFund / phd_ml is a sealed harness: walk-forward, BH multiple-testing, cost- and funding-aware half-Kelly. First family: <b>1 PASS / 11 FAIL</b>. The pass is the Merger Monitor deal-EV below. The fails include HL micro variants, meme mortality, Polymarket complete-set, and the rest of that family. That is a kill log, not a return.</p>
+  <p class="meta">updated 6 sep 2026 &middot; every number below says what kind of number it is &mdash; live, holdout, or backtest</p>
 
   <section>
     <h2>The finding</h2>
@@ -111,6 +112,7 @@
 
     <h3>Why the annualised number is the wrong number</h3>
     <p>A 3% spread held to the median 49-day close annualises to <b>24.6% a year</b>. That is how this kind of thing is normally sold, and it is worthless. Price the same trade properly — 2.4% break rate, 27% median loss when one does break, 0.40% round-trip cost, 0.49% of forgone Treasury-bill carry — and it is worth <b>+1.38% per deal</b>.</p>
+    <p>SEAL_PHD_0004 in HyperFund research/phd_ml ran the same 3% case: measured EV ≈ +1.37% a deal, bootstrap CI roughly [1.35%, 1.39%]. A sealed check of the method already published here, not a book.</p>
     <p>A 1% spread still annualises to something that looks healthy. Priced the same way it is <b>−0.57% per deal</b>. Break-even sits at 1.59%, which is why that number, and not the annualised one, is what the product publishes.</p>
     <p><a href="subscribe/">Subscribe — £5/month</a>. Checkout stays on the existing <a href="https://wuytackcharlie.gumroad.com/l/mergermonitor">Gumroad listing</a>. The <a href="merger-monitor/">week-late public table</a> is the same maths, one week late. Filings, not advice. No position, no execution, no tips.</p>
     <ul>
@@ -147,9 +149,9 @@
     <h3>Numerai — three tournaments, all live, nothing staked</h3>
     <p>Classic, Signals and Crypto all submit on schedule without a laptop involved. Crypto scores +0.116 market-cap-neutralised in validation. A late-submission bug was caught and fixed that had left the margin at 3.7 minutes — October's clock change would have made every round late, and therefore payout-ineligible, without anything appearing to break. Staking is pre-registered for a November decision, after at least ten resolved rounds.</p>
 
-    <h3>WorldQuant BRAIN — seven alphas live</h3>
+    <h3>WorldQuant BRAIN — Gold, about 14 alphas live</h3>
     <p>Three days and 308 single-term simulations produced a 0-for-5 rejection queue. Every candidate strong enough to clear the performance gates was a fast price/volume signal already in my book, so each one drew self-correlation around 0.79 against a 0.70 limit. Searching harder inside that class could not fix it, because the class was the problem.</p>
-    <p>Pairing each strong-but-crowded fast term with a weak, orthogonal slow one cleared 14 of 30 combinations, against 2 of 308 singles. Correlation fell 0.79 → 0.51 and fitness rose 1.04 → 1.68. The components that made it work had all failed on their own and would have been filed as dead ends.</p>
+    <p>Pairing each strong-but-crowded fast term with a weak, orthogonal slow one cleared 14 of 30 combinations, against 2 of 308 singles. Correlation fell 0.79 → 0.51 and fitness rose 1.04 → 1.68. The components that made it work had all failed on their own and would have been filed as dead ends. Gold (10,000 pts) reached around 30 August 2026. About 14 alphas live.</p>
   </section>
 
   <section>
@@ -197,11 +199,11 @@
 
   <section>
     <h2>What is running right now, unstaked</h2>
-    <p class="meta">nothing has money on it until its gate passes</p>
+    <p class="meta">paper books, sealed gates, evidence gates. nothing staked until a gate passes</p>
     <ul>
       <li>A 40-name value and quality book, paper, at a real broker since 20 August — there to measure execution honestly rather than to make money. Measured median effective spread came in at 3.5 basis points against the 10 the models had assumed.</li>
       <li>The paper Almach clone, accruing toward its September verdict behind a sealed evaluator.</li>
-      <li>A meme-coin desk running paper-only against a frozen pre-registration, first evaluation 8 September.</li>
+      <li>A meme-token desk, paper, behind rug-pull and evidence gates, against a frozen pre-registration. First evaluation 8 September.</li>
       <li>Numerai staking, gated on ten resolved rounds and a checklist, earliest November.</li>
     </ul>
     <p>Every automated submission runs preflights first — is the data fresh, are the predictions sane and non-degenerate, does the model file match the code — behind a retry wrapper that has already saved one live round from a dropped connection. Nightly unattended sessions re-verify the stack and commit a digest: 1,500+ tests across three suites, green before I wake up.</p>
