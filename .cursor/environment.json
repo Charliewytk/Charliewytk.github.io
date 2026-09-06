@@ -1,0 +1,11 @@
+{
+  "name": "charliewytk.github.io",
+  "install": "python3 --version && node --version && (google-chrome --version || google-chrome-stable --version)",
+  "terminals": [
+    {
+      "name": "static-server",
+      "command": "python3 -m http.server 8000 --bind 127.0.0.1"
+    }
+  ],
+  "ports": [8000]
+}
