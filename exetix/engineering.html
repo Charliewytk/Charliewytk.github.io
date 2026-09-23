@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How ExeTix is built — SwiftUI, Next.js, Stripe Connect and a two-machine drop watcher</title>
+<meta name="description" content="Engineering notes on ExeTix: a native SwiftUI app with widgets, Live Activities and rich pushes; a Next.js 15, Drizzle and Postgres backend on Vercel; an at-cost Stripe Connect marketplace; and a Python drop watcher with a one-second fast lane.">
+<link rel="canonical" href="https://charliewytk.github.io/exetix/engineering.html">
+<link rel="icon" href="img/icon-green.png" type="image/png">
+<link rel="apple-touch-icon" href="img/icon-green.png">
+<meta name="theme-color" content="#07070a">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Charlie Wuytack">
+<meta property="og:url" content="https://charliewytk.github.io/exetix/engineering.html">
+<meta property="og:title" content="How ExeTix is built">
+<meta property="og:description" content="SwiftUI app, Next.js marketplace on Stripe Connect, and a two-machine drop watcher that gets a known release to your phone in about a second — and never pings twice.">
+<meta property="og:image" content="https://charliewytk.github.io/media/og-exetix.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ExeTix: pinged the second Exeter tickets drop. Three iPhone screens showing tonight's club nights, drop alerts and the drops radar.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How ExeTix is built">
+<meta name="twitter:description" content="SwiftUI app, Next.js marketplace on Stripe Connect, and a two-machine drop watcher with a one-second fast lane.">
+<meta name="twitter:image" content="https://charliewytk.github.io/media/og-exetix.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Anton&display=swap">
+<link rel="stylesheet" href="exetix.css">
+</head>
+<body>
+<header class="mast">
+  <a class="who" href="../">Charlie Wuytack</a>
+  <nav class="sub" aria-label="ExeTix pages">
+    <a href="./">Overview</a>
+    <a href="how-it-works.html">How it works</a>
+    <a href="engineering.html" aria-current="page">Engineering</a>
+    <a href="gallery.html">Gallery</a>
+  </nav>
+</header>
+
+<main>
+  <section class="night">
+    <div class="hero-in solo">
+      <div>
+        <p class="eyebrow">ExeTix · engineering notes</p>
+        <h1>How it’s built</h1>
+        <p class="pitch">Three systems, one job: get a student from “tickets just dropped” to the ticket page in about a second, <span class="dim">and never ping them twice.</span></p>
+        <div class="facts">
+          <div><b>≈1<span class="u">s</span></b><span>typical, a known release flipping to the alert leaving the watcher</span></div>
+          <div><b>≈1.6<span class="u">s</span></b><span>worst case on the same path, with one read in flight</span></div>
+          <div><b>2</b><span>watchers, half an interval out of phase</span></div>
+          <div><b>1</b><span>push per drop, per person, however the two feeds race</span></div>
+        </div>
+        <p class="soon">Coming to the App Store · in TestFlight beta now</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="shape">
+    <div class="wrap">
+      <p class="eyebrow rise">The shape of it</p>
+      <h2 class="rise">Pages in, one alert out.</h2>
+      <div class="prose rise">
+        <p>Two watchers read public ticket pages and post what they see. The backend turns those observations into a state per night, decides what changed, and fans the change out to the people who follow that night: pushes to the iPhone app, web push and email to the website. Money moves through Stripe Connect.</p>
+      </div>
+      <div class="arch rise" role="img" aria-label="Architecture: public ticket pages are read by two Python watchers, which post observations to a Next.js backend on Vercel with Postgres; the backend sends pushes to the iPhone app and alerts to the website, and payments run through Stripe Connect.">
+        <div class="row">
+          <div class="box"><b>Public ticket pages</b>Club and society event pages. Public, read-only, no login</div>
+        </div>
+        <div class="flow up">read within a request budget</div>
+        <div class="row" style="--n:2">
+          <div class="box dark"><b>Watcher · cloud VM</b>Python, standard library only. Sweeps clubs and societies; opens a one-second fast lane at known release times</div>
+          <div class="box dark"><b>Watcher · second machine</b>Same code, half an interval out of phase. Hot standby that promotes itself if the VM goes quiet or blind</div>
+        </div>
+        <div class="flow">every observation, from both</div>
+        <div class="row">
+          <div class="box core"><b>Backend · Next.js 15 on Vercel</b>Ingest → per-night state machine → flip guard → outbox → fan-out. Postgres through Drizzle. A JSON API for the app, server actions for the web</div>
+        </div>
+        <div class="flow">pushes · email · API · payments</div>
+        <div class="row" style="--n:3">
+          <div class="box dark"><b>iPhone app</b>SwiftUI. Time-sensitive pushes with the flyer, widget, Live Activities, StoreKit 2</div>
+          <div class="box"><b>Website</b>exeterticketexchange.com. Web push and email alerts, checkout, seller onboarding</div>
+          <div class="box"><b>Stripe Connect</b>Buyer checkout and seller payouts, priced at cost</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="ios">
+    <div class="wrap split">
+      <div>
+        <p class="eyebrow rise">The iPhone app</p>
+        <h2 class="rise">Native, all the way down.</h2>
+        <div class="prose rise">
+          <ul>
+            <li><b>SwiftUI, iOS 17 and up.</b> On iOS 26 the tab bar is Liquid Glass, with a classic fallback below it.</li>
+            <li><b>Four targets:</b> the app; a widget extension with the <i>Tonight in Exeter</i> widget and a Lock Screen / Dynamic Island countdown Live Activity; a notification service extension that downloads the night’s flyer into each push; and unit tests.</li>
+            <li><b>Pushes that break through.</b> Drop alerts go out over APNs as time-sensitive notifications with action buttons (Get tickets, View night, Sell). A tap opens the ticket page directly, even on a cold launch.</li>
+            <li><b>StoreKit 2</b> for the plans. Each purchase carries the user’s account token, and every transaction is also posted to the server and verified with Apple there.</li>
+            <li><b>Passwordless sign-in</b>: an email, then a six-digit code. The session lives in the Keychain.</li>
+            <li><b>Instant cold start.</b> One catalogue store feeds every screen and is cached on disk; flyers go through a downsampling image pipeline with memory and disk caches.</li>
+            <li><b>London time, properly.</b> Nights are grouped in Europe/London, and a 00:30 start belongs to the night before.</li>
+            <li><b>A privacy manifest</b>, and no tracking: data is used to run the app.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="side rise">
+        <figure class="phone solo"><img src="img/screen-explore.webp" width="540" height="1173" alt="ExeTix Explore tab: ‘5 club nights tonight’ with a swipeable flyer carousel and a Dropping soon rail" loading="lazy" decoding="async"></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="backend">
+    <div class="wrap">
+      <div class="narrow">
+        <p class="eyebrow rise">The backend</p>
+        <h2 class="rise">Every night is a small state machine.</h2>
+        <div class="prose rise">
+          <p>Next.js 15 and React 19 on Vercel, Postgres through Drizzle ORM. The website uses server actions; the iPhone app talks to a JSON API beside them.</p>
+          <p>Each night has a state (pending, live or sold out) driven by the watchers’ observations, and each change emits one of four alert kinds: announced, reminder, dropped, restock. The alert is written to an outbox in the same transaction as the state change, so a failed send is retried rather than lost, and fresh observations are applied before stale retries so a new drop never waits behind old work. Fan-out to followers runs in parallel: pushes, web push and email together.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="watcher">
+    <div class="wrap">
+      <div class="narrow">
+        <p class="eyebrow rise">The watcher</p>
+        <h2 class="rise">Polite most of the time. One read a second when it counts.</h2>
+        <div class="prose rise">
+          <p>The watcher is a Python process that reads public event pages, politely, within a request budget. It never buys tickets.</p>
+          <p><b>The budget.</b> Every read is counted in one ledger against a per-minute budget. Clubs are swept on a fixed clock; societies keep their own, slower clocks and give way first when the budget is tight. A fast-lane read that comes back blind (an error, a rate limit, a timeout) doubles that lane’s interval, to 2, 4, 8 and then 10 seconds, and when every page is blind the whole loop backs off.</p>
+          <p><b>The fast lane.</b> Most of the time a pending night is looked at every few seconds as part of its venue’s sweep. When its release time is known, from 90 seconds before it the watcher reads just that night’s detail <span class="mk">once a second</span> until it flips, or three minutes pass, then every two seconds until ten minutes after. Nights with no stated time get the same one-second read from twenty seconds before to forty seconds after each round hour, 09:00 to 22:00. All lanes share a single read per second on a wall-clock grid, and while a lane is open the cold sweeps stretch out to make room for it.</p>
+          <p><b>Two machines.</b> The same watcher runs on a cloud VM and on a second machine, half an interval out of phase, so their looks interleave instead of landing together. The second machine is a hot standby: every two minutes it checks the VM’s heartbeat, and if that is stale or blind, it promotes itself. Both post every observation; the backend turns them into one. A separate deadman process reads the heartbeat and raises the alarm if a watcher stops, which is the only way to tell a quiet week from a dead one.</p>
+        </div>
+        <div class="table-scroll rise">
+          <table class="ledger">
+            <thead><tr><th>Release</th><th>Typical</th><th>Worst</th></tr></thead>
+            <tbody>
+              <tr><td>Known time, 90 s before to 3 min after</td><td class="n hi">≈1 s</td><td class="n">≈1.6 s</td></tr>
+              <tr><td>Known time, 3 to 10 min after</td><td class="n hi">≈1.5 s</td><td class="n">≈2.6 s</td></tr>
+              <tr><td>No stated time, inside a round-hour burst</td><td class="n hi">≈1.1 s</td><td class="n">≈1.6 s</td></tr>
+              <tr><td>Any other time (the regular sweep)</td><td class="n hi">≈5 s</td><td class="n">≈10 s</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note rise">From the ticket page flipping to the alert leaving the watcher, for one pending night, with reads of about 300 ms. APNs delivery comes on top.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="release-times">
+    <div class="wrap">
+      <div class="narrow">
+        <p class="eyebrow rise">Release times</p>
+        <h2 class="rise">Reading a release time out of a sentence.</h2>
+        <div class="prose rise">
+          <p>The ticket platform has no release-time field. Organisers write it in the event description instead, in every style imaginable. A parser finds the sentence, strips the HTML, and resolves it to an instant in Europe/London:</p>
+        </div>
+        <p class="quote rise">“Tickets on sale Wednesday 6pm”<span class="arrow">→ Wednesday 18:00, Europe/London (BST or GMT, whichever applies)</span></p>
+        <div class="prose rise">
+          <p>Weekdays and “today” / “tomorrow” resolve from when the night was first listed, not from when the page happened to be re-read. A time in the past, or at or after the night itself, is thrown away, and anything ambiguous returns nothing rather than a guess.</p>
+          <p>A parsed time does three jobs: it schedules the ten-minute warning, it opens the watcher’s fast lane, and it heats that society’s polling clock. It <span class="mk">never fires the “dropped” alert</span>. That only ever follows an observed flip.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="flip-guard">
+    <div class="wrap">
+      <div class="narrow">
+        <p class="eyebrow rise">Flip guard</p>
+        <h2 class="rise">One drop, one alert.</h2>
+        <div class="prose rise">
+          <p>Two feeds reading the same page half an interval apart will disagree at the moment of release: one box can still hold a stale copy for a few seconds and report “pending” after the other has seen the night go live. Committed naively, that is live → pending → live, and a second “tickets just dropped” push. The backend stops it in layers:</p>
+        </div>
+        <ul class="kinds rise">
+          <li><b>Order</b><span>Each night’s row is locked and compare-and-set on observation time. An older observation that arrives late is skipped.</span></li>
+          <li><b>Reversal hold</b><span>Live → pending or sold out, seen within 90 s of going live, is held. It commits only if an observation at least 30 s later still agrees.</span></li>
+          <li><b>Quiet re-flip</b><span>A night that goes buyable again within 10 minutes of a dropped or restock alert is recorded silently, never pushed twice.</span></li>
+          <li><b>Outbox</b><span>Transitions are unique per night, kind and sequence, so the same moment cannot be queued twice.</span></li>
+          <li><b>Sends</b><span>Every push and email carries a fingerprint unique per person, night, kind and sequence.</span></li>
+        </ul>
+        <p class="note rise">The guard has its own test suite that replays both feeds interleaved around a release.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="payments">
+    <div class="wrap">
+      <div class="narrow">
+        <p class="eyebrow rise">Payments</p>
+        <h2 class="rise">A marketplace priced at cost.</h2>
+        <div class="prose rise">
+          <p>Stripe Connect onboards sellers and pays them out. There is no seller fee: the seller receives exactly their asking price.</p>
+          <p>The buyer’s booking fee is solved for, not set. It is the smallest whole-pence fee that covers the card fee on the full charge plus the payout fee on the seller’s transfer, each rounded up. Because the card fee grows with the fee itself, that is a fixed point, found in a step or two. The platform can never go negative on an order, and it keeps a penny or two of rounding at most. On a £10 ticket the fee is <span class="num">49p</span>.</p>
+          <p>Every order stores the fee model it was priced under, so changing the model never re-prices or re-pays an order that already exists. Plans are App Store subscriptions through StoreKit; ticket checkout is Stripe, because a ticket is admission to a real-world event.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="referrals">
+    <div class="wrap">
+      <div class="narrow">
+        <p class="eyebrow rise">Referral economics</p>
+        <h2 class="rise">Paid from subscriptions, never from tickets.</h2>
+        <div class="prose rise">
+          <p>At cost there is nothing on a ticket order to share, and the fee code caps referral cash so that it can never turn an order into a loss. So referral money comes out of subscription revenue instead.</p>
+          <p>A referrer earns £2 a month for each friend on a paid plan, for as long as they stay, so three friends (£6) more than cover a £4.99 Drops plan. The friend’s £2 is a booking-fee credit, and credits are never turned into cash. Cash-out starts at £5 and goes through Stripe Connect.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="numbers">
+    <div class="wrap">
+      <p class="eyebrow rise">By the numbers</p>
+      <h2 class="rise">What is under it.</h2>
+      <div class="facts three rise">
+        <div><b>~9,500</b><span>lines of Swift across the app, its widget and its notification extension</span></div>
+        <div><b>~52,000</b><span>lines of TypeScript in the website and API, with 137 test files</span></div>
+        <div><b>~5,400</b><span>lines of Python in the watcher, and as many again in its tests</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="not">
+    <div class="wrap">
+      <div class="narrow">
+        <p class="eyebrow rise">On purpose</p>
+        <h2 class="rise">What it deliberately does not do.</h2>
+        <ul class="nots rise">
+          <li><span>Buy tickets on any ticketing platform. Auto-buy only buys ExeTix resale listings, and the watcher only reads.</span></li>
+          <li><span>Read faster than its budget. Errors and rate limits slow it down, never speed it up.</span></li>
+          <li><span>Trust a parsed release time to announce a drop. Only an observed flip does that.</span></li>
+          <li><span>Track anyone. No ads and no tracking; data is used to run the app.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <nav class="pager" aria-label="More about ExeTix">
+      <a href="how-it-works.html"><small>Previous</small><span>← How it works</span></a>
+      <a class="next" href="gallery.html"><small>Next</small><span>Gallery →</span></a>
+    </nav>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>ExeTix is designed and built by Charlie Wuytack. <a href="https://www.exeterticketexchange.com" target="_blank" rel="noopener">exeterticketexchange.com</a> · App Store release coming (TestFlight beta now).</p>
+    <p><a href="../">← All projects</a> · <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    if (!('IntersectionObserver' in window)) return;
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var els = [].slice.call(document.querySelectorAll('.rise, .phones'));
+    var vh = window.innerHeight;
+    els.forEach(function (el) {
+      if (!el.classList.contains('phones') && el.getBoundingClientRect().top < vh * 0.9) el.classList.add('in');
+    });
+    document.documentElement.classList.add('rv');
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    els.forEach(function (el) { if (!el.classList.contains('in')) io.observe(el); });
+  })();
+</script>
+</body>
+</html>
