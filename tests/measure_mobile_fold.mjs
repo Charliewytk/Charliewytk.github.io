@@ -7,6 +7,7 @@
  */
 import http from "node:http";
 import { spawn } from "node:child_process";
+import { existsSync } from "node:fs";
 import { setTimeout as delay } from "node:timers/promises";
 
 const url = process.argv[2];
@@ -25,7 +26,7 @@ function findChrome() {
     "/usr/bin/google-chrome",
     "/usr/local/bin/google-chrome",
   ].filter(Boolean);
-  return names[0];
+  return names.find((n) => existsSync(n)) || names[0];
 }
 
 function freePort() {
@@ -38,7 +39,7 @@ function freePort() {
   });
 }
 
-async function waitForJson(endpoint, tries = 40) {
+async function waitForJson(endpoint, tries = 300) {  // up to 30 s: CI runners cold-start Chrome slowly
   for (let i = 0; i < tries; i++) {
     try {
       const res = await fetch(endpoint);
