@@ -22,13 +22,6 @@ import subprocess
 import unittest
 from pathlib import Path
 
-# Overhaul 2026-09 (branch overhaul-2026-09): the homepage no longer sells Merger
-# Monitor. The brief for the public portfolio was "nothing that solicits money",
-# so the masthead / hero / section pay path is off the homepage. /subscribe/,
-# /merger-monitor/, /sizer/, /example/ and /weekly/ are untouched and still tested.
-# Remove these skips if Charles decides to put the paid path back.
-HOMEPAGE_SELL_REMOVED = "overhaul-2026-09: homepage paid path removed pending Charles's decision"
-
 ROOT = Path(__file__).resolve().parents[1]
 SIZER = ROOT / "sizer" / "index.html"
 JS = ROOT / "assets" / "js" / "merger-sizer.js"
@@ -333,7 +326,6 @@ class SizerPage(unittest.TestCase):
         self.assertNotIn("1.57%", fold.group(0))
         self.assertNotIn("sizer/", fold.group(0).lower())
 
-    @unittest.skip(HOMEPAGE_SELL_REMOVED)
     def test_homepage_index_contains_sizer_href(self) -> None:
         """Homepage notes point at the public calculator. Not a new hero."""
         homepage = (ROOT / "index.html").read_text(encoding="utf-8")
@@ -350,7 +342,6 @@ class SizerPage(unittest.TestCase):
         self.assertIn('href="example/"', notes.group(1))
         self.assertNotIn("share/", homepage.lower())
 
-    @unittest.skip(HOMEPAGE_SELL_REMOVED)
     def test_does_not_replace_paid_path_on_homepage_or_subscribe(self) -> None:
         homepage = (ROOT / "index.html").read_text(encoding="utf-8")
         fold = re.search(r'<header class="opening">.*?</header>', homepage, re.S)

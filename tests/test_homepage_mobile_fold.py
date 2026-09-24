@@ -8,9 +8,6 @@ opens. Merger Monitor / £5 stay after that, on the existing Gumroad SKU.
 
 This file fails on the broken AFTER (MM copy mid-screen, no hint) and
 passes on the restored reveal.
-
-Overhaul 2026-09: the Merger Monitor pay path is off the homepage (the public
-portfolio sells nothing). The reveal geometry tests are unchanged.
 """
 from __future__ import annotations
 
@@ -105,14 +102,16 @@ class HomepageOpeningReveal(unittest.TestCase):
         self.assertIsNotNone(hint)
         self.assertLess(pin_html.find("scroll-hint"), pin_html.find('class="veil"'))
 
-    def test_homepage_sells_nothing_after_the_open(self) -> None:
-        """overhaul-2026-09: the public portfolio carries no paid CTA."""
+    def test_mm_pay_still_exists_after_the_open(self) -> None:
         mast = re.search(r'<div class="masthead">.*?</div>', HOMEPAGE, re.S)
         self.assertIsNotNone(mast)
-        self.assertNotIn("gumroad", HOMEPAGE.lower())
-        self.assertNotIn("£5", HOMEPAGE)
-        self.assertIn("mailto:", mast.group(0))
+        self.assertIn(GUMROAD, mast.group(0))
+        self.assertIn("£5", mast.group(0))
+        merger = re.search(r'<section class="work" id="merger">.*?</section>', HOMEPAGE, re.S)
+        self.assertIsNotNone(merger)
+        self.assertIn(GUMROAD, merger.group(0))
         self.assertNotIn("Clothes", HOMEPAGE)
+        self.assertNotIn("mergerweekly", mast.group(0).lower())
 
     def test_mobile_viewport_before_scroll_is_the_small_hint(self) -> None:
         geo = _measure(*MOBILE, 0)
@@ -130,7 +129,7 @@ class HomepageOpeningReveal(unittest.TestCase):
             2,
             f"veil already open before scroll: {geo['revealPct']}",
         )
-        self.assertIsNone(geo["payHref"])
+        self.assertEqual(geo["payHref"], GUMROAD)
 
     def test_mobile_viewport_scroll_wipes_the_headline_open(self) -> None:
         geo = _measure(*MOBILE, int(844 * 0.55))
@@ -139,18 +138,18 @@ class HomepageOpeningReveal(unittest.TestCase):
             20,
             f"scroll did not open the veil: {geo['revealPct']}",
         )
-        self.assertIsNone(geo["payHref"])
+        self.assertEqual(geo["payHref"], GUMROAD)
 
     def test_desktop_reveal_does_not_regress(self) -> None:
         rest = _measure(*DESKTOP, 0)
         self.assertTrue(rest["hintInView"])
         self.assertFalse(rest["foldSellInView"])
         self.assertLess(rest["revealPct"], 2)
-        self.assertIsNone(rest["payHref"])
+        self.assertEqual(rest["payHref"], GUMROAD)
         opened = _measure(*DESKTOP, int(800 * 0.55))
         self.assertGreater(opened["revealPct"], 20)
-        self.assertIsNone(opened["payHref"])
-        self.assertIsNone(opened["foldHref"])
+        self.assertEqual(opened["payHref"], GUMROAD)
+        self.assertEqual(opened["foldHref"] or GUMROAD, GUMROAD)
 
 
 if __name__ == "__main__":

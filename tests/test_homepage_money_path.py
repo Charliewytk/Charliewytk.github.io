@@ -14,13 +14,6 @@ import subprocess
 import unittest
 from pathlib import Path
 
-# Overhaul 2026-09 (branch overhaul-2026-09): the homepage no longer sells Merger
-# Monitor. The brief for the public portfolio was "nothing that solicits money",
-# so the masthead / hero / section pay path is off the homepage. /subscribe/,
-# /merger-monitor/, /sizer/, /example/ and /weekly/ are untouched and still tested.
-# Remove these skips if Charles decides to put the paid path back.
-HOMEPAGE_SELL_REMOVED = "overhaul-2026-09: homepage paid path removed pending Charles's decision"
-
 ROOT = Path(__file__).resolve().parents[1]
 HOMEPAGE = (ROOT / "index.html").read_text(encoding="utf-8")
 SUBSCRIBE = ROOT / "subscribe" / "index.html"
@@ -40,7 +33,6 @@ def _merger_block() -> str:
 
 
 class HomepageMoneyPath(unittest.TestCase):
-    @unittest.skip(HOMEPAGE_SELL_REMOVED)
     def test_homepage_links_to_merger_monitor(self) -> None:
         hrefs = _hrefs(HOMEPAGE, "merger-monitor")
         self.assertTrue(
@@ -49,7 +41,6 @@ class HomepageMoneyPath(unittest.TestCase):
             f"homepage has no /merger-monitor link, found {hrefs!r}",
         )
 
-    @unittest.skip(HOMEPAGE_SELL_REMOVED)
     def test_merger_monitor_link_is_obvious(self) -> None:
         """Masthead plus a clickable week-late preview — not a footnote-only href."""
         mast = re.search(r'<div class="masthead">.*?</div>', HOMEPAGE, re.S)
@@ -63,7 +54,6 @@ class HomepageMoneyPath(unittest.TestCase):
         self.assertIn("mm-preview", block)
         self.assertIn("merger-monitor", block)
 
-    @unittest.skip(HOMEPAGE_SELL_REMOVED)
     def test_primary_paid_cta_is_subscribe(self) -> None:
         """Once /subscribe/ exists, the paid button owns that path — not the free weekly."""
         block = _merger_block()
@@ -77,7 +67,6 @@ class HomepageMoneyPath(unittest.TestCase):
         self.assertNotIn("mergerweekly", href)
         self.assertNotEqual(href, WEEKLY)
 
-    @unittest.skip(HOMEPAGE_SELL_REMOVED)
     def test_paid_path_is_subscribe_plus_gumroad(self) -> None:
         self.assertTrue(SUBSCRIBE.is_file(), "/subscribe/ page from PR #2 is missing")
         subscribe = SUBSCRIBE.read_text(encoding="utf-8")
@@ -102,7 +91,6 @@ class HomepageMoneyPath(unittest.TestCase):
         # Chelsea Bikes uses "customers" as a shop problem, not a count. Fine.
         self.assertIsNone(re.search(r"\d[\d,]*\s+customers", lowered))
 
-    @unittest.skip(HOMEPAGE_SELL_REMOVED)
     def test_paid_checkout_is_gumroad_not_a_new_form(self) -> None:
         block = _merger_block()
         self.assertNotIn("<form", block.lower())
@@ -112,7 +100,6 @@ class HomepageMoneyPath(unittest.TestCase):
         self.assertIn(GUMROAD, subscribe)
         self.assertNotIn("<form", subscribe.lower())
 
-    @unittest.skip(HOMEPAGE_SELL_REMOVED)
     def test_honest_week_late_copy(self) -> None:
         text = _merger_block().lower()
         self.assertTrue("week" in text and "late" in text)
@@ -446,7 +433,6 @@ class HomepageAndKillLogPayPath(unittest.TestCase):
     no sticky pay control after the named deaths. Same SKU only.
     """
 
-    @unittest.skip(HOMEPAGE_SELL_REMOVED)
     def test_homepage_merger_offers_gumroad_after_the_offer(self) -> None:
         block = _merger_block()
         gos = re.findall(r'<a class="go(?:\s+pay)?" href="([^"]+)"', block)
@@ -463,7 +449,6 @@ class HomepageAndKillLogPayPath(unittest.TestCase):
         self.assertNotIn("i trade this", block.lower())
         self.assertIsNone(re.search(r"\bict\b", block.lower()))
 
-    @unittest.skip(HOMEPAGE_SELL_REMOVED)
     def test_homepage_first_row_names_gumroad_without_replacing_subscribe(self) -> None:
         """Already-decided readers can pay from the first doing-row, not only /subscribe/."""
         block = _merger_block()
@@ -742,7 +727,6 @@ class HomepageOpeningRevealMoney(unittest.TestCase):
         if "fold-sell" in fold:
             self.assertRegex(css, r"\.fold-sell\s*\{[^}]*opacity:\s*var\(--tail-op")
 
-    @unittest.skip(HOMEPAGE_SELL_REMOVED)
     def test_pay_still_exists_on_mast_and_merger_after_open(self) -> None:
         mast = re.search(r'<div class="masthead">.*?</div>', HOMEPAGE, re.S)
         self.assertIsNotNone(mast)
@@ -762,7 +746,6 @@ class HomepageOpeningRevealMoney(unittest.TestCase):
         self.assertNotIn("i trade", self._fold().lower())
         self.assertIsNone(re.search(r"\bict\b", self._fold().lower()))
 
-    @unittest.skip(HOMEPAGE_SELL_REMOVED)
     def test_entry_gate_also_names_tonights_table(self) -> None:
         """First-time visitors see the vinyl gate, not the opening. Same SKU, same CTA."""
         gate = HOMEPAGE.split('<div class="gate"', 1)[1].split('<div class="masthead">', 1)[0]
@@ -917,7 +900,6 @@ class WorkedExamplePage(unittest.TestCase):
         self.assertNotIn("mergerweekly", first_cta)
         self.assertIn(GUMROAD, subscribe.split('class="paybar"', 1)[1])
 
-    @unittest.skip(HOMEPAGE_SELL_REMOVED)
     def test_homepage_links_quietly_from_the_worked_block(self) -> None:
         homepage = (ROOT / "index.html").read_text(encoding="utf-8")
         block = re.search(r'<section class="work" id="merger">.*?</section>', homepage, re.S)
@@ -1137,7 +1119,6 @@ class WeeklyFreeEditionPage(unittest.TestCase):
         self.assertIsNone(re.search(r"\bict\b", html))
         self.assertNotIn("<form", html)
 
-    @unittest.skip(HOMEPAGE_SELL_REMOVED)
     def test_does_not_replace_paid_path_on_homepage_or_subscribe(self) -> None:
         homepage = (ROOT / "index.html").read_text(encoding="utf-8")
         fold = re.search(r'<header class="opening">.*?</header>', homepage, re.S)
@@ -1166,7 +1147,6 @@ class WeeklyFreeEditionPage(unittest.TestCase):
             or f"/{name}/" in h
         ]
 
-    @unittest.skip(HOMEPAGE_SELL_REMOVED)
     def test_homepage_and_subscribe_link_quietly_to_weekly(self) -> None:
         homepage = (ROOT / "index.html").read_text(encoding="utf-8")
         block = re.search(r'<section class="work" id="merger">.*?</section>', homepage, re.S)
@@ -1291,7 +1271,6 @@ class HomepageStickyPayPath(unittest.TestCase):
     honest. Clothes stays out.
     """
 
-    @unittest.skip(HOMEPAGE_SELL_REMOVED)
     def test_masthead_has_sticky_gumroad_cta(self) -> None:
         mast = re.search(r'<div class="masthead">.*?</div>', HOMEPAGE, re.S)
         self.assertIsNotNone(mast, "homepage has no masthead")
@@ -1307,7 +1286,6 @@ class HomepageStickyPayPath(unittest.TestCase):
         self.assertEqual(pay.group(1), GUMROAD)
         self.assertIn("£5", pay.group(2))
 
-    @unittest.skip(HOMEPAGE_SELL_REMOVED)
     def test_sticky_pay_stays_outside_the_first_fold(self) -> None:
         opening = re.search(r'<header class="opening">.*?</header>', HOMEPAGE, re.S)
         self.assertIsNotNone(opening)
@@ -1325,7 +1303,6 @@ class HomepageStickyPayPath(unittest.TestCase):
         self.assertIsNone(re.search(r"\.masthead\s+a\.pay\s*\{[^}]*display:\s*none", css))
         self.assertIsNone(re.search(r"\.masthead\s*\{[^}]*display:\s*none", css))
 
-    @unittest.skip(HOMEPAGE_SELL_REMOVED)
     def test_zero_ledger_and_no_new_sku(self) -> None:
         lowered = HOMEPAGE.lower()
         self.assertIn("zero subscribers", lowered)

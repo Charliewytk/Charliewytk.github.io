@@ -81,8 +81,8 @@
     content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%;
     background: #00c805; box-shadow: 0 0 6px rgba(0,200,5,0.8); margin-right: 7px; vertical-align: 1px;
   }
-  .masthead a.touch { font-weight: 700; background: var(--ink); color: var(--ground); padding: 5px 9px; letter-spacing: 0.12em; }
-  .masthead a.touch:hover { background: var(--accent); color: var(--ground); }
+  .masthead a.touch { font-weight: 700; }
+  .masthead a.touch:hover { color: var(--accent); }
 
   /* ---------- opening statement ---------- */
   .opening { height: 215vh; position: relative; }
@@ -745,12 +745,79 @@
     .hbars .fill { transition: none; }
     .note-fly { display: none; }
   }
+
+  /* ---------- Merger Monitor: the one with a price attached ---------- */
+  .masthead a.pay {
+    font-weight: 700; letter-spacing: 0.12em;
+    background: var(--ink); color: var(--ground); border: none; padding: 5px 9px;
+  }
+  .masthead a.pay:hover { background: var(--accent); color: var(--ground); }
+  .masthead .mast-end a.mm { font-weight: 700; }
+
+  /* after the wipe — same SKU, never the first paint */
+  .fold-sell {
+    opacity: var(--tail-op, 0); transition: opacity 0.6s ease 0.2s;
+    pointer-events: none;
+    margin: 26px auto 0; width: min(38rem, 100%);
+  }
+  .opening.opened .fold-sell { pointer-events: auto; }
+  .fold-sell .fold-nums { margin: 0 0 14px; font-size: 0.98rem; line-height: 1.45; color: var(--ink2); text-wrap: pretty; }
+  .fold-sell .fold-ledger { display: block; margin: 10px 0 0; font-size: 0.8rem; color: var(--faint); }
+
+  .go.pay {
+    display: inline-block; font-family: inherit; font-weight: 600; font-size: 0.95rem; line-height: 1.2;
+    background: var(--ink); color: var(--ground); border: 1px solid var(--ink); padding: 11px 18px;
+  }
+  .go.pay:hover { background: var(--accent); border-color: var(--accent); color: var(--ground); }
+  .doing-row .go.pay { font-family: inherit; font-size: 0.95rem; }
+
+  .gate-end { display: flex; align-items: baseline; gap: 22px; }
+  .gate-mast a.gate-pay { border: none; font-weight: 700; }
+  .gate-mast a.gate-pay:hover { color: var(--accent); }
+
+  a.mm-preview {
+    display: block; margin: 1.6em 0; padding: 20px 22px 16px;
+    background: var(--ground); border: 1px solid var(--ink); color: var(--ink);
+    transition: box-shadow 0.3s ease;
+  }
+  a.mm-preview:hover { color: var(--ink); border-color: var(--ink); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 30%, transparent); }
+  a.mm-preview .cap { font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); margin: 0 0 14px; }
+  a.mm-preview table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  a.mm-preview th { text-align: left; font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); font-weight: 600; padding: 0 10px 8px 0; border-bottom: 1px solid var(--ink); }
+  a.mm-preview td { padding: 10px 10px 10px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  a.mm-preview .tk { font-family: var(--mono); font-weight: 600; letter-spacing: 0.03em; }
+  a.mm-preview .co { color: var(--muted); }
+  a.mm-preview .num { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  a.mm-preview .go-row { margin: 12px 0 0; font-family: var(--serif); font-size: 1rem; }
+
+  .worked { margin: 2em 0 0; }
+  .worked h4 { margin-top: 0; }
+  .worked p { font-size: 1rem; line-height: 1.65; color: var(--ink2); margin: 0 0 1em; max-width: 40em; text-wrap: pretty; }
+  .twoup { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin: 1.4em 0; }
+  .twoup div { padding: 18px 20px; background: var(--tint); }
+  .twoup b { display: block; font-family: var(--slab); font-weight: 400; font-size: 1.9rem; letter-spacing: 0.01em; margin-bottom: 5px; }
+  .twoup .bad b { color: rgba(34,32,29,0.42); }
+  .twoup .real b { color: var(--accent); }
+  .twoup span { font-size: 0.8rem; color: var(--muted); line-height: 1.45; display: block; }
+  @media (max-width: 760px) {
+    .twoup { grid-template-columns: 1fr; }
+    a.mm-preview { padding: 16px 14px 12px; }
+    a.mm-preview th:nth-child(2), a.mm-preview td:nth-child(2) { display: none; }
+    .masthead .mast-end { gap: 10px; }
+    .masthead a.pay { letter-spacing: 0.08em; padding: 4px 8px; }
+    .masthead a.touch { background: none; color: var(--ink); padding: 0; letter-spacing: 0.1em; }
+    .gate-mast { flex-wrap: wrap; row-gap: 6px; }
+    .gate-end { gap: 12px; }
+    .gate-skip .long { display: none; }
+    .fold-sell .fold-nums { font-size: 0.88rem; }
+    .opening .under { font-size: 0.88rem; margin-top: 18px; }
+  }
 </style>
 </head>
 <body>
 
 <div class="gate" id="gate">
-  <div class="gate-mast"><span>CHARLIE WUYTACK</span><button class="gate-skip" id="gateSkip" type="button">Enter without sound</button></div>
+  <div class="gate-mast"><span>CHARLIE WUYTACK</span><span class="gate-end"><a class="gate-pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table — £5/month</a><button class="gate-skip" id="gateSkip" type="button" aria-label="Enter without sound">Skip<span class="long"> — no sound</span></button></span></div>
   <div class="gate-mid">
     <div class="deck" id="deck">
       <span class="platter" aria-hidden="true"></span>
@@ -815,6 +882,7 @@
   <a href="#apex" data-t="Research platform"></a>
   <a href="#solana" data-t="Solana execution"></a>
   <a href="#events" data-t="Event-driven shorts"></a>
+  <a href="#merger" data-t="Merger Monitor"></a>
   <a href="#deskstatus" data-t="DeskStatus"></a>
   <a href="#numerai" data-t="Numerai"></a>
   <a href="#competitions" data-t="Competitions"></a>
@@ -831,9 +899,10 @@
   <span class="who">Charlie Wuytack</span>
   <span class="mast-end">
     <a class="xt-mast" href="exetix/">ExeTix</a>
+    <a class="mm opt" href="merger-monitor/">Merger Monitor</a>
     <a class="opt" href="#work">Work</a>
     <a class="opt" href="#research">Research</a>
-    <a href="#about">About</a>
+    <a class="pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener" aria-label="Get tonight's table — £5/month">£5/month</a>
     <a class="touch" href="mailto:charlie@wuytack.net">Get in touch</a>
   </span>
 </div>
@@ -845,7 +914,11 @@
       <h1 class="veil"><span class="slab">I'D RATHER BUILD</span><span class="ital">than consume.</span></h1>
     </div>
     <p class="under">An iPhone app for Exeter's ticket drops, macOS tools, games, and a quantitative research programme: <b>on-chain execution, an online-learning platform and about 170 pre-registered trading hypotheses</b>, each with an honest verdict.</p>
-    <div class="jump"><a href="#work">Selected work</a><a href="#research">Research</a><a href="#about">About</a></div>
+    <div class="fold-sell">
+      <p class="fold-nums">Merger Monitor: a 3% spread is not <span data-merger-annualised-3pct>24.6%</span> a year. After costs it is <span data-merger-ev-3pct>+1.38%</span> a deal. Break-even is <span data-merger-breakeven>1.59%</span>.</p>
+      <a class="go pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table — £5/month</a>
+      <p class="fold-ledger">Zero subscribers. Take: £0. Filings, not advice.</p>
+    </div>
   </div>
 </header>
 <div class="ticker" aria-hidden="true"><div class="belt"><span>PINGED THE SECOND EXETER TICKETS DROP ★ 0.33 MS FROM TRIGGER TO A READY-TO-SIGN EXIT ★ 47 OF 62 TRADING LANES KILLED, ON THE RECORD ★ A FALSE POSITIVE, CAUGHT AND RETRACTED ★ THE CHEAPEST FLIGHT ISN'T ALWAYS THE CHEAPEST TRIP ★ 64W DRAW, HELD AT A 42.8W CAP ★ HOLD THE TRENCH. KEEP THE LIGHTS ON ★ </span><span>PINGED THE SECOND EXETER TICKETS DROP ★ 0.33 MS FROM TRIGGER TO A READY-TO-SIGN EXIT ★ 47 OF 62 TRADING LANES KILLED, ON THE RECORD ★ A FALSE POSITIVE, CAUGHT AND RETRACTED ★ THE CHEAPEST FLIGHT ISN'T ALWAYS THE CHEAPEST TRIP ★ 64W DRAW, HELD AT A 42.8W CAP ★ HOLD THE TRENCH. KEEP THE LIGHTS ON ★ </span></div></div>
@@ -929,6 +1002,12 @@
       <h3>Shorting token unlocks and exchange listings</h3>
       <p>Two event studies on crypto perps, split at a fixed date and attacked three ways. One held up; the other decayed by 70%.</p>
       <span class="big"><b>+5.56%</b><span>per event, held-out mean (n = 69), before any forward test</span></span>
+    </a>
+    <a class="card wide" href="#merger">
+      <span class="kind"><span>Data product · SEC filings</span><span class="chip live">Live · £5/month</span></span>
+      <h3>Merger Monitor</h3>
+      <p>The contractual cash price of every US cash merger with a definitive proxy, priced against the market, each figure tied to the filing sentence it came from. A table of filings, not a tip sheet.</p>
+      <span class="big"><b>24.6% → +1.38%</b><span>a 3% spread annualised, then priced after break risk and costs</span></span>
     </a>
     <a class="card" href="#deskstatus">
       <span class="kind"><span>macOS app</span><span class="chip live">Shipped</span></span>
@@ -1225,6 +1304,67 @@
       <p class="note">Research, not advice. Real costs measured since then (32–39 bps a round trip) are higher than the 23 bps the studies assumed. That is part of why the forward paper book, not the backtest, is the test.</p>
     </div>
   </article>
+
+
+  <!-- MERGER MONITOR -->
+  <section class="work" id="merger">
+  <article class="case rise">
+    <div class="case-side"><div class="sticky">
+      <p class="eyebrow">Data product · live</p>
+      <h3>Merger Monitor</h3>
+      <p class="tag">Deal prices from SEC filings, priced against the market. The one piece of research with a price attached.</p>
+      <dl>
+        <dt>Status</dt><dd><span class="chip live">Live product</span> £5/month · not advice</dd>
+        <dt>Ledger</dt><dd>Zero subscribers so far. Take: £0.</dd>
+        <dt>Scope</dt><dd>US cash mergers that have reached a definitive proxy</dd>
+      </dl>
+    </div></div>
+    <div class="case-body">
+      <p class="lead">I extract the contractual cash price of every US cash merger that has reached a definitive proxy, and price it against the live market. Each figure carries the sentence from the filing it was read from.</p>
+      <p>It is a table of filings, not a tip sheet. A 3% spread annualises to <span data-merger-annualised-3pct>24.6%</span>; after costs it is <span data-merger-ev-3pct>+1.38%</span> a deal. Most thin ones die. The paid edition is <span class="mk">£5/month</span>: the same table, emailed the evening it is built. A sealed re-run of the same 3% case in my research harness measured about +1.37% a deal (bootstrap CI roughly 1.35–1.39%).</p>
+
+      <div class="doing-row">
+        <a class="go pay" href="subscribe/">Get tonight's table — £5/month</a>
+        <span class="note"><a href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Pay on Gumroad</a> · <a href="merger-monitor/">Week-late public table</a></span>
+      </div>
+
+      <p>The public table at <a href="merger-monitor/">/merger-monitor</a> is the same product, published one week late on purpose. A week-old table is the worse entry on deals that complete.</p>
+
+      <a class="mm-preview" href="merger-monitor/">
+        <p class="cap">Week-late public table · 19 August 2026</p>
+        <table>
+          <thead>
+            <tr><th>Deal</th><th>Company</th><th>Offer / market</th><th>Spread</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="tk">WBD</td><td class="co">Warner Bros. Discovery</td><td class="num">$31.00 / $28.48</td><td class="num">+8.85%</td></tr>
+            <tr><td class="tk">SLAB</td><td class="co">Silicon Laboratories</td><td class="num">$231.00 / $219.29</td><td class="num">+5.34%</td></tr>
+            <tr><td class="tk">ACA</td><td class="co">Arcosa</td><td class="num">$150.00 / $145.01</td><td class="num">+3.44%</td></tr>
+            <tr><td class="tk">AES</td><td class="co">AES Corp</td><td class="num">$15.00 / $14.74</td><td class="num">+1.76%</td></tr>
+            <tr><td class="tk">CRNX</td><td class="co">Crinetics</td><td class="num">$85.00 / $84.75</td><td class="num">+0.29%</td></tr>
+          </tbody>
+        </table>
+        <p class="go-row">See every deal, with the filing sentence →</p>
+      </a>
+
+      <div class="worked rise">
+        <h4>Annualising flatters everything. Here is the one I sell, done properly.</h4>
+        <p>A 3% merger spread held to the median <span data-merger-median-days>49</span>-day close annualises to <b><span data-merger-annualised-3pct>24.6%</span> a year</b>. That number is worthless, and it is the number this whole business would normally be sold on.</p>
+        <div class="twoup">
+          <div class="bad"><b data-merger-annualised-3pct>24.6%</b><span>a year: what a 3% spread over <span data-merger-median-days>49</span> days looks like when you annualise it</span></div>
+          <div class="real"><b data-merger-ev-3pct>+1.38%</b><span>per deal: the same trade after a <span data-merger-break-rate>2.4%</span> break rate, a <span data-merger-break-loss>27%</span> median loss when one breaks, <span data-merger-cost>0.40%</span> round-trip cost and <span data-merger-carry>0.49%</span> of forgone T-bill carry</span></div>
+        </div>
+        <p>Price a 1% spread the same way (still a healthy-looking annualised number) and it is <span class="mk" data-merger-ev-1pct>−0.57%</span> per deal. Break-even sits at <span class="mk" data-merger-breakeven>1.59%</span>.</p>
+        <p>On the 19 August table, nine of the seventeen cash-priced rows clear that 1.59% break-even. The rest are published anyway, because a wide spread and a thin one look identical until you price the break risk. Base rate <span data-merger-break-rate>2.4%</span>: <span data-merger-breaks>39</span> breaks in <span data-merger-settled>1,606</span> settled outcomes. A floor, not a ceiling: deals that die before a definitive proxy never enter the sample.</p>
+        <p>That is the whole method in one line: the annualised number is marketing, the expected value is the trade. You pay £5/month for the evening the table is built, not for a secret. A named row from that table is walked through at <a href="example/">/example/</a>. The same frozen 3% case (24.6% annualised, +1.38% after costs) is a public calculator at <a href="sizer/">/sizer/</a>.</p>
+      </div>
+      <div class="doing-row">
+        <a class="go pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Pay on Gumroad — £5/month</a>
+        <span class="note"><a href="subscribe/">The offer</a> · <a href="weekly/">Free weekly edition</a>: same table, one week late</span>
+      </div>
+    </div>
+  </article>
+  </section>
 
   <article class="case rise" id="deskstatus">
     <div class="case-side"><div class="sticky">
@@ -1630,10 +1770,11 @@
 <footer class="close">
   <p><a class="mail" href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></p>
   <p class="didnt">Also built, didn't make the cut: Resale Radar (resale margin maths with real fees and return rates), a trading bot retired after its own audit, an ETF cost tool that deliberately ranks nothing, a tender-offer scanner that reads SEC filings, fifteen programmatic SEO sites, and a handful of small Mac tools: a doomscroll tracker, a cleaner that dry-runs everything, and a companion that refuses coding jobs the machine can't finish.</p>
-  <p class="fine">Research and engineering, not financial advice. Backtest and paper results are labelled as such, and nothing on this page is trading live at a profit.</p>
+  <p class="fine">Research and engineering, not financial advice. Backtest and paper results are labelled as such, and nothing on this page is trading live at a profit. Merger Monitor is a table of filings, not a tip sheet.</p>
   <p class="stamp">24 sep 2026 · <a href="https://github.com/Charliewytk">github</a></p>
 </footer>
 
+<script src="assets/js/merger-stats.js" defer></script>
 <script>
   (function () {
     // ---------- clock ----------

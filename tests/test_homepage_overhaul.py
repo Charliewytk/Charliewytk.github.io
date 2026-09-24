@@ -2,7 +2,7 @@
 """Rails for the 2026-09 homepage overhaul.
 
 The homepage is a public portfolio for employers and friends:
-- it sells nothing and solicits nothing;
+- the only thing for sale is the existing Merger Monitor SKU (not advice);
 - it ships no wallet addresses, keys, RPC URLs, local paths or balances;
 - it does not promote gambling (no matched betting, bookmakers or free bets);
 - every paper / backtest / dry-run number carries a label, and the footer says
@@ -48,9 +48,14 @@ def _parsed() -> _Refs:
     return p
 
 
-class SellsNothing(unittest.TestCase):
-    def test_no_paid_cta(self) -> None:
-        for needle in ("gumroad", "£5", "/month", "subscribe/", "sizer/", "buy now", "donate", "patreon", "ko-fi"):
+class SellsOnlyTheExistingSku(unittest.TestCase):
+    """Charles kept Merger Monitor (24 Sep 2026). Nothing else is for sale."""
+
+    def test_only_existing_gumroad_skus(self) -> None:
+        skus = set(re.findall(r"https://wuytackcharlie\.gumroad\.com/l/[a-z0-9]+", LOWER))
+        self.assertTrue(skus <= {"https://wuytackcharlie.gumroad.com/l/mergermonitor",
+                                 "https://wuytackcharlie.gumroad.com/l/mergerweekly"}, skus)
+        for needle in ("donate", "patreon", "ko-fi", "buy me a coffee", "copy trading", "signals group"):
             self.assertNotIn(needle, LOWER, f"homepage must not carry {needle!r}")
 
     def test_not_advice_and_no_live_profit_claim(self) -> None:
@@ -118,7 +123,7 @@ class LinksResolve(unittest.TestCase):
 class Structure(unittest.TestCase):
     def test_chapters_in_order(self) -> None:
         order = ['id="exetix"', 'id="work"', 'id="research"', 'id="method"', 'id="apex"', 'id="solana"',
-                 'id="events"', 'id="deskstatus"', 'id="numerai"', 'id="competitions"', 'id="builds"',
+                 'id="events"', 'id="merger"', 'id="deskstatus"', 'id="numerai"', 'id="competitions"', 'id="builds"',
                  'id="doorly"', 'id="powerleash"', 'id="chess"', 'id="chelsea"', 'id="abyss"', 'id="about"']
         pos = [HOMEPAGE.index(x) for x in order]
         self.assertEqual(pos, sorted(pos))

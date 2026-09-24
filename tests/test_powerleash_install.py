@@ -111,13 +111,13 @@ class PowerLeashHonesty(unittest.TestCase):
         self.assertNotIn("haircut", block)
         self.assertNotIn("companion product", block)
 
-    def test_homepage_carries_no_gumroad_sku(self) -> None:
-        # overhaul-2026-09: the public homepage sells nothing
+    def test_homepage_gumroad_skus_are_still_only_the_existing_two(self) -> None:
         gumroad = re.findall(
             r"https://wuytackcharlie\.gumroad\.com/l/[a-z0-9]+",
             HOMEPAGE.lower(),
         )
-        self.assertEqual(gumroad, [])
+        self.assertTrue(all(u in {GUMROAD, WEEKLY} for u in gumroad), gumroad)
+        self.assertIn(GUMROAD, gumroad)
 
     def test_first_fold_scroll_wipe_is_untouched(self) -> None:
         opening = _opening()
