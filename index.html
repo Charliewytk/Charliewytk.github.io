@@ -3,50 +3,62 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="ExeTix, an iPhone ticket app for Exeter students, plus games, flight search, prediction markets, macOS tools and trading research — most of it playable right here.">
+<meta name="description" content="Charlie Wuytack: ExeTix, an iPhone app for Exeter's ticket drops, plus macOS tools, games and a quantitative research programme covering Solana execution, online learning and pre-registered trading research, with honest verdicts.">
 <link rel="icon" href="media/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://charliewytk.github.io/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://charliewytk.github.io/">
 <meta property="og:title" content="Charlie Wuytack — I'd rather build than consume">
-<meta property="og:description" content="ExeTix, an iPhone ticket app for Exeter students, plus games, flight search, prediction markets, macOS tools and trading research — most of it playable right here.">
+<meta property="og:description" content="ExeTix, macOS tools, games, and a quant research programme: Solana execution, online learning, ~170 pre-registered trading hypotheses and the honest verdicts.">
 <meta property="og:image" content="https://charliewytk.github.io/media/preview.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Charlie Wuytack — I'd rather build than consume">
-<meta name="twitter:description" content="ExeTix, an iPhone ticket app for Exeter students, plus games, flight search, prediction markets, macOS tools and trading research.">
+<meta name="twitter:description" content="ExeTix, macOS tools, games, and a quant research programme with honest verdicts.">
 <meta name="twitter:image" content="https://charliewytk.github.io/media/preview.png">
+<meta name="theme-color" content="#f7f7ef">
 <title>Charlie Wuytack</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Anton&display=swap">
 <style>
   :root {
+    --ground: #f7f7ef;
     --ink:   #22201d;   /* 15.1:1 — headings, primary prose            */
     --ink2:  #3b3833;   /* 10.8:1 — secondary prose                    */
     --muted: #5f5b52;   /*  6.3:1 — captions, notes, muted body        */
     --faint: #6f6a60;   /*  5.0:1 — micro-labels; lightest text allowed */
     --rule:  rgba(34,32,29,0.16);
     --rule2: rgba(34,32,29,0.26);
+    --tint:  rgba(34,32,29,0.045);
+    --good:  #3f6b45;
+    /* the record sets this; without one, the first side's red */
+    --accent: #a9331f;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+    --serif: "Lora", Georgia, serif;
+    --slab: "Anton", "Arial Narrow", sans-serif;
   }
 
   /* light by design — cream ground, near-black ink, an accent that follows the record */
-  a, .mk, .num-r, .head .eyebrow::after, .todo li.doing::before { transition: color 0.6s ease, background-color 0.6s ease, border-color 0.6s ease; }
+  a, .mk, .num-r, .eyebrow::after, .todo li.doing::before { transition: color 0.6s ease, background-color 0.6s ease, border-color 0.6s ease; }
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; scroll-padding-top: 64px; }
   body {
     margin: 0;
-    background: #f7f7ef;
-    color: #22201d;
+    background: var(--ground);
+    color: var(--ink);
     font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
     font-size: 15px;
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
   ::selection { background: #e4e2d4; }
-  a { color: #22201d; text-decoration: none; border-bottom: 1px solid #c9c6b4; padding-bottom: 1px; }
+  a { color: var(--ink); text-decoration: none; border-bottom: 1px solid #c9c6b4; padding-bottom: 1px; }
   a:hover { color: var(--accent); border-color: var(--accent); }
-  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+  code { font-family: var(--mono); font-size: 0.88em; }
 
   .shell { max-width: 1152px; margin: 0 auto; padding: 0 32px; }
 
@@ -56,31 +68,24 @@
     display: flex; justify-content: space-between; align-items: baseline;
     padding: 18px 34px;
     font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase;
-    background: #f7f7ef;
-    border-bottom: 1px solid #22201d;
+    background: var(--ground);
+    border-bottom: 1px solid var(--ink);
     pointer-events: none;
   }
   .masthead a, .masthead .who { pointer-events: auto; }
   .masthead a { border: none; }
   .masthead .who { font-weight: 700; }
   .masthead .mast-end { display: flex; gap: 22px; align-items: baseline; pointer-events: auto; }
-  .masthead .mast-end a.mm { font-weight: 700; }
-  .masthead a.pay {
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    background: #22201d;
-    color: #f7f7ef;
-    border: none;
-    padding: 5px 9px;
+  .masthead .mast-end a.xt-mast { font-weight: 700; }
+  .masthead .mast-end a.xt-mast::before {
+    content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+    background: #00c805; box-shadow: 0 0 6px rgba(0,200,5,0.8); margin-right: 7px; vertical-align: 1px;
   }
-  .masthead a.pay:hover {
-    background: var(--accent);
-    color: #f7f7ef;
-    border: none;
-  }
+  .masthead a.touch { font-weight: 700; }
+  .masthead a.touch:hover { color: var(--accent); }
 
   /* ---------- opening statement ---------- */
-  .opening { height: 170vh; position: relative; }
+  .opening { height: 215vh; position: relative; }
   .pin-hero {
     position: sticky; top: 0; height: 100vh; overflow: hidden;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -90,23 +95,22 @@
   .opening h1 { margin: 0; }
   .opening .slab {
     display: block;
-    font-family: "Anton", "Arial Narrow", sans-serif;
+    font-family: var(--slab);
     font-weight: 400;
-    font-size: clamp(4.2rem, 16vw, 12.5rem);
+    font-size: clamp(4.2rem, min(16vw, 22vh), 12.5rem);
     line-height: 0.9;
     letter-spacing: 0.005em;
-    color: #22201d;
+    color: var(--ink);
   }
   .opening .ital {
     display: block;
-    font-family: "Lora", Georgia, serif;
+    font-family: var(--serif);
     font-style: italic;
     font-weight: 500;
     font-size: clamp(2rem, 6.2vw, 4.6rem);
     margin-top: -0.52em;
-    color: #22201d;
+    color: var(--ink);
   }
-
   .scroll-hint {
     position: absolute; left: 50%; transform: translateX(-50%);
     bottom: -12vh; margin: 0;
@@ -122,71 +126,28 @@
   @keyframes hint-drop { 0%,100% { opacity: 0.3; transform: translateY(-4px); } 50% { opacity: 1; transform: translateY(2px); } }
   @media (prefers-reduced-motion: reduce) { .scroll-hint::after { animation: none; } }
 
-  /* after the wipe — same SKU, not the first paint */
-  .fold-sell {
-    opacity: var(--tail-op, 0); transition: opacity 0.6s ease 0.1s;
-    pointer-events: none;
-    position: absolute; left: 50%; transform: translateX(-50%);
-    bottom: 7%; width: min(38rem, calc(100% - 36px));
-    margin: 0;
-  }
-  .opening.opened .fold-sell { pointer-events: auto; }
-  .fold-sell .fold-nums {
-    margin: 0 0 16px;
-    font-size: 1.02rem;
-    line-height: 1.45;
-    color: var(--ink2);
-    text-wrap: pretty;
-  }
-  .fold-sell .go.pay {
-    display: inline-block;
-    font-family: inherit;
-    font-weight: 600;
-    font-size: 0.95rem;
-    background: #22201d;
-    color: #f7f7ef;
-    border: 1px solid #22201d;
-    padding: 11px 18px;
-  }
-  .fold-sell .go.pay:hover {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #f7f7ef;
-  }
-  .fold-sell .fold-ledger {
-    display: block;
-    margin: 12px 0 0;
-    font-size: 0.82rem;
-    color: var(--faint);
-  }
-
   .veil { clip-path: inset(0 calc(100% - var(--reveal, 0%)) 0 0); }
-
 
   .opening .under {
     opacity: var(--tail-op, 0); transition: opacity 0.6s ease 0.1s;
     margin: 30px 0 0;
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: var(--muted);
-    max-width: 46ch;
+    max-width: 50ch;
+    text-wrap: pretty;
   }
-
-  /* ---------- a said-out-loud statement ---------- */
-  .statement {
-    min-height: 78vh;
-    display: flex; align-items: center; justify-content: center;
-    text-align: center;
-    padding: 0 32px;
+  .opening .under b { color: var(--ink); font-weight: 600; }
+  .opening .jump {
+    opacity: var(--tail-op, 0); transition: opacity 0.6s ease 0.2s;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 26px 0 0;
+    pointer-events: none;
   }
-  .statement p {
-    font-family: "Lora", Georgia, serif;
-    font-weight: 400;
-    font-size: clamp(1.5rem, 3.2vw, 2.4rem);
-    line-height: 1.35;
-    max-width: 22ch;
-    margin: 0;
+  .opening.opened .jump { pointer-events: auto; }
+  .jump a {
+    font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 700;
+    border: 1px solid var(--ink); padding: 8px 13px;
   }
-
+  .jump a:hover { background: var(--ink); color: var(--ground); border-color: var(--ink); }
 
   /* a red pen through the phrase that carries the argument */
   .mk {
@@ -195,530 +156,276 @@
     box-decoration-break: clone;
     padding: 0 0.04em;
   }
-  .mk-u { border-bottom: 2px solid var(--accent); padding-bottom: 1px; }
   .num-r { color: var(--accent); }
 
-
-  /* ---------- work ---------- */
-  .work { position: relative; padding-bottom: 12vh; }
-  .head {
-    position: sticky; top: 0; z-index: 6;
-    background: #f7f7ef;
-    border-bottom: 1px solid #22201d;
-    padding: 64px 32px 18px;
-    text-align: center;
+  /* ---------- chapter heads ---------- */
+  .chapter { padding: 16vh 0 0; }
+  .chapter-head {
+    width: min(1088px, calc(100% - 64px)); margin: 0 auto; padding: 0 0 34px;
+    display: grid; grid-template-columns: 1fr; gap: 14px;
+    border-bottom: 1px solid var(--ink);
   }
+  .chapter-head .no {
+    font-family: var(--mono); font-size: 0.78rem; color: var(--accent); letter-spacing: 0.08em;
+    grid-column: 1 / -1;
+  }
+  .chapter-head h2 {
+    font-family: var(--slab); font-weight: 400; text-transform: uppercase;
+    font-size: clamp(3rem, 8.2vw, 6.4rem); line-height: 0.92; letter-spacing: 0.01em; margin: 0;
+  }
+  .chapter-head .lede {
+    font-family: var(--serif); font-size: clamp(1.05rem, 1.6vw, 1.25rem); line-height: 1.5;
+    color: var(--ink2); margin: 0; max-width: 36em; text-wrap: pretty;
+  }
+
   .eyebrow {
     font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
     color: var(--faint); margin: 0 0 16px;
   }
+
+  /* ---------- the projects grid ---------- */
+  .grid {
+    width: min(1088px, calc(100% - 64px)); margin: 0 auto; padding: 0;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    border-left: 1px solid var(--rule2);
+  }
+  .card {
+    display: flex; flex-direction: column; gap: 10px;
+    padding: 26px 24px 22px; min-height: 250px;
+    border: none; border-right: 1px solid var(--rule2); border-bottom: 1px solid var(--rule2);
+    color: var(--ink); background: var(--ground);
+    transition: background 0.25s ease;
+  }
+  .card:hover { background: #efeee3; color: var(--ink); }
+  .card .kind { font-size: 0.66rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--faint); display: flex; justify-content: space-between; gap: 10px; }
+  .card h3 { font-family: var(--serif); font-weight: 600; font-size: 1.35rem; line-height: 1.2; margin: 0; letter-spacing: -0.01em; }
+  .card p { margin: 0; font-size: 0.9rem; line-height: 1.5; color: var(--muted); text-wrap: pretty; }
+  .card .big { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--rule); display: flex; align-items: baseline; gap: 12px; }
+  .card .big b { font-family: var(--slab); font-weight: 400; font-size: 1.9rem; line-height: 1; letter-spacing: 0.01em; white-space: nowrap; }
+  .card .big span { font-size: 0.76rem; line-height: 1.35; color: var(--muted); }
+  .card:hover h3 { color: var(--accent); }
+  .grid .card.wide { grid-column: span 2; }
+  @media (max-width: 700px) { .grid .card.wide { grid-column: auto; } .grid { width: calc(100% - 32px); } .card { min-height: 0; } }
+
+  /* status chips: what kind of evidence a number is */
+  .chip {
+    display: inline-block; font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 2px 7px; border: 1px solid currentColor; border-radius: 99px;
+    white-space: nowrap; line-height: 1.5; vertical-align: 2px;
+  }
+  .chip.live { color: var(--good); }
+  .chip.paper { color: #7a5a14; }
+  .chip.bt { color: #4a4f7a; }
+  .chip.dead { color: var(--accent); }
+  .chip.res { color: var(--muted); }
+
+  /* ---------- case studies ---------- */
+  .case {
+    max-width: 1152px; margin: 0 auto; padding: 12vh 32px 0;
+    display: grid; grid-template-columns: minmax(230px, 300px) 1fr; gap: 56px;
+  }
+  .case + .case .case-side, .case + .case .case-body { border-top: 1px solid var(--rule2); padding-top: 34px; }
+  .case-side { position: relative; }
+  .case-side .sticky { position: sticky; top: 92px; }
+  .case-side h3 {
+    font-family: var(--slab); font-weight: 400; text-transform: uppercase;
+    font-size: clamp(2.2rem, 4vw, 3.1rem); line-height: 0.95; letter-spacing: 0.01em; margin: 0 0 12px;
+  }
+  .case-side .tag { font-family: var(--serif); font-style: italic; font-size: 1.02rem; line-height: 1.45; color: var(--ink2); margin: 0 0 18px; }
+  .case-side dl { margin: 0; font-size: 0.8rem; }
+  .case-side dt { font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--faint); margin-top: 12px; }
+  .case-side dd { margin: 2px 0 0; color: var(--ink2); }
+  .case-body { min-width: 0; }
+  .case-body > p, .case-body .prose p {
+    font-size: 1.02rem; line-height: 1.7; color: var(--ink2); margin: 0 0 1.1em; max-width: 40em; text-wrap: pretty;
+  }
+  .case-body > p.lead {
+    font-family: var(--serif); font-size: clamp(1.2rem, 2vw, 1.45rem); line-height: 1.45; color: var(--ink); max-width: 30em;
+  }
+  .case-body h4 {
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--faint);
+    margin: 2.2em 0 0.9em; font-weight: 600;
+  }
+  .case-body .links { display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 1.4em 0 0; font-family: var(--serif); font-size: 1.05rem; }
+  .case-body > p.fig-note { font-size: 0.8rem; line-height: 1.55; color: var(--muted); margin: 10px 0 0; }
+  .case-body > p.note, .case-body .note { font-size: 0.82rem; color: var(--faint); margin-top: 8px; max-width: 44em; }
+  @media (max-width: 900px) {
+    .case { grid-template-columns: 1fr; gap: 18px; padding: 9vh 20px 0; }
+    .case + .case .case-body { border-top: none; padding-top: 0; }
+    .case-side .sticky { position: static; }
+    .case-side dl { display: grid; grid-template-columns: 88px 1fr; gap: 8px 14px; align-items: baseline; }
+    .case-side dt { margin-top: 0; }
+  }
+
+  /* measured facts, one row */
+  .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; margin: 2em 0; }
+  .facts div { border-top: 1px solid var(--rule2); padding-top: 12px; }
+  .facts b {
+    display: block; font-family: var(--slab); font-weight: 400;
+    font-size: clamp(1.6rem, 2.6vw, 2.1rem); line-height: 1.05; letter-spacing: 0.01em; margin-bottom: 4px;
+  }
+  .facts b .u { color: var(--accent); }
+  .facts > div > span { display: block; font-size: 0.78rem; line-height: 1.45; color: var(--muted); }
+  .facts b .u { display: inline; font-size: inherit; margin-left: 2px; }
+  @media (max-width: 700px) {
+    .facts { grid-template-columns: 1fr; gap: 12px; }
+    .facts div { display: grid; grid-template-columns: 112px 1fr; gap: 14px; align-items: baseline; }
+  }
+
+  /* status list */
+  .todo { list-style: none; padding: 0; margin: 0 0 1em; max-width: 44em; font-size: 0.9rem; }
+  .todo li { text-wrap: pretty; display: flex; gap: 10px; margin-bottom: 7px; color: var(--muted); }
+  .todo li::before { content: "·"; color: var(--faint); flex: none; width: 12px; }
+  .todo li.done { color: var(--ink2); }
+  .todo li.done::before { content: "✓"; color: var(--good); font-size: 0.8rem; }
+  .todo li.doing { color: var(--ink); }
+  .todo li.doing::before { content: "→"; color: var(--accent); }
+  /* .log — a record of things that are closed. Reads, does not cross out. */
+  .log li { color: var(--ink2); margin-bottom: 11px; align-items: baseline; }
+  .log li::before { content: "\00d7"; color: var(--accent); font-size: 0.95rem; opacity: 0.8; }
+
+  /* ---------- figures ---------- */
+  .figure { margin: 2.2em 0; }
+  .figure .cap { font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--faint); margin: 0 0 16px; }
+  .fig { width: 100%; height: auto; display: block; overflow: visible; }
+  .fig text { font-family: var(--mono); }
+  .fig .t-s { font-size: 12px; }
+  .fig .t-m { font-size: 13.5px; }
+  .fig .t-l { font-size: 15px; }
+  .key { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 14px 0 0; }
+  .key span { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--muted); }
+  .key i { width: 22px; height: 0; border-top: 2.5px solid var(--ink); display: block; }
+  .key i.dash { border-top-style: dashed; border-color: var(--accent); }
+  .key i.sw { width: 12px; height: 12px; border: none; }
+  .fig-note { font-size: 0.8rem; line-height: 1.55; color: var(--muted); margin: 12px 0 0; max-width: 44em; text-wrap: pretty; }
+  @media (max-width: 700px) {
+    .fig .t-s { font-size: 20px; }
+    .fig .t-m { font-size: 22px; }
+    .fig .t-l { font-size: 24px; }
+    .fig.keep-small .t-s { font-size: 12px; }
+    .fig.keep-small .t-m { font-size: 13.5px; }
+  }
+
+  /* horizontal bars in HTML so they reflow on a phone */
+  .hbars { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+  .hbars li { display: grid; grid-template-columns: minmax(150px, 34%) 1fr; gap: 16px; align-items: center; font-size: 0.86rem; }
+  .hbars .lbl { color: var(--ink2); line-height: 1.35; }
+  .hbars .lbl small { display: block; color: var(--faint); font-size: 0.74rem; }
+  .hbars .track { position: relative; height: 22px; background: var(--tint); }
+  .hbars .fill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--ink); transform-origin: left; transform: scaleX(var(--grow, 0)); transition: transform 1.1s cubic-bezier(0.22,1,0.36,1); }
+  .hbars .fill.acc { background: var(--accent); }
+  .hbars .fill.good { background: var(--good); }
+  .hbars .fill.pale { background: rgba(34,32,29,0.28); }
+  .hbars .v { position: absolute; top: 50%; transform: translateY(-50%); font-family: var(--mono); font-size: 0.76rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  @media (max-width: 700px) { .hbars li { grid-template-columns: 1fr; gap: 5px; } }
+
+  /* a stacked tally: every hypothesis, one strip */
+  .tally { display: flex; height: 54px; width: 100%; gap: 2px; }
+  .tally span { position: relative; display: flex; align-items: center; justify-content: center; color: var(--ground); font-family: var(--mono); font-size: 0.8rem; font-weight: 600; min-width: 26px; }
+  .tally-key { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px 24px; margin: 16px 0 0; padding: 0; list-style: none; }
+  .tally-key li { display: grid; grid-template-columns: 12px 1fr; gap: 10px; font-size: 0.8rem; line-height: 1.4; color: var(--muted); }
+  .tally-key li i { width: 12px; height: 12px; margin-top: 3px; }
+  .tally-key b { color: var(--ink); font-weight: 600; }
+
+  /* the method, as a pipeline */
+  .pipe { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(6, 1fr); gap: 0; counter-reset: step; }
+  .pipe li { position: relative; padding: 16px 16px 16px 0; border-top: 2px solid var(--ink); counter-increment: step; }
+  .pipe li::before { content: counter(step, decimal-leading-zero); display: block; font-family: var(--mono); font-size: 0.72rem; color: var(--accent); margin-bottom: 8px; }
+  .pipe li::after { content: ""; position: absolute; top: -6px; left: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--ground); border: 2px solid var(--ink); }
+  .pipe b { display: block; font-size: 0.92rem; margin-bottom: 4px; }
+  .pipe span { display: block; font-size: 0.78rem; line-height: 1.45; color: var(--muted); }
+  .pipe li.gate-step { border-top-color: var(--accent); }
+  .pipe li.gate-step::after { border-color: var(--accent); }
+  @media (max-width: 900px) {
+    .pipe { grid-template-columns: 1fr; }
+    .pipe li { border-top: none; border-left: 2px solid var(--ink); padding: 0 0 20px 22px; }
+    .pipe li::after { top: 2px; left: -7px; }
+    .pipe li.gate-step { border-left-color: var(--accent); }
+  }
+
+  /* principle cards */
+  .rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 2px; margin: 2em 0; }
+  .rules div { background: var(--tint); padding: 18px 20px; }
+  .rules b { display: block; font-family: var(--serif); font-weight: 600; font-size: 1.02rem; margin-bottom: 6px; }
+  .rules span { font-size: 0.84rem; line-height: 1.5; color: var(--muted); display: block; }
+
+  /* the retraction — told as a ledger */
+  .retract { border: 1px solid var(--ink); margin: 2em 0; }
+  .retract .row { display: grid; grid-template-columns: 120px 1fr; gap: 18px; padding: 14px 18px; border-top: 1px solid var(--rule2); font-size: 0.92rem; line-height: 1.5; }
+  .retract .row:first-child { border-top: none; }
+  .retract .row b { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); font-weight: 600; padding-top: 2px; }
+  .retract .row.bad b { color: var(--accent); }
+  .retract .row.ok b { color: var(--good); }
+  .retract s { text-decoration-color: var(--accent); text-decoration-thickness: 2px; color: var(--muted); }
+  @media (max-width: 600px) { .retract .row { grid-template-columns: 1fr; gap: 4px; } }
+
+  /* edge vs cost ledger */
+  .ledger { margin: 2em 0; }
+  .ledger-head, .ledger-row { display: grid; grid-template-columns: 1.2fr 1fr; gap: 26px; }
+  .ledger-head { font-size: 0.64rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--faint); padding-bottom: 10px; border-bottom: 1px solid var(--ink); }
+  .ledger-row { padding: 12px 0; border-bottom: 1px solid var(--rule); font-size: 0.9rem; line-height: 1.45; }
+  .ledger-row .c { color: var(--muted); }
+  .ledger-row .n { font-family: var(--mono); font-size: 0.84rem; font-variant-numeric: tabular-nums; color: var(--accent); }
+  @media (max-width: 700px) {
+    .ledger-head { display: none; }
+    .ledger-row { grid-template-columns: 1fr; gap: 3px; }
+    .ledger-row .c::before { content: "eaten by "; font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); }
+  }
+
+  /* hunt table */
+  .hunts { width: 100%; border-collapse: collapse; font-size: 0.86rem; margin: 1.4em 0; }
+  .hunts th { text-align: left; font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); font-weight: 600; padding: 0 12px 8px 0; border-bottom: 1px solid var(--ink); }
+  .hunts td { padding: 10px 12px 10px 0; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.45; color: var(--ink2); }
+  .hunts td.n { font-family: var(--mono); font-size: 0.8rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .hunts td:first-child { font-weight: 600; color: var(--ink); }
+  @media (max-width: 700px) {
+    .hunts thead { display: none; }
+    .hunts tr { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 10px 0; border-bottom: 1px solid var(--rule); }
+    .hunts td { border: none; padding: 0; }
+    .hunts td.why { grid-column: 1 / -1; color: var(--muted); }
+  }
+
+  /* media frames */
+  .frame { margin: 0 0 2em; overflow: hidden; background: var(--ink); border: 1px solid var(--ink); }
+  .frame video, .frame img { display: block; width: 100%; height: auto; }
+
+  /* PowerLeash panel chart */
+  .loadchart { width: 100%; height: auto; display: block; }
+
+  /* ---------- ExeTix — the flagship, first thing after the opening ---------- */
+  .work { position: relative; }
+  .head {
+    position: sticky; top: 0; z-index: 6;
+    background: var(--ground);
+    border-bottom: 1px solid var(--ink);
+    padding: 64px 32px 18px;
+    text-align: center;
+  }
   .head h2 {
-    font-family: "Anton", "Arial Narrow", sans-serif;
-    font-weight: 400;
-    font-size: clamp(3rem, 8.5vw, 6.8rem);
-    line-height: 0.95;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
-    margin: 0;
+    font-family: var(--slab); font-weight: 400;
+    font-size: clamp(3rem, 8.5vw, 6.8rem); line-height: 0.95; letter-spacing: 0.01em;
+    text-transform: uppercase; margin: 0;
   }
   .head .eyebrow { margin: 10px 0 0; position: relative; display: inline-block; padding-bottom: 9px; }
   .head .eyebrow::after {
     content: ""; position: absolute; left: 50%; transform: translateX(-50%); bottom: 0;
     width: 34px; height: 2px; background: var(--accent);
   }
-  .stream { position: relative; z-index: 5; }
-  .frame {
-    width: min(100%, 1060px);
-    margin: 0 auto 11vh;
-    overflow: hidden;
-    background: #22201d;
-    border: 1px solid #22201d;
-    transition: box-shadow 0.35s ease, transform 0.35s cubic-bezier(0.22,1,0.36,1);
+  .xt .stream { position: relative; z-index: 5; }
+  .xt .say {
+    max-width: 30ch; margin: 0 auto 8vh; text-align: center; text-wrap: balance;
+    font-family: var(--serif); font-size: clamp(1.15rem, 2.1vw, 1.5rem); line-height: 1.45;
   }
-  a.frame:hover, .stream a:hover .frame { box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 35%, transparent); }
-  .frame video, .frame img { display: block; width: 100%; height: auto; }
-
-  .say {
-    max-width: 30ch; margin: 0 auto 9vh; text-align: center; text-wrap: balance;
-    font-family: "Lora", Georgia, serif;
-    font-size: clamp(1.15rem, 2.1vw, 1.5rem);
-    line-height: 1.45;
-  }
-  .say.small { font-family: inherit; font-size: 0.95rem; color: var(--muted); max-width: 44ch; }
-
-  .doing-row { text-align: center; margin: 0 auto 9vh; }
-  .doing-row .go {
-    font-family: "Lora", Georgia, serif;
-    font-size: 1.15rem; border-bottom-width: 1px;
-  }
-  .doing-row .go.pay {
-    font-family: inherit;
-    font-weight: 600;
-    font-size: 0.95rem;
-    background: #22201d;
-    color: #f7f7ef;
-    border: 1px solid #22201d;
-    padding: 11px 18px;
-  }
-  .doing-row .go.pay:hover {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #f7f7ef;
-  }
-  .doing-row .note { display: block; margin-top: 12px; font-size: 0.85rem; color: var(--faint); }
-  .doing-row .note a { border-color: #c9c6b4; }
-
-  /* status list */
-  .todo {
-    list-style: none; padding: 0;
-    margin: 0 auto; max-width: 40ch; text-align: left;
-    font-size: 0.86rem;
-  }
-  .todo li { text-wrap: pretty; display: flex; gap: 10px; margin-bottom: 7px; color: var(--muted); }
-  .todo li::before { content: "·"; color: var(--faint); flex: none; width: 10px; }
-  .todo li.done { color: var(--faint); }
-  .todo li.done::before { content: "✓"; color: #4f6b51; font-size: 0.78rem; }
-  .todo li.done span { text-decoration: line-through; text-decoration-color: #c2bfae; }
-  .todo li.doing { color: var(--ink); }
-  /* .log — a record of things that are closed, not a checklist. Reads, does not cross out. */
-  .log { max-width: 46ch; }
-  .log li { color: var(--ink2); margin-bottom: 13px; align-items: baseline; }
-  .log li::before { content: "\00d7"; color: var(--accent); font-size: 0.9rem; width: 12px; opacity: 0.75; }
-  .log li span { text-decoration: none; }
-  .todo li.doing::before { content: "→"; color: var(--accent); }
-  .todo-label {
-    text-align: center; margin: 0 0 18px;
-    font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--faint);
-  }
-  .mono-stat {
-    font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    font-size: 0.8rem; line-height: 1.9; color: var(--muted);
-    font-variant-numeric: tabular-nums;
-    text-align: left; max-width: 40ch; margin: 0 auto 9vh;
-    border-left: 1px solid #d6d3c2; padding-left: 16px;
-  }
-
-  /* maths blocks — held back until MATHS = True in build.py */
-  .maths { max-width: 40ch; margin: 0 auto 9vh; border-left: 1px solid #d6d3c2; padding-left: 16px; display: flex; flex-direction: column; gap: 14px; text-align: left; }
-  .maths .row { display: flex; flex-direction: column; gap: 4px; }
-  .maths code { font-family: ui-monospace, Menlo, monospace; font-size: 0.78rem; color: var(--accent); font-variant-numeric: tabular-nums; }
-  .maths .why { font-size: 0.88rem; color: var(--muted); }
-
-  /* ---------- quiet blocks ---------- */
-  .quiet { padding: 12vh 32px; text-align: center; }
-  .quiet .eyebrow { margin-bottom: 18px; }
-  .quiet h2 {
-    font-family: "Lora", Georgia, serif; font-weight: 600;
-    font-size: clamp(1.8rem, 3.6vw, 2.5rem); margin: 0 0 26px; letter-spacing: -0.01em;
-  }
-  .quiet p { max-width: 40ch; margin: 0 auto 14px; color: var(--ink2); }
-
-  /* ---------- close ---------- */
-  .close { padding: 14vh 32px 12vh; text-align: center; border-top: 1px solid #e2dfd0; margin-top: 8vh; }
-  .close .mail {
-    border-bottom: 2px solid var(--accent);
-    font-family: "Lora", Georgia, serif;
-    font-size: clamp(1.6rem, 3.4vw, 2.2rem);
-  }
-  .close .didnt { max-width: 46em; text-wrap: pretty;
-    margin: 44px auto 0; max-width: 46em;
-    font-size: 0.78rem; line-height: 1.8; color: var(--faint);
-  }
-  .close .stamp { margin-top: 26px; font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--faint); }
-
-
-
-  .rail {
-    position: fixed; right: 22px; top: 50%; transform: translateY(-50%); z-index: 30;
-    display: flex; flex-direction: column; gap: 12px; align-items: flex-end;
-    opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
-  }
-  .entered .rail { opacity: 1; pointer-events: auto; }
-  .rail a {
-    width: 26px; height: 2px; background: #c2bfae; border: none; padding: 0;
-    position: relative; transition: background 0.3s ease, width 0.3s ease;
-  }
-  .rail a:hover, .rail a.on { background: var(--accent); width: 40px; }
-  .rail a::after {
-    content: attr(data-t); position: absolute; right: 46px; top: -0.65em;
-    font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase;
-    color: #22201d; white-space: nowrap; opacity: 0; transition: opacity 0.25s ease;
-  }
-  .rail a:hover::after { opacity: 1; }
-  @media (max-width: 900px) { .rail { display: none; } }
-
-  /* ---------- entry gate ---------- */
-  .gate {
-    position: fixed; inset: 0; z-index: 60;
-    background: #f7f7ef;
-    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-    gap: 9vh;
-    transition: transform 1s cubic-bezier(0.7, 0, 0.2, 1);
-  }
-  .gate.open { transform: translateY(-101%); }
-  .gate-mast {
-    width: 100%; display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
-    padding: 18px 34px; border-bottom: 1px solid #22201d;
-    font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700;
-  }
-  .gate-mast a { border: none; font-weight: 700; }
-  .gate-mid { display: flex; flex-direction: column; align-items: center; gap: 30px; }
-  .vinyl { width: clamp(240px, 32vw, 360px); height: auto; display: block; }
-  .spinning .vinyl, .mini.playing .vinyl { animation: spin 1.8s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .needle {
-    margin: 0; font-size: 0.72rem; letter-spacing: 0.24em; text-transform: uppercase;
-    color: var(--faint);
-  }
-  .picks { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-  .pick {
-    display: flex; flex-direction: column; align-items: center; gap: 4px;
-    min-width: 132px; padding: 15px 20px; cursor: pointer;
-    background: #f7f7ef; border: 1px solid #22201d;
-    transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
-  }
-  .pick .mood {
-    font: 700 0.82rem/1 -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-    letter-spacing: 0.14em; text-transform: uppercase;
-  }
-  .pick .track { font-family: "Lora", Georgia, serif; font-style: italic; font-size: 0.82rem; color: var(--faint); }
-  .pick:hover { background: #22201d; color: #f7f7ef; transform: translateY(-2px); }
-  .pick:hover .track { color: rgba(247,247,239,0.7); }
-  .pick.missing { display: none; }
-
-
-
-
-  .vinyl .label-fill, .vinyl .label-text, .vinyl .label-dot {
-    transition: fill 0.75s ease;
-  }
-  .deck.picked .vinyl .label-fill { fill: var(--accent); }
-  .deck.picked .vinyl .label-text { fill: #f7f7ef; }
-  .deck.picked .vinyl .label-text.sub { fill: rgba(247,247,239,0.8); }
-  .deck.picked .vinyl .label-dot { fill: #f7f7ef; }
-
-  /* ---------- the gate arrives from nothing ---------- */
-  @keyframes gate-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-  @keyframes record-in { from { opacity: 0; transform: translateY(-42px) scale(0.9); } to { opacity: 1; transform: translateY(-16px) scale(0.96); } }
-  .gate-mast, .deck, .needle, .picks { opacity: 0; }
-  .gate-mast { animation: gate-in 0.8s ease 0.55s both; }
-  .deck .vinyl { animation: record-in 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0.9s both; }
-  .deck { animation: gate-in 0.01s linear 0.9s both; }
-  .needle { animation: gate-in 0.7s ease 1.85s both; }
-  .picks { animation: gate-in 0.7s ease 2.05s both; }
-  /* once a record is cueing, the settle transition takes over from the intro */
-  .deck.cueing .vinyl { animation: none; }
-  @media (prefers-reduced-motion: reduce) {
-    .gate-mast, .deck, .deck .vinyl, .needle, .picks { animation: none; opacity: 1; }
-  }
-
-
-  /* the record eases into a spin while the track loads, so a click always shows a response */
-  @keyframes cue-spin { to { transform: rotate(360deg); } }
-  .deck.loading .vinyl { animation: cue-spin 2.6s linear infinite; }
-  .deck.loading.cueing .vinyl { animation: cue-spin 2.6s linear infinite; }
-  @media (prefers-reduced-motion: reduce) { .deck.loading .vinyl { animation: none; } }
-
-  /* ---------- the deck: record, platter, tonearm ---------- */
-  .deck { position: relative; display: inline-block; }
-  .deck .vinyl {
-    position: relative; z-index: 2;
-    transform: translateY(-16px) scale(0.96);
-    transition: transform 0.85s cubic-bezier(0.65, 0, 0.25, 1);
-  }
-  .platter {
-    position: absolute; left: 50%; top: 50%;
-    width: 104%; height: 104%; border-radius: 50%;
-    transform: translate(-50%, -50%) scale(0.55);
-    background: #e9e7db;
-    box-shadow: inset 0 0 0 1px rgba(34,32,29,0.16);
-    opacity: 0; z-index: 1;
-    transition: opacity 0.6s ease, transform 0.85s cubic-bezier(0.65, 0, 0.25, 1);
-  }
-  .tonearm {
-    position: absolute; right: -4%; top: -7%;
-    width: 54%; height: auto; z-index: 3;
-    transform-origin: 82.5% 17.5%;
-    transform: rotate(-26deg);
-    opacity: 0;
-    transition: opacity 0.5s ease, transform 1s cubic-bezier(0.5, 0, 0.2, 1);
-  }
-  .deck.cueing .platter { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-  .deck.cueing .vinyl { transform: translateY(0) scale(1); }
-  .deck.cueing .tonearm { opacity: 1; transform: rotate(10deg); }
-  @media (prefers-reduced-motion: reduce) {
-    .deck .vinyl, .platter, .tonearm { transition: none; }
-  }
-
-  /* ---------- corner record ---------- */
-  .mini {
-    position: fixed; left: 22px; bottom: 22px; z-index: 40;
-    width: 78px; height: 78px; padding: 0;
-    background: none; border: none; cursor: pointer;
-    opacity: 0; pointer-events: none; transition: opacity 0.6s ease;
-  }
-  .entered .mini { opacity: 1; pointer-events: auto; }
-  .mini .vinyl.small { width: 78px; }
-  .mini:not(.playing) .vinyl { animation: none; }
-
-
-  .now-playing {
-    position: fixed; left: 108px; bottom: 34px; z-index: 40;
-    font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase;
-    color: var(--faint); opacity: 0; pointer-events: none;
-    transition: opacity 0.5s ease;
-  }
-  .entered .now-playing { opacity: 1; }
-  .mini::before {
-    content: ""; position: absolute; inset: -6px; border-radius: 50%;
-    border: 2px solid var(--accent); opacity: 0;
-  }
-  .entered .mini::before { animation: hint-ring 1s ease-out 1.2s 2; }
-  @keyframes hint-ring {
-    0% { opacity: 0.9; transform: scale(1); }
-    100% { opacity: 0; transform: scale(1.35); }
-  }
-  @media (prefers-reduced-motion: reduce) { .entered .mini::before { animation: none; } }
-  .now-playing b { color: var(--accent); font-weight: 600; }
-  .mini::after {
-    content: "Change the record";
-    position: absolute; left: 0; bottom: calc(100% + 10px);
-    font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase;
-    color: #22201d; background: #f7f7ef; padding: 5px 9px; white-space: nowrap;
-    border: 1px solid #22201d; opacity: 0; transition: opacity 0.25s ease; pointer-events: none;
-  }
-  .mini:hover::after, .mini:focus-visible::after { opacity: 1; }
-  @media (max-width: 700px) { .now-playing { display: none; } }
-
-  /* ---------- ticker ---------- */
-  .ticker {
-    border-top: 1px solid #22201d; border-bottom: 1px solid #22201d;
-    background: #f7f7ef;
-    overflow: hidden; white-space: nowrap;
-    padding: 9px 0;
-  }
-  .ticker .belt { display: inline-block; }
-  .ticker span {
-    display: inline-block;
-    font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: #22201d;
-    animation: belt 36s linear infinite;
-  }
-  @keyframes belt { to { transform: translateX(-100%); } }
-
-
-  .note-fly {
-    position: fixed; z-index: 39; pointer-events: none;
-    font-size: 22px; color: #22201d;
-    animation: floatnote 2.4s ease-out forwards;
-  }
-  @keyframes floatnote {
-    0%   { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.7); }
-    12%  { opacity: 0.9; }
-    100% { opacity: 0; transform: translate(var(--dx, 30px), -190px) rotate(var(--rot, 14deg)) scale(1.1); }
-  }
-  .vinyl-clone { position: fixed; z-index: 70; transition: transform 1.05s cubic-bezier(0.7, 0, 0.2, 1); transform-origin: top left; }
-  .ticker:hover span { animation-play-state: paused; }
-  @media (prefers-reduced-motion: reduce) { .note-fly { display: none; } }
-
-  body.locked { overflow: hidden; }
-
-
-  /* ---------- inverted data panels ---------- */
-  .panel {
-    width: calc(100vw - var(--sbw, 0px));
-    margin: 0 0 10vh calc(50% - (100vw - var(--sbw, 0px)) / 2);
-    background: #f7f7ef; color: #22201d;
-    border-top: 1px solid #22201d; border-bottom: 1px solid #22201d;
-    padding: 200px 32px 9vh;
-  }
-  .panel-in { max-width: 1000px; margin: 0 auto; }
-  .panel .hero-num {
-    font-family: "Anton", "Arial Narrow", sans-serif;
-    font-size: clamp(3.4rem, 11vw, 8rem); line-height: 0.9;
-    margin: 0; letter-spacing: 0.01em;
-  }
-  .panel .hero-sub {
-    font-size: 0.74rem; letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--muted); margin: 12px 0 0;
-  }
-  .panel .accent { color: var(--accent); }
-
-  .chart { margin: 6vh 0 0; }
-  .loadchart { width: 100%; height: auto; display: block; }
-  .chart .cap {
-    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--faint); margin: 0 0 34px;
-  }
-  .bars { display: flex; align-items: stretch; gap: 6px; height: 240px; }
-  .bar { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; }
-  .bar .stalk { flex: none; }
-  .bar .stalk {
-    background: #22201d; border-radius: 4px 4px 0 0;
-    transform-origin: bottom; transform: scaleY(var(--grow, 0));
-    transition: transform 1.1s cubic-bezier(0.22,1,0.36,1);
-  }
-  .bar.now .stalk { background: var(--accent); }
-  .bar .val {
-    font-family: ui-monospace, Menlo, monospace; font-size: 0.76rem;
-    font-variant-numeric: tabular-nums; color: #22201d;
-  }
-  .bar.now .val { color: var(--accent); }
-  .bar .gen {
-    font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase;
-    color: var(--faint); border-top: 1px solid rgba(34,32,29,0.25); padding-top: 8px;
-  }
-  @media (max-width: 760px) {
-    .chart .cap { margin-bottom: 26px; }
-    .bars { height: 220px; gap: 3px; }
-    .bar { gap: 6px; }
-    .bar .val { font-size: 0.58rem; }
-    .bar .gen { font-size: 0.5rem; letter-spacing: 0.06em; white-space: nowrap; padding-top: 6px; }
-  }
-
-  /* edge vs cost — the finding, as a ledger */
-  .ledger { width: min(100%, 1060px); margin: 0 auto 9vh; }
-  .ledger-head {
-    display: grid; grid-template-columns: 1.15fr 1fr; gap: 26px;
-    font-size: 0.66rem; letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--faint); padding-bottom: 12px; border-bottom: 1px solid #22201d;
-  }
-  .ledger-row {
-    display: grid; grid-template-columns: 1.15fr 1fr; gap: 26px;
-    padding: 15px 0; border-bottom: 1px solid rgba(34,32,29,0.16);
-    font-size: 0.94rem; line-height: 1.45;
-  }
-  .ledger-row .e { color: #22201d; }
-  .ledger-row .c { color: var(--muted); }
-  .ledger-row .n {
-    font-family: ui-monospace, Menlo, monospace; font-size: 0.86rem;
-    font-variant-numeric: tabular-nums; color: var(--accent);
-  }
-  @media (max-width: 760px) {
-    .ledger-head { display: none; }
-    .ledger-row { grid-template-columns: 1fr; gap: 5px; padding: 14px 0; font-size: 0.9rem; }
-    .ledger-row .c::before {
-      content: "eaten by "; font-size: 0.62rem; letter-spacing: 0.16em;
-      text-transform: uppercase; color: var(--faint);
-    }
-  }
-
-  /* the worked example: annualised vs actual */
-  .worked { width: min(100%, 720px); margin: 0 auto 9vh; }
-  .worked h3 {
-    font-family: "Lora", Georgia, serif; font-weight: 600; font-style: italic;
-    font-size: 1.15rem; margin: 0 0 18px; color: #22201d;
-  }
-  .worked p { font-size: 0.96rem; line-height: 1.62; color: var(--ink2); margin: 0 0 15px; max-width: 36em; text-wrap: pretty; }
-  .twoup { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin: 22px 0; }
-  .twoup div { padding: 18px 20px; background: rgba(34,32,29,0.04); }
-  .twoup b {
-    display: block; font-family: "Anton", "Arial Narrow", sans-serif;
-    font-weight: 400; font-size: 1.9rem; letter-spacing: 0.01em; margin-bottom: 5px;
-  }
-  .twoup .bad b { color: rgba(34,32,29,0.42); }
-  .twoup .real b { color: var(--accent); }
-  .twoup span { font-size: 0.78rem; color: var(--muted); line-height: 1.4; display: block; }
-  @media (max-width: 760px) { .twoup { grid-template-columns: 1fr; } }
-
-  /* week-late table preview — the product, not a teaser graphic */
-  a.mm-preview {
-    display: block;
-    width: min(100%, 720px);
-    margin: 0 auto 9vh;
-    padding: 22px 24px 18px;
-    background: #f7f7ef;
-    border: 1px solid #22201d;
-    color: #22201d;
-    text-decoration: none;
-  }
-  a.mm-preview:hover {
-    color: #22201d;
-    border-color: #22201d;
-    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 35%, transparent);
-  }
-  a.mm-preview .cap {
-    font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase;
-    color: var(--faint); margin: 0 0 16px;
-  }
-  a.mm-preview table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-  a.mm-preview th {
-    text-align: left; font-size: 0.62rem; letter-spacing: 0.14em;
-    text-transform: uppercase; color: var(--faint); font-weight: 600;
-    padding: 0 10px 8px 0; border-bottom: 1px solid #22201d;
-  }
-  a.mm-preview td {
-    padding: 11px 10px 11px 0;
-    border-bottom: 1px solid rgba(34,32,29,0.14);
-    vertical-align: top;
-  }
-  a.mm-preview .tk { font-family: ui-monospace, Menlo, monospace; font-weight: 600; letter-spacing: 0.03em; }
-  a.mm-preview .co { color: var(--muted); }
-  a.mm-preview .num { font-family: ui-monospace, Menlo, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
-  a.mm-preview .go-row {
-    margin: 14px 0 0;
-    font-family: "Lora", Georgia, serif;
-    font-size: 1.02rem;
-  }
-  @media (max-width: 640px) {
-    a.mm-preview { padding: 18px 16px 14px; }
-    a.mm-preview th:nth-child(2), a.mm-preview td:nth-child(2) { display: none; }
-    .masthead .mast-end { gap: 10px; flex-wrap: nowrap; justify-content: flex-end; }
-    .masthead a.pay { letter-spacing: 0.08em; padding: 4px 8px; }
-    .masthead .mail-mast { display: none; }
-  }
-
-  /* measured figures — one per programme */
-  .figure { width: min(100%, 1060px); margin: 0 auto 9vh; }
-  .figure .cap {
-    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--faint); margin: 0 0 22px;
-  }
-  .fig { width: 100%; height: auto; display: block; }
-  .fig text { font-family: ui-monospace, Menlo, monospace; }
-  .fig .t-s { font-size: 12px; }
-  .fig .t-m { font-size: 13.5px; }
-  .key { display: flex; flex-wrap: wrap; gap: 20px; margin: 16px 0 0; }
-  .key span { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--muted); }
-  .key i { width: 22px; height: 0; border-top: 2.5px solid #22201d; display: block; }
-  .key i.dash { border-top-style: dashed; border-color: var(--accent); }
-  .fig-note { font-size: 0.78rem; line-height: 1.55; color: var(--muted); margin: 15px 0 0; max-width: 39em; text-wrap: pretty; }
-  @media (max-width: 760px) {
-    .figure { margin-bottom: 7vh; }
-    .figure .cap { margin-bottom: 16px; font-size: 0.62rem; letter-spacing: 0.16em; }
-    .fig .t-s { font-size: 26px; }
-    .fig .t-m { font-size: 30px; }
-  }
-
-  .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin: 7vh 0 0; }
-  .facts div { border-top: 1px solid rgba(34,32,29,0.25); padding-top: 14px; }
-  .facts b {
-    display: block; font-family: "Anton", "Arial Narrow", sans-serif;
-    font-size: 1.9rem; font-weight: 400; letter-spacing: 0.01em;
-  }
-  .facts span { font-size: 0.78rem; color: var(--muted); }
-
-  /* alert feed */
-  .feed { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.82rem; line-height: 1.75; }
-  .feed .row { display: grid; grid-template-columns: 190px 1fr; gap: 20px; padding: 11px 0; border-top: 1px solid rgba(34,32,29,0.18); }
-  .feed .row:first-child { border-top: none; }
-  .feed time { color: var(--faint); font-variant-numeric: tabular-nums; }
-  .feed .down { color: var(--accent); }
-  @media (max-width: 700px) {
-    .facts { grid-template-columns: 1fr; gap: 20px; }
-    .feed .row { grid-template-columns: 1fr; gap: 2px; }
-    .panel { padding: 150px 22px 7vh; }
-  }
-
-  /* ---------- ExeTix — the flagship, first thing after the opening ---------- */
-  .masthead .mast-end a.xt-mast { font-weight: 700; }
-  .masthead .mast-end a.xt-mast::before {
-    content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%;
-    background: #00c805; box-shadow: 0 0 6px rgba(0,200,5,0.8); margin-right: 7px; vertical-align: 1px;
-  }
+  .xt .say.small { font-family: inherit; font-size: 0.95rem; color: var(--muted); max-width: 44ch; }
+  .xt .doing-row { text-align: center; margin: 0 auto 8vh; }
+  .xt .doing-row .go { font-family: var(--serif); font-size: 1.15rem; }
+  .xt .doing-row .note { display: block; margin-top: 12px; font-size: 0.85rem; color: var(--faint); }
+  .xt .todo-label { text-align: center; margin: 0 0 18px; font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--faint); }
+  .xt .todo { max-width: 40ch; margin: 0 auto; text-align: left; font-size: 0.86rem; }
   .xt-band {
     position: relative; overflow: hidden; margin: 0 0 10vh;
     background: #07070a; color: #f4f4ee;
-    border-top: 1px solid #22201d; border-bottom: 1px solid #22201d;
+    border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink);
   }
   .xt-band::before {
     content: ""; position: absolute; inset: 0; pointer-events: none;
@@ -736,14 +443,14 @@
   }
   .xt-kick img { flex: none; width: 52px; height: 52px; border-radius: 12px; box-shadow: 0 0 34px -6px rgba(0,200,5,0.6); }
   .xt-pitch {
-    font-family: "Lora", Georgia, serif; font-style: italic; font-weight: 500;
+    font-family: var(--serif); font-style: italic; font-weight: 500;
     font-size: clamp(1.5rem, 3vw, 2.25rem); line-height: 1.28; margin: 0 0 30px; max-width: 20em; text-wrap: balance;
   }
   .xt-pitch span { color: rgba(244,244,238,0.68); }
   .xt-facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 0 0 30px; }
   .xt-facts div { border-top: 1px solid rgba(244,244,238,0.2); padding-top: 12px; }
   .xt-facts b {
-    display: block; font-family: "Anton", "Arial Narrow", sans-serif; font-weight: 400;
+    display: block; font-family: var(--slab); font-weight: 400;
     font-size: clamp(1.7rem, 3vw, 2.3rem); line-height: 1.05; letter-spacing: 0.01em; margin-bottom: 4px;
   }
   .xt-facts b i { font-style: normal; color: #00c805; }
@@ -775,9 +482,7 @@
   .xt-phone.l, .xt-phone.r { transform: translate(-50%, -50%) scale(0.86); }
   .xt-band.in .xt-phone.l { transform: translate(-108%, -46%) rotate(-7deg) scale(0.86); }
   .xt-band.in .xt-phone.r { transform: translate(8%, -46%) rotate(7deg) scale(0.86); }
-  @media (max-width: 900px) {
-    .xt-in { grid-template-columns: 1fr; gap: 8px; padding-top: 8vh; }
-  }
+  @media (max-width: 900px) { .xt-in { grid-template-columns: 1fr; gap: 8px; padding-top: 8vh; } }
   @media (max-width: 640px) {
     .masthead .mast-end a.xt-mast { display: none; }
     .xt-in { padding: 7vh 20px 6vh; }
@@ -791,52 +496,245 @@
   }
   @media (prefers-reduced-motion: reduce) { .xt-phone { transition: none; } }
 
-  /* ---------- reveal ---------- */
-  /* the thread between projects — a groove drawn between one record and the next */
-  .bridge {
-    max-width: 33ch; margin: 0 auto; padding: 15vh 22px 16vh;
-    text-align: center; text-wrap: pretty;
-    font-family: "Lora", Georgia, serif;
-    font-size: clamp(1.02rem, 1.45vw, 1.2rem);
-    line-height: 1.72;
-    color: #22201d;
+  /* ---------- about / close ---------- */
+  .about { max-width: 1152px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; }
+  .about .prose p { font-family: var(--serif); font-size: clamp(1.1rem, 1.7vw, 1.3rem); line-height: 1.55; color: var(--ink); margin: 0 0 1em; max-width: 30em; text-wrap: pretty; }
+  .about .prose p.quiet { font-family: inherit; font-size: 0.95rem; color: var(--muted); }
+  .about .stack dt { font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--faint); margin-top: 16px; }
+  .about .stack dd { margin: 4px 0 0; font-size: 0.92rem; color: var(--ink2); line-height: 1.5; }
+  @media (max-width: 900px) { .about { grid-template-columns: 1fr; gap: 20px; padding: 0 20px; } }
+  .close { padding: 14vh 32px 16vh; text-align: center; border-top: 1px solid var(--rule); margin-top: 14vh; }
+  .close .mail { border-bottom: 2px solid var(--accent); font-family: var(--serif); font-size: clamp(1.6rem, 3.4vw, 2.2rem); }
+  .close .didnt { max-width: 46em; margin: 44px auto 0; font-size: 0.8rem; line-height: 1.8; color: var(--faint); text-wrap: pretty; }
+  .close .stamp { margin-top: 26px; font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--faint); }
+  .close .fine { max-width: 46em; margin: 18px auto 0; font-size: 0.74rem; line-height: 1.6; color: var(--faint); }
+
+  /* ---------- rail ---------- */
+  .rail {
+    position: fixed; right: 22px; top: 50%; transform: translateY(-50%); z-index: 30;
+    display: flex; flex-direction: column; gap: 12px; align-items: flex-end;
+    opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
   }
-  /* hairline in the same language as the scroll hint, drawn downward on entry */
-  .bridge::before {
-    content: ""; display: block;
-    width: 1px; height: 48px; margin: 0 auto 32px;
-    background: linear-gradient(to bottom, transparent, var(--accent));
-    transform: scaleY(0); transform-origin: top center;
-    transition: transform 1.15s cubic-bezier(0.22, 1, 0.36, 1) 0.06s, background 0.6s ease;
+  .entered .rail { opacity: 1; pointer-events: auto; }
+  .rail a {
+    width: 26px; height: 2px; background: #c2bfae; border: none; padding: 0;
+    position: relative; transition: background 0.3s ease, width 0.3s ease;
   }
-  .bridge.in::before { transform: scaleY(1); }
-  /* what came before sits back; the turn sits forward */
-  .bridge .from { color: var(--muted); font-style: italic; }
-  .bridge .to { color: #22201d; }
-  @media (prefers-reduced-motion: reduce) {
-    .bridge::before { transform: none; transition: background 0.6s ease; }
+  .rail a:hover, .rail a.on { background: var(--accent); width: 40px; }
+  .rail a::after {
+    content: attr(data-t); position: absolute; right: 46px; top: -0.65em;
+    font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink); background: var(--ground); padding: 0 4px; white-space: nowrap; opacity: 0; transition: opacity 0.25s ease;
   }
+  .rail a:hover::after { opacity: 1; }
+  @media (max-width: 1240px) { .rail { display: none; } }
+
+  /* ---------- small building blocks used inside case studies ---------- */
+  .doing-row { margin: 1.6em 0 1.4em; }
+  .doing-row .go { font-family: var(--serif); font-size: 1.12rem; }
+  .doing-row .note { display: block; margin-top: 10px; font-size: 0.84rem; line-height: 1.55; color: var(--faint); max-width: 44em; }
+  .todo-label { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--faint); margin: 2em 0 0.9em; font-weight: 600; }
+
+  /* dot-and-whisker: mean with its 90% interval, one row per sample */
+  .dots { margin: 0; padding: 0; list-style: none; }
+  .dots li { display: grid; grid-template-columns: minmax(150px, 30%) 1fr; gap: 16px; align-items: center; padding: 9px 0; border-top: 1px solid var(--rule); }
+  .dots li.grp { border-top: 1px solid var(--ink); margin-top: 8px; }
+  .dots .lbl { font-size: 0.84rem; line-height: 1.35; color: var(--ink2); }
+  .dots .lbl small { display: block; color: var(--faint); font-size: 0.74rem; }
+  .dots .plot { position: relative; height: 34px; }
+  .dots .zero { position: absolute; top: -9px; bottom: -9px; left: 16.667%; width: 1px; background: var(--ink); opacity: 0.5; }
+  .dots .ci { position: absolute; top: 50%; height: 2px; margin-top: -1px; background: currentColor; }
+  .dots .ci::before, .dots .ci::after { content: ""; position: absolute; top: -6px; width: 2px; height: 14px; background: currentColor; }
+  .dots .ci::before { left: 0; } .dots .ci::after { right: 0; }
+  .dots .pt { position: absolute; top: 50%; width: 13px; height: 13px; margin: -6.5px 0 0 -6.5px; border-radius: 50%; background: currentColor; }
+  .dots .val { position: absolute; top: -4px; transform: translateX(-50%); font-family: var(--mono); font-size: 0.72rem; white-space: nowrap; }
+  .dots .is { color: rgba(34,32,29,0.55); }
+  .dots .ho { color: var(--accent); }
+  .dots .axis { display: grid; grid-template-columns: minmax(150px, 30%) 1fr; gap: 16px; border: none; padding-top: 4px; }
+  .dots .ticks { position: relative; height: 18px; font-family: var(--mono); font-size: 0.68rem; color: var(--faint); }
+  .dots .ticks span { position: absolute; transform: translateX(-50%); }
+  @media (max-width: 700px) {
+    .dots li, .dots .axis { grid-template-columns: 1fr; gap: 2px; }
+    .dots .axis > span:first-child { display: none; }
+  }
+
+  /* a funnel of three numbers */
+  .funnel { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin: 2em 0; }
+  .funnel div { background: var(--tint); padding: 18px 20px; position: relative; }
+  .funnel div + div::before { content: "→"; position: absolute; left: -12px; top: 22px; font-size: 1rem; color: var(--faint); background: var(--ground); line-height: 1; padding: 2px 0; }
+  .funnel b { display: block; font-family: var(--slab); font-weight: 400; font-size: clamp(2rem, 4vw, 2.8rem); line-height: 1; }
+  .funnel div:last-child b { color: var(--accent); }
+  .funnel span { display: block; margin-top: 6px; font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
+  @media (max-width: 600px) { .funnel { grid-template-columns: 1fr; } .funnel div + div::before { content: "↓"; left: 20px; top: -12px; } }
+
+  /* data flow, boxes and arrows in HTML */
+  .flow { display: flex; align-items: stretch; gap: 0; margin: 1.4em 0 0; flex-wrap: wrap; }
+  .flow .node { flex: 1 1 150px; border: 1px solid var(--ink); padding: 12px 14px; font-size: 0.8rem; line-height: 1.4; background: var(--ground); }
+  .flow .node b { display: block; font-size: 0.86rem; margin-bottom: 3px; }
+  .flow .node span { color: var(--muted); }
+  .flow .node.key-node { background: var(--ink); color: var(--ground); }
+  .flow .node.key-node span { color: rgba(247,247,239,0.72); }
+  .flow .arr { flex: 0 0 34px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: var(--accent); }
+  .flow.sub .node { border-style: dashed; }
   @media (max-width: 760px) {
-    .bridge { padding: 10vh 26px 11vh; font-size: 1.02rem; }
-    .bridge::before { height: 36px; margin-bottom: 26px; }
+    .flow { flex-direction: column; }
+    .flow .arr { flex-basis: 26px; transform: rotate(90deg); }
   }
+
+  /* DeskStatus: a schematic window, not a screenshot */
+  .ds-win { border: 1px solid var(--ink); background: #15161a; color: #d9dbd2; font-family: var(--mono); font-size: 0.7rem; margin: 2em 0 0; overflow: hidden; }
+  .ds-bar { display: flex; align-items: center; gap: 7px; padding: 9px 12px; border-bottom: 1px solid #2a2c33; }
+  .ds-bar i { width: 10px; height: 10px; border-radius: 50%; background: #3b3d45; }
+  .ds-bar i:nth-child(1) { background: #d0574a; } .ds-bar i:nth-child(2) { background: #d4a73f; } .ds-bar i:nth-child(3) { background: #5aa05a; }
+  .ds-bar span { margin-left: 10px; letter-spacing: 0.14em; color: #9a9c95; }
+  .ds-bar .dot { margin-left: auto; width: 8px; height: 8px; border-radius: 50%; background: #00c805; box-shadow: 0 0 8px #00c805; }
+  .ds-tabs { display: flex; flex-wrap: wrap; border-bottom: 1px solid #2a2c33; }
+  .ds-tabs span { padding: 8px 12px; letter-spacing: 0.1em; color: #8d9089; border-right: 1px solid #2a2c33; }
+  .ds-tabs span b { color: #5f625c; font-weight: 400; margin-right: 6px; }
+  .ds-tabs span.on { color: #f0f1ea; background: #1f2127; box-shadow: inset 0 -2px 0 var(--accent); }
+  .ds-body { display: grid; grid-template-columns: 1.1fr 1fr; gap: 1px; background: #2a2c33; }
+  .ds-body > div { background: #15161a; padding: 14px; min-height: 150px; }
+  .ds-body .h { letter-spacing: 0.14em; color: #6f726b; margin-bottom: 10px; display: block; }
+  .ds-row { height: 9px; background: #23252c; margin: 0 0 8px; border-radius: 2px; }
+  .ds-row:nth-child(3n) { width: 82%; } .ds-row:nth-child(3n+1) { width: 94%; } .ds-row:nth-child(3n+2) { width: 70%; }
+  .ds-body svg { width: 100%; height: 110px; display: block; }
+  @media (max-width: 600px) { .ds-body { grid-template-columns: 1fr; } .ds-tabs span { padding: 7px 8px; } }
+
+  /* ---------- entry gate ---------- */
+  .gate {
+    position: fixed; inset: 0; z-index: 60;
+    background: var(--ground);
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    gap: 9vh;
+    transition: transform 1s cubic-bezier(0.7, 0, 0.2, 1);
+  }
+  .gate.open { transform: translateY(-101%); }
+  .gate-mast {
+    width: 100%; display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
+    padding: 18px 34px; border-bottom: 1px solid var(--ink);
+    font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700;
+  }
+  .gate-mast > * { white-space: nowrap; }
+  .gate-skip {
+    font: inherit; font-weight: 600; letter-spacing: inherit; text-transform: inherit; color: var(--muted);
+    background: none; border: none; padding: 0; cursor: pointer; border-bottom: 1px solid #c9c6b4;
+  }
+  .gate-skip:hover { color: var(--accent); border-color: var(--accent); }
+  .gate-mid { display: flex; flex-direction: column; align-items: center; gap: 30px; }
+  .vinyl { width: clamp(240px, 32vw, 360px); height: auto; display: block; }
+  .spinning .vinyl, .mini.playing .vinyl { animation: spin 1.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .needle { margin: 0; font-size: 0.72rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--faint); }
+  .picks { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .pick {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    min-width: 132px; padding: 15px 20px; cursor: pointer; color: var(--ink);
+    background: var(--ground); border: 1px solid var(--ink);
+    transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+  }
+  .pick .mood { font: 700 0.82rem/1 -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif; letter-spacing: 0.14em; text-transform: uppercase; }
+  .pick .track { font-family: var(--serif); font-style: italic; font-size: 0.82rem; color: var(--faint); }
+  .pick:hover { background: var(--ink); color: var(--ground); transform: translateY(-2px); }
+  .pick:hover .track { color: rgba(247,247,239,0.7); }
+  .pick.missing { display: none; }
+  .vinyl .label-fill, .vinyl .label-text, .vinyl .label-dot { transition: fill 0.75s ease; }
+  .deck.picked .vinyl .label-fill { fill: var(--accent); }
+  .deck.picked .vinyl .label-text { fill: #f7f7ef; }
+  .deck.picked .vinyl .label-text.sub { fill: rgba(247,247,239,0.8); }
+  .deck.picked .vinyl .label-dot { fill: #f7f7ef; }
+  @keyframes gate-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @keyframes record-in { from { opacity: 0; transform: translateY(-42px) scale(0.9); } to { opacity: 1; transform: translateY(-16px) scale(0.96); } }
+  .gate-mast, .deck, .needle, .picks { opacity: 0; }
+  .gate-mast { animation: gate-in 0.8s ease 0.55s both; }
+  .deck .vinyl { animation: record-in 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0.9s both; }
+  .deck { animation: gate-in 0.01s linear 0.9s both; }
+  .needle { animation: gate-in 0.7s ease 1.85s both; }
+  .picks { animation: gate-in 0.7s ease 2.05s both; }
+  .deck.cueing .vinyl { animation: none; }
+  @keyframes cue-spin { to { transform: rotate(360deg); } }
+  .deck.loading .vinyl, .deck.loading.cueing .vinyl { animation: cue-spin 2.6s linear infinite; }
+  .deck { position: relative; display: inline-block; }
+  .deck .vinyl { position: relative; z-index: 2; transform: translateY(-16px) scale(0.96); transition: transform 0.85s cubic-bezier(0.65, 0, 0.25, 1); }
+  .platter {
+    position: absolute; left: 50%; top: 50%; width: 104%; height: 104%; border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0.55); background: #e9e7db;
+    box-shadow: inset 0 0 0 1px rgba(34,32,29,0.16); opacity: 0; z-index: 1;
+    transition: opacity 0.6s ease, transform 0.85s cubic-bezier(0.65, 0, 0.25, 1);
+  }
+  .tonearm {
+    position: absolute; right: -4%; top: -7%; width: 54%; height: auto; z-index: 3;
+    transform-origin: 82.5% 17.5%; transform: rotate(-26deg); opacity: 0;
+    transition: opacity 0.5s ease, transform 1s cubic-bezier(0.5, 0, 0.2, 1);
+  }
+  .deck.cueing .platter { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  .deck.cueing .vinyl { transform: translateY(0) scale(1); }
+  .deck.cueing .tonearm { opacity: 1; transform: rotate(10deg); }
+  @media (prefers-reduced-motion: reduce) {
+    .gate-mast, .deck, .deck .vinyl, .needle, .picks { animation: none; opacity: 1; }
+    .deck.loading .vinyl { animation: none; }
+    .deck .vinyl, .platter, .tonearm { transition: none; }
+  }
+
+  /* ---------- corner record ---------- */
+  .mini {
+    position: fixed; left: 22px; bottom: 22px; z-index: 40;
+    width: 78px; height: 78px; padding: 0; background: none; border: none; cursor: pointer;
+    opacity: 0; pointer-events: none; transition: opacity 0.6s ease;
+  }
+  .entered .mini { opacity: 1; pointer-events: auto; }
+  .mini .vinyl.small { width: 78px; }
+  .mini:not(.playing) .vinyl { animation: none; }
+  .now-playing {
+    position: fixed; left: 108px; bottom: 34px; z-index: 40;
+    font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--faint); opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
+  }
+  .entered .now-playing { opacity: 1; }
+  .now-playing b { color: var(--accent); font-weight: 600; }
+  .mini::before { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid var(--accent); opacity: 0; }
+  .entered .mini::before { animation: hint-ring 1s ease-out 1.2s 2; }
+  @keyframes hint-ring { 0% { opacity: 0.9; transform: scale(1); } 100% { opacity: 0; transform: scale(1.35); } }
+  .mini::after {
+    content: "Change the record"; position: absolute; left: 0; bottom: calc(100% + 10px);
+    font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink); background: var(--ground); padding: 5px 9px; white-space: nowrap;
+    border: 1px solid var(--ink); opacity: 0; transition: opacity 0.25s ease; pointer-events: none;
+  }
+  .mini:hover::after, .mini:focus-visible::after { opacity: 1; }
+  @media (max-width: 700px) { .now-playing { display: none; } .mini { width: 42px; height: 42px; left: 10px; bottom: 10px; } .mini .vinyl.small { width: 42px; } .entered .mini { opacity: 0.9; } .mini::after { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .entered .mini::before { animation: none; } }
+
+  /* ---------- ticker ---------- */
+  .ticker { border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); background: var(--ground); overflow: hidden; white-space: nowrap; padding: 9px 0; }
+  .ticker .belt { display: inline-block; }
+  .ticker span { display: inline-block; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink); animation: belt 48s linear infinite; }
+  @keyframes belt { to { transform: translateX(-100%); } }
+  .ticker:hover span { animation-play-state: paused; }
+
+  .note-fly { position: fixed; z-index: 39; pointer-events: none; font-size: 22px; color: var(--ink); animation: floatnote 2.4s ease-out forwards; }
+  @keyframes floatnote {
+    0%   { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.7); }
+    12%  { opacity: 0.9; }
+    100% { opacity: 0; transform: translate(var(--dx, 30px), -190px) rotate(var(--rot, 14deg)) scale(1.1); }
+  }
+  .vinyl-clone { position: fixed; z-index: 70; transition: transform 1.05s cubic-bezier(0.7, 0, 0.2, 1); transform-origin: top left; }
+  body.locked { overflow: hidden; }
 
   .rise { opacity: 0; transform: translateY(20px); transition: opacity 0.9s ease, transform 1s cubic-bezier(0.22,1,0.36,1); }
   .rise.in { opacity: 1; transform: none; }
 
   @media (max-width: 760px) {
     .head { padding: 8vh 22px 3vh; }
-    .frame { margin-bottom: 7vh; width: 100%; }
-    .say, .mono-stat, .todo, .maths { margin-bottom: 7vh; }
+    .chapter { padding-top: 11vh; }
+    .chapter-head { width: calc(100% - 40px); padding: 0 0 26px; }
     .masthead {
       padding: max(14px, env(safe-area-inset-top, 0px)) max(18px, calc(env(safe-area-inset-right, 0px) + 12px)) 14px max(18px, calc(env(safe-area-inset-left, 0px) + 12px));
-      font-size: 0.7rem;
+      font-size: 0.68rem;
     }
     .masthead .mast-end { gap: 12px; }
-    .masthead .mail-mast { display: none; }
-    .fold-sell .fold-nums { font-size: 0.92rem; }
+    .masthead .mast-end .opt { display: none; }
     .gate-mast { padding: 12px 14px; font-size: 0.62rem; letter-spacing: 0.08em; }
-    .gate-mast .gate-pay { letter-spacing: 0.06em; text-align: right; }
+    .close { padding: 10vh 20px 14vh; }
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
@@ -844,16 +742,82 @@
     .ticker span { animation: none; }
     .gate { transition: none; }
     .rise { opacity: 1; transform: none; transition: none; }
-    .opening .rule path { animation: none; stroke-dashoffset: 0; }
-    .readout { animation: none; opacity: 1; }
+    .hbars .fill { transition: none; }
+    .note-fly { display: none; }
+  }
+
+  /* ---------- Merger Monitor: the one with a price attached ---------- */
+  .masthead a.pay {
+    font-weight: 700; letter-spacing: 0.12em;
+    background: var(--ink); color: var(--ground); border: none; padding: 5px 9px;
+  }
+  .masthead a.pay:hover { background: var(--accent); color: var(--ground); }
+  .masthead .mast-end a.mm { font-weight: 700; }
+
+  /* after the wipe — same SKU, never the first paint */
+  .fold-sell {
+    opacity: var(--tail-op, 0); transition: opacity 0.6s ease 0.2s;
+    pointer-events: none;
+    margin: 26px auto 0; width: min(38rem, 100%);
+  }
+  .opening.opened .fold-sell { pointer-events: auto; }
+  .fold-sell .fold-nums { margin: 0 0 14px; font-size: 0.98rem; line-height: 1.45; color: var(--ink2); text-wrap: pretty; }
+  .fold-sell .fold-ledger { display: block; margin: 10px 0 0; font-size: 0.8rem; color: var(--faint); }
+
+  .go.pay {
+    display: inline-block; font-family: inherit; font-weight: 600; font-size: 0.95rem; line-height: 1.2;
+    background: var(--ink); color: var(--ground); border: 1px solid var(--ink); padding: 11px 18px;
+  }
+  .go.pay:hover { background: var(--accent); border-color: var(--accent); color: var(--ground); }
+  .doing-row .go.pay { font-family: inherit; font-size: 0.95rem; }
+
+  .gate-end { display: flex; align-items: baseline; gap: 22px; }
+  .gate-mast a.gate-pay { border: none; font-weight: 700; }
+  .gate-mast a.gate-pay:hover { color: var(--accent); }
+
+  a.mm-preview {
+    display: block; margin: 1.6em 0; padding: 20px 22px 16px;
+    background: var(--ground); border: 1px solid var(--ink); color: var(--ink);
+    transition: box-shadow 0.3s ease;
+  }
+  a.mm-preview:hover { color: var(--ink); border-color: var(--ink); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 30%, transparent); }
+  a.mm-preview .cap { font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); margin: 0 0 14px; }
+  a.mm-preview table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  a.mm-preview th { text-align: left; font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); font-weight: 600; padding: 0 10px 8px 0; border-bottom: 1px solid var(--ink); }
+  a.mm-preview td { padding: 10px 10px 10px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  a.mm-preview .tk { font-family: var(--mono); font-weight: 600; letter-spacing: 0.03em; }
+  a.mm-preview .co { color: var(--muted); }
+  a.mm-preview .num { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  a.mm-preview .go-row { margin: 12px 0 0; font-family: var(--serif); font-size: 1rem; }
+
+  .worked { margin: 2em 0 0; }
+  .worked h4 { margin-top: 0; }
+  .worked p { font-size: 1rem; line-height: 1.65; color: var(--ink2); margin: 0 0 1em; max-width: 40em; text-wrap: pretty; }
+  .twoup { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin: 1.4em 0; }
+  .twoup div { padding: 18px 20px; background: var(--tint); }
+  .twoup b { display: block; font-family: var(--slab); font-weight: 400; font-size: 1.9rem; letter-spacing: 0.01em; margin-bottom: 5px; }
+  .twoup .bad b { color: rgba(34,32,29,0.42); }
+  .twoup .real b { color: var(--accent); }
+  .twoup span { font-size: 0.8rem; color: var(--muted); line-height: 1.45; display: block; }
+  @media (max-width: 760px) {
+    .twoup { grid-template-columns: 1fr; }
+    a.mm-preview { padding: 16px 14px 12px; }
+    a.mm-preview th:nth-child(2), a.mm-preview td:nth-child(2) { display: none; }
+    .masthead .mast-end { gap: 10px; }
+    .masthead a.pay { letter-spacing: 0.08em; padding: 4px 8px; }
+    .masthead a.touch { background: none; color: var(--ink); padding: 0; letter-spacing: 0.1em; }
+    .gate-mast { flex-wrap: wrap; row-gap: 6px; }
+    .gate-end { gap: 12px; }
+    .gate-skip .long { display: none; }
+    .fold-sell .fold-nums { font-size: 0.88rem; }
+    .opening .under { font-size: 0.88rem; margin-top: 18px; }
   }
 </style>
 </head>
 <body>
 
-
 <div class="gate" id="gate">
-  <div class="gate-mast"><span>CHARLIE WUYTACK</span><a class="gate-pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table — £5/month</a></div>
+  <div class="gate-mast"><span>CHARLIE WUYTACK</span><span class="gate-end"><a class="gate-pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table — £5/month</a><button class="gate-skip" id="gateSkip" type="button" aria-label="Enter without sound">Skip<span class="long"> — no sound</span></button></span></div>
   <div class="gate-mid">
     <div class="deck" id="deck">
       <span class="platter" aria-hidden="true"></span>
@@ -912,30 +876,34 @@
 
 <nav class="rail" aria-label="sections">
   <a href="#exetix" data-t="ExeTix"></a>
+  <a href="#work" data-t="Selected work"></a>
+  <a href="#research" data-t="Research programme"></a>
+  <a href="#method" data-t="The method"></a>
+  <a href="#apex" data-t="Research platform"></a>
+  <a href="#solana" data-t="Solana execution"></a>
+  <a href="#events" data-t="Event-driven shorts"></a>
+  <a href="#merger" data-t="Merger Monitor"></a>
+  <a href="#deskstatus" data-t="DeskStatus"></a>
+  <a href="#numerai" data-t="Numerai"></a>
+  <a href="#competitions" data-t="Competitions"></a>
+  <a href="#builds" data-t="Products and tools"></a>
   <a href="#doorly" data-t="Doorly"></a>
   <a href="#powerleash" data-t="PowerLeash"></a>
   <a href="#chess" data-t="Chess Exchange"></a>
-  <a href="#research" data-t="Trading research"></a>
-  <a href="#merger" data-t="Merger Monitor"></a>
-  <a href="#quantiacs" data-t="Quantiacs"></a>
-  <a href="#numerai" data-t="Numerai"></a>
-  <a href="#brain" data-t="WorldQuant BRAIN"></a>
-  <a href="#sbreak" data-t="Structural Break"></a>
-  <a href="#almach" data-t="The almach audit"></a>
-  <a href="#killlog" data-t="The kill log"></a>
-  <a href="#rig" data-t="How the rig works"></a>
-  <a href="#unstaked" data-t="Running now"></a>
   <a href="#chelsea" data-t="Chelsea Bikes"></a>
   <a href="#abyss" data-t="Abyss Warden"></a>
+  <a href="#about" data-t="About"></a>
 </nav>
 
 <div class="masthead">
   <span class="who">Charlie Wuytack</span>
   <span class="mast-end">
     <a class="xt-mast" href="exetix/">ExeTix</a>
-    <a class="mm" href="merger-monitor/">Merger Monitor</a>
+    <a class="mm opt" href="merger-monitor/">Merger Monitor</a>
+    <a class="opt" href="#work">Work</a>
+    <a class="opt" href="#research">Research</a>
     <a class="pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener" aria-label="Get tonight's table — £5/month">£5/month</a>
-    <a class="mail-mast" href="mailto:charlie@wuytack.net">Get in touch</a>
+    <a class="touch" href="mailto:charlie@wuytack.net">Get in touch</a>
   </span>
 </div>
 
@@ -945,15 +913,15 @@
       <p class="scroll-hint" id="scrollHint">Scroll</p>
       <h1 class="veil"><span class="slab">I'D RATHER BUILD</span><span class="ital">than consume.</span></h1>
     </div>
+    <p class="under">An iPhone app for Exeter's ticket drops, macOS tools, games, and a quantitative research programme: <b>on-chain execution, an online-learning platform and about 170 pre-registered trading hypotheses</b>, each with an honest verdict.</p>
     <div class="fold-sell">
-      <p class="fold-nums">A 3% spread is not <span data-merger-annualised-3pct>24.6%</span> a year. After costs it is <span data-merger-ev-3pct>+1.38%</span> a deal. Break-even is <span data-merger-breakeven>1.59%</span>.</p>
+      <p class="fold-nums">Merger Monitor: a 3% spread is not <span data-merger-annualised-3pct>24.6%</span> a year. After costs it is <span data-merger-ev-3pct>+1.38%</span> a deal. Break-even is <span data-merger-breakeven>1.59%</span>.</p>
       <a class="go pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table — £5/month</a>
       <p class="fold-ledger">Zero subscribers. Take: £0. Filings, not advice.</p>
     </div>
-    <p class="under">A ticket app for Exeter students, plus games, macOS tools, flight search, prediction markets and trading research. Most of it works right here on this page.</p>
   </div>
 </header>
-<div class="ticker" aria-hidden="true"><div class="belt"><span>PINGED THE SECOND EXETER TICKETS DROP. ★ THE CHEAPEST FLIGHT ISN'T ALWAYS THE CHEAPEST TRIP. ★ 64W DRAW, HELD AT A 42.8W CAP. ★ ALWAYS A PRICE, NEVER A COUNTERPARTY. ★ 90 HYPOTHESES, ZERO EDGES. ★ RANK ~12 OF 13,534. ★ HOLD THE TRENCH. KEEP THE LIGHTS ON. ★ </span><span>PINGED THE SECOND EXETER TICKETS DROP. ★ THE CHEAPEST FLIGHT ISN'T ALWAYS THE CHEAPEST TRIP. ★ 64W DRAW, HELD AT A 42.8W CAP. ★ ALWAYS A PRICE, NEVER A COUNTERPARTY. ★ 90 HYPOTHESES, ZERO EDGES. ★ RANK ~12 OF 13,534. ★ HOLD THE TRENCH. KEEP THE LIGHTS ON. ★ </span></div></div>
+<div class="ticker" aria-hidden="true"><div class="belt"><span>PINGED THE SECOND EXETER TICKETS DROP ★ 0.33 MS FROM TRIGGER TO A READY-TO-SIGN EXIT ★ 47 OF 62 TRADING LANES KILLED, ON THE RECORD ★ A FALSE POSITIVE, CAUGHT AND RETRACTED ★ THE CHEAPEST FLIGHT ISN'T ALWAYS THE CHEAPEST TRIP ★ 64W DRAW, HELD AT A 42.8W CAP ★ HOLD THE TRENCH. KEEP THE LIGHTS ON ★ </span><span>PINGED THE SECOND EXETER TICKETS DROP ★ 0.33 MS FROM TRIGGER TO A READY-TO-SIGN EXIT ★ 47 OF 62 TRADING LANES KILLED, ON THE RECORD ★ A FALSE POSITIVE, CAUGHT AND RETRACTED ★ THE CHEAPEST FLIGHT ISN'T ALWAYS THE CHEAPEST TRIP ★ 64W DRAW, HELD AT A 42.8W CAP ★ HOLD THE TRENCH. KEEP THE LIGHTS ON ★ </span></div></div>
 
 <!-- EXETIX -->
 <section class="work xt" id="exetix">
@@ -1003,546 +971,807 @@
   </div>
 </section>
 
-<!-- DOORLY -->
-<p class="bridge rise"><span class="from">That one is for a whole university.</span> <span class="to">The rest started smaller.</span></p>
-<section class="work" id="doorly">
-  <div class="head">
-    <h2>Doorly</h2>
-    <p class="eyebrow">The cheapest flight is rarely the cheapest trip</p>
+<!-- 01 SELECTED WORK -->
+<section class="chapter" id="work" aria-labelledby="work-h">
+  <div class="chapter-head">
+    <p class="no">01 — Selected work</p>
+    <h2 id="work-h">The rest of it</h2>
+    <p class="lede">ExeTix is the biggest thing I've shipped. Since then most of my time has gone into quantitative research and the engineering under it. Every card links to a short case study.</p>
   </div>
-  <div class="stream">
-    <div class="frame rise">
-      <video muted loop playsinline preload="none" poster="media/doorly.jpg">
-        <source src="media/doorly-demo.mp4" type="video/mp4">
-      </video>
+  <div class="grid">
+    <a class="card wide" href="#research">
+      <span class="kind"><span>Quant research · 2026</span><span class="chip res">Research</span></span>
+      <h3>A research programme that publishes its failures</h3>
+      <p>Pre-registered hypotheses, one-shot holdouts, independent attacks on every candidate, and a public retraction when one of them turned out to be a data artefact.</p>
+      <span class="big"><b>~170</b><span>hypotheses tested across two programmes. None promoted to live money yet.</span></span>
+    </a>
+    <a class="card" href="#apex">
+      <span class="kind"><span>ML platform</span><span class="chip paper">Paper</span></span>
+      <h3>Online learners behind an anytime-valid gate</h3>
+      <p>Streaming models that score before they learn, promoted only when an e-process says the evidence is real.</p>
+      <span class="big"><b>956</b><span>tests across 88k lines of Python</span></span>
+    </a>
+    <a class="card" href="#solana">
+      <span class="kind"><span>On-chain infrastructure</span><span class="chip paper">Dry run</span></span>
+      <h3>Solana execution, measured in microseconds</h3>
+      <p>Helius streams, exact AMM pricing and pre-armed exits. Then a measurement showing that speed wasn't the problem.</p>
+      <span class="big"><b>0.33 ms</b><span>p50, trigger to a ready-to-sign exit</span></span>
+    </a>
+    <a class="card" href="#events">
+      <span class="kind"><span>Event-driven research</span><span class="chip bt">Backtest</span></span>
+      <h3>Shorting token unlocks and exchange listings</h3>
+      <p>Two event studies on crypto perps, split at a fixed date and attacked three ways. One held up; the other decayed by 70%.</p>
+      <span class="big"><b>+5.56%</b><span>per event, held-out mean (n = 69), before any forward test</span></span>
+    </a>
+    <a class="card wide" href="#merger">
+      <span class="kind"><span>Data product · SEC filings</span><span class="chip live">Live · £5/month</span></span>
+      <h3>Merger Monitor</h3>
+      <p>The contractual cash price of every US cash merger with a definitive proxy, priced against the market, each figure tied to the filing sentence it came from. A table of filings, not a tip sheet.</p>
+      <span class="big"><b>24.6% → +1.38%</b><span>a 3% spread annualised, then priced after break risk and costs</span></span>
+    </a>
+    <a class="card" href="#deskstatus">
+      <span class="kind"><span>macOS app</span><span class="chip live">Shipped</span></span>
+      <h3>DeskStatus</h3>
+      <p>A native SwiftUI dashboard for the whole research desk. Read-only by design, and it never holds a key.</p>
+      <span class="big"><b>7</b><span>tabs, a menu-bar status light and a headless mode for scripts</span></span>
+    </a>
+    <a class="card" href="#numerai">
+      <span class="kind"><span>Tournament ML</span><span class="chip live">Live, unstaked</span></span>
+      <h3>Numerai</h3>
+      <p>Classic, Signals and Crypto models submitting on schedule, plus a fix for a deadline that moves every week.</p>
+      <span class="big"><b>1.47</b><span>out-of-sample Sharpe of correlation over 93 eras</span></span>
+    </a>
+    <a class="card" href="#competitions">
+      <span class="kind"><span>Competitions</span><span class="chip live">Selected</span></span>
+      <h3>Quantiacs, BRAIN, Structural Break</h3>
+      <p>One strategy selected to trade live, Gold on WorldQuant BRAIN, and a leaderboard that taught me to read deltas, not levels.</p>
+      <span class="big"><b>1 of 15</b><span>strategies selected in the Quantiacs Q25 contest</span></span>
+    </a>
+    <a class="card" href="#doorly">
+      <span class="kind"><span>Web + iOS</span><span class="chip res">Demo</span></span>
+      <h3>Doorly</h3>
+      <p>Flight search that ranks the whole door-to-door trip, not just the fare.</p>
+      <span class="big"><b>£120 &lt; £130</b><span>until you add the journey to the airport</span></span>
+    </a>
+    <a class="card" href="#powerleash">
+      <span class="kind"><span>macOS utility</span><span class="chip live">Download</span></span>
+      <h3>PowerLeash</h3>
+      <p>A low power mode that leaves the app in front alone, and a cap that matches the charger.</p>
+      <span class="big"><b>42.8 W</b><span>held under a sustained 8-thread burn</span></span>
+    </a>
+    <a class="card" href="#chess">
+      <span class="kind"><span>Markets + engines</span><span class="chip res">Play money</span></span>
+      <h3>Chess Exchange</h3>
+      <p>Live prediction markets on chess games, priced by a small engine and an LMSR market maker.</p>
+      <span class="big"><b>W / D / B</b><span>from any position you paste in</span></span>
+    </a>
+    <a class="card" href="#chelsea">
+      <span class="kind"><span>Web design</span><span class="chip res">Prototype</span></span>
+      <h3>Chelsea Bikes</h3>
+      <p>My local bike shop's website, rebuilt without being asked.</p>
+      <span class="big"><b>11</b><span>pages, works offline</span></span>
+    </a>
+    <a class="card" href="#abyss">
+      <span class="kind"><span>Game</span><span class="chip live">Playable</span></span>
+      <h3>Abyss Warden</h3>
+      <p>A deep-sea tower defence game in the spirit of Kingdom Rush.</p>
+      <span class="big"><b>5</b><span>bosses, playable in the browser</span></span>
+    </a>
+  </div>
+</section>
+
+<!-- 02 RESEARCH -->
+<section class="chapter" id="research" aria-labelledby="research-h">
+  <div class="chapter-head">
+    <p class="no">02 — Quant research</p>
+    <h2 id="research-h">Research that says no</h2>
+    <p class="lede">Most trading ideas die the moment they meet a realistic cost model or an honest holdout. I built the tooling to find that out early, and I publish the kills.</p>
+  </div>
+
+  <article class="case rise" id="programme">
+    <div class="case-side"><div class="sticky">
+      <p class="eyebrow">The programme · Aug–Sep 2026</p>
+      <h3>The scoreboard</h3>
+      <p class="tag">Two programmes: equities and prediction markets first, then crypto and on-chain.</p>
+      <dl>
+        <dt>Status</dt><dd><span class="chip res">Research</span> Nothing here is trading live at a profit</dd>
+        <dt>Revenue</dt><dd>£0. Paper and backtest numbers are labelled as such throughout.</dd>
+      </dl>
+    </div></div>
+    <div class="case-body">
+      <p class="lead">In the first programme, about 110 hypotheses produced nine real anomalies. <span class="mk">None</span> were bigger than the cost of trading them.</p>
+      <div class="funnel">
+        <div><b>~110</b><span>hypotheses tested: equities, ETFs, Polymarket, factors, filings</span></div>
+        <div><b>9</b><span>produced a real, measurable anomaly</span></div>
+        <div><b>0</b><span>survived their own trading costs</span></div>
+      </div>
+      <p>The second programme moved to crypto and on-chain markets, with a stricter ledger. Each lane is a pre-registered hypothesis with a written verdict. Leaving out infrastructure work, a blocked venue, a duplicate entry and non-trading side projects, 62 of them are trading ideas:</p>
+      <div class="figure">
+        <p class="cap">Every trading lane on the second ledger, by verdict (n = 62)</p>
+        <div class="tally" role="img" aria-label="47 killed, 8 inconclusive, 4 still accruing on paper, 3 paper candidates, 0 promoted to live">
+          <span style="flex:47;background:#22201d">47</span>
+          <span style="flex:8;background:rgba(34,32,29,0.42)">8</span>
+          <span style="flex:4;background:#9a7a2c">4</span>
+          <span style="flex:3;background:var(--good)">3</span>
+        </div>
+        <ul class="tally-key">
+          <li><i style="background:#22201d"></i><span><b>47 killed.</b> Negative out of sample, eaten by fees, no capacity, or the wrong sign.</span></li>
+          <li><i style="background:rgba(34,32,29,0.42)"></i><span><b>8 inconclusive.</b> Too few independent events to decide. Said so rather than guessing.</span></li>
+          <li><i style="background:#9a7a2c"></i><span><b>4 accruing.</b> Forward paper tests with a sealed sample-size target.</span></li>
+          <li><i style="background:var(--good)"></i><span><b>3 candidates, on paper.</b> The unlock and listing shorts below, and the book that combines them.</span></li>
+          <li><i style="background:transparent;border:1px solid var(--accent)"></i><span><b>0 promoted to live.</b> The gate is there to make this number hard to move.</span></li>
+        </ul>
+        <p class="fig-note">From the lane ledger as of 24 September 2026. Separately, the meme-desk auditor has closed about 70 entry and exit variants as failed or inconclusive, with no pass standing.</p>
+      </div>
+
+      <h4>What ate the edges, first programme</h4>
+      <div class="ledger">
+        <div class="ledger-head"><span>The edge</span><span>What eats it</span></div>
+        <div class="ledger-row"><span class="e">Polymarket longshot bias, real: <span class="n">~2¢</span></span><span class="c">the spread is <span class="n">1.5–3¢</span></span></div>
+        <div class="ledger-row"><span class="e">Dip-buying, 503 stocks + 90 ETFs: <span class="n">+20bp</span> in 2016–21</span><span class="c"><span class="n">+2bp</span> in 2021–26, below costs</span></div>
+        <div class="ledger-row"><span class="e">Polymarket liquidity provision, liquid markets</span><span class="c"><span class="n">−$102.59</span>/day per $1,000 (paper), <i>after</i> rewards</span></div>
+        <div class="ledger-row"><span class="e">Following analyst upgrades</span><span class="c">the whole reaction is in the untradeable gap</span></div>
+        <div class="ledger-row"><span class="e">25 equity factors, 29 survivors of multiple-testing correction</span><span class="c">one levered beta bet wearing 29 hats</span></div>
+        <div class="ledger-row"><span class="e">13F cloning, 19,000 filings</span><span class="c">survivorship, plus a single regime</span></div>
+        <div class="ledger-row"><span class="e">Merger spreads: 3% annualises to <span class="n">24.6%</span> a year</span><span class="c">after break risk and costs, <span class="n">+1.38%</span> a deal; break-even 1.59%</span></div>
+      </div>
+      <p class="note">Longer write-up: <a href="essays/friction-sized-edges.html">I pre-registered 110 market hypotheses. Nine were real. Zero were tradeable.</a> · <a href="essays/90-Hypotheses-Zero-Edges-short.pdf">90 Hypotheses, Zero Edges (pdf, earlier count)</a></p>
     </div>
-    <p class="say rise">One only flies to get from point A to point B. But I found that websites such as flightscanner did not account for <span class="mk">the prices and time taken to get to and from the airport on either side</span>.</p>
-    <p class="say rise">For example, a flight from Heathrow may cost <span class="num-r">£120</span> and from City <span class="num-r">£130</span>. Of which normal flight trackers would recommend Heathrow as it is cheaper. However, taking into account where you live, at least for me, City would end up being cheaper.</p>
-    <div class="doing-row rise">
-      <a class="go" href="doorly/" target="_blank" rel="noopener">Try the demo</a>
-      <span class="note">Demo fares, labelled as such — the real thing pulls live prices.</span>
+  </article>
+
+  <article class="case rise" id="method">
+    <div class="case-side"><div class="sticky">
+      <p class="eyebrow">Methodology</p>
+      <h3>The method</h3>
+      <p class="tag">Measure the instrument before you trust it, and write down what would prove you wrong before you look.</p>
+      <dl>
+        <dt>Tooling</dt><dd>SHA-256-sealed pre-registrations and evaluators · append-only ledgers · bootstrap CIs clustered by week, month and coin · deflated Sharpe, Hansen SPA, White's reality check</dd>
+      </dl>
+    </div></div>
+    <div class="case-body">
+      <ol class="pipe" aria-label="Research pipeline">
+        <li><b>Power check</b><span>Work out the smallest effect the data could detect. If the target is below it, don't run the search.</span></li>
+        <li><b>Pre-register</b><span>Rules, split date, bars and costs, hashed before any outcome is read.</span></li>
+        <li><b>Develop in-sample</b><span>Time splits with an embargo; CIs clustered by week, month and coin; drop-the-top-5 as a gate.</span></li>
+        <li class="gate-step"><b>One-shot holdout</b><span>A lock file is written before the first label is read. One look, no retries.</span></li>
+        <li class="gate-step"><b>Attack it</b><span>Independent reviews for leakage, costs and recency, plus deflation for every trial ever run.</span></li>
+        <li class="gate-step"><b>Paper, then a gate</b><span>A forward paper book behind an e-process. Promotion only writes a proposal; a person decides.</span></li>
+      </ol>
+      <div class="rules">
+        <div><b>Count every trial</b><span>3,038 model trials sit in one ledger. The best of them, deflated for all 3,038, has a deflated-Sharpe p of about 1.0. That is the honest answer.</span></div>
+        <div><b>Run a canary</b><span>A model trained on permuted labels scores AUC 0.47, against 0.82–0.94 on the real ones. If a canary ever passes a gate, every promotion freezes.</span></div>
+        <div><b>Count events, not trades</b><span>Sample sizes are counted in independent events. 21 live Numerai rounds turn out to be about one independent observation.</span></div>
+      </div>
+
+      <h4 id="retraction">A retraction, in full</h4>
+      <div class="retract">
+        <div class="row bad"><b>Claimed</b><span>Buying a newly migrated token 1–2 seconds after the snipers had positive expected value. It replicated on a holdout and passed a grid-null test. <s>Verdict: candidate.</s></span></div>
+        <div class="row"><b>Caught</b><span>An audit of the raw data found 88 of 1,320 tick files were sparse. They skipped the trades between the pool opening and my fill, so entries were priced before the snipers had moved the price. That produced phantom winners of +400% to +4,500%. Those 88 files alone made the positive mean, the "replication" and the null pass.</span></div>
+        <div class="row ok"><b>Corrected</b><span>On the 1,232 complete pools, entry loses at every delay: −5.2% a trade at 1 s (t −5.3), −3.9% at 5 s, −5.4% at 22 s (t −8.6). Verdict: RED, published the same day.</span></div>
+        <div class="row"><b>Fixed</b><span>The loader now rejects sparse pools. The ML selector that had learned "few transactions means a winner" was retired, because it had learned the artefact.</span></div>
+      </div>
+      <h4>Other things the process caught</h4>
+      <ul class="todo log">
+        <li><span>A meme-momentum result of +1.07% a day came from corrupted third-party price data. On clean data it is −0.72% a day.</span></li>
+        <li><span>Shorting new perp listings made +2,666 bps an event over 18 months (t 4.69), and +295 bps (t 0.6) on the full 2023–26 tape.</span></li>
+        <li><span>A sealed entry model was marked PASS. The internal auditor overturned it: the deflated-Sharpe gate was missing and the baseline compared totals with totals. A "17 PASS" meta-result became 0 of 47 once every trial was counted.</span></li>
+        <li><span>A market maker's paper profit was mostly fiction: 60% of its paper fills had no matching volume on the real trade tape.</span></li>
+        <li><span>Reusing one holdout inflated measured gains 3.2×. It also hid the small negatives that would have closed a project months earlier.</span></li>
+        <li><span>A pre-registration file was edited after the results existed. It was disclosed, and that result was downgraded.</span></li>
+      </ul>
     </div>
-    <p class="todo-label rise">Where it's at</p>
-    <ul class="todo rise">
-      <li class="done"><span>Live provider data, door-to-door ranking, iOS build via Capacitor</span></li>
-      <li><span>Connecting flights — right now it only searches direct</span></li>
-      <li><span>Host it publicly rather than running locally</span></li>
+  </article>
+
+  <article class="case rise" id="apex">
+    <div class="case-side"><div class="sticky">
+      <p class="eyebrow">Research platform · 2026</p>
+      <h3>Apex</h3>
+      <p class="tag">The platform the second programme runs on: chain truth, a single cost model, replay, online learning and promotion gates.</p>
+      <dl>
+        <dt>Status</dt><dd><span class="chip paper">Paper only</span> It never signs or sends</dd>
+        <dt>Scale</dt><dd>333 modules · 88.6k lines · 956 tests · 14 subpackages · plus ~105k lines of research code</dd>
+        <dt>Stack</dt><dd>Python · polars · LightGBM · river · solders · websockets · Parquet/zstd · launchd services</dd>
+      </dl>
+    </div></div>
+    <div class="case-body">
+      <p class="lead">One question drives the design: can a model learn a trading policy from a live stream without fooling itself? The answer so far is "not profitably". The machinery that says so is the part worth showing.</p>
+      <h4>Streaming ingest and state</h4>
+      <p>Free public log streams for the pump.fun and PumpSwap programs are decoded in real time, about 215 events a second or roughly 19 million a day. Exact state is kept for the bonding curve and the constant-product pools, and decoders cover Raydium CPMM and LaunchLab and Meteora DBC and DAMM v2. A replay engine rebuilds 1,611 clean migrations from chain history to test against.</p>
+      <h4>Online learners</h4>
+      <p>Models score each event before learning from it, so every prediction is out of sample by construction. They include logistic regression, adaptive random forests with ADWIN drift detection, Mondrian forests and stochastic gradient trees, all with online Platt and isotonic calibration. An hourly LightGBM Q-model picks among 120 actions: three entry delays, five sizes and eight exit rules.</p>
+      <h4>Promotion by e-process</h4>
+      <p>A challenger is promoted only when a betting-martingale e-process (Waudby-Smith &amp; Ramdas) on its forward per-trade returns clears <code>max(20, K/α)</code>. K is the number of challengers in the epoch, and it never goes down, so running more models makes promotion harder. The gate also needs n ≥ 100, at least 50 distinct tokens and a positive result with the top five trades removed. Books hold one position at a time, which keeps the e-process valid when trades would overlap. Passing writes a proposal file; it never flips a switch.</p>
+      <div class="flow" aria-label="Promotion path">
+        <div class="node"><b>Candidate</b><span>screened on labels, n ≥ 200</span></div>
+        <div class="arr">→</div>
+        <div class="node"><b>Challenger</b><span>forward paper ledger, one position at a time</span></div>
+        <div class="arr">→</div>
+        <div class="node"><b>e ≥ max(20, K/α)</b><span>n ≥ 100, ≥ 50 tokens, drop-top-5 &gt; 0</span></div>
+        <div class="arr">→</div>
+        <div class="node key-node"><b>Proposal file</b><span>a person reads it and decides</span></div>
+      </div>
+
+      <h4>The hindsight-optimal policy learner</h4>
+      <p>For about 5,000 pools I priced every way each one could have been traded: 15 entry times, 7 sizes, 637 exit rules and 3 latencies, with exact AMM maths and real fees. That gives a hindsight-best action for every pool. A model then tried to predict that action from 214 features known at decision time. Split 3,016 / 999 / 1,009, holdout run once.</p>
+      <div class="facts">
+        <div><b>98.9<span class="u">%</span></b><span>of training pools had a profitable action in hindsight</span></div>
+        <div><b>0.90</b><span>AUC predicting which pools will be rugged</span></div>
+        <div><b>−0.020</b><span>SOL a trade on the one-shot holdout (n = 674). <span class="chip dead">RED</span></span></div>
+      </div>
+      <p>It learned which pools die, not which ones pay after fees, price impact and the rug tail. That is a clean negative, and the model now runs as a forward shadow ledger rather than being tuned until it looks better.</p>
+    </div>
+  </article>
+
+<!-- SOLANA EXECUTION -->
+<article class="case rise" id="solana">
+  <div class="case-side"><div class="sticky">
+    <p class="eyebrow">On-chain infrastructure · 2026</p>
+    <h3>Solana execution</h3>
+    <p class="tag">A streaming, pre-armed execution layer for PumpSwap pools, measured down to the microsecond, then used to prove what speed can't fix.</p>
+    <dl>
+      <dt>Status</dt><dd><span class="chip paper">Dry / simulation only</span></dd>
+      <dt>Stack</dt><dd>Python · Helius websockets (<code>transactionSubscribe</code>, <code>accountSubscribe</code>) · Anchor IDL + Borsh decoding · Helius Sender</dd>
+      <dt>Safety</dt><dd>No send path in the dry pilot (AST-checked); live send needs two independent arm switches</dd>
+    </dl>
+  </div></div>
+  <div class="case-body">
+    <p class="lead">Newly graduated tokens move fastest in their first seconds on a pool. I wanted to know how much of a bad exit is latency and how much is the market, so I built the fast path first and measured it.</p>
+    <div class="facts">
+      <div><b>0.33<span class="u">ms</span></b><span>p50, trigger to ready-to-sign sell bytes (p90 1.2 ms; every tick-triggered exit ≤ 0.64 ms)</span></div>
+      <div><b>0.0<span class="u">bps</span></b><span>median error of my integer constant-product quote against the on-chain fill event</span></div>
+      <div><b>96.9<span class="u">%</span></b><span>of 32 live migrations simulated clean at both +1 s and +2 s after detection</span></div>
+    </div>
+    <h4>What is built</h4>
+    <ul class="todo">
+      <li class="done"><span><b>Exact pricing.</b> The pump AMM's Anchor IDL is fetched on-chain and pinned against the published copy. Pool accounts and swap events are decoded with Borsh, and quotes use integer constant-product maths on the real reserves, fee tier included (62 of 62 tiers matched).</span></li>
+      <li class="done"><span><b>Streaming triggers.</b> Each position subscribes to its pool's transactions from the moment it is detected. Stops, take-profits, trailing and clock exits, creator or insider sells, whale buys and rug labels are all evaluated on every transaction, not on a polling timer.</span></li>
+      <li class="done"><span><b>Pre-armed exits.</b> The sell is assembled at entry: accounts, fee tier, tip account, compute-unit limit and a per-trigger plan. A background thread keeps the blockhash fresh. At the trigger only the amount and minimum-out are filled in.</span></li>
+      <li class="done"><span><b>Transaction builder.</b> p50 0.035 ms with the pool cached (n = 1,000). Buys come to 1,091 bytes, well under Solana's 1,232-byte limit.</span></li>
+      <li class="done"><span><b>Fees and routing.</b> The fee policy targets priority fees per percentile. Priced at the live market, a round trip's fees and tips fall from 0.00209 to 0.0000368 SOL. Urgent exits deliberately pay more, because landing a stop matters more than the fee.</span></li>
     </ul>
+
+    <div class="figure">
+      <p class="cap">Detection: when each feed sees a new migration, ms after the slot starts (p50)</p>
+      <ul class="hbars" data-bars>
+        <li><span class="lbl">PumpPortal websocket<small>hosted in New Jersey</small></span><span class="track"><span class="fill pale" style="width:100%"></span><span class="v" style="left:calc(100% - 64px);color:var(--ground)">266 ms</span></span></li>
+        <li><span class="lbl">Helius transaction subscribe</span><span class="track"><span class="fill" style="width:46.2%"></span><span class="v" style="left:calc(46.2% + 8px)">123 ms</span></span></li>
+        <li><span class="lbl">Helius migration logs</span><span class="track"><span class="fill acc" style="width:36.8%"></span><span class="v" style="left:calc(36.8% + 8px)">98 ms</span></span></li>
+      </ul>
+      <p class="fig-note">Timed against the Helius node's own first-shred timestamp for each slot (clock within ±5 ms). A Solana slot is about 254 ms at the median, so the free websocket feed arrives roughly a full slot later than the Helius feeds. Measured from London; a server beside the validators is modelled to save a further ~70 ms at the median.</p>
+    </div>
+
+    <h4>The result that mattered</h4>
+    <p>The dry pilot's stops were filling well past their −12% line. The obvious suspect was latency: two-second polling, and a sell built and simulated one step after another (70–130 ms). The streaming, pre-armed engine cut that path to a third of a millisecond.</p>
+    <p>Replayed on the same positions, it improved the average stop fill by <span class="mk">0.4 points</span>.</p>
+    <div class="figure">
+      <p class="cap">Where a stop-loss actually loses, n = 16 stops, stop set at −12%</p>
+      <svg class="fig" viewBox="0 0 1000 156" role="img" aria-label="Of the 13.5 points lost past the stop, 12.8 are the price gapping through the stop on a single transaction and 0.7 are the time from trigger to fill" xmlns="http://www.w3.org/2000/svg">
+        <text class="t-s" x="0" y="22" fill="#5f5b52">STOP −12%</text>
+        <text class="t-s" x="1000" y="22" text-anchor="end" fill="#5f5b52">MEAN FILL −25.5%</text>
+        <rect x="0" y="36" width="946" height="58" fill="var(--accent)"/>
+        <rect x="949" y="36" width="51" height="58" fill="#22201d"/>
+        <text class="t-l" x="18" y="71" fill="#f7f7ef">Gap at the trigger: −12.8 pts</text>
+        <line x1="974" y1="94" x2="974" y2="126" stroke="#22201d" stroke-width="1.2"/>
+        <text class="t-s" x="1000" y="146" text-anchor="end" fill="#22201d">latency: ≈ −0.7 pts</text>
+      </svg>
+      <p class="fig-note">One sell jumps the pool straight through the stop, and being faster cannot recover a price that never traded. Stream pilot, three live dry runs on 24 September 2026, 63 positions. A 3,911-pool tick replay agrees: with tick-level triggers, fill minus trigger is between −0.1 and +0.7 points at one, two and three slots. Fills are simulated at the estimated landing slot, not landed.</p>
+    </div>
+    <p>That answer saved the next obvious spend: renting a server next to the validators. It would shave ~70 ms off each decision, and none of that reaches P&amp;L when the loss is in the gap. The exit engine stays, because a stop that fires on the right transaction is still worth having. The money goes elsewhere.</p>
   </div>
+</article>
+
+
+  <article class="case rise" id="events">
+    <div class="case-side"><div class="sticky">
+      <p class="eyebrow">Event-driven research · 2026</p>
+      <h3>Event shorts</h3>
+      <p class="tag">Do perpetual futures fall around token unlocks and new exchange listings, after real costs?</p>
+      <dl>
+        <dt>Status</dt><dd><span class="chip bt">Backtest</span> <span class="chip paper">Paper forward from 24 Sep 2026</span></dd>
+        <dt>Design</dt><dd>Hyperliquid perps, 1× short, hedged with an equal BTC long. 18 bps taker fee plus measured slippage and funding.</dd>
+        <dt>Split</dt><dd>In-sample before July 2025, held out from 1 July 2025. Week-clustered bootstrap, B = 10,000.</dd>
+      </dl>
+    </div></div>
+    <div class="case-body">
+      <p class="lead">Two families survived. One kept its size out of sample; the other lost about 70% of it. Both are candidates on paper, not results.</p>
+      <div class="figure">
+        <p class="cap">Mean return per event, net of costs, with 90% intervals</p>
+        <ul class="dots">
+          <li class="grp"><span class="lbl">Token unlocks · in-sample<small>n = 257, before Jul 2025</small></span>
+            <span class="plot is"><span class="zero"></span><span class="ci" style="left:38.08%;right:36.83%"></span><span class="pt" style="left:51.17%"></span><span class="val" style="left:51.17%;top:-12px">+4.14%</span></span></li>
+          <li><span class="lbl">Token unlocks · held out<small>n = 228, from Jul 2025</small></span>
+            <span class="plot ho"><span class="zero"></span><span class="ci" style="left:9.67%;right:56.17%"></span><span class="pt" style="left:27.17%"></span><span class="val" style="left:27.17%;top:-12px">+1.26%</span></span></li>
+          <li class="grp"><span class="lbl">CEX listings · all events<small>n = 149</small></span>
+            <span class="plot is"><span class="zero"></span><span class="ci" style="left:44.25%;right:15.33%"></span><span class="pt" style="left:64.58%"></span><span class="val" style="left:64.58%;top:-12px">+5.75%</span></span></li>
+          <li><span class="lbl">CEX listings · held out<small>n = 69, from Jul 2025</small></span>
+            <span class="plot ho"><span class="zero"></span><span class="ci" style="left:41.33%;right:14.5%"></span><span class="pt" style="left:63%"></span><span class="val" style="left:63%;top:-12px">+5.56%</span></span></li>
+          <li class="axis"><span></span><span class="ticks"><span style="left:0%">−2%</span><span style="left:16.667%">0</span><span style="left:33.33%">+2%</span><span style="left:50%">+4%</span><span style="left:66.67%">+6%</span><span style="left:83.33%">+8%</span><span style="left:100%">+10%</span></span></li>
+        </ul>
+        <div class="key"><span><i class="sw" style="background:rgba(34,32,29,0.55)"></i>in-sample or full sample</span><span><i class="sw" style="background:var(--accent)"></i>held out</span></div>
+        <p class="fig-note">Backtest. The unlock hold-out interval crosses zero under every clustering (week, month, coin). The per-event standard deviation of listing shorts is 17.7%, so a hold-out mean of 5.6% sits only just above its detection floor of about 5.3%.</p>
+      </div>
+      <h4>Token unlocks</h4>
+      <p>The hypothesis: insiders sell into scheduled unlocks of at least 1% of supply. The rule is to short at the open seven days before and exit two days after. Across 485 events on 44 coins it made +2.78% an event, and the effect grows with unlock size, from +1.5% for 1–2% of supply to +10.1% above 25%. The drift happens before the unlock, not after it. A 150-cell parameter grid added nothing: its best in-sample cell (+23% an event) lost 0.70% on the holdout, so only the fixed, pre-registered window counts. One data trap is worth mentioning: the exchange's candle API backfills fake pre-listing candles with zero trades, which created 48 events that never happened.</p>
+      <h4>Exchange listings</h4>
+      <p>The hypothesis: when a coin that already trades as a perp gets its first spot listing on a major exchange, the pump reverts. The rule is to short the day after and hold seven days. It held out of sample (t 3.24; +3.59% with the top five events removed), and it survived three independent attacks on data and leakage, execution and costs, and recency. It was still downgraded from GREEN, for three reasons: true first listings alone fail and the effect lives in later-venue listings, the pre-registration file was edited after the results, and the last 26 weeks are thin. My expectation going forward is +2–3% an event, not +5.6%.</p>
+      <h4>What didn't survive</h4>
+      <ul class="todo log">
+        <li><span>Buying on-chain after a listing announcement: 92% of the move happens within five seconds.</span></li>
+        <li><span>Trading exchange notices: 86–94% of the move is done before a one-to-two-minute entry.</span></li>
+        <li><span>Treasury unlocks: +4.6% in-sample, −1.0% held out. Treasury tokens mostly aren't sold.</span></li>
+        <li><span>Leverage on the combined book. At 1× the holdout Sharpe was 1.46, but most of it came from one crash in autumn 2025 (about +7.7% a year without it). The pre-registered 3× failed out of sample.</span></li>
+      </ul>
+      <p class="note">Research, not advice. Real costs measured since then (32–39 bps a round trip) are higher than the 23 bps the studies assumed. That is part of why the forward paper book, not the backtest, is the test.</p>
+    </div>
+  </article>
+
+
+  <!-- MERGER MONITOR -->
+  <section class="work" id="merger">
+  <article class="case rise">
+    <div class="case-side"><div class="sticky">
+      <p class="eyebrow">Data product · live</p>
+      <h3>Merger Monitor</h3>
+      <p class="tag">Deal prices from SEC filings, priced against the market. The one piece of research with a price attached.</p>
+      <dl>
+        <dt>Status</dt><dd><span class="chip live">Live product</span> £5/month · not advice</dd>
+        <dt>Ledger</dt><dd>Zero subscribers so far. Take: £0.</dd>
+        <dt>Scope</dt><dd>US cash mergers that have reached a definitive proxy</dd>
+      </dl>
+    </div></div>
+    <div class="case-body">
+      <p class="lead">I extract the contractual cash price of every US cash merger that has reached a definitive proxy, and price it against the live market. Each figure carries the sentence from the filing it was read from.</p>
+      <p>It is a table of filings, not a tip sheet. A 3% spread annualises to <span data-merger-annualised-3pct>24.6%</span>; after costs it is <span data-merger-ev-3pct>+1.38%</span> a deal. Most thin ones die. The paid edition is <span class="mk">£5/month</span>: the same table, emailed the evening it is built. A sealed re-run of the same 3% case in my research harness measured about +1.37% a deal (bootstrap CI roughly 1.35–1.39%).</p>
+
+      <div class="doing-row">
+        <a class="go pay" href="subscribe/">Get tonight's table — £5/month</a>
+        <span class="note"><a href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Pay on Gumroad</a> · <a href="merger-monitor/">Week-late public table</a></span>
+      </div>
+
+      <p>The public table at <a href="merger-monitor/">/merger-monitor</a> is the same product, published one week late on purpose. A week-old table is the worse entry on deals that complete.</p>
+
+      <a class="mm-preview" href="merger-monitor/">
+        <p class="cap">Week-late public table · 19 August 2026</p>
+        <table>
+          <thead>
+            <tr><th>Deal</th><th>Company</th><th>Offer / market</th><th>Spread</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="tk">WBD</td><td class="co">Warner Bros. Discovery</td><td class="num">$31.00 / $28.48</td><td class="num">+8.85%</td></tr>
+            <tr><td class="tk">SLAB</td><td class="co">Silicon Laboratories</td><td class="num">$231.00 / $219.29</td><td class="num">+5.34%</td></tr>
+            <tr><td class="tk">ACA</td><td class="co">Arcosa</td><td class="num">$150.00 / $145.01</td><td class="num">+3.44%</td></tr>
+            <tr><td class="tk">AES</td><td class="co">AES Corp</td><td class="num">$15.00 / $14.74</td><td class="num">+1.76%</td></tr>
+            <tr><td class="tk">CRNX</td><td class="co">Crinetics</td><td class="num">$85.00 / $84.75</td><td class="num">+0.29%</td></tr>
+          </tbody>
+        </table>
+        <p class="go-row">See every deal, with the filing sentence →</p>
+      </a>
+
+      <div class="worked rise">
+        <h4>Annualising flatters everything. Here is the one I sell, done properly.</h4>
+        <p>A 3% merger spread held to the median <span data-merger-median-days>49</span>-day close annualises to <b><span data-merger-annualised-3pct>24.6%</span> a year</b>. That number is worthless, and it is the number this whole business would normally be sold on.</p>
+        <div class="twoup">
+          <div class="bad"><b data-merger-annualised-3pct>24.6%</b><span>a year: what a 3% spread over <span data-merger-median-days>49</span> days looks like when you annualise it</span></div>
+          <div class="real"><b data-merger-ev-3pct>+1.38%</b><span>per deal: the same trade after a <span data-merger-break-rate>2.4%</span> break rate, a <span data-merger-break-loss>27%</span> median loss when one breaks, <span data-merger-cost>0.40%</span> round-trip cost and <span data-merger-carry>0.49%</span> of forgone T-bill carry</span></div>
+        </div>
+        <p>Price a 1% spread the same way (still a healthy-looking annualised number) and it is <span class="mk" data-merger-ev-1pct>−0.57%</span> per deal. Break-even sits at <span class="mk" data-merger-breakeven>1.59%</span>.</p>
+        <p>On the 19 August table, nine of the seventeen cash-priced rows clear that 1.59% break-even. The rest are published anyway, because a wide spread and a thin one look identical until you price the break risk. Base rate <span data-merger-break-rate>2.4%</span>: <span data-merger-breaks>39</span> breaks in <span data-merger-settled>1,606</span> settled outcomes. A floor, not a ceiling: deals that die before a definitive proxy never enter the sample.</p>
+        <p>That is the whole method in one line: the annualised number is marketing, the expected value is the trade. You pay £5/month for the evening the table is built, not for a secret. A named row from that table is walked through at <a href="example/">/example/</a>. The same frozen 3% case (24.6% annualised, +1.38% after costs) is a public calculator at <a href="sizer/">/sizer/</a>.</p>
+      </div>
+      <div class="doing-row">
+        <a class="go pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Pay on Gumroad — £5/month</a>
+        <span class="note"><a href="subscribe/">The offer</a> · <a href="weekly/">Free weekly edition</a>: same table, one week late</span>
+      </div>
+    </div>
+  </article>
+  </section>
+
+  <article class="case rise" id="deskstatus">
+    <div class="case-side"><div class="sticky">
+      <p class="eyebrow">macOS app · Sep 2026</p>
+      <h3>DeskStatus</h3>
+      <p class="tag">A native trading-floor dashboard for the research desk, built so that looking can't turn into doing by accident.</p>
+      <dl>
+        <dt>Status</dt><dd><span class="chip live">Shipped · v1.0.3</span></dd>
+        <dt>Stack</dt><dd>Swift 5 · SwiftUI · Swift Charts · MenuBarExtra · Swift Package Manager · macOS 14+</dd>
+        <dt>Size</dt><dd>16 Swift files · 4.6k lines</dd>
+      </dl>
+    </div></div>
+    <div class="case-body">
+      <p class="lead">Dozens of daemons, paper books and research jobs each write their own state. DeskStatus puts all of it in one window and one menu-bar light, and it can't sign anything.</p>
+      <div class="ds-win" role="img" aria-label="Schematic of the DeskStatus window: a title bar with a status light, seven tabs and two panels. No data is shown.">
+        <div class="ds-bar"><i></i><i></i><i></i><span>DESKSTATUS</span><span class="dot"></span></div>
+        <div class="ds-tabs"><span class="on"><b>1</b>FLOOR</span><span><b>2</b>ENGINES</span><span><b>3</b>HL</span><span><b>4</b>PAPER</span><span><b>5</b>PRINTER</span><span><b>6</b>DP2</span><span><b>7</b>APEX</span></div>
+        <div class="ds-body">
+          <div><span class="h">BLOTTER</span><div class="ds-row"></div><div class="ds-row"></div><div class="ds-row"></div><div class="ds-row"></div><div class="ds-row"></div><div class="ds-row"></div></div>
+          <div><span class="h">CHART</span>
+            <svg viewBox="0 0 300 110" aria-hidden="true"><polyline points="0,80 30,74 60,78 90,60 120,64 150,48 180,55 210,40 240,46 270,30 300,36" fill="none" stroke="#5f625c" stroke-width="2" stroke-dasharray="4 4"/></svg>
+          </div>
+        </div>
+      </div>
+      <p class="fig-note">A schematic of the layout, not a screenshot. The real window shows live account data, so it isn't pictured.</p>
+      <h4>How it works</h4>
+      <div class="flow">
+        <div class="node"><b>Daemons and jobs</b><span>desk, paper books, Apex, research engines</span></div>
+        <div class="arr">→</div>
+        <div class="node"><b>State files</b><span>JSON / JSONL snapshots, pid and heartbeat files</span></div>
+        <div class="arr">→</div>
+        <div class="node key-node"><b>DeskStatus</b><span>polls every 1 s (Apex every 3 s); health check every 60 s</span></div>
+      </div>
+      <div class="flow sub">
+        <div class="node"><b>SELL ALL → CONFIRM</b><span>the only action, two steps</span></div>
+        <div class="arr">→</div>
+        <div class="node"><b>Intent file</b><span>plus a wake-up over a Unix socket</span></div>
+        <div class="arr">→</div>
+        <div class="node"><b>Separate signer</b><span>the app never opens a key</span></div>
+      </div>
+      <ul class="todo" style="margin-top:1.6em">
+        <li class="done"><span>Seven keyboard tabs: the live floor, background engines, a Hyperliquid watch, paper books, a research "printer" with a luck bar, the entry-model sleeve and the Apex platform.</span></li>
+        <li class="done"><span>A staleness state machine, so old data reads as old instead of as calm.</span></li>
+        <li class="done"><span>A menu-bar extra with a coloured status dot, so the desk's state is visible from any app.</span></li>
+        <li class="done"><span>Headless modes: <code>--screenshot</code> renders the dashboard at 2× with ImageRenderer, and <code>--dump --text</code> prints the floor for scripts and agents.</span></li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="case rise" id="numerai">
+    <div class="case-side"><div class="sticky">
+      <p class="eyebrow">Tournament ML</p>
+      <h3>Numerai</h3>
+      <p class="tag">Three tournaments submitting on schedule. The interesting parts are the audit and a deadline that moves.</p>
+      <dl>
+        <dt>Status</dt><dd><span class="chip live">Live submissions</span> <span class="chip res">Unstaked</span></dd>
+        <dt>Model</dt><dd>LightGBM, 2,000 trees, all 3,555 features, target <code>ender_60</code></dd>
+      </dl>
+    </div></div>
+    <div class="case-body">
+      <p class="lead">The model Numerai runs is byte-identical to the one in my repo. Run in a copy of their environment, it reproduces a live round's ranks exactly. After that, the question is only whether it's any good.</p>
+      <div class="facts">
+        <div><b>0.0222</b><span>mean CORR60 on 93 eras held out from a twin model (Sharpe 1.47, positive in 95% of eras)</span></div>
+        <div><b>1.27</b><span>Sharpe of the payout score out of sample, with no losing quarter</span></div>
+        <div><b>2</b><span>live rounds resolved so far (93rd and 98th percentile). Too few to stake on; the policy asks for ten.</span></div>
+      </div>
+      <p>Eleven challengers were tested against the champion. The best, a blend with Numerai's benchmark, added 12% to the payout score but had a Holm-adjusted p of 0.14. It failed the gate and runs as an unstaked live A/B test instead. On Signals, I measured survivorship bias directly: scoring only the names I could map inflated correlation by +0.0109 (t 3.5). The fix was a point-in-time ticker map built from SEC fails-to-deliver data, which recovers 88% of dead names against 31% for the usual mapping service.</p>
+      <div class="figure">
+        <p class="cap">Crypto: where the submission landed against a deadline that moves</p>
+        <svg class="fig" viewBox="0 0 1000 250" role="img" aria-label="Timeline: the old job fired at 13:10Z, after a deadline band of 13:03 to 13:07; the fixed job now uploads at 12:21:50Z, 41 minutes inside" xmlns="http://www.w3.org/2000/svg">
+          <rect x="761.6" y="84" width="35.2" height="88" fill="rgba(34,32,29,0.12)"/>
+          <line x1="761.6" y1="84" x2="761.6" y2="172" stroke="#5f5b52" stroke-width="1" stroke-dasharray="2 3"/>
+          <line x1="796.8" y1="84" x2="796.8" y2="172" stroke="#5f5b52" stroke-width="1" stroke-dasharray="2 3"/>
+          <line x1="64" y1="128" x2="944" y2="128" stroke="#22201d" stroke-width="1.8"/>
+          <line x1="64.0" y1="122" x2="64.0" y2="134" stroke="#22201d" stroke-width="1.8"/>
+          <text class="t-s" x="64.0" y="236" text-anchor="start" fill="#5f5b52">12:00Z</text>
+          <line x1="394.0" y1="122" x2="394.0" y2="134" stroke="#22201d" stroke-width="1.8"/>
+          <text class="t-s" x="394.0" y="236" text-anchor="middle" fill="#5f5b52">12:30</text>
+          <line x1="724.0" y1="122" x2="724.0" y2="134" stroke="#22201d" stroke-width="1.8"/>
+          <text class="t-s" x="724.0" y="236" text-anchor="middle" fill="#5f5b52">13:00</text>
+          <line x1="944.0" y1="122" x2="944.0" y2="134" stroke="#22201d" stroke-width="1.8"/>
+          <text class="t-s" x="944.0" y="236" text-anchor="end" fill="#5f5b52">13:20</text>
+          <line x1="304.2" y1="128" x2="304.2" y2="80.0" stroke="var(--accent)" stroke-width="1.6" stroke-dasharray="3 3"/>
+          <circle cx="304.2" cy="128.0" r="6" fill="var(--accent)"/>
+          <text class="t-m" x="304.2" y="70.0" text-anchor="middle" fill="var(--accent)">12:21:50Z</text>
+          <line x1="834.0" y1="128" x2="834.0" y2="184.0" stroke="#22201d" stroke-width="1.6" stroke-dasharray="3 3"/>
+          <circle cx="834.0" cy="128.0" r="6" fill="#22201d"/>
+          <text class="t-m" x="834.0" y="200.0" text-anchor="end" fill="#22201d">13:10Z</text>
+        </svg>
+        <div class="key"><span><i style="border-color:var(--accent)"></i>now: 41 min inside</span><span><i></i>old job: late every weekday</span><span><i class="sw" style="background:rgba(34,32,29,0.12)"></i>deadline, drifting ~3 min</span></div>
+        <p class="fig-note">Every Crypto submission was silently ineligible for payouts for months: my log recorded success while the platform recorded late. The fix fires eight times across summer and winter time, takes a lock, checks whether the round is already in and refuses stale data. Along the way it caught three of its own bugs. Round 1341 was the first on time.</p>
+      </div>
+    </div>
+  </article>
+
+  <article class="case rise" id="competitions">
+    <div class="case-side"><div class="sticky">
+      <p class="eyebrow">Competitions</p>
+      <h3>Quantiacs, BRAIN, Structural Break</h3>
+      <p class="tag">Three platforms, three different lessons about measurement.</p>
+      <dl>
+        <dt>Quantiacs Q25</dt><dd><span class="chip live">Selected</span> Trades 1 Oct – 31 Jan</dd>
+        <dt>WorldQuant BRAIN</dt><dd><span class="chip live">Gold</span> ~14 alphas live</dd>
+        <dt>CrunchDAO</dt><dd>Structural Break 263rd of 1,332; DataCrunch around 15th of 13,534</dd>
+      </dl>
+    </div></div>
+    <div class="case-body">
+      <p class="lead">A defended dual-momentum strategy was selected to trade live, one of fifteen. In-sample Sharpe 1.22, maximum drawdown 23.6%. The platform's drawdown matched my from-source engine exactly.</p>
+      <div class="figure">
+        <p class="cap">Quantiacs · £100 through the strategy, 2014–2025 <span class="chip bt">Backtest</span></p>
+        <svg class="fig" viewBox="0 0 1000 300" role="img" aria-label="Equity curve: 100 grows to 654 between 2014 and 2025, with most of the gain in 2017 and 2021" xmlns="http://www.w3.org/2000/svg">
+          <line x1="64" y1="258.0" x2="948" y2="258.0" stroke="rgba(34,32,29,0.18)" stroke-width="1"/>
+          <text class="t-s" x="54" y="262.0" text-anchor="end" fill="#5f5b52">0</text>
+          <line x1="64" y1="197.4" x2="948" y2="197.4" stroke="rgba(34,32,29,0.18)" stroke-width="1"/>
+          <text class="t-s" x="54" y="201.4" text-anchor="end" fill="#5f5b52">200</text>
+          <line x1="64" y1="136.9" x2="948" y2="136.9" stroke="rgba(34,32,29,0.18)" stroke-width="1"/>
+          <text class="t-s" x="54" y="140.9" text-anchor="end" fill="#5f5b52">400</text>
+          <line x1="64" y1="76.3" x2="948" y2="76.3" stroke="rgba(34,32,29,0.18)" stroke-width="1"/>
+          <text class="t-s" x="54" y="80.3" text-anchor="end" fill="#5f5b52">600</text>
+          <path d="M64.0 227.7 L137.7 227.1 L211.3 227.3 L285.0 223.6 L358.7 172.1 L432.3 180.0 L506.0 176.1 L579.7 164.5 L653.3 116.1 L727.0 124.8 L800.7 87.0 L874.3 58.9 L948.0 59.9" fill="none" stroke="#22201d" stroke-width="2.4" stroke-linejoin="round"/>
+          <text class="t-s" x="64.0" y="286" text-anchor="start" fill="#5f5b52">2013</text>
+          <text class="t-s" x="358.7" y="286" text-anchor="middle" fill="#5f5b52">2017</text>
+          <circle cx="358.7" cy="172.1" r="5" fill="var(--accent)"/>
+          <text class="t-m" x="358.7" y="158.1" text-anchor="middle" fill="var(--accent)">284</text>
+          <text class="t-s" x="653.3" y="286" text-anchor="middle" fill="#5f5b52">2021</text>
+          <circle cx="653.3" cy="116.1" r="5" fill="var(--accent)"/>
+          <text class="t-m" x="653.3" y="102.1" text-anchor="middle" fill="var(--accent)">469</text>
+          <text class="t-s" x="948.0" y="286" text-anchor="end" fill="#5f5b52">2025</text>
+          <circle cx="948.0" cy="59.9" r="5" fill="var(--accent)"/>
+          <text class="t-m" x="948.0" y="45.9" text-anchor="end" fill="var(--accent)">654</text>
+        </svg>
+        <p class="fig-note">Compounded through the annual net returns, slippage included. Two years carry it, 2017 and 2021, and the rest is defence. A best-of-100 search on the same data manufactured a fake +0.30 of Sharpe against a detection floor of 0.68, which is why I stopped tuning it.</p>
+      </div>
+      <h4>WorldQuant BRAIN</h4>
+      <p>Three days stuck at zero accepted submissions. It broke when I stopped submitting single expressions and started submitting two-term combinations: correlation fell from 0.79 to 0.51 and fitness rose from 1.04 to 1.68. Gold (10,000 points) followed, with about 14 alphas live from a 416-simulation sweep. The components that made it work had each failed on their own and would have been filed as dead ends. Submissions are now paused on purpose, because each new alpha raises the correlation wall for the next.</p>
+      <h4>Structural Break</h4>
+      <p>Two shipped improvements gained +0.0144 on my own holdout and moved the live score by −0.0003. My holdout matched live almost exactly in level, and I used that to justify believing a delta. Levels agreeing says nothing about whether improvements transfer.</p>
+      <div class="figure">
+        <p class="cap">Two lines that should move together, and don't</p>
+        <svg class="fig" viewBox="0 0 1000 300" role="img" aria-label="Holdout score climbs from 57.31 to 58.75 while the live score stays flat, ending at 57.43" xmlns="http://www.w3.org/2000/svg">
+          <line x1="74" y1="216.8" x2="944" y2="216.8" stroke="rgba(34,32,29,0.18)" stroke-width="1"/>
+          <text class="t-s" x="64" y="220.8" text-anchor="end" fill="#5f5b52">57.5</text>
+          <line x1="74" y1="157.9" x2="944" y2="157.9" stroke="rgba(34,32,29,0.18)" stroke-width="1"/>
+          <text class="t-s" x="64" y="161.9" text-anchor="end" fill="#5f5b52">58.0</text>
+          <line x1="74" y1="99.0" x2="944" y2="99.0" stroke="rgba(34,32,29,0.18)" stroke-width="1"/>
+          <text class="t-s" x="64" y="103.0" text-anchor="end" fill="#5f5b52">58.5</text>
+          <path d="M74.0 239.2 L509.0 227.4 L944.0 69.6" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-dasharray="8 5"/>
+          <path d="M74.0 221.5 L509.0 223.8 L944.0 225.0" fill="none" stroke="#22201d" stroke-width="2.6"/>
+          <circle cx="74.0" cy="239.2" r="5" fill="var(--accent)"/>
+          <circle cx="74.0" cy="221.5" r="5" fill="#22201d"/>
+          <text class="t-s" x="74.0" y="286" text-anchor="start" fill="#5f5b52">v5</text>
+          <circle cx="509.0" cy="227.4" r="5" fill="var(--accent)"/>
+          <circle cx="509.0" cy="223.8" r="5" fill="#22201d"/>
+          <text class="t-s" x="509.0" y="286" text-anchor="middle" fill="#5f5b52">v6</text>
+          <circle cx="944.0" cy="69.6" r="5" fill="var(--accent)"/>
+          <circle cx="944.0" cy="225.0" r="5" fill="#22201d"/>
+          <text class="t-s" x="944.0" y="286" text-anchor="end" fill="#5f5b52">v11</text>
+          <text class="t-m" x="944.0" y="54.6" text-anchor="end" fill="var(--accent)">58.75</text>
+          <text class="t-m" x="944.0" y="251.0" text-anchor="end" fill="#22201d">57.43</text>
+        </svg>
+        <div class="key"><span><i class="dash"></i>my holdout</span><span><i></i>live leaderboard</span></div>
+        <p class="fig-note">Three shipped models, same metric, same axis. The holdout climbs 1.44 points; live moves −0.03.</p>
+      </div>
+      <h4>Checking someone else's numbers</h4>
+      <p>A Polymarket trader turned $2,895 into $257,000 and an article explained how. I pulled 478,021 of their public on-chain events. The profit was real, +$221,120 over 97 days (t 7.52), but the mechanism everyone assumed was wrong. A second wallet in the same study looked profitable until the same filter removed 72% of its apparent profit, nearly all of it on one day. Those were redemptions of positions opened before the measurement window: an artefact I had to catch before it fooled me too.</p>
+    </div>
+  </article>
+</section>
+
+<!-- 03 PRODUCTS AND TOOLS -->
+<section class="chapter" id="builds" aria-labelledby="builds-h">
+  <div class="chapter-head">
+    <p class="no">03 — Products and tools</p>
+    <h2 id="builds-h">Things you can use</h2>
+    <p class="lede">Smaller builds, most of them started by a price being wrong or an annoyance I couldn't leave alone. Most of them work right here on the page.</p>
+  </div>
+</section>
+
+<!-- DOORLY -->
+<section class="work" id="doorly">
+  <article class="case rise">
+    <div class="case-side"><div class="sticky">
+      <p class="eyebrow">Web + iOS</p>
+      <h3>Doorly</h3>
+      <p class="tag">The cheapest flight is rarely the cheapest trip.</p>
+      <dl>
+        <dt>Status</dt><dd><span class="chip res">Demo</span> Demo fares, labelled as such</dd>
+        <dt>Stack</dt><dd>Vite · web workers · Capacitor for the iOS build</dd>
+      </dl>
+    </div></div>
+    <div class="case-body">
+      <div class="frame">
+        <video muted loop playsinline preload="none" poster="media/doorly.jpg">
+          <source src="media/doorly-demo.mp4" type="video/mp4">
+        </video>
+      </div>
+      <p>You only fly to get from A to B, but flight search sites don't count <span class="mk">the cost and time of getting to and from the airport at either end</span>.</p>
+      <p>For example, a flight from Heathrow might cost <span class="num-r">£120</span> and one from City <span class="num-r">£130</span>. A normal tracker recommends Heathrow because it's cheaper. From where I live, City works out cheaper door to door. Doorly ranks the whole trip.</p>
+      <div class="doing-row">
+        <a class="go" href="doorly/" target="_blank" rel="noopener">Try the demo</a>
+        <span class="note">Demo fares, labelled as such. The real thing pulls live prices.</span>
+      </div>
+      <p class="todo-label">Where it's at</p>
+      <ul class="todo">
+        <li class="done"><span>Live provider data, door-to-door ranking, iOS build via Capacitor</span></li>
+        <li><span>Connecting flights: it only searches direct for now</span></li>
+        <li><span>Host it publicly rather than running it locally</span></li>
+      </ul>
+    </div>
+  </article>
 </section>
 
 <!-- POWERLEASH -->
-<p class="bridge rise"><span class="from">That started with a trip I did not want to overpay for.</span> <span class="to">This one started with the laptop I was building it on.</span></p>
-
 <section class="work" id="powerleash">
-  <div class="head">
-    <h2>PowerLeash</h2>
-    <p class="eyebrow">Apple's low power mode made my Mac worse, so I made my own</p>
-  </div>
-  <div class="stream">
-    <p class="say rise">A custom low power mode. Apple's native low power mode made macOS feel sluggish: the cursor was slow and laggy and the movements felt off.</p>
-    <p class="say rise">I also only have a charger of <span class="num-r">45W</span> on a Mac that can draw much more than that: I was losing battery working on heavy tasks while on charge.</p>
-    <p class="say rise">I found out the reason LPM was sluggish was because <span class="mk">it killed the CPU by about <span class="num-r">40%</span></span>.</p>
-    <p class="say rise">Eco Mode is my own low power mode, moving all background apps to efficiency cores leaving the foreground untouched. Match Charger capped my total draw by what I could supply.</p>
-    <div class="panel rise">
-      <div class="panel-in">
-        <p class="hero-num">42.8<span class="accent">W</span> CAP</p>
-        <p class="hero-sub">Match Charger holding total draw at what a 45W adapter can actually supply</p>
-        <div class="chart">
-          <p class="cap">Measured against a sustained 8-thread burn — system load, one sample per control cycle</p>
-          <svg class="loadchart" viewBox="0 0 980 230" role="img" aria-label="System load falling from 57.8W to hold at the 42.8W charger cap, then dropping to idle">
-            <g stroke="rgba(34,32,29,0.18)" stroke-width="1">
-              <line x1="46" y1="16" x2="960" y2="16"/>
-              <line x1="46" y1="103" x2="960" y2="103"/>
-              <line x1="46" y1="190" x2="960" y2="190"/>
-            </g>
-            <g fill="rgba(34,32,29,0.5)" font-family="ui-monospace, Menlo, monospace" font-size="11">
-              <text x="8" y="20">64W</text><text x="8" y="107">32W</text><text x="8" y="194">0W</text>
-            </g>
-            <line x1="46" y1="73.6" x2="960" y2="73.6" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="6 5"/>
-            <text x="960" y="66" text-anchor="end" fill="var(--accent)" font-family="ui-monospace, Menlo, monospace" font-size="11">CHARGER CAP 42.8W</text>
-            <polyline points="60,32.9 280,75.3 500,72.9 720,159.2 940,163.1"
-                      fill="none" stroke="#22201d" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-            <g fill="#22201d">
-              <circle cx="60" cy="32.9" r="5"/><circle cx="280" cy="75.3" r="5"/>
-              <circle cx="500" cy="72.9" r="5"/><circle cx="720" cy="159.2" r="5"/><circle cx="940" cy="163.1" r="5"/>
-            </g>
-            <g font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#22201d">
-              <text x="60" y="22" text-anchor="middle">57.8</text>
-              <text x="280" y="96" text-anchor="middle">42.2</text>
-              <text x="500" y="62" text-anchor="middle">43.1</text>
-              <text x="720" y="180" text-anchor="middle">11.3</text>
-              <text x="940" y="184" text-anchor="end">9.9</text>
-            </g>
-            <g font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="10.5" fill="rgba(34,32,29,0.5)" letter-spacing="1.2">
-              <text x="60" y="216" text-anchor="middle">BURN STARTS</text>
-              <text x="390" y="216" text-anchor="middle">HOLDING AT THE CAP</text>
-              <text x="820" y="216" text-anchor="middle">BURN ENDS · RELEASING</text>
-            </g>
-          </svg>
-        </div>
-        <div class="facts">
-          <div><b>59.0 → 42.7<span class="accent">W</span></b><span>system load, before and after Match Charger</span></div>
-          <div><b>−15.6 → −3.5<span class="accent">W</span></b><span>battery flow: draining hard while plugged in, to nearly break-even</span></div>
-          <div><b>60 → 30<span class="accent">W</span></b><span>one heavy background app demoted · the app in front untouched</span></div>
-        </div>
+  <article class="case rise">
+    <div class="case-side"><div class="sticky">
+      <p class="eyebrow">macOS utility</p>
+      <h3>PowerLeash</h3>
+      <p class="tag">Apple's low power mode made my Mac worse, so I made my own.</p>
+      <dl>
+        <dt>Status</dt><dd><span class="chip live">Download</span> Apple Silicon</dd>
+        <dt>Pieces</dt><dd>Eco Mode · Match Charger · a live per-process power readout</dd>
+      </dl>
+    </div></div>
+    <div class="case-body">
+      <p>Apple's low power mode made macOS feel sluggish: the cursor lagged and movement felt off. It turned out to be cutting CPU performance by <span class="mk">about 40%</span> across the board. I also only have a <span class="num-r">45W</span> charger on a Mac that can draw far more, so I was losing battery on heavy work while plugged in.</p>
+      <p>Eco Mode moves background apps onto the efficiency cores and leaves the app in front untouched. Match Charger caps total draw at what the charger can actually supply.</p>
+      <div class="figure">
+        <p class="cap">Match Charger against a sustained 8-thread burn · system load, one sample per control cycle</p>
+        <svg class="loadchart" viewBox="0 0 980 230" role="img" aria-label="System load falling from 57.8W to hold at the 42.8W charger cap, then dropping to idle">
+          <g stroke="rgba(34,32,29,0.18)" stroke-width="1">
+            <line x1="46" y1="16" x2="960" y2="16"/>
+            <line x1="46" y1="103" x2="960" y2="103"/>
+            <line x1="46" y1="190" x2="960" y2="190"/>
+          </g>
+          <g fill="rgba(34,32,29,0.5)" font-family="ui-monospace, Menlo, monospace" font-size="11">
+            <text x="8" y="20">64W</text><text x="8" y="107">32W</text><text x="8" y="194">0W</text>
+          </g>
+          <line x1="46" y1="73.6" x2="960" y2="73.6" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="6 5"/>
+          <text x="960" y="66" text-anchor="end" fill="var(--accent)" font-family="ui-monospace, Menlo, monospace" font-size="11">CHARGER CAP 42.8W</text>
+          <polyline points="60,32.9 280,75.3 500,72.9 720,159.2 940,163.1" fill="none" stroke="#22201d" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+          <g fill="#22201d">
+            <circle cx="60" cy="32.9" r="5"/><circle cx="280" cy="75.3" r="5"/>
+            <circle cx="500" cy="72.9" r="5"/><circle cx="720" cy="159.2" r="5"/><circle cx="940" cy="163.1" r="5"/>
+          </g>
+          <g font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#22201d">
+            <text x="60" y="22" text-anchor="middle">57.8</text>
+            <text x="280" y="96" text-anchor="middle">42.2</text>
+            <text x="500" y="62" text-anchor="middle">43.1</text>
+            <text x="720" y="180" text-anchor="middle">11.3</text>
+            <text x="940" y="184" text-anchor="end">9.9</text>
+          </g>
+          <g font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="10.5" fill="rgba(34,32,29,0.5)" letter-spacing="1.2">
+            <text x="60" y="216" text-anchor="middle">BURN STARTS</text>
+            <text x="390" y="216" text-anchor="middle">HOLDING AT THE CAP</text>
+            <text x="820" y="216" text-anchor="middle">BURN ENDS · RELEASING</text>
+          </g>
+        </svg>
       </div>
+      <div class="facts">
+        <div><b>59.0 → 42.7<span class="u">W</span></b><span>system load, before and after Match Charger</span></div>
+        <div><b>−15.6 → −3.5<span class="u">W</span></b><span>battery flow: draining hard while plugged in, to nearly break-even</span></div>
+        <div><b>60 → 30<span class="u">W</span></b><span>one heavy background app demoted; the app in front untouched</span></div>
+      </div>
+      <div class="doing-row">
+        <a class="go" href="https://charliewytk.github.io/downloads/PowerLeash.zip" download>Download for Mac</a>
+        <span class="note">Apple Silicon, unsigned. Unzip → drag PowerLeash.app to /Applications → right-click Open. Double-click is blocked by Gatekeeper; that is expected. Battery savings are not quantified yet.</span>
+      </div>
+      <p class="todo-label">Where it's at</p>
+      <ul class="todo">
+        <li class="done"><span>Eco Mode: background apps to efficiency cores</span></li>
+        <li class="done"><span>Match Charger: caps total draw at what the charger supplies</span></li>
+        <li class="done"><span>Live power readout at 1 s, per-process watts, brightness break-even</span></li>
+        <li class="done"><span>Fixed the power model double-counting the battery while charging</span></li>
+        <li><span>Quantify the actual battery saving; the gauge only updates every ~16 s</span></li>
+        <li><span>GPU-bound workloads: there's no public API to lower GPU clocks</span></li>
+      </ul>
     </div>
-    <div class="doing-row rise">
-      <a class="go" href="https://charliewytk.github.io/downloads/PowerLeash.zip" download>Download for Mac</a>
-      <span class="note">Apple Silicon, unsigned. Unzip → drag PowerLeash.app to /Applications → right-click Open. Double-click is blocked by Gatekeeper; that is expected. Battery savings are not quantified yet.</span>
-    </div>
-    <p class="todo-label rise">Where it's at</p>
-    <ul class="todo rise">
-      <li class="done"><span>Eco Mode — background apps to efficiency cores</span></li>
-      <li class="done"><span>Match Charger — caps total draw at what the charger supplies</span></li>
-      <li class="done"><span>Live power readout at 1s, per-process watts, brightness break-even</span></li>
-      <li class="done"><span>Fixed the power model double-counting battery while charging</span></li>
-      <li class="done"><span>Battery-health case measured: capping cuts heat and stops burning cycles on the charger</span></li>
-      <li><span>Quantify the actual battery saving — the gauge only updates every ~16s</span></li>
-      <li><span>GPU-bound workloads: no public API to lower GPU clocks</span></li>
-    </ul>
-  </div>
+  </article>
 </section>
 
 <!-- CHESS EXCHANGE -->
-<p class="bridge rise"><span class="from">Both of those were a price being wrong.</span> <span class="to">Here the price is the whole product.</span></p>
-
 <section class="work" id="chess">
-  <div class="head">
-    <h2>Chess Exchange</h2>
-    <p class="eyebrow">Betting on live chess, with play money</p>
-  </div>
-  <div class="stream">
-    <div class="frame rise">
-      <video muted loop playsinline preload="none" poster="media/chess.jpg">
-        <source src="media/chess-demo.mp4" type="video/mp4">
-      </video>
-    </div>
-    <p class="say rise">Simply I think it would be fun to live bet on chess games.</p>
-    <p class="say rise">I am a fan of poker - it being <span class="mk">about half skill and half luck</span> - and I feel chess exchange would be more of an <span class="num-r">80/20</span> split, with the luck landing on whether a player plays what you think is the best move.</p>
-    <div class="doing-row rise">
-      <a class="go" href="https://charliewytk.github.io/chess-exchange/" target="_blank" rel="noopener">Try the FEN → WDL demo</a>
-      <span class="note">Play money. Paste a FEN, see White / Draw / Black. Not a book, not advice. Demo goes live after Pages click.</span>
-    </div>
-    <p class="todo-label rise">Where it's at</p>
-    <ul class="todo rise">
-      <li class="done"><span>Live boards from lichess TV, markets on chess.com titled games</span></li>
-      <li class="done"><span>LMSR market maker, six liquidity bots, replays at true clock speed</span></li>
-      <li class="done"><span>Compact in-process alpha-beta engine: White/Draw/Black from WDL when a FEN exists; Elo is the no-board fallback</span></li>
-      <li class="doing"><span>Static FEN→WDL demo on GitHub Pages — live after the Pages click</span></li>
-      <li><span>Long term: real players betting against each other, not bots</span></li>
-    </ul>
-  </div>
-</section>
-
-<!-- TRADING RESEARCH -->
-<p class="bridge rise"><span class="from">That one runs on play money.</span> <span class="to">This is what happened when I tried it on real markets.</span></p>
-
-<!-- TRADING RESEARCH -->
-<section class="work" id="research">
-  <div class="head">
-    <h2>Trading Research</h2>
-    <p class="eyebrow">The edges are real. They're just the size of their own costs.</p>
-  </div>
-  <div class="stream">
-    <p class="say rise">Around 110 hypotheses tested. Nine produced a real, measurable anomaly. <span class="mk">Zero</span> produced one bigger than the cost of trading it.</p>
-    <p class="say rise">Separately, four findings survived independent replication — none of them a tradeable edge, which is the point.</p>
-    <p class="say rise">HyperFund / phd_ml is a sealed harness: walk-forward, BH multiple-testing, cost- and funding-aware half-Kelly. First family: <span class="mk">1 PASS / 11 FAIL</span>. The pass is the Merger Monitor deal-EV already on this page. The fails include HL micro variants, meme mortality, Polymarket complete-set, and the rest of that family. That is a kill log, not a return.</p>
-
-    <div class="panel rise">
-      <div class="panel-in">
-        <div class="facts">
-          <div><b>~110 → 9 → 0</b><span>tested → real anomalies → ones that beat their own costs</span></div>
-          <div><b>4</b><span>findings that survived independent replication</span></div>
-          <div><b>£0</b><span>revenue to date. Nothing staked until its evidence gate passes.</span></div>
-        </div>
+  <article class="case rise">
+    <div class="case-side"><div class="sticky">
+      <p class="eyebrow">Markets + engines</p>
+      <h3>Chess Exchange</h3>
+      <p class="tag">Live prediction markets on chess games, with play money.</p>
+      <dl>
+        <dt>Status</dt><dd><span class="chip res">Play money</span></dd>
+        <dt>Stack</dt><dd>Node, zero dependencies · LMSR market maker · in-process alpha-beta engine</dd>
+      </dl>
+    </div></div>
+    <div class="case-body">
+      <div class="frame">
+        <video muted loop playsinline preload="none" poster="media/chess.jpg">
+          <source src="media/chess-demo.mp4" type="video/mp4">
+        </video>
       </div>
-    </div>
-
-    <div class="ledger rise">
-      <div class="ledger-head"><span>The edge</span><span>What eats it</span></div>
-      <div class="ledger-row"><span class="e">Polymarket longshot bias — real, <span class="n">~2¢</span></span><span class="c">the spread is <span class="n">1.5–3¢</span></span></div>
-      <div class="ledger-row"><span class="e">Dip-buying, 503 stocks + 90 ETFs — <span class="n">+20bp</span> in 2016–21</span><span class="c"><span class="n">+2bp</span> in 2021–26, below costs</span></div>
-      <div class="ledger-row"><span class="e">The same trade, intraday</span><span class="c"><span class="n">−4bp</span> before any costs at all</span></div>
-      <div class="ledger-row"><span class="e">Polymarket liquidity provision, liquid markets</span><span class="c"><span class="n">−$102.59</span>/day per $1,000, <i>after</i> rewards</span></div>
-      <div class="ledger-row"><span class="e">Buying both sides to hedge</span><span class="c"><span class="n">−8%</span> locked in at entry</span></div>
-      <div class="ledger-row"><span class="e">Following analyst upgrades</span><span class="c">the whole reaction is in the untradeable gap</span></div>
-      <div class="ledger-row"><span class="e">A firm's track record as a signal</span><span class="c"><span class="n">ρ = 0.005</span>. Three domains, nothing in any of them</span></div>
-      <div class="ledger-row"><span class="e">25 equity factors, 29 survivors of multiple-testing correction</span><span class="c">one levered beta bet wearing 29 hats</span></div>
-      <div class="ledger-row"><span class="e">13F cloning, 19,000 filings</span><span class="c">survivorship, plus a single regime</span></div>
-    </div>
-
-    <div class="doing-row rise">
-      <a class="go" href="research.html">Read the research notes</a>
-      <span class="note"><a href="essays/90-Hypotheses-Zero-Edges-short.pdf">90 Hypotheses, Zero Edges (pdf)</a> — written at an earlier count</span>
-    </div>
-  </div>
-</section>
-
-<!-- MERGER MONITOR -->
-<p class="bridge rise"><span class="to">The only one of those with a price attached is this.</span></p>
-
-<section class="work" id="merger">
-  <div class="head">
-    <h2>Merger Monitor</h2>
-    <p class="eyebrow">Deal prices from SEC filings · £5/month · not advice</p>
-  </div>
-  <div class="stream">
-    <p class="say rise">I extract the contractual cash price of every US cash merger that has reached a definitive proxy, and price it against the live market. Each figure carries the sentence from the filing it was read from.</p>
-    <p class="say rise">It is a table of filings, not a tip sheet. A 3% spread annualises to <span data-merger-annualised-3pct>24.6%</span>; after costs it is <span data-merger-ev-3pct>+1.38%</span> a deal. Most thin ones die. The paid edition is <span class="mk">£5/month</span>: the same table, emailed the evening it is built.</p>
-    <p class="say small rise">SEAL_PHD_0004 in HyperFund research/phd_ml ran the same 3% case: measured EV ≈ +1.37% a deal, bootstrap CI roughly [1.35%, 1.39%]. A sealed check of the method already published here, not a book.</p>
-
-    <div class="doing-row rise">
-      <a class="go pay" href="subscribe/">Get tonight's table — £5/month</a>
-      <span class="note"><a href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Pay on Gumroad</a> · <a href="merger-monitor/">Week-late public table</a></span>
-    </div>
-
-    <p class="say small rise">The public table at <a href="merger-monitor/">/merger-monitor</a> is that same product, published one week late on purpose. A week-old table is the worse entry on deals that complete.</p>
-
-    <a class="mm-preview rise" href="merger-monitor/">
-      <p class="cap">Week-late public table · 19 August 2026</p>
-      <table>
-        <thead>
-          <tr><th>Deal</th><th>Company</th><th>Offer / market</th><th>Spread</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="tk">WBD</td>
-            <td class="co">Warner Bros. Discovery</td>
-            <td class="num">$31.00 / $28.48</td>
-            <td class="num">+8.85%</td>
-          </tr>
-          <tr>
-            <td class="tk">SLAB</td>
-            <td class="co">Silicon Laboratories</td>
-            <td class="num">$231.00 / $219.29</td>
-            <td class="num">+5.34%</td>
-          </tr>
-          <tr>
-            <td class="tk">ACA</td>
-            <td class="co">Arcosa</td>
-            <td class="num">$150.00 / $145.01</td>
-            <td class="num">+3.44%</td>
-          </tr>
-          <tr>
-            <td class="tk">AES</td>
-            <td class="co">AES Corp</td>
-            <td class="num">$15.00 / $14.74</td>
-            <td class="num">+1.76%</td>
-          </tr>
-          <tr>
-            <td class="tk">CRNX</td>
-            <td class="co">Crinetics</td>
-            <td class="num">$85.00 / $84.75</td>
-            <td class="num">+0.29%</td>
-          </tr>
-        </tbody>
-      </table>
-      <p class="go-row">See every deal, with the filing sentence</p>
-    </a>
-
-    <div class="worked rise">
-      <h3>Annualising flatters everything. Here is the one I sell, done properly.</h3>
-      <p>A 3% merger spread held to the median <span data-merger-median-days>49</span>-day close annualises to <b><span data-merger-annualised-3pct>24.6%</span> a year</b>. That number is worthless, and it is the number this whole business would normally be sold on.</p>
-      <div class="twoup">
-        <div class="bad"><b data-merger-annualised-3pct>24.6%</b><span>a year — what a 3% spread over <span data-merger-median-days>49</span> days looks like when you annualise it</span></div>
-        <div class="real"><b data-merger-ev-3pct>+1.38%</b><span>per deal — the same trade after a <span data-merger-break-rate>2.4%</span> break rate, a <span data-merger-break-loss>27%</span> median loss when one breaks, <span data-merger-cost>0.40%</span> round-trip cost and <span data-merger-carry>0.49%</span> of forgone T-bill carry</span></div>
+      <p>The idea: a market on a live chess game, priced move by move. Chess has far less luck than most things people price. What's left is mostly whether a player finds the move you think is best, which makes it an interesting thing to put a price on.</p>
+      <div class="doing-row">
+        <a class="go" href="https://charliewytk.github.io/chess-exchange/" target="_blank" rel="noopener">Try the FEN → WDL demo</a>
+        <span class="note">Play money. Paste a FEN, see White / Draw / Black. Not a book, not advice. Demo goes live after Pages click.</span>
       </div>
-      <p>Price a 1% spread the same way — still a healthy-looking annualised number — and it is <span class="mk" data-merger-ev-1pct>−0.57%</span> per deal. Break-even sits at <span class="mk" data-merger-breakeven>1.59%</span>.</p>
-      <p>On the 19 August table, nine of the seventeen cash-priced rows clear that 1.59% break-even. The rest are published anyway, because a wide spread and a thin one look identical until you price the break risk. Base rate <span data-merger-break-rate>2.4%</span> — <span data-merger-breaks>39</span> breaks in <span data-merger-settled>1,606</span> settled outcomes. A floor, not a ceiling: deals that die before a definitive proxy never enter the sample.</p>
-      <p>That is the whole method in one line: the annualised number is marketing, the expected value is the trade. You pay £5/month for the evening the table is built, not for a secret. A named row from that table is walked through at <a href="example/">/example/</a>. The same frozen 3% case — 24.6% annualised, +1.38% after costs — is a public calculator at <a href="sizer/">/sizer/</a>.</p>
+      <p class="todo-label">Where it's at</p>
+      <ul class="todo">
+        <li class="done"><span>Live boards from lichess TV, markets on chess.com titled games</span></li>
+        <li class="done"><span>LMSR market maker, six liquidity bots, replays at true clock speed</span></li>
+        <li class="done"><span>Compact in-process alpha-beta engine: White/Draw/Black from WDL when a FEN exists; Elo is the no-board fallback</span></li>
+        <li class="doing"><span>Static FEN→WDL demo on GitHub Pages, live after the Pages click</span></li>
+      </ul>
     </div>
-
-    <div class="doing-row rise">
-      <a class="go pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Pay on Gumroad — £5/month</a>
-      <span class="note"><a href="subscribe/">The offer</a> · <a href="weekly/">Free weekly edition</a> — same table, one week late</span>
-    </div>
-  </div>
-</section>
-
-<!-- QUANTIACS -->
-<p class="bridge rise"><span class="from">That one I sell.</span> <span class="to">These I compete in.</span></p>
-
-<section class="work" id="quantiacs">
-  <div class="head">
-    <h2>Quantiacs</h2>
-    <p class="eyebrow">Q25 defended dual momentum</p>
-  </div>
-  <div class="stream">
-    <p class="say rise">In-sample Sharpe <span class="mk">1.22</span>, maximum drawdown 23.6%.</p>
-    <p class="say rise">The platform's drawdown figure matched my from-source engine exactly, which is the only validation available before live trading starts.</p>
-    <p class="say rise">Selected, one of fifteen. Trades 1 October to 31 January.</p>
-    <p class="todo-label rise">Where it's at</p>
-    <ul class="todo rise">
-      <li class="done"><span>Submitted, passed the contest filters, selected</span></li>
-      <li class="done"><span>Engine validated against the platform</span></li>
-    </ul>
-    <p class="say small rise">Correct further work before October: none. Leave it alone.</p>
-    <div class="figure rise">
-      <p class="cap">£100 through the strategy, 2014–2025</p>
-      <svg class="fig" viewBox="0 0 1000 300" role="img" aria-label="Equity curve: 100 grows to 654 between 2014 and 2025, with most of the gain in 2017 and 2021" xmlns="http://www.w3.org/2000/svg">
-  <line x1="64" y1="258.0" x2="948" y2="258.0" stroke="rgba(34,32,29,0.18)" stroke-width="1"/>
-  <text class="t-s" x="54" y="262.0" text-anchor="end" fill="#5f5b52">0</text>
-  <line x1="64" y1="197.4" x2="948" y2="197.4" stroke="rgba(34,32,29,0.18)" stroke-width="1"/>
-  <text class="t-s" x="54" y="201.4" text-anchor="end" fill="#5f5b52">200</text>
-  <line x1="64" y1="136.9" x2="948" y2="136.9" stroke="rgba(34,32,29,0.18)" stroke-width="1"/>
-  <text class="t-s" x="54" y="140.9" text-anchor="end" fill="#5f5b52">400</text>
-  <line x1="64" y1="76.3" x2="948" y2="76.3" stroke="rgba(34,32,29,0.18)" stroke-width="1"/>
-  <text class="t-s" x="54" y="80.3" text-anchor="end" fill="#5f5b52">600</text>
-  <path d="M64.0 227.7 L137.7 227.1 L211.3 227.3 L285.0 223.6 L358.7 172.1 L432.3 180.0 L506.0 176.1 L579.7 164.5 L653.3 116.1 L727.0 124.8 L800.7 87.0 L874.3 58.9 L948.0 59.9" fill="none" stroke="#22201d" stroke-width="2.4" stroke-linejoin="round"/>
-  <text class="t-s" x="64.0" y="286" text-anchor="start" fill="#5f5b52">2013</text>
-  <text class="t-s" x="358.7" y="286" text-anchor="middle" fill="#5f5b52">2017</text>
-  <circle cx="358.7" cy="172.1" r="5" fill="var(--accent)"/>
-  <text class="t-m" x="358.7" y="158.1" text-anchor="middle" fill="var(--accent)">284</text>
-  <text class="t-s" x="653.3" y="286" text-anchor="middle" fill="#5f5b52">2021</text>
-  <circle cx="653.3" cy="116.1" r="5" fill="var(--accent)"/>
-  <text class="t-m" x="653.3" y="102.1" text-anchor="middle" fill="var(--accent)">469</text>
-  <text class="t-s" x="948.0" y="286" text-anchor="end" fill="#5f5b52">2025</text>
-  <circle cx="948.0" cy="59.9" r="5" fill="var(--accent)"/>
-  <text class="t-m" x="948.0" y="45.9" text-anchor="end" fill="var(--accent)">654</text>
-</svg>
-      <p class="fig-note">Compounded through the annual net returns, slippage included. Two years carry it — 2017 and 2021 — and the rest is defence. 2026 is excluded as a partial year.</p>
-    </div>
-
-  </div>
-</section>
-
-<!-- NUMERAI -->
-<p class="bridge rise"><span class="to">The next one taught me more about my own logging than about markets.</span></p>
-
-<section class="work" id="numerai">
-  <div class="head">
-    <h2>Numerai</h2>
-    <p class="eyebrow">Two tournaments, running without me</p>
-  </div>
-  <div class="stream">
-    <p class="say rise">Classic and Crypto both submitting on schedule. Crypto correlation <span class="mk">+0.116</span> neutralised.</p>
-    <p class="say rise">The interesting part is not the model. Every Crypto submission was silently payout-ineligible for months: the deadline drifts, and my own log recorded success while the platform recorded late.</p>
-    <p class="say rise">Fixed. The first ever on-time round was R1341.</p>
-    <div class="figure rise">
-      <p class="cap">Where the submission landed against a deadline that moves</p>
-      <svg class="fig" viewBox="0 0 1000 250" role="img" aria-label="Timeline: the old job fired at 13:10Z, after a deadline band of 13:03 to 13:07; the fixed job now uploads at 12:21:50Z, 41 minutes inside" xmlns="http://www.w3.org/2000/svg">
-  <rect x="761.6" y="84" width="35.2" height="88" fill="rgba(34,32,29,0.12)"/>
-  <line x1="761.6" y1="84" x2="761.6" y2="172" stroke="#5f5b52" stroke-width="1" stroke-dasharray="2 3"/>
-  <line x1="796.8" y1="84" x2="796.8" y2="172" stroke="#5f5b52" stroke-width="1" stroke-dasharray="2 3"/>
-  <line x1="64" y1="128" x2="944" y2="128" stroke="#22201d" stroke-width="1.8"/>
-  <line x1="64.0" y1="122" x2="64.0" y2="134" stroke="#22201d" stroke-width="1.8"/>
-  <text class="t-s" x="64.0" y="236" text-anchor="start" fill="#5f5b52">12:00Z</text>
-  <line x1="394.0" y1="122" x2="394.0" y2="134" stroke="#22201d" stroke-width="1.8"/>
-  <text class="t-s" x="394.0" y="236" text-anchor="middle" fill="#5f5b52">12:30</text>
-  <line x1="724.0" y1="122" x2="724.0" y2="134" stroke="#22201d" stroke-width="1.8"/>
-  <text class="t-s" x="724.0" y="236" text-anchor="middle" fill="#5f5b52">13:00</text>
-  <line x1="944.0" y1="122" x2="944.0" y2="134" stroke="#22201d" stroke-width="1.8"/>
-  <text class="t-s" x="944.0" y="236" text-anchor="end" fill="#5f5b52">13:20</text>
-  <line x1="304.2" y1="128" x2="304.2" y2="80.0" stroke="var(--accent)" stroke-width="1.6" stroke-dasharray="3 3"/>
-  <circle cx="304.2" cy="128.0" r="6" fill="var(--accent)"/>
-  <text class="t-m" x="304.2" y="70.0" text-anchor="middle" fill="var(--accent)">12:21:50Z</text>
-  <line x1="834.0" y1="128" x2="834.0" y2="184.0" stroke="#22201d" stroke-width="1.6" stroke-dasharray="3 3"/>
-  <circle cx="834.0" cy="128.0" r="6" fill="#22201d"/>
-  <text class="t-m" x="834.0" y="200.0" text-anchor="end" fill="#22201d">13:10Z</text>
-</svg>
-      <div class="key"><span><i style="border-color:var(--accent)"></i>now — 41 min inside</span><span><i></i>old job — late every weekday</span><span><i style="border:none;width:22px;height:12px;background:rgba(34,32,29,0.12)"></i>deadline, drifting 3m12s</span></div>
-      <p class="fig-note">Measured <code>closeStakingTime</code>: 13:03:25Z (R1341), 13:06:01Z (R1340), 13:06:14Z (R1336), 13:06:37Z (R1338). The old job fired at a fixed local time, which is why a moving UTC deadline caught it every weekday.</p>
-    </div>
-
-  </div>
-</section>
-
-<!-- BRAIN -->
-<p class="bridge rise"><span class="to">The same lesson in a different shape: the thing blocking me was the shape of what I was submitting, not its quality.</span></p>
-
-<section class="work" id="brain">
-  <div class="head">
-    <h2>WorldQuant BRAIN</h2>
-    <p class="eyebrow">Gold · ~14 alphas live</p>
-  </div>
-  <div class="stream">
-    <p class="say rise">Three days stuck at zero accepted from five submissions. It broke when I dropped single expressions for two-term combinations.</p>
-    <p class="say rise">Correlation fell <span class="mk">0.79 to 0.51</span>. Fitness rose <span class="mk">1.04 to 1.68</span>.</p>
-    <p class="say small rise">Gold (10,000 pts) reached around 30 August 2026. About 14 alphas live. A 416-simulation sweep; 16 clear every gate. The best is Sharpe 2.05 at fitness 1.68. The components that made it work had all failed on their own and would have been filed as dead ends.</p>
-  </div>
-</section>
-
-<!-- STRUCTURAL BREAK -->
-<p class="bridge rise"><span class="to">That is what happens when the measurement is right. This is what happens when it is not.</span></p>
-
-<section class="work" id="sbreak">
-  <div class="head">
-    <h2>Structural Break</h2>
-    <p class="eyebrow">263rd of 1,332, and why that's the interesting part</p>
-  </div>
-  <div class="stream">
-    <p class="say rise">Live 57.43%. Two shipped improvements gained <span class="mk">+0.0144</span> on my own holdout and moved live by <span class="mk">−0.0003</span>. Zero for two.</p>
-    <p class="say rise">My holdout matched live almost exactly in level, and I used that to justify believing a delta.</p>
-    <p class="say rise">Levels agreeing tells you nothing about whether improvements transfer. Read as deltas, the evidence had been arguing against me the whole time.</p>
-    <div class="figure rise">
-      <p class="cap">Two lines that should move together, and do not</p>
-      <svg class="fig" viewBox="0 0 1000 300" role="img" aria-label="Holdout score climbs from 57.31 to 58.75 while the live score stays flat, ending at 57.43" xmlns="http://www.w3.org/2000/svg">
-  <line x1="74" y1="216.8" x2="944" y2="216.8" stroke="rgba(34,32,29,0.18)" stroke-width="1"/>
-  <text class="t-s" x="64" y="220.8" text-anchor="end" fill="#5f5b52">57.5</text>
-  <line x1="74" y1="157.9" x2="944" y2="157.9" stroke="rgba(34,32,29,0.18)" stroke-width="1"/>
-  <text class="t-s" x="64" y="161.9" text-anchor="end" fill="#5f5b52">58.0</text>
-  <line x1="74" y1="99.0" x2="944" y2="99.0" stroke="rgba(34,32,29,0.18)" stroke-width="1"/>
-  <text class="t-s" x="64" y="103.0" text-anchor="end" fill="#5f5b52">58.5</text>
-  <path d="M74.0 239.2 L509.0 227.4 L944.0 69.6" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-dasharray="8 5"/>
-  <path d="M74.0 221.5 L509.0 223.8 L944.0 225.0" fill="none" stroke="#22201d" stroke-width="2.6"/>
-  <circle cx="74.0" cy="239.2" r="5" fill="var(--accent)"/>
-  <circle cx="74.0" cy="221.5" r="5" fill="#22201d"/>
-  <text class="t-s" x="74.0" y="286" text-anchor="start" fill="#5f5b52">v5</text>
-  <circle cx="509.0" cy="227.4" r="5" fill="var(--accent)"/>
-  <circle cx="509.0" cy="223.8" r="5" fill="#22201d"/>
-  <text class="t-s" x="509.0" y="286" text-anchor="middle" fill="#5f5b52">v6</text>
-  <circle cx="944.0" cy="69.6" r="5" fill="var(--accent)"/>
-  <circle cx="944.0" cy="225.0" r="5" fill="#22201d"/>
-  <text class="t-s" x="944.0" y="286" text-anchor="end" fill="#5f5b52">v11</text>
-  <text class="t-m" x="944.0" y="54.6" text-anchor="end" fill="var(--accent)">58.75</text>
-  <text class="t-m" x="944.0" y="251.0" text-anchor="end" fill="#22201d">57.43</text>
-</svg>
-      <div class="key"><span><i class="dash"></i>my holdout</span><span><i></i>live leaderboard</span></div>
-      <p class="fig-note">Three shipped models, same metric, same axis. Both start around 57.3–57.5. The holdout climbs 1.44 points; live moves −0.03.</p>
-    </div>
-
-  </div>
-</section>
-
-<!-- ALMACH -->
-<p class="bridge rise"><span class="from">That is my own measurement failing.</span> <span class="to">This is what happened when I checked someone else's.</span></p>
-
-<section class="work" id="almach">
-  <div class="head">
-    <h2>The almach audit</h2>
-    <p class="eyebrow">$2,895 to $257,000, checked</p>
-  </div>
-  <div class="stream">
-    <p class="say rise">A Polymarket trader turned $2,895 into $257,000 and an article explained how. I pulled 478,021 of their on-chain events and checked.</p>
-    <p class="say rise">The profit was real: <span class="mk">+$221,120</span> over 97 days, t = 7.52. The mechanism everyone assumed was wrong.</p>
-    <p class="say rise">A third wallet in the same study looked profitable until the same filter took <span class="mk">$176,266</span> out of it — 72% of its apparent profit, nearly all of it in one day that had presented as its biggest. Those were redemptions of positions opened before my measurement window. An artifact I had to catch before it fooled me too.</p>
-    <p class="say small rise">A paper clone now tests the real mechanism forward, evaluator sealed before starting. It will not report a number until it has 1,000 windows and 14 days. It is at 161.</p>
-  </div>
-</section>
-
-<!-- KILL LOG -->
-<p class="bridge rise"><span class="to">Most of what follows did not survive contact with its own numbers.</span></p>
-
-<section class="work" id="killlog">
-  <div class="head">
-    <h2>The kill log</h2>
-    <p class="eyebrow">Every closed door, with the measurement that closed it</p>
-  </div>
-  <div class="stream">
-    <p class="say rise">The nine friction-sized anomalies are in the table at the top. These are the ones that died for other reasons — and this is most of the work.</p>
-    <ul class="todo log rise">
-      <li><span>Numerai hyperparameter sweeps, seven variants — six within 0.0008 correlation. Noise.</span></li>
-      <li><span>Feature subsets beating all 3,555 — breadth is monotonic. There is no clever subset.</span></li>
-      <li><span>Shorter training windows — longer wins on both metrics. Recency loses.</span></li>
-      <li><span>Crypto monthly refit, "+0.00951, t 2.57" — reproduced exactly, then died on three disjoint years at +0.00007. Refitting is hygiene, not alpha.</span></li>
-      <li><span>Structural-break ensembling as a family — below its own detection floor, confirmed by two methods.</span></li>
-      <li><span>Reversal sweep, 503 stocks and 90 ETFs — +20bp in 2016–21 down to +2bp in 2021–26, below costs.</span></li>
-      <li><span>A market maker — its projection rested on a fill model, so the fill model got a pre-declared test. Zero fills in 71 attempts against 3.7 expected.</span></li>
-      <li><span>An ETF cost tool that ranks nothing on purpose — two cost components are not available free, so ranking would just promote whichever fund has the least data.</span></li>
-    </ul>
-  </div>
-</section>
-
-<!-- THE RIG -->
-<p class="bridge rise"><span class="to">None of that is impressive on its own. The way I killed them is.</span></p>
-
-<section class="work" id="rig">
-  <div class="head">
-    <h2>How the rig works</h2>
-    <p class="eyebrow">Measure the instrument before you trust it</p>
-  </div>
-  <div class="stream">
-    <p class="say rise">Before searching for an effect I measure the smallest effect the data could detect. If what I am hunting is below that floor, I do not run the search.</p>
-    <p class="say rise">Thresholds frozen before the run. Evaluators hashed and sealed so they cannot be adjusted after seeing results. Every book with a coin-flip control running beside it. Sample size counted in independent events rather than trades.</p>
-    <p class="say rise">And when the method itself fails, that gets logged too.</p>
-    <ul class="todo log rise">
-      <li><span>Filtering on cumulative volume leaked the outcome into the filter and flipped a result from −8¢ to +4¢</span></li>
-      <li><span>Reusing one holdout inflated measured gains 3.2× and suppressed the small negatives that would have closed a project months earlier</span></li>
-      <li><span>Normalisation layers over a time axis are silent lookahead</span></li>
-    </ul>
-    </div>
-</section>
-
-<!-- RUNNING NOW -->
-<p class="bridge rise"><span class="to">All of which is why none of it has money on it.</span></p>
-
-<section class="work" id="unstaked">
-  <div class="head">
-    <h2>Running now, unstaked</h2>
-    <p class="eyebrow">Paper books and sealed gates. Nothing staked until evidence passes</p>
-  </div>
-  <div class="stream">
-    <p class="say rise">Paper books: a 40-name value and quality book on Alpaca since 20 August; the almach clone behind a sealed evaluator; a meme-token desk with rug-pull and evidence gates.</p>
-    <p class="say rise">Nothing is staked until its evidence gate passes — a paper book and a staked one produce the same data.</p>
-  </div>
+  </article>
 </section>
 
 <!-- CHELSEA BIKES -->
-<p class="bridge rise"><span class="from">Everything up to here I built for myself.</span> <span class="to">This one is for somebody else, and they had not asked.</span></p>
-
 <section class="work" id="chelsea">
-  <div class="head">
-    <h2>Chelsea Bikes</h2>
-    <p class="eyebrow">Rebuilding my local bike shop, unasked</p>
-  </div>
-  <div class="stream">
-    <div class="frame rise">
-      <video muted loop playsinline preload="none" poster="media/chelsea.jpg">
-        <source src="media/chelsea-demo.mp4" type="video/mp4">
-      </video>
+  <article class="case rise">
+    <div class="case-side"><div class="sticky">
+      <p class="eyebrow">Web design</p>
+      <h3>Chelsea Bikes</h3>
+      <p class="tag">Rebuilding my local bike shop's website, unasked.</p>
+      <dl>
+        <dt>Status</dt><dd><span class="chip res">Prototype</span> Not yet pitched</dd>
+      </dl>
+    </div></div>
+    <div class="case-body">
+      <div class="frame">
+        <video muted loop playsinline preload="none" poster="media/chelsea.jpg">
+          <source src="media/chelsea-demo.mp4" type="video/mp4">
+        </video>
+      </div>
+      <p>My local bike shop. I bought my bike there, second hand (most things are better value that way), and I do some repairs there too. Its website wasn't doing it justice, which probably costs it customers. So I rebuilt it, <span class="mk">to bring more of them in</span>, and haven't pitched it yet.</p>
+      <div class="doing-row">
+        <a class="go" href="chelsea-bikes/compare.html" target="_blank" rel="noopener">See before and after</a>
+        <span class="note"><a href="chelsea-bikes/" target="_blank" rel="noopener">Or browse the full prototype</a>: eleven pages, works offline.</span>
+      </div>
+      <p class="todo-label">Where it's at</p>
+      <ul class="todo">
+        <li class="done"><span>Prototype finished: 11 pages, accessibility pass, works offline</span></li>
+        <li class="done"><span>Pitch materials: before/after tool, one-page leave-behind, quote template</span></li>
+        <li class="done"><span>Photo-drop system, so real shop photos replace the illustrations instantly</span></li>
+        <li><span>Pitch it to the owner</span></li>
+      </ul>
     </div>
-    <p class="say rise">My local bike shop. I bought my bike there (second hand as I think most things are better value for money second hand). I also do some repairs there.</p>
-    <p class="say rise">However, sometimes I found using the website to not be very good and clean, potentially reducing customers and so revenue and so profits. Hence, I have created a website, that is yet to be pitched, <span class="mk">that should increase customers</span> and so forth.</p>
-    <div class="doing-row rise">
-      <a class="go" href="chelsea-bikes/compare.html" target="_blank" rel="noopener">See before and after</a>
-      <span class="note"><a href="chelsea-bikes/" target="_blank" rel="noopener">Or browse the full prototype</a> — eleven pages, works offline.</span>
-    </div>
-    <p class="todo-label rise">Where it's at</p>
-    <ul class="todo rise">
-      <li class="done"><span>Prototype finished — 11 pages, accessibility pass, works offline</span></li>
-      <li class="done"><span>Pitch materials: before/after tool, one-page leave-behind, quote template</span></li>
-      <li class="done"><span>Photo-drop system, so real shop photos replace the illustrations instantly</span></li>
-      <li><span>Pitch it to the owner</span></li>
-    </ul>
-  </div>
+  </article>
 </section>
 
 <!-- ABYSS WARDEN -->
-<p class="bridge rise"><span class="to">And this is what I build when nobody has asked at all.</span></p>
-
 <section class="work" id="abyss">
-  <div class="head">
-    <h2>Abyss Warden</h2>
-    <p class="eyebrow">A personalised version of my favourite strategy game</p>
+  <article class="case rise">
+    <div class="case-side"><div class="sticky">
+      <p class="eyebrow">Game</p>
+      <h3>Abyss Warden</h3>
+      <p class="tag">A personal take on my favourite strategy game.</p>
+      <dl>
+        <dt>Status</dt><dd><span class="chip live">Playable</span></dd>
+        <dt>Stack</dt><dd>Plain JavaScript, canvas, synthesised audio, installable offline</dd>
+      </dl>
+    </div></div>
+    <div class="case-body">
+      <div class="frame">
+        <video muted loop playsinline preload="none" poster="media/abyss-poster.jpg">
+          <source src="media/abyss.mp4" type="video/mp4">
+        </video>
+      </div>
+      <p>My favourite video game of all time is Kingdom Rush, a niche indie tower defence game. This is my attempt at something similar, set in the deep sea.</p>
+      <div class="doing-row">
+        <a class="go" href="abyss-warden/" target="_blank" rel="noopener">Play it in your browser</a>
+      </div>
+      <p class="todo-label">Where it's at</p>
+      <ul class="todo">
+        <li class="done"><span>Finished: all levels, 5 bosses, balance passed</span></li>
+        <li class="done"><span>Builds packaged for itch.io, Newgrounds, Poki and four other portals</span></li>
+        <li class="doing"><span>Submitting them to the portals</span></li>
+      </ul>
+    </div>
+  </article>
+</section>
+
+<!-- 04 ABOUT -->
+<section class="chapter" id="about" aria-labelledby="about-h">
+  <div class="chapter-head">
+    <p class="no">04 — About</p>
+    <h2 id="about-h">About</h2>
   </div>
-  <div class="stream">
-    <div class="frame rise">
-      <video muted loop playsinline preload="none" poster="media/abyss-poster.jpg">
-        <source src="media/abyss.mp4" type="video/mp4">
-      </video>
+  <div class="about rise" style="padding-top:34px">
+    <div class="prose">
+      <p>I'm Charlie Wuytack. I'd rather build than consume. Most of what's on this page started as something that annoyed me: a ticket that sold out in minutes, a flight that was only cheap on paper, a laptop that throttled itself.</p>
+      <p>The trading work taught me my most useful habit: decide what would prove me wrong before I look, then go looking for it. Most of what I've tested didn't survive that, and I'd rather show you the kill log than a backtest that flatters me.</p>
+      <p class="quiet">Happy to walk through any of it in more depth: the code, the data, or the failures.</p>
     </div>
-    <p class="say rise">My favourite video game of all time is Kingdom Rush. It is a niche indie strategy tower defence game.</p>
-    <p class="say rise">Here is my attempt at making something similar - but with a deep sea theme.</p>
-    <div class="doing-row rise">
-      <a class="go" href="abyss-warden/" target="_blank" rel="noopener">Play it in your browser</a>
-      
-    </div>
-    <p class="todo-label rise">Where it's at</p>
-    <ul class="todo rise">
-      <li class="done"><span>Finished — all 15 levels, 5 bosses, balance passed</span></li>
-      <li class="done"><span>Builds packaged for itch.io, Newgrounds, Poki and four other portals</span></li>
-      <li class="doing"><span>Submitting them to the portals</span></li>
-      <li><span>Nudge level 2 starting gold if 3-star rates run high</span></li>
-    </ul>
+    <dl class="stack">
+      <dt>Languages</dt><dd>Python · Swift / SwiftUI · TypeScript · JavaScript · SQL</dd>
+      <dt>Data and ML</dt><dd>polars · pandas · LightGBM · river (online learning) · scikit-learn</dd>
+      <dt>Statistics</dt><dd>Clustered bootstrap · e-processes · deflated Sharpe · SPA / reality check · power analysis</dd>
+      <dt>Markets and infrastructure</dt><dd>Solana RPC and websockets · AMM maths · Hyperliquid · event studies · launchd services</dd>
+      <dt>Products</dt><dd>Next.js · Stripe Connect · Capacitor · WidgetKit · Live Activities</dd>
+    </dl>
   </div>
 </section>
 
 <footer class="close">
-  <p class="rise"><a class="mail" href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></p>
-  <p class="didnt rise">Also built, didn't make the cut: Resale Radar (resale margin maths with real fees and return rates), a trading bot retired after its own audit, an ETF cost tool that deliberately ranks nothing, fifteen programmatic SEO sites, and a strategy-validation project that killed three ideas out of five.</p>
-  <p class="stamp rise">23 sep 2026 · <a href="https://github.com/Charliewytk">github</a></p>
+  <p><a class="mail" href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></p>
+  <p class="didnt">Also built, didn't make the cut: Resale Radar (resale margin maths with real fees and return rates), a trading bot retired after its own audit, an ETF cost tool that deliberately ranks nothing, a tender-offer scanner that reads SEC filings, fifteen programmatic SEO sites, and a handful of small Mac tools: a doomscroll tracker, a cleaner that dry-runs everything, and a companion that refuses coding jobs the machine can't finish.</p>
+  <p class="fine">Research and engineering, not financial advice. Backtest and paper results are labelled as such, and nothing on this page is trading live at a profit. Merger Monitor is a table of filings, not a tip sheet.</p>
+  <p class="stamp">24 sep 2026 · <a href="https://github.com/Charliewytk">github</a></p>
 </footer>
 
 <script src="assets/js/merger-stats.js" defer></script>
@@ -1629,6 +1858,12 @@
         resume: function () { ctx.resume(); }
       };
     }
+
+    // ---------- the record's colour: restore it for returning visitors ----------
+    try {
+      var savedAccent = localStorage.getItem('cw-accent');
+      if (savedAccent && /^#[0-9a-f]{6}$/i.test(savedAccent)) document.documentElement.style.setProperty('--accent', savedAccent);
+    } catch (e) {}
 
     // ---------- entry gate ----------
     var gate = document.getElementById('gate');
@@ -1799,6 +2034,13 @@
       location.href = location.pathname;
     }
     if (mini) mini.addEventListener('click', backToStart);
+    // no sound, no ceremony: straight in
+    var skip = document.getElementById('gateSkip');
+    if (skip) skip.addEventListener('click', function () {
+      var np = document.getElementById('nowPlaying');
+      if (np) np.innerHTML = '<b>No record</b> — the corner record plays one';
+      enter(false);
+    });
     // Escape does the same, from anywhere
     document.addEventListener('keydown', function (ev) {
       if (ev.key === 'Escape' && document.body.classList.contains('entered')) backToStart();
@@ -1872,19 +2114,19 @@
       }
     });
 
-    var barBox = document.getElementById('bars');
-    if (barBox) {
+    // bars grow when they scroll into view
+    var barSets = [].slice.call(document.querySelectorAll('[data-bars]'));
+    if (barSets.length) {
       var bio = new IntersectionObserver(function (es) {
         es.forEach(function (e) {
           if (!e.isIntersecting) return;
-          var bs = e.target.querySelectorAll('.bar');
-          bs.forEach(function (bar, i) {
-            setTimeout(function () { bar.style.setProperty('--grow', 1); }, reduce ? 0 : i * 110);
+          e.target.querySelectorAll('.fill').forEach(function (bar, i) {
+            setTimeout(function () { bar.style.setProperty('--grow', 1); }, reduce ? 0 : i * 140);
           });
           bio.unobserve(e.target);
         });
       }, { threshold: 0.35 });
-      bio.observe(barBox);
+      barSets.forEach(function (b) { if (reduce) { b.querySelectorAll('.fill').forEach(function (f) { f.style.setProperty('--grow', 1); }); } else bio.observe(b); });
     }
 
     var player = new IntersectionObserver(function (es) {
