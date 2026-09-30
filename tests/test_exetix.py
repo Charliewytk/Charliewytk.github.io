@@ -2,7 +2,7 @@
 """ExeTix showcase: the /exetix/ pages and the homepage hero after the opening.
 
 Rails: the opening (Scroll / I'D RATHER BUILD) stays the first paint; ExeTix is
-the first project after it. No fake App Store link. Nothing private ships:
+the first project after it. Only the real App Store link. Nothing private ships:
 no IPs, no push topics, no keys, no emails beyond the one already public, no
 local paths. Every image has alt text and every local reference resolves.
 """
@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 HOMEPAGE = (ROOT / "index.html").read_text(encoding="utf-8")
 EXETIX = ROOT / "exetix"
 PAGES = ["index.html", "how-it-works.html", "engineering.html", "gallery.html"]
+APP_STORE = "https://apps.apple.com/gb/app/exetix/id6814591245"
 LIVE_SITE = "https://www.exeterticketexchange.com"
 PUBLIC_EMAIL = "charlie@wuytack.net"
 VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"}
@@ -121,9 +122,10 @@ class ExetixPages(unittest.TestCase):
     def test_app_store_is_honest(self) -> None:
         for name in PAGES:
             html = _page(name)
-            self.assertFalse("apps.apple.com" in html, f"{name}: no App Store link until it is live")
+            # live since 29 Sep 2026 (iTunes Search API, GB store): link the real listing, never a TestFlight invite
+            self.assertTrue(APP_STORE in html, f"{name}: link the real App Store listing")
             self.assertFalse("testflight.apple.com" in html, f"{name}: no TestFlight invite link")
-            self.assertTrue("Coming to the App Store" in html, f"{name}: say it is coming, not live")
+            self.assertNotIn("Coming to the App Store", html, f"{name}: it is live now")
             self.assertTrue(LIVE_SITE in html, f"{name}: link the live site")
 
     def test_nothing_private_ships(self) -> None:
@@ -172,8 +174,7 @@ class HomepageHero(unittest.TestCase):
         block = _section()
         self.assertIn('href="exetix/"', block)
         self.assertIn(LIVE_SITE, block)
-        self.assertIn("Coming to the App Store", block)
-        self.assertNotIn("apps.apple.com", block)
+        self.assertIn(APP_STORE, block)
         p = _parse(block)
         self.assertGreaterEqual(len(p.imgs), 3)
         for img in p.imgs:
