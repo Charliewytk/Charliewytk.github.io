@@ -66,7 +66,7 @@ class SellsOnlyTheExistingSku(unittest.TestCase):
             self.assertNotIn(claim, visible)
 
     def test_evidence_is_labelled(self) -> None:
-        for chip in ('class="chip bt">Backtest', 'class="chip paper">Paper', 'class="chip paper">Dry'):
+        for chip in ('class="chip bt">Backtest', 'class="chip paper">Paper', 'class="chip live">Live execution test'):
             self.assertIn(chip, HOMEPAGE, f"missing evidence label {chip!r}")
         events = re.search(r'<article class="case[^"]*" id="events">.*?</article>', HOMEPAGE, re.S)
         self.assertIsNotNone(events)
