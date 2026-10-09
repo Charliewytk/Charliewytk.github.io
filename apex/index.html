@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Apex — research write-up — Charlie Wuytack</title>
-<meta name="description" content="A month-long, AI-agent-assisted on-chain trading research programme: what was built, what was tested, what was killed, and the one small thing that survived.">
+<meta name="description" content="An on-chain trading research programme: what was built, what was tested, what was killed, and the one small thing that survived.">
 <link rel="canonical" href="https://charliewytk.github.io/apex/">
 <link rel="icon" href="../media/favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://charliewytk.github.io/apex/">
-<meta property="og:title" content="Apex — a month of AI-assisted trading research, written up honestly">
+<meta property="og:title" content="Apex — on-chain trading research, written up honestly">
 <meta property="og:description" content="Pre-registration, e-processes, a chain-exact live ledger, ~3,750 counted trials and the kills that came out of them.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap">
@@ -83,8 +83,8 @@
 <div class="page">
   <p class="back"><a href="../">← charliewytk.github.io</a></p>
   <p class="meta">research write-up · sep–oct 2026 · programme closed</p>
-  <h1>Apex: a month of AI-assisted on-chain trading research</h1>
-  <p class="lede">I spent about a month trying to find an automated trading edge on Solana's newest tokens, with AI coding agents doing most of the engineering. The most useful result was an explanation. The edge I thought I had was a protocol subsidy, and the subsidy was already crowded.</p>
+  <h1>Apex: on-chain trading research</h1>
+  <p class="lede">I set out to find an automated trading edge on Solana's newest tokens. The most useful result was an explanation. The edge I thought I had was a protocol subsidy, and the subsidy was already crowded.</p>
   <p>This page covers what was built, how I tried not to fool myself, what was tested and killed (with numbers), and the one small effect that survived. Numbers are paper or backtest unless they're marked live.</p>
 
   <div class="stats">
@@ -96,8 +96,8 @@
 
   <section>
     <h2>What it was</h2>
-    <p class="meta">solo · ~1 month · AI-agent-assisted</p>
-    <p>A one-person research programme. AI coding agents (Claude Code, and later OpenAI Codex as an independent auditor) wrote and ran most of the code, analysis and infrastructure. I set the questions and the rules, and made every decision that touched real money. The agents worked under rails: research was paper-only, agents never held keys or signed transactions, and any live change was my click.</p>
+    <p class="meta">solo · Sep–Oct 2026</p>
+    <p>A one-person research programme. I set the questions and the rules, and made every decision that touched real money. Everything automated ran under rails: research was paper-only, no automated process held keys or signed transactions, and any live change was my click.</p>
     <p>The target market was pump.fun, where new tokens start on a bonding curve, and PumpSwap, the exchange pool they "graduate" into. Roughly 1,000 tokens graduate a day. In about a third of them, one wallet buys most of the new pool within two seconds. The starting idea was simple: follow those buyers.</p>
   </section>
 
