@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apex — research write-up — Charlie Wuytack</title>
+<meta name="description" content="A month-long, AI-agent-assisted on-chain trading research programme: what was built, what was tested, what was killed, and the one small thing that survived.">
+<link rel="canonical" href="https://charliewytk.github.io/apex/">
+<link rel="icon" href="../media/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://charliewytk.github.io/apex/">
+<meta property="og:title" content="Apex — a month of AI-assisted trading research, written up honestly">
+<meta property="og:description" content="Pre-registration, e-processes, a chain-exact live ledger, ~3,750 counted trials and the kills that came out of them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+  :root {
+    --ink:   #22201d;
+    --ink2:  #3b3833;
+    --muted: #5f5b52;
+    --faint: #6f6a60;
+    --rule:  rgba(34,32,29,0.16);
+    --accent: #a9331f;
+    --good:  #3f6b3a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: #f7f7ef; color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.6; font-size: 16.5px; -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: #e4e2d4; color: var(--ink); }
+  .page { max-width: 620px; margin: 0 auto; padding: 56px 18px 100px; }
+  a { color: var(--ink); text-decoration: none; border-bottom: 1px solid #c9c6b4; }
+  a:hover { color: var(--accent); border-color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+  h1 { font-family: "Lora", Georgia, serif; font-weight: 600; font-size: 2.1rem; line-height: 1.2; margin: 14px 0; }
+  h2 { font-family: "Lora", Georgia, serif; font-weight: 600; font-size: 1.6rem; margin: 0 0 6px; }
+  h3 { font-size: 1rem; margin: 30px 0 8px; }
+  .meta { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.72rem; letter-spacing: 0.06em; color: var(--faint); margin: 0 0 16px; }
+  p { margin: 0 0 15px; text-wrap: pretty; }
+  .lede { font-family: "Lora", Georgia, serif; font-style: italic; font-size: 1.2rem; color: var(--ink2); text-wrap: balance; }
+  ul, ol { margin: 0 0 15px; padding-left: 22px; }
+  li { margin-bottom: 9px; text-wrap: pretty; }
+  .back { font-size: 0.88rem; }
+  section { margin-top: 64px; padding-top: 30px; border-top: 1px solid var(--rule); }
+  .tw { overflow-x: auto; margin: 18px 0; border: 1px solid #e2dfd0; border-radius: 8px; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.87rem; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid #e2dfd0; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  th { background: #efeee4; font-weight: 600; color: var(--ink2); }
+  td.num { font-variant-numeric: tabular-nums; white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 0.82rem; }
+  td.kill { color: var(--accent); font-weight: 600; white-space: nowrap; }
+  td.alive { color: var(--good); font-weight: 600; white-space: nowrap; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin: 22px 0; }
+  .stats div { border: 1px solid #e2dfd0; border-radius: 8px; padding: 12px; background: #fbfbf5; }
+  .stats b { display: block; font-family: "Lora", Georgia, serif; font-size: 1.45rem; font-weight: 600; }
+  .stats span { font-size: 0.8rem; color: var(--muted); line-height: 1.35; display: block; }
+  .figure { margin: 22px 0; padding: 16px; border: 1px solid #e2dfd0; border-radius: 8px; background: #fbfbf5; }
+  .cap { font-size: 0.85rem; font-weight: 600; color: var(--ink2); margin: 0 0 12px; }
+  .fig-note { font-size: 0.8rem; color: var(--muted); margin: 12px 0 0; }
+  .bars { display: flex; flex-direction: column; gap: 6px; }
+  .bar { display: grid; grid-template-columns: 82px 1fr 52px; align-items: center; gap: 8px; font-size: 0.8rem; }
+  .bar .track { height: 14px; background: #ecebe0; border-radius: 3px; overflow: hidden; }
+  .bar .fill { height: 100%; background: var(--ink); }
+  .bar .fill.null { background: var(--accent); }
+  .bar .v { font-family: ui-monospace, Menlo, monospace; font-variant-numeric: tabular-nums; text-align: right; }
+  .flow { display: flex; flex-wrap: wrap; gap: 6px; align-items: stretch; font-size: 0.8rem; }
+  .flow div { flex: 1 1 120px; border: 1px solid #d6d3c2; border-radius: 6px; padding: 8px; background: #fff; }
+  .flow b { display: block; font-size: 0.82rem; }
+  .ci { position: relative; height: 40px; margin: 6px 0 2px; }
+  .ci .axis { position: absolute; top: 20px; left: 0; right: 0; height: 1px; background: #c9c6b4; }
+  .ci .zero { position: absolute; top: 6px; bottom: 6px; width: 1px; background: var(--accent); }
+  .ci .rng { position: absolute; top: 16px; height: 9px; background: rgba(34,32,29,0.35); border-radius: 2px; }
+  .ci .pt { position: absolute; top: 13px; width: 3px; height: 15px; background: var(--ink); }
+  .ci-row { font-size: 0.8rem; margin-bottom: 10px; }
+  .note { font-size: 0.9rem; color: var(--muted); }
+  footer { margin-top: 80px; padding-top: 26px; border-top: 1px solid #e2dfd0; color: var(--muted); font-size: 0.88rem; }
+  @media (max-width: 480px) { h1 { font-size: 1.75rem; } .bar { grid-template-columns: 70px 1fr 46px; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <p class="back"><a href="../">← charliewytk.github.io</a></p>
+  <p class="meta">research write-up · sep–oct 2026 · programme closed</p>
+  <h1>Apex: a month of AI-assisted on-chain trading research</h1>
+  <p class="lede">I spent about a month trying to find an automated trading edge on Solana's newest tokens, with AI coding agents doing most of the engineering. The most useful result was an explanation. The edge I thought I had was a protocol subsidy, and the subsidy was already crowded.</p>
+  <p>This page covers what was built, how I tried not to fool myself, what was tested and killed (with numbers), and the one small effect that survived. Numbers are paper or backtest unless they're marked live.</p>
+
+  <div class="stats">
+    <div><b>~3,750</b><span>counted trials in the register, plus 2.8M grid cells</span></div>
+    <div><b>0</b><span>survivors after Benjamini–Yekutieli correction</span></div>
+    <div><b>267</b><span>live trades, ledger reconciled to the lamport</span></div>
+    <div><b>1</b><span>small surviving effect, off-chain, paper only</span></div>
+  </div>
+
+  <section>
+    <h2>What it was</h2>
+    <p class="meta">solo · ~1 month · AI-agent-assisted</p>
+    <p>A one-person research programme. AI coding agents (Claude Code, and later OpenAI Codex as an independent auditor) wrote and ran most of the code, analysis and infrastructure. I set the questions and the rules, and made every decision that touched real money. The agents worked under rails: research was paper-only, agents never held keys or signed transactions, and any live change was my click.</p>
+    <p>The target market was pump.fun, where new tokens start on a bonding curve, and PumpSwap, the exchange pool they "graduate" into. Roughly 1,000 tokens graduate a day. In about a third of them, one wallet buys most of the new pool within two seconds. The starting idea was simple: follow those buyers.</p>
+  </section>
+
+  <section>
+    <h2>The live execution study</h2>
+    <p class="meta">267 live trades · real money at small size</p>
+    <p>The whale-follow strategy ran live at small size for six days. Rather than its returns, the useful outputs are the measurements of execution and accounting, which paper trading can't give you:</p>
+    <ul>
+      <li><b>A chain-exact ledger.</b> All 267 round trips were rebuilt from on-chain balances alone and reconciled to the bot's own books with zero lamport residual (a lamport is a billionth of a SOL). Every entry and every exit landed.</li>
+      <li><b>Costs against the model.</b> Measured round-trip cost came in <b>+2.36 bps</b> above the cost model (CI −16.9 to +13.1), so the model was kept and a 153 bps safety margin was added on top. Mark-outs showed no adverse selection on buys. The round-trip cost <i>is</i> the pool fee.</li>
+      <li><b>Latency.</b> Median send-to-land was 1 slot (under half a second), and the median true exit lag was 1.7 slots. The live-minus-paper execution gap was 0.1–0.24% of the trade size. Latency was not what decided outcomes.</li>
+      <li><b>Governance lessons.</b> Trade size was stepped up faster than the evidence allowed, and new books went live on a small fraction of their planned paper sample. That led to a written capital ladder: a book only doubles when the upper confidence bound on its blow-up rate is below break-even.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>The Boost discovery</h2>
+    <p class="meta">why the whale edge was a subsidy</p>
+    <p>Since July 2026, every graduating token gets a protocol-funded buyback called Boost. A crank buys the token every 12 seconds for about the first 5½ minutes, pays no pool fee and burns what it buys. In 99.6% of standard graduations it spends exactly 17.58 SOL, taken from the pool's own reserve.</p>
+    <div class="figure">
+      <p class="cap">Where the "whale drift" came from</p>
+      <div class="flow">
+        <div><b>Graduation</b>Pool is seeded. A whale may buy most of it.</div>
+        <div><b>Boost crank</b>~29 fee-free buys over ~340 s, 17.58 SOL in total.</div>
+        <div><b>Price drifts up</b>This looked like "following the whale".</div>
+        <div><b>~900 wallets</b>already trade the subsidy. They absorb ~80% of the lift.</div>
+      </div>
+      <p class="fig-note">Replay counterfactual over 8,117 pools, holding other flow fixed. Removing Boost took the follower rule from about +0.09 to −0.02 SOL per trade, so ~124% of the in-sample edge. Boost was also about a quarter of the whales' own realised profit.</p>
+    </div>
+    <p>So the in-sample edge wasn't skill in picking whales. It was a scheduled, mechanical buyer, and a crowded one. Buying the subsidy directly, without the whale filter, lost about 0.02 SOL per 0.25 SOL trade after costs. A census of the whole market over 30 days found the same picture: the large buyers were the only consistent winners, and no group you could join as a follower kept an edge.</p>
+    <p>Once the mechanism was named, 11 of 35 "promising" variants were closed in one pass as explained by Boost. Twenty more were closed because they couldn't reach statistical power before the deadline.</p>
+  </section>
+
+  <section>
+    <h2>Methodology</h2>
+    <p class="meta">how it tried not to fool itself</p>
+    <p>An audit partway through found that many earlier "GREEN" and "PASS" labels only meant "the software ran". Of 276 such claims, 53 were later falsified. The programme was rebuilt around five ideas.</p>
+
+    <h3>1. Pre-registration and seals</h3>
+    <p>Each forward test is written down before any outcome exists. The pre-registration, the scorer and the scorer's full import tree are hashed with SHA-256. The first sealing tool failed 8 of 8 tamper tests, and the rebuilt one passes 29 of 29. A separate reviewer approves every seal, and sealed files are never edited. Amendments are only allowed at n = 0.</p>
+
+    <h3>2. E-processes for forward tests</h3>
+    <p>Forward books are scored with e-processes, which stay valid however often you look, so there's no fixed sample size to wait for. Betting per trade turned out to be invalid. On a day-block null it gave about 11% false GREENs, because trades on the same day by the same wallet aren't independent. Betting on wallet-day clusters brought that down to about 0.2–0.5%. A GREEN also needs a blow-up bound below break-even, and mirror processes watch for futility and catastrophe.</p>
+
+    <h3>3. One cost model, measured</h3>
+    <p>Costs come from live legs, not assumptions: a 25-tier fee schedule that matches 99%+ of 17M historical swaps, plus measured network and tip costs. The kill bar is the measured cost model, plus daily overhead, plus 153 bps. A 500 bps stress test is reported alongside.</p>
+
+    <h3>4. Multiple-testing accounting</h3>
+    <p>Every specification ever scored is a row in a trial register, including bug-killed ones and parameter variants. Three versions of one idea count as three tests. At about 3,750 trials, Benjamini–Yekutieli left zero survivors. The looser Benjamini–Hochberg flagged 99 hits, and 92 of those turned out to be copies of a single idea. A control library (random-skip, drop-top-k operators, day-block bootstrap) showed only 28 of 122 "whales" were independent operators.</p>
+
+    <h3>5. Testing the test: the validation gate</h3>
+    <p>The automated idea pipeline's validation gate was run on synthetic data with a planted +3% edge. It found the edge <b>1 time in 200</b>. Most of the gates were testing the absolute profit <i>level</i>, which is dominated by day-and-operator noise, rather than the <i>edge</i> over a control. A few paired tests were also too permissive on nulls.</p>
+    <p>Gate v4 separates an effect gate (exact randomisation within time × operator strata, beaten placebo labels, beaten shuffled features) from the economics checks. It was pre-registered before one final run of 500 replications per arm:</p>
+    <div class="figure">
+      <p class="cap">Gate v4: share of 500 synthetic runs passing the effect gate</p>
+      <div class="bars" role="img" aria-label="Null 3.2%, drift without skill 3.6%, placebo 3.4%, +1% 12.8%, +2% 35.2%, +3% 76.2%, +4% 92.4%, +5% 97.8%">
+        <div class="bar"><span>no skill</span><span class="track"><span class="fill null" style="display:block;width:3.2%"></span></span><span class="v">3.2%</span></div>
+        <div class="bar"><span>drift only</span><span class="track"><span class="fill null" style="display:block;width:3.6%"></span></span><span class="v">3.6%</span></div>
+        <div class="bar"><span>placebo</span><span class="track"><span class="fill null" style="display:block;width:3.4%"></span></span><span class="v">3.4%</span></div>
+        <div class="bar"><span>+1% edge</span><span class="track"><span class="fill" style="display:block;width:12.8%"></span></span><span class="v">12.8%</span></div>
+        <div class="bar"><span>+2% edge</span><span class="track"><span class="fill" style="display:block;width:35.2%"></span></span><span class="v">35.2%</span></div>
+        <div class="bar"><span>+3% edge</span><span class="track"><span class="fill" style="display:block;width:76.2%"></span></span><span class="v">76.2%</span></div>
+        <div class="bar"><span>+4% edge</span><span class="track"><span class="fill" style="display:block;width:92.4%"></span></span><span class="v">92.4%</span></div>
+        <div class="bar"><span>+5% edge</span><span class="track"><span class="fill" style="display:block;width:97.8%"></span></span><span class="v">97.8%</span></div>
+      </div>
+      <p class="fig-note">Red: false-positive rate on no-skill worlds, at most 3.6%. Black: power at a planted edge per trade. 76% power at +3% narrowly missed the pre-registered 80% target, and I report it as a fail. Absolute profit still can't be certified at this sample size; that job is left to forward e-processes.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Tested and killed</h2>
+    <p class="meta">a selection · all paper unless noted</p>
+    <div class="tw"><table>
+      <thead><tr><th>Idea</th><th>Result</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td>Following whale buyouts (and ~40 variants)</td><td>Edge explained by Boost; 0 of 35 candidates reached GREEN</td><td class="kill">killed</td></tr>
+        <tr><td>Completing stalled bonding curves (15–50 SOL)</td><td>Headline +13.8 SOL/cycle on 33 resolved rows. Intention-to-treat on all 43 events: <span class="num">+3.3, CI90 −3.8 to +10.8</span>. Spans zero, and the regime changed on the day the forward test was sealed</td><td class="kill">killed</td></tr>
+        <tr><td>Custom-pair parent coins (forced quote-token demand)</td><td>Mechanism real, but locked demand is a median 0.7% of the parent's daily volume, and per-trade impact is ≤ 2% against a ≥ 3% cost bar</td><td class="kill">killed</td></tr>
+        <tr><td>US gap fade as a UK spread bet</td><td>+1.74%/trade on assumed costs becomes <span class="num">−0.15%/trade (CI90 −1.3 to +0.9)</span> on measured opening spreads. 2026 negative in every variant</td><td class="kill">killed</td></tr>
+        <tr><td>Betfair: lay drifting favourites</td><td>One-shot confirm on 39,788 bets: <span class="num">−0.23% per £ liability, CI95 −0.43 to −0.02</span></td><td class="kill">killed</td></tr>
+        <tr><td>Resting bids at −20/35/50% wicks</td><td>144 of 144 cells negative even with ideal fills</td><td class="kill">killed</td></tr>
+        <tr><td>Wallet "skill" persistence</td><td>Clean split at null; all 12 derived rules negative</td><td class="kill">killed</td></tr>
+        <tr><td>LLM autoresearch loop</td><td>Its "best" rule was the base rule with the trade size doubled three times. The metric rewarded scale, not edge</td><td class="kill">killed</td></tr>
+        <tr><td>~25 other markets in two days</td><td>Other launchpads and chains, liquidations, token unlocks, PUMP buyback, LP provision, NFTs, CS2 skins, Sorare, 0DTE options, fear-and-greed timing, collectibles, expired domains. None cleared costs, access or data limits</td><td class="kill">killed</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Ideas died for five reasons: fees (1.25% a side on new pools), speed (same-slot races against co-located bots), crowding, data limits, and access.</p>
+
+    <div class="figure">
+      <p class="cap">Three headline numbers before and after honest accounting (90% CIs)</p>
+      <div class="ci-row">Curve completion, SOL/cycle: resolved-only vs intention-to-treat
+        <div class="ci" aria-label="Resolved only +13.8 CI +7.0 to +20.7; ITT +3.3 CI −3.8 to +10.8">
+          <span class="axis"></span><span class="zero" style="left:20%"></span>
+          <span class="rng" style="left:34%;width:27.4%;top:8px;background:rgba(34,32,29,0.18)"></span><span class="pt" style="left:47.6%;top:5px"></span>
+          <span class="rng" style="left:12.4%;width:29.2%;top:24px"></span><span class="pt" style="left:26.6%;top:21px"></span>
+        </div>
+      </div>
+      <div class="ci-row">US gap fade, %/trade: factory costs vs measured costs
+        <div class="ci" aria-label="Factory +1.74 CI +0.61 to +2.83; measured −0.15 CI −1.29 to +0.95">
+          <span class="axis"></span><span class="zero" style="left:40%"></span>
+          <span class="rng" style="left:46.1%;width:22.2%;top:8px;background:rgba(34,32,29,0.18)"></span><span class="pt" style="left:57.4%;top:5px"></span>
+          <span class="rng" style="left:27.1%;width:22.4%;top:24px"></span><span class="pt" style="left:38.5%;top:21px"></span>
+        </div>
+      </div>
+      <p class="fig-note">Pale bar: the number as first reported. Dark bar: the same events after intention-to-treat or real costs. The red line is zero.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>What survived</h2>
+    <p class="meta">uk investment-trust tenders · paper only</p>
+    <p>Closed-ended investment trusts sometimes offer to buy back part of their shares at close to net asset value, while the shares trade at a discount. Buying five trading days before the last buy date, tendering the basic entitlement and selling the remainder after the result gave:</p>
+    <div class="stats">
+      <div><b>+2.0%</b><span>mean net return per event, after stamp duty, spread and fees</span></div>
+      <div><b>+0.9 to +3.4%</b><span>90% CI, month-clustered bootstrap</span></div>
+      <div><b>51</b><span>priced events, Jul 2023 to Oct 2026</span></div>
+    </div>
+    <p>The method and event list were frozen before any price was loaded. Caveats, stated plainly:</p>
+    <ul>
+      <li>Only 51 of 83 qualifying events could be priced. The unpriced ones lean toward fully exited vehicles, which is survivorship risk.</li>
+      <li>The gain is concentrated in large-fill events. Small-entitlement tenders are roughly zero after costs, and 2026 is the weakest year (median −0.5%).</li>
+      <li>Drop-top-3 falls to +0.9%. Distressed compulsory redemptions carry the tail, with a worst case of −8.1%.</li>
+      <li>It's small. At the planning rule (quote 25% of the in-sample mean) it's about 0.5% per event, at roughly one or two events a month, with capacity capped around £50k. This is a paper-forward candidate, not a result.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Engineering</h2>
+    <p class="meta">python · gRPC · clickhouse · on-chain decoders</p>
+    <ul>
+      <li><b>Recorders and archive.</b> gRPC stream recorders capturing every graduation and pool tick, a 98M-row local archive and a ClickHouse mirror. The export was rebuilt as a staged partition swap after the original drop-then-insert left production days empty when an insert timed out.</li>
+      <li><b>Decoders and the quote fuzzer.</b> An exact-integer mirror of PumpSwap pricing, ported from the official SDK, with signed virtual reserves (they can go negative since a 30 September upgrade, which quietly broke tools that clamped them at zero) and the full fee-tier schedule. A fuzzer checks it against a public aggregator's quotes. A review of 11 public repos found none that handled the pool layout and fees correctly.</li>
+      <li><b>Mechanism-change watcher.</b> Watches the programs for upgrades and pauses anything live when the mechanism changes. On 8 October it caught a redeploy that introduced "synthetic" migrations, which showed that a forward test sealed 23 minutes later was entirely in a new regime. That test's verdict was downgraded before it produced one.</li>
+      <li><b>Multi-model adversarial review.</b> Claude built and sealed; Codex attacked. Within 40 minutes of three seals, Codex showed 12 defects with synthetic probes against the real code. One was future rows rewriting a decision-time price. The independent reviewer blocked all three seals until they were rebuilt with 25 strict expected-failure probes. The defects turned out to be latent in history (0 eligibility flips), but forward scorers had been exposed.</li>
+      <li><b>Leak tooling.</b> A look-ahead lint (15 static rules plus a truncation probe) across 160 scorers, a point-in-time column registry, and a harness that refuses to read holdouts.</li>
+    </ul>
+    <h3>Infrastructure lessons</h3>
+    <ul>
+      <li>A 24 GB laptop running recorders, agents and backtests at once makes memory the binding constraint. Scorers silently skipped under swap pressure.</li>
+      <li>A stale lock left the forward-test loop idle for about 21 hours, and nothing alerted. The fix was a lease lock with a heartbeat and notifications.</li>
+      <li>Moving data to cloud storage turned files into online-only placeholders. Thousands of factory hypotheses were then "closed" by I/O errors, and those errors were being counted as trials.</li>
+      <li>Data availability, not analysis, was the limit. Tapes stopped 6½ minutes after graduation, and the stream captured only 48–80% of migrations.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Lessons</h2>
+    <ul>
+      <li><b>Name the mechanism before you size.</b> One afternoon spent on <i>why</i> the drift existed was worth more than weeks of variants on <i>whether</i> it did.</li>
+      <li><b>Measure the instrument.</b> A validation gate with 0.5% power, a sealer that failed tamper tests and an e-process with an 11% false-positive rate all looked fine until they were tested on synthetic worlds.</li>
+      <li><b>Forward results shrink.</b> Forward effects kept a median of 0.23× their in-sample size, which is why plans quote 25%.</li>
+      <li><b>Small true edges are hard to see.</b> At available sample sizes, only effects of about +2% per trade or more were detectable before the deadline.</li>
+      <li><b>Agents need adversaries.</b> AI agents are fast, tireless builders and confident reporters. A second model whose only job is to break the first one's work caught what self-review missed.</li>
+      <li><b>Write the stop rule early.</b> The programme had cash, time and calendar caps written in advance, and it kept to them when they fired.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>Not investment advice. Nothing here is an offer of a product or signal. Paper and backtest figures are labelled as such; the live trades were a small-size execution study. Related: <a href="../research.html">research notes</a> · <a href="../kill-log/">kill log</a> · <a href="../essays/friction-sized-edges.html">friction-sized edges</a>.</p>
+  </footer>
+</div>
+</body>
+</html>
