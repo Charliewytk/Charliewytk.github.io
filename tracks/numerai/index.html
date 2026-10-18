@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Numerai · Track 09 · Charlie Wuytack</title>
+<meta name="description" content="Classic, Signals and Crypto models submitting on schedule, an honest audit, and a fix for a deadline that moves every week.">
+<link rel="icon" href="../../media/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://charliewytk.github.io/tracks/numerai/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://charliewytk.github.io/tracks/numerai/">
+<meta property="og:title" content="Numerai · Track 09 · Charlie Wuytack">
+<meta property="og:description" content="Classic, Signals and Crypto models submitting on schedule, an honest audit, and a fix for a deadline that moves every week.">
+<meta property="og:image" content="https://charliewytk.github.io/media/og/numerai.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://charliewytk.github.io/media/og/numerai.png">
+<meta name="theme-color" content="#0c0f1c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&amp;family=Fraunces:ital,opsz,wght@1,9..144,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../../tracks/track.css">
+</head>
+<body style="--bg:#0c0f1c;--acc:#8fb0ff">
+<div class="grain" aria-hidden="true"></div>
+
+<header class="wrap top">
+  <a href="../../">← Side A</a>
+  <nav><a href="../">Track 09 / 12</a><a href="../../work/">All work</a><a href="https://wuytackcharlie.gumroad.com/l/mergermonitor">Merger Monitor £5/mo</a></nav>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <p class="kick">Track 09 · tournament ML</p>
+      <h1>Numerai</h1>
+      <p class="sub">The audit, and a deadline that moves.</p>
+      <p class="lede">Three tournaments submitting on schedule. The model Numerai runs is byte-identical to the one in my repo, and it reproduces a live round's ranks exactly. After that, the only question is whether it's any good.</p>
+    </div>
+    <div class="disc" aria-hidden="true"><div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg><small>TRACK 09</small></div></div>
+  </div>
+
+  <div class="wrap"><div class="facts"><div><b>1.47</b><span>Sharpe of CORR60 over 93 held-out eras, positive in 95% of them</span></div><div><b>1.27</b><span>Sharpe of the payout score out of sample, with no losing quarter</span></div><div><b>2</b><span>live rounds resolved so far. Too few to stake on; the policy asks for ten</span></div></div></div>
+
+  <div class="wrap body">
+    <div class="story">
+    <section><h2>Challengers and <em>the gate</em></h2>
+      <p>Eleven challengers were tested against the champion. The best, a blend with Numerai's benchmark, added 12% to the payout score but had a Holm-adjusted p of 0.14. It failed the gate and runs as an unstaked live A/B test instead.</p></section>
+    <section><h2>Survivorship, <em>measured</em></h2>
+      <p>On Signals, scoring only the names I could map inflated correlation by <b>+0.0109</b> (t 3.5). The fix was a point-in-time ticker map built from SEC fails-to-deliver data, which recovers 88% of dead names against 31% for the usual mapping service.</p></section>
+    <section><h2>The deadline that <em>moves</em></h2>
+      <p>Every Crypto submission was silently ineligible for months: my log recorded success while the platform recorded late. The fix fires eight times across summer and winter time, takes a lock, checks whether the round is already in and refuses stale data. Uploads now land at <b>12:21:50Z, 41 minutes inside</b> a deadline that drifts by about three minutes. Round 1341 was the first on time.</p>
+      <div class="cta"><a class="btn solid" href="../../work/#numerai">Full case study</a></div></section>
+    </div>
+    <dl class="liner"><dt>Status</dt><dd>Live submissions · unstaked</dd><dt>Model</dt><dd>LightGBM, 2,000 trees, all 3,555 features, target ender_60</dd></dl>
+  </div>
+
+  <div class="wrap"></div>
+</main>
+
+<a class="next wrap" href="../competitions/"><small>Next · track 10</small><b>Competitions →</b></a>
+<footer class="wrap foot"><span>Charlie Wuytack · <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></span><span>Research and engineering, not financial advice. Nothing here is trading live at a profit.</span></footer>
+<script>
+  // opened straight from Side A? Back takes you to where you were on it, not to the top
+  (function () {
+    try { var ref = new URL(document.referrer); } catch (e) { return; }
+    if (ref.origin !== location.origin || history.length < 2) return;
+    var home = new URL('../../', location.href).pathname;
+    if (ref.pathname !== home && ref.pathname !== home + 'index.html') return;
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a');
+      if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+      var p = new URL(a.href, location.href).pathname;
+      if (p === home || p === home + 'index.html') { e.preventDefault(); history.back(); }
+    });
+  })();
+</script>
+</body>
+</html>

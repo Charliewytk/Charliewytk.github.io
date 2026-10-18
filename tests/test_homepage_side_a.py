@@ -84,8 +84,24 @@ class SideAHomepage(unittest.TestCase):
 
     def test_contact_and_share_card_kept(self) -> None:
         self.assertIn('href="mailto:charlie@wuytack.net"', HOMEPAGE)
-        self.assertIn('<meta property="og:image" content="https://charliewytk.github.io/media/preview.png">', HOMEPAGE)
+        self.assertIn('<meta property="og:image" content="https://charliewytk.github.io/media/og/side-a.png">', HOMEPAGE)
+        self.assertTrue((ROOT / "media" / "og" / "side-a.png").is_file())
         self.assertIn("<title>Charlie Wuytack</title>", HOMEPAGE)
+
+    def test_side_b_scene_lists_tracks_08_to_12(self) -> None:
+        block = re.search(r'<section class="scene" data-word="Side B".*?</section>', HOMEPAGE, re.S)
+        self.assertIsNotNone(block)
+        hrefs = re.findall(r'href="(tracks/[a-z-]+/)"', block.group(0))
+        self.assertEqual(len(hrefs), 5)
+        self.assertIn("Two sides, 12 tracks", HOMEPAGE)
+
+    def test_old_anchor_links_forward_to_work(self) -> None:
+        self.assertIn("location.replace('work/#' + id)", HOMEPAGE)
+        self.assertIn("addEventListener('hashchange', go)", HOMEPAGE)
+        work = (ROOT / "work" / "index.html").read_text(encoding="utf-8")
+        for anchor in ("merger", "solana", "research", "doorly", "powerleash", "abyss"):
+            self.assertIn(f"'{anchor}'", HOMEPAGE)
+            self.assertIn(f'id="{anchor}"', work)
 
     def test_three_is_pinned(self) -> None:
         self.assertIn("https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js", HOMEPAGE)

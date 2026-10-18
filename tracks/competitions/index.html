@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Competitions · Track 10 · Charlie Wuytack</title>
+<meta name="description" content="Quantiacs Q25 selection, Gold on WorldQuant BRAIN, and a Structural Break leaderboard that taught me to read deltas, not levels.">
+<link rel="icon" href="../../media/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://charliewytk.github.io/tracks/competitions/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://charliewytk.github.io/tracks/competitions/">
+<meta property="og:title" content="Competitions · Track 10 · Charlie Wuytack">
+<meta property="og:description" content="Quantiacs Q25 selection, Gold on WorldQuant BRAIN, and a Structural Break leaderboard that taught me to read deltas, not levels.">
+<meta property="og:image" content="https://charliewytk.github.io/media/og/competitions.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://charliewytk.github.io/media/og/competitions.png">
+<meta name="theme-color" content="#16100a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&amp;family=Fraunces:ital,opsz,wght@1,9..144,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../../tracks/track.css">
+</head>
+<body style="--bg:#16100a;--acc:#e0a640">
+<div class="grain" aria-hidden="true"></div>
+
+<header class="wrap top">
+  <a href="../../">← Side A</a>
+  <nav><a href="../">Track 10 / 12</a><a href="../../work/">All work</a><a href="https://wuytackcharlie.gumroad.com/l/mergermonitor">Merger Monitor £5/mo</a></nav>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <p class="kick">Track 10 · Quantiacs, BRAIN, Structural Break</p>
+      <h1>Competitions</h1>
+      <p class="sub">Read deltas, not levels.</p>
+      <p class="lede">Three platforms, three lessons about measurement. One strategy was selected to trade live, one sweep reached Gold, and one leaderboard taught me that a holdout matching live in level says nothing about improvements.</p>
+    </div>
+    <div class="disc" aria-hidden="true"><div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg><small>TRACK 10</small></div></div>
+  </div>
+
+  <div class="wrap"><div class="facts"><div><b>1 of 15</b><span>strategies selected to trade live in the Quantiacs Q25 contest</span></div><div><b>Gold</b><span>on WorldQuant BRAIN, with about 14 alphas live</span></div><div><b>−0.0003</b><span>live change from two improvements that gained +0.0144 on my holdout</span></div></div></div>
+
+  <div class="wrap body">
+    <div class="story">
+    <section><h2>Quantiacs <em>Q25</em></h2>
+      <p>A defended dual-momentum strategy, selected to trade 1 Oct – 31 Jan. In-sample Sharpe 1.22, maximum drawdown 23.6%, and the platform's drawdown matched my from-source engine exactly.</p>
+      <div class="bars">
+        <div><span>£100 in 2014</span><i style="--w:15%"><b>100</b></i></div>
+        <div><span>2017</span><i style="--w:43%"><b>284</b></i></div>
+        <div><span>2021</span><i style="--w:72%"><b>469</b></i></div>
+        <div><span>2025</span><i style="--w:100%;max-width:calc(100% - 50px)"><b>654</b></i></div>
+      </div>
+      <p class="note">Backtest, compounded through annual net returns, slippage included. A best-of-100 search on the same data manufactured a fake +0.30 of Sharpe against a detection floor of 0.68, which is why I stopped tuning it.</p></section>
+    <section><h2>WorldQuant <em>BRAIN</em></h2>
+      <p>Three days stuck at zero accepted submissions. It broke when I switched from single expressions to two-term combinations: correlation fell from 0.79 to 0.51 and fitness rose from 1.04 to 1.68. Gold followed, from a 416-simulation sweep. The components that made it work had each failed on their own.</p></section>
+    <section><h2>Structural <em>Break</em></h2>
+      <p>Over three shipped models my holdout climbed from 57.31 to 58.75 while the live score went to 57.43. 263rd of 1,332. Levels agreeing says nothing about whether improvements transfer.</p>
+      <div class="cta"><a class="btn solid" href="../../work/#competitions">Full case study</a></div></section>
+    </div>
+    <dl class="liner"><dt>Quantiacs Q25</dt><dd>Selected · trades 1 Oct – 31 Jan</dd><dt>WorldQuant BRAIN</dt><dd>Gold · ~14 alphas live</dd><dt>CrunchDAO</dt><dd>Structural Break 263rd of 1,332; DataCrunch around 15th of 13,534</dd></dl>
+  </div>
+
+  <div class="wrap"></div>
+</main>
+
+<a class="next wrap" href="../chess-exchange/"><small>Next · track 11</small><b>Chess Exchange →</b></a>
+<footer class="wrap foot"><span>Charlie Wuytack · <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></span><span>Research and engineering, not financial advice. Nothing here is trading live at a profit.</span></footer>
+<script>
+  // opened straight from Side A? Back takes you to where you were on it, not to the top
+  (function () {
+    try { var ref = new URL(document.referrer); } catch (e) { return; }
+    if (ref.origin !== location.origin || history.length < 2) return;
+    var home = new URL('../../', location.href).pathname;
+    if (ref.pathname !== home && ref.pathname !== home + 'index.html') return;
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a');
+      if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+      var p = new URL(a.href, location.href).pathname;
+      if (p === home || p === home + 'index.html') { e.preventDefault(); history.back(); }
+    });
+  })();
+</script>
+</body>
+</html>
