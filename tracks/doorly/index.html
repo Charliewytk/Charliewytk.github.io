@@ -63,6 +63,7 @@
       <figcaption>Demo fares, labelled as such in the app.</figcaption></figure></div>
 </main>
 
+<a class="prev wrap" href="../merger-monitor/"><small>← Previous · track 04</small> Merger Monitor</a>
 <a class="next wrap" href="../powerleash/"><small>Next · track 06</small><b>PowerLeash →</b></a>
 <footer class="wrap foot"><span>Charlie Wuytack · <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></span><span>Research and engineering, not financial advice. Nothing here is trading live at a profit.</span></footer>
 <script>
@@ -78,6 +79,20 @@
       var p = new URL(a.href, location.href).pathname;
       if (p === home || p === home + 'index.html') { e.preventDefault(); history.back(); }
     });
+  })();
+  // flip through tracks: arrow keys, or swipe sideways on a phone
+  (function () {
+    function go(dir) { var a = document.querySelector(dir < 0 ? 'a.prev' : 'a.next'); if (a) a.click(); }
+    document.addEventListener('keydown', function (e) {
+      if (e.altKey || e.metaKey || e.ctrlKey || /input|textarea|select/i.test(e.target.tagName)) return;
+      if (e.key === 'ArrowRight') go(1); else if (e.key === 'ArrowLeft') go(-1);
+    });
+    var x0 = null, y0 = 0;
+    addEventListener('touchstart', function (e) { var t = e.touches[0]; x0 = t.clientX; y0 = t.clientY; }, { passive: true });
+    addEventListener('touchend', function (e) {
+      if (x0 === null) return; var t = e.changedTouches[0], dx = t.clientX - x0, dy = t.clientY - y0; x0 = null;
+      if (Math.abs(dx) > 80 && Math.abs(dx) > Math.abs(dy) * 1.8) go(dx < 0 ? 1 : -1);
+    }, { passive: true });
   })();
 </script>
 </body>

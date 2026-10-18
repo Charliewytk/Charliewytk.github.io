@@ -114,6 +114,11 @@ h1 { margin: 0; font: 800 clamp(56px, 10vw, 150px)/0.86 var(--display); letter-s
 .btn.solid:hover { background: var(--ink); border-color: var(--ink); }
 .note { margin: 12px 0 0; font-size: 13px; color: var(--dim); }
 
+/* previous track: a quiet line above the big next link */
+.prev { display: block; padding-block: 22px; border-top: 1px solid var(--line); text-decoration: none; font: 800 22px/1.2 var(--display); letter-spacing: -0.02em; color: var(--dim); transition: color 0.2s ease; }
+.prev small { font: 500 12px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; margin-right: 8px; }
+.prev:hover { color: var(--ink); }
+
 /* next track */
 .next { display: block; padding-block: 60px 50px; border-top: 1px solid var(--line); text-decoration: none; }
 .next small { font: 500 12px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); }

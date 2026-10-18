@@ -75,6 +75,11 @@ class TrackPages(unittest.TestCase):
         for i, slug in enumerate(TRACKS):
             html = _page(slug).read_text(encoding="utf-8")
             self.assertIn(f"Track {i + 1:02d} / {len(TRACKS)}", html)
+            if i > 0:
+                self.assertIn(f'class="prev wrap" href="../{TRACKS[i - 1]}/"', html)
+            else:
+                self.assertIn('class="prev wrap" href="../../"', html)
+            self.assertIn("ArrowRight", html)
             if i + 1 < len(TRACKS):
                 self.assertIn(f'class="next wrap" href="../{TRACKS[i + 1]}/"', html)
             else:

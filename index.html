@@ -73,8 +73,19 @@
   header a { text-decoration: none; }
   header button { font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; background: none; border: 1px solid currentColor; padding: 6px 10px; cursor: pointer; }
   .meter { position: fixed; right: max(20px, env(safe-area-inset-right, 0px)); top: 50%; z-index: 10; transform: translateY(-50%); display: grid; gap: 8px; mix-blend-mode: difference; }
-  .meter i { width: 2px; height: 22px; background: rgba(255,255,255,0.3); }
-  .meter i.on { background: #fff; }
+  .meter button { position: relative; width: 22px; height: 26px; padding: 0; border: 0; background: none; cursor: pointer; }
+  .meter button::before { content: ""; position: absolute; right: 0; top: 2px; bottom: 2px; width: 2px; background: rgba(255,255,255,0.3); transition: background 0.2s ease, width 0.2s ease; }
+  .meter button:hover::before { width: 4px; background: rgba(255,255,255,0.7); }
+  .meter button.on::before { background: #fff; width: 4px; }
+  .meter button::after { content: attr(data-label); position: absolute; right: 14px; top: 50%; transform: translateY(-50%); white-space: nowrap; font: 500 11px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: #fff; opacity: 0; transition: opacity 0.2s ease; pointer-events: none; }
+  .meter button:hover::after, .meter button:focus-visible::after { opacity: 1; }
+  /* a record shows at once; the 3D one replaces it when ready (and it stays if WebGL can't run) */
+  .ph { position: fixed; left: 50%; top: 50%; z-index: 1; width: min(46vmin, 420px); aspect-ratio: 1; transform: translate(-50%, -50%) rotateX(58deg); border-radius: 50%; pointer-events: none;
+    background: radial-gradient(circle, #e0a640 0 17%, #0c0c0e 17.4% 18.6%, transparent 19%), repeating-radial-gradient(circle, #111113 0 2px, #1c1c20 2px 4px);
+    box-shadow: 0 40px 80px -30px rgba(0,0,0,0.8); transition: opacity 0.6s ease; }
+  .gl-ready .ph { opacity: 0; }
+  #player { display: inline-flex; gap: 0; }
+  #player button + button { border-left: 0; }
 
   main { position: relative; z-index: 2; }
   .scene { position: relative; min-height: 170vh; }
@@ -164,6 +175,7 @@
 <body>
 
 
+<div class="ph" aria-hidden="true"></div>
 <canvas id="gl" aria-hidden="true"></canvas>
 <div class="back" aria-hidden="true"><b id="backword">Side A</b></div>
 <div class="grain" aria-hidden="true"></div>
@@ -174,10 +186,12 @@
     <a href="tracks/">Tracklist</a>
     <a href="work/">All work</a>
     <a href="https://wuytackcharlie.gumroad.com/l/mergermonitor">Merger Monitor £5/mo</a>
-    <button type="button" id="sound" aria-pressed="false">Play the record</button>
+    <span id="player"><button type="button" id="sound" aria-pressed="false">Play the record</button><button type="button" id="nextRecord" aria-label="Change the record" title="Change the record">↻</button></span>
   </nav>
 </header>
-<div class="meter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<nav class="meter" aria-label="Scenes">
+  <button type="button" data-label="Intro" aria-label="Go to the intro"></button><button type="button" data-label="It's" aria-label="Go to: not just a record"></button><button type="button" data-label="ExeTix" aria-label="Go to ExeTix"></button><button type="button" data-label="Research" aria-label="Go to research"></button><button type="button" data-label="Solana" aria-label="Go to Solana"></button><button type="button" data-label="B-sides" aria-label="Go to the B-sides"></button><button type="button" data-label="Side B" aria-label="Go to side B"></button><button type="button" data-label="Contact" aria-label="Go to contact"></button>
+</nav>
 
 <main>
   <section class="scene" data-word="I'd rather build" aria-label="Intro">
@@ -311,7 +325,7 @@
   addEventListener('pagehide', function () { try { sessionStorage.setItem(KEY, String(scrollY)); } catch (e) {} });
 
   var scenes = [].slice.call(document.querySelectorAll('.scene'));
-  var meter = [].slice.call(document.querySelectorAll('.meter i'));
+  var meter = [].slice.call(document.querySelectorAll('.meter button'));
   var backword = document.getElementById('backword');
 
   // per scene: record pose, room colour, label colour, wireframe amount, big word under the record
@@ -440,6 +454,37 @@
   var tiles = [].slice.call(document.querySelectorAll('.tile'));
   var copies = scenes.map(function (s) { return s.querySelector('.copy'); });
   var lastLab = '', spin = 0, lastWord = null, lastScene = -1, lastBurst = -1, t0 = performance.now();
+  var glReady = false, beat = 0;
+  // bass level from the record player (0 when nothing is playing), eased so the light breathes
+  function listen() {
+    var level = 0;
+    if (analyser && audio && !audio.paused) { analyser.getByteFrequencyData(bins); level = (bins[1] + bins[2] + bins[3]) / 765; }
+    beat += (Math.pow(level, 2.2) - beat) * 0.25;
+    return reduce ? 0 : beat;
+  }
+
+  // jump between scenes: the marks on the right, or the keyboard
+  function settleY(k) { return Math.max(0, tops[k] + heights[k] * 0.3 - innerHeight * 0.5); }
+  function goScene(k) {
+    k = Math.max(0, Math.min(scenes.length - 1, k));
+    scrollTo({ top: settleY(k), behavior: reduce ? 'auto' : 'smooth' });
+  }
+  meter.forEach(function (m, k) { m.addEventListener('click', function () { goScene(k); }); });
+  document.addEventListener('keydown', function (e) {
+    if (root.classList.contains('sheet-on') || e.altKey || e.metaKey || e.ctrlKey) return;
+    var tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || tag === 'select' || (tag === 'button' && e.key === ' ')) return;
+    var next = { ArrowDown: 1, PageDown: 1, ' ': e.shiftKey ? -1 : 1, ArrowUp: -1, PageUp: -1 }[e.key];
+    if (e.key === 'Home') { e.preventDefault(); goScene(0); return; }
+    if (e.key === 'End') { e.preventDefault(); goScene(scenes.length - 1); return; }
+    if (!next) return;
+    e.preventDefault();
+    // from wherever you are, go to the next scene's settled pose
+    var here = Math.round(smooth), y = scrollY, k = here;
+    if (next > 0) { k = here + 1; if (y < settleY(here) - 4) k = here; }
+    else { k = here - 1; if (y > settleY(here) + 4) k = here; }
+    goScene(k);
+  });
   var smooth = target(), paused = false;
   window.__sideA = { pause: function (p) { paused = p; if (!p) { t0 = performance.now(); measure(); } } };
   document.addEventListener('visibilitychange', function () { t0 = performance.now(); });
@@ -520,7 +565,7 @@
           labelTex.needsUpdate = true;
         });
       }
-      if (!reduce) spin += dt * (0.35 + cur.burst * 1.2);
+      if (!reduce) spin += dt * (0.35 + cur.burst * 1.2 + listen() * 1.6);
       if (dragX === null && Math.abs(flick) > 0.001) { spin += flick * dt; flick *= Math.pow(0.04, dt); }
       tilt.x += (tilt.tx - tilt.x) * Math.min(1, dt * 4); tilt.y += (tilt.ty - tilt.y) * Math.min(1, dt * 4);
       var mob = innerWidth < 760, lean = reduce ? 0 : 0.14;
@@ -544,19 +589,47 @@
         pts.material.opacity = k2 * 0.9;
         pts.visible = k2 > 0;
       }
-      keyLight.intensity = 1.3 + 0.5 * Math.sin(now / 1400);
+      keyLight.intensity = 1.3 + 0.5 * Math.sin(now / 1400) + beat * 1.4;
       renderer.render(scene, camera);
+      if (!glReady) { glReady = true; root.classList.add('gl-ready'); }
     }
   }
   requestAnimationFrame(frame);
 
-  // play the record (sound only on request)
-  var audio = null, btn = document.getElementById('sound');
+  // the record player: three records, sound only on request, and the record moves with the bass
+  var RECORDS = [{ src: 'media/tank.m4a', name: 'Tank!' }, { src: 'media/backdrop.m4a', name: 'Jazz noir' }, { src: 'media/third.m4a', name: 'Bossa nova' }];
+  var audio = null, which = 0, actx = null, analyser = null, bins = null;
+  var btn = document.getElementById('sound'), nextBtn = document.getElementById('nextRecord');
+  function label() {
+    var on = audio && !audio.paused;
+    btn.textContent = (on ? '■ ' : '▶ ') + RECORDS[which].name;
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.setAttribute('aria-label', (on ? 'Stop ' : 'Play ') + RECORDS[which].name);
+  }
+  function loadRecord(i) {
+    if (audio) audio.pause();
+    which = i;
+    audio = new Audio(new URL(RECORDS[i].src, HOME).href); audio.loop = true;
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      var srcNode = actx.createMediaElementSource(audio);
+      analyser = actx.createAnalyser(); analyser.fftSize = 64; bins = new Uint8Array(analyser.frequencyBinCount);
+      srcNode.connect(analyser); analyser.connect(actx.destination);
+    } catch (e) { analyser = null; }
+  }
   btn.addEventListener('click', function () {
-    if (!audio) { audio = new Audio(new URL('media/tank.m4a', HOME).href); audio.loop = true; }
-    if (audio.paused) { audio.play().catch(function () {}); btn.textContent = 'Stop the record'; btn.setAttribute('aria-pressed', 'true'); }
-    else { audio.pause(); btn.textContent = 'Play the record'; btn.setAttribute('aria-pressed', 'false'); }
+    if (!audio) loadRecord(which);
+    if (actx && actx.state === 'suspended') actx.resume();
+    if (audio.paused) audio.play().catch(function () {}); else audio.pause();
+    label();
   });
+  nextBtn.addEventListener('click', function () {
+    var playing = audio && !audio.paused;
+    loadRecord((which + 1) % RECORDS.length);
+    if (playing || !audio) { if (actx && actx.state === 'suspended') actx.resume(); audio.play().catch(function () {}); }
+    label();
+  });
+  label();
 
   // ---------- tracks open in place ----------
   // The track pages are real files (tracks/<slug>/), so links, refresh and sharing work.
@@ -680,7 +753,21 @@
   }
   document.addEventListener('click', function (e) { route(e, e.target.closest && e.target.closest('a')); });
   shadow.addEventListener('click', function (e) { route(e, e.target.closest && e.target.closest('a')); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && showing !== null) close(); });
+  document.addEventListener('keydown', function (e) {
+    if (showing === null) return;
+    if (e.key === 'Escape') close();
+    else if ((e.key === 'ArrowRight' || e.key === 'ArrowLeft') && !e.altKey && !e.metaKey && !e.ctrlKey) {
+      var a = shadow.querySelector(e.key === 'ArrowRight' ? 'a.next' : 'a.prev');
+      if (a) { e.preventDefault(); a.click(); }
+    }
+  });
+  // swipe sideways on a phone to change track
+  var sx = null, sy = 0;
+  sheet.addEventListener('touchstart', function (e) { var t = e.touches[0]; sx = t.clientX; sy = t.clientY; }, { passive: true });
+  sheet.addEventListener('touchend', function (e) {
+    if (sx === null) return; var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy; sx = null;
+    if (Math.abs(dx) > 80 && Math.abs(dx) > Math.abs(dy) * 1.8) { var a = shadow.querySelector(dx < 0 ? 'a.next' : 'a.prev'); if (a) a.click(); }
+  }, { passive: true });
 
   addEventListener('popstate', function (e) {
     var st = e.state;

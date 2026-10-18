@@ -103,6 +103,23 @@ class SideAHomepage(unittest.TestCase):
             self.assertIn(f"'{anchor}'", HOMEPAGE)
             self.assertIn(f'id="{anchor}"', work)
 
+    def test_scene_marks_are_buttons_one_per_scene(self) -> None:
+        scenes = len(re.findall(r'<section class="scene', HOMEPAGE))
+        nav = re.search(r'<nav class="meter" aria-label="Scenes">(.*?)</nav>', HOMEPAGE, re.S)
+        self.assertIsNotNone(nav)
+        buttons = re.findall(r'<button type="button" data-label="[^"]+" aria-label="[^"]+"></button>', nav.group(1))
+        self.assertEqual(len(buttons), scenes)
+
+    def test_record_player_records_exist(self) -> None:
+        for src in re.findall(r"src: '(media/[a-z]+\.m4a)'", HOMEPAGE):
+            self.assertTrue((ROOT / src).is_file(), src)
+        self.assertEqual(len(re.findall(r"src: '(media/[a-z]+\.m4a)'", HOMEPAGE)), 3)
+        self.assertIn('id="nextRecord"', HOMEPAGE)
+
+    def test_placeholder_record_before_webgl(self) -> None:
+        self.assertIn('<div class="ph" aria-hidden="true"></div>', HOMEPAGE)
+        self.assertIn(".gl-ready .ph { opacity: 0; }", HOMEPAGE)
+
     def test_three_is_pinned(self) -> None:
         self.assertIn("https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js", HOMEPAGE)
 
