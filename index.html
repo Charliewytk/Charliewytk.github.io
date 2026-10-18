@@ -37,6 +37,9 @@
  "email": "mailto:charlie@wuytack.net", "sameAs": ["https://github.com/Charliewytk"],
  "knowsAbout": ["iOS apps", "SwiftUI", "quantitative research", "Solana", "machine learning", "web development"]}
 </script>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="media/icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,600&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -85,6 +88,7 @@
     box-shadow: 0 40px 80px -30px rgba(0,0,0,0.8); transition: opacity 0.6s ease; }
   .gl-ready .ph { opacity: 0; }
   #player { display: inline-flex; gap: 0; }
+  .menu { display: none; }
   #player button + button { border-left: 0; }
 
   main { position: relative; z-index: 2; }
@@ -133,6 +137,13 @@
 
   @media (max-width: 760px) {
     header nav a { display: none; }
+    /* phones: the links fold into a menu */
+    .menu { display: inline-block; margin-left: auto; }
+    header { flex-wrap: wrap; row-gap: 0; }
+    header.open { mix-blend-mode: normal; background: rgba(11,10,9,0.96); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); color: var(--ink); }
+    header.open nav { order: 3; flex-basis: 100%; flex-direction: column; align-items: flex-start; gap: 0; padding-top: 14px; }
+    header.open nav a { display: block; width: 100%; padding: 14px 0; border-bottom: 1px solid rgba(242,236,224,0.16); font-size: 14px; }
+    header.open #player { margin-top: 16px; }
     .meter { display: none; }
     .phone { right: 50%; transform: translate(50%, calc(-62% + var(--py, 40px))) rotate(4deg); width: 150px; }
     .notes { font-size: 10px; } .notes b { font-size: 24px; }
@@ -182,7 +193,8 @@
 
 <header>
   <span>Charlie Wuytack</span>
-  <nav>
+  <button type="button" class="menu" id="menu" aria-expanded="false" aria-controls="links">Menu</button>
+  <nav id="links">
     <a href="tracks/">Tracklist</a>
     <a href="work/">All work</a>
     <a href="https://wuytackcharlie.gumroad.com/l/mergermonitor">Merger Monitor £5/mo</a>
@@ -308,12 +320,25 @@
   // tracks change the address bar to tracks/<slug>/, so pin this page's own relative
   // links and files to absolute URLs now, while they still resolve from the homepage
   var HOME = new URL('./', location.href);
-  document.querySelectorAll('link[rel="icon"][href], a[href], img[src], source[src], video[poster]').forEach(function (el) {
+  document.querySelectorAll('link[rel="icon"][href], link[rel="manifest"], link[rel="apple-touch-icon"], a[href], img[src], source[src], video[poster]').forEach(function (el) {
     ['href', 'src', 'poster'].forEach(function (a) {
       var v = el.getAttribute(a);
       if (v && !/^(#|[a-z]+:|\/\/)/i.test(v)) el.setAttribute(a, new URL(v, HOME).href);
     });
   });
+
+  // whoever has heard Side A has been through the door: /work/ skips its record gate
+  try { localStorage.setItem('cw-entered', '1'); } catch (e) {}
+  // keep the record, the tracklist and the tracks for offline listening
+  if ('serviceWorker' in navigator) addEventListener('load', function () { navigator.serviceWorker.register(new URL('sw.js', HOME).href).catch(function () {}); });
+
+  // phones: the header links fold into a menu
+  var header = document.querySelector('header'), menu = document.getElementById('menu');
+  function setMenu(on) { header.classList.toggle('open', on); menu.setAttribute('aria-expanded', String(on)); menu.textContent = on ? 'Close' : 'Menu'; }
+  menu.addEventListener('click', function () { setMenu(!header.classList.contains('open')); });
+  header.addEventListener('click', function (e) { if (e.target.closest('a')) setMenu(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && header.classList.contains('open')) { setMenu(false); menu.focus(); } });
+  addEventListener('scroll', function () { if (header.classList.contains('open')) setMenu(false); }, { passive: true });
 
   // coming back from another page: land exactly where you left
   var KEY = 'sideA-y';
@@ -683,7 +708,7 @@
           ['src', 'href', 'poster'].forEach(function (a) { var v = el.getAttribute(a); if (v && v.charAt(0) !== '#' && v.indexOf('mailto:') !== 0) el.setAttribute(a, new URL(v, url).href); });
         });
         return { title: doc.title, style: doc.body.getAttribute('style') || '', bg: (doc.body.getAttribute('style') || '').match(/--bg:\s*([^;]+)/), body: doc.body.innerHTML };
-      });
+      }).catch(function (err) { delete cache[slug]; throw err; });
     }
     return cache[slug];
   }
@@ -712,6 +737,8 @@
       if (showing === null) { lastFocus = document.activeElement; setInert(true); }
       showing = slug;
       sheet.focus({ preventScroll: true });
+      // the next and previous tracks are a keypress away: fetch them now
+      shadow.querySelectorAll('a.next, a.prev').forEach(function (a) { try { var s = slugOf(new URL(a.href)); if (s !== null) load(s); } catch (err) {} });
     }).catch(function () {
       // could not load it in place: go to the real page instead
       location.href = new URL('tracks/' + (slug ? slug + '/' : ''), BASE).href;
