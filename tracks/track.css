@@ -1,5 +1,6 @@
 /* Track pages: one per scene on Side A. Each page sets --bg and --acc on <body>. */
-:root {
+/* :host and .tbody let the same sheet style a track opened in place on Side A */
+:root, :host {
   --ink: #f2ece0;
   --dim: rgba(242,236,224,0.66);
   --line: rgba(242,236,224,0.16);
@@ -10,7 +11,7 @@
 }
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: var(--bg, #0b0a09); color: var(--ink); font: 500 17px/1.6 var(--display); overflow-x: hidden; }
+body, .tbody { margin: 0; background: var(--bg, #0b0a09); color: var(--ink); font: 500 17px/1.6 var(--display); overflow-x: hidden; }
 a { color: inherit; }
 :focus-visible { outline: 2px solid var(--acc); outline-offset: 3px; }
 img, video { max-width: 100%; display: block; }

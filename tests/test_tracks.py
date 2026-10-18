@@ -97,6 +97,21 @@ class TrackPages(unittest.TestCase):
         self.assertIn("merger-stats.js", html)
         self.assertIsNone(re.search(r"[1-9][\d,]*\s+subscribers?", html.lower()))
 
+    def test_tracks_open_in_place_on_side_a(self) -> None:
+        """Side A slides a track up over itself; Back returns to the same scroll spot."""
+        home = (ROOT / "index.html").read_text(encoding="utf-8")
+        for needle in ("attachShadow", "history.pushState", "popstate", "sessionStorage"):
+            self.assertIn(needle, home, needle)
+        css = (ROOT / "tracks" / "track.css").read_text(encoding="utf-8")
+        self.assertIn(":root, :host {", css)
+        self.assertIn("body, .tbody {", css)
+
+    def test_standalone_track_goes_back_to_side_a(self) -> None:
+        for slug in TRACKS:
+            html = _page(slug).read_text(encoding="utf-8")
+            self.assertIn("history.back()", html, slug)
+            self.assertIn("document.referrer", html, slug)
+
     def test_research_track_claims_no_profit(self) -> None:
         html = _page("research").read_text(encoding="utf-8").lower()
         self.assertIn("no profit is claimed", html)

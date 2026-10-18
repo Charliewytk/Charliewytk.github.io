@@ -39,7 +39,7 @@
     color-scheme: dark;
   }
   html { scroll-behavior: auto; }
-  body { background: var(--bg); color: var(--ink); font-family: var(--display); transition: background-color 0.5s linear; overflow-x: hidden; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--display); overflow-x: hidden; }
   a { color: inherit; }
   :focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; }
 
@@ -117,7 +117,21 @@
     .tile:nth-child(4) { left: 50% !important; top: 46% !important; }
     .tile .ic { width: 30px; height: 30px; top: 8px; right: 8px; } .tile .ic svg { width: 16px; height: 16px; }
   }
-  @media (prefers-reduced-motion: reduce) { body { transition: none; } }
+  /* each scene's words rise in as the record arrives; visible without script */
+  .js .copy { opacity: 0; transform: translateY(34px); filter: blur(6px); transition: opacity 0.7s cubic-bezier(.16,1,.3,1), transform 0.9s cubic-bezier(.16,1,.3,1), filter 0.7s ease; }
+  .js .copy.in { opacity: 1; transform: none; filter: none; }
+  .js .copy > * { transition: transform 0.9s cubic-bezier(.16,1,.3,1); }
+  .js .copy:not(.in) > * { transform: translateY(14px); }
+  .js .copy.in > *:nth-child(2) { transition-delay: 0.06s; } .js .copy.in > *:nth-child(3) { transition-delay: 0.12s; } .js .copy.in > *:nth-child(4) { transition-delay: 0.18s; }
+
+  /* a track opens in place: its page slides up over Side A, Back slides it away */
+  .sheet { position: fixed; inset: 0; z-index: 20; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
+    background: var(--sheet-bg, #0b0a09); transform: translate3d(0, 102%, 0); transition: transform 0.75s cubic-bezier(.16,1,.3,1); will-change: transform; }
+  .sheet.open { transform: translate3d(0, 0, 0); }
+  .sheet[hidden] { display: none; }
+  .sheet-host { display: block; min-height: 100%; }
+  html.sheet-on, html.sheet-on body { overflow: hidden; }
+  @media (prefers-reduced-motion: reduce) { .js .copy, .js .copy > *, .sheet { transition: none; } .js .copy:not(.in) { opacity: 1; transform: none; filter: none; } }
 </style>
 </head>
 <body>
@@ -226,11 +240,33 @@
   </section>
 </main>
 
+<div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-label="Track" tabindex="-1"><div class="sheet-host" id="sheetHost"></div></div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 (function () {
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var root = document.documentElement;
+  root.classList.add('js');
+  // tracks change the address bar to tracks/<slug>/, so pin this page's own relative
+  // links and files to absolute URLs now, while they still resolve from the homepage
+  var HOME = new URL('./', location.href);
+  document.querySelectorAll('link[rel="icon"][href], a[href], img[src], source[src], video[poster]').forEach(function (el) {
+    ['href', 'src', 'poster'].forEach(function (a) {
+      var v = el.getAttribute(a);
+      if (v && !/^(#|[a-z]+:|\/\/)/i.test(v)) el.setAttribute(a, new URL(v, HOME).href);
+    });
+  });
+
+  // coming back from another page: land exactly where you left
+  var KEY = 'sideA-y';
+  try {
+    var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+    var saved = sessionStorage.getItem(KEY);
+    if (saved !== null && nav && nav.type === 'back_forward' && !(history.state && history.state.track)) scrollTo(0, +saved);
+  } catch (e) {}
+  addEventListener('pagehide', function () { try { sessionStorage.setItem(KEY, String(scrollY)); } catch (e) {} });
+
   var scenes = [].slice.call(document.querySelectorAll('.scene'));
   var meter = [].slice.call(document.querySelectorAll('.meter i'));
   var backword = document.getElementById('backword');
@@ -251,7 +287,7 @@
   if (hasGL) {
     try {
       renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('gl'), antialias: true, alpha: true });
-      renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+      renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.75));
     } catch (e) { hasGL = false; }
   }
   if (hasGL) {
@@ -323,41 +359,77 @@
   function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
   function lerp(a, b, t) { return a + (b - a) * t; }
 
-  // where are we: scene index + how far into the next
-  function progress() {
-    var vh = innerHeight, mid = vh * 0.5;
+  // scene positions are measured once (and on resize), never per frame
+  var tops = [], heights = [];
+  function measure() {
+    var y = scrollY;
+    scenes.forEach(function (s, i) { var r = s.getBoundingClientRect(); tops[i] = r.top + y; heights[i] = r.height; });
+  }
+  measure();
+  addEventListener('resize', measure);
+  addEventListener('load', measure);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+
+  // where are we, as one number: scene index + how far it has travelled to the next
+  function target() {
+    var mid = scrollY + innerHeight * 0.5;
     for (var i = 0; i < scenes.length; i++) {
-      var r = scenes[i].getBoundingClientRect();
-      if (r.bottom > mid) {
-        var f = Math.min(1, Math.max(0, (mid - r.top) / r.height));
+      if (tops[i] + heights[i] > mid) {
+        var f = Math.min(1, Math.max(0, (mid - tops[i]) / heights[i]));
         // hold each pose for the first half of its scene, then travel to the next
-        return { i: i, f: Math.max(0, (f - 0.5) * 2) };
+        return i + Math.max(0, (f - 0.5) * 2);
       }
     }
-    return { i: scenes.length - 1, f: 0 };
+    return scenes.length - 1;
   }
 
-  var lastLab = '', spin = 0, lastWord = null, t0 = performance.now();
-  function frame(now) {
-    var pr = progress(), a = K[pr.i], b = K[Math.min(pr.i + 1, K.length - 1)], t = ease(pr.f);
-    var cur = {}; ['rx', 'ry', 'rz', 'x', 'y', 's', 'wire', 'bo', 'burst'].forEach(function (k) { cur[k] = lerp(a[k], b[k], t); });
-    var bg = mixHex(a.bg, b.bg, t);
-    document.body.style.backgroundColor = bg;
-    meter.forEach(function (m, i) { m.classList.toggle('on', i === pr.i); });
+  // write a style only when its value changes, so idle frames touch nothing
+  var memo = new Map();
+  function put(el, prop, val) {
+    var key = el; var m = memo.get(key); if (!m) { m = {}; memo.set(key, m); }
+    if (m[prop] === val) return;
+    m[prop] = val;
+    if (prop.charAt(0) === '-') el.style.setProperty(prop, val); else el.style[prop] = val;
+  }
 
-    var word = t < 0.5 ? scenes[pr.i].dataset.word : scenes[Math.min(pr.i + 1, scenes.length - 1)].dataset.word;
+  var phone = document.getElementById('phone'), notes = document.getElementById('notes');
+  var tiles = [].slice.call(document.querySelectorAll('.tile'));
+  var copies = scenes.map(function (s) { return s.querySelector('.copy'); });
+  var lastLab = '', spin = 0, lastWord = null, lastScene = -1, lastBurst = -1, t0 = performance.now();
+  var smooth = target(), paused = false;
+  window.__sideA = { pause: function (p) { paused = p; if (!p) { t0 = performance.now(); measure(); } } };
+  document.addEventListener('visibilitychange', function () { t0 = performance.now(); });
+
+  function frame(now) {
+    requestAnimationFrame(frame);
+    if (paused || document.hidden) return;
+    var dt = Math.min(0.05, (now - t0) / 1000); t0 = now;
+    // glide towards the scroll position: smooth on wheels, trackpads and flicks alike
+    var goal = target();
+    smooth = reduce ? goal : smooth + (goal - smooth) * (1 - Math.pow(0.0009, dt));
+    if (Math.abs(goal - smooth) < 0.0005) smooth = goal;
+    var i = Math.min(Math.floor(smooth), K.length - 1), f = smooth - i;
+    var pr = { i: i, f: f }, a = K[i], b = K[Math.min(i + 1, K.length - 1)], t = ease(f);
+    var cur = {}; ['rx', 'ry', 'rz', 'x', 'y', 's', 'wire', 'bo', 'burst'].forEach(function (k) { cur[k] = lerp(a[k], b[k], t); });
+    put(document.body, 'backgroundColor', mixHex(a.bg, b.bg, t));
+
+    var active = t < 0.5 ? i : Math.min(i + 1, scenes.length - 1);
+    if (active !== lastScene) {
+      lastScene = active;
+      meter.forEach(function (m, k) { m.classList.toggle('on', k === active); });
+      copies.forEach(function (c, k) { if (c) c.classList.toggle('in', k === active); });
+    }
+    var word = scenes[active].dataset.word;
     if (word !== lastWord) { backword.textContent = word; lastWord = word; }
-    backword.style.setProperty('--bo', word ? cur.bo : 0);
-    backword.style.setProperty('--by', ((pr.f - 0.5) * -40) + 'px');
+    put(backword, '--bo', (word ? cur.bo : 0).toFixed(3));
+    put(backword, '--by', ((f - 0.5) * -40).toFixed(1) + 'px');
 
     // scene-specific overlays
-    var phone = document.getElementById('phone');
-    var inX = pr.i === 2 ? 1 - Math.abs(pr.f - 0) : (pr.i === 1 ? t : 0);
-    phone.style.setProperty('--po', pr.i === 2 ? 1 - t : (pr.i === 1 ? t : 0));
-    phone.style.setProperty('--py', ((1 - (pr.i === 2 ? 1 : t)) * 60 + (pr.i === 2 ? t * -60 : 0)) + 'px');
-    document.getElementById('notes').style.opacity = pr.i === 3 ? 1 - t : (pr.i === 2 ? t : 0);
-    var cTiles = document.querySelectorAll('.tile'), cv2 = pr.i === 5 ? 1 - t : (pr.i === 4 ? t : 0);
-    cTiles.forEach(function (el, k) { el.style.setProperty('--to', cv2); el.style.setProperty('--ty', ((1 - cv2) * (60 + k * 20)) + 'px'); });
+    put(phone, '--po', (i === 2 ? 1 - t : (i === 1 ? t : 0)).toFixed(3));
+    put(phone, '--py', ((1 - (i === 2 ? 1 : t)) * 60 + (i === 2 ? t * -60 : 0)).toFixed(1) + 'px');
+    put(notes, 'opacity', (i === 3 ? 1 - t : (i === 2 ? t : 0)).toFixed(3));
+    var cv2 = i === 5 ? 1 - t : (i === 4 ? t : 0);
+    tiles.forEach(function (el, k) { put(el, '--to', cv2.toFixed(3)); put(el, '--ty', ((1 - cv2) * (60 + k * 20)).toFixed(1) + 'px'); });
 
     if (hasGL) {
       var lab = t < 0.5 ? a.lab : b.lab;
@@ -377,7 +449,6 @@
           labelTex.needsUpdate = true;
         });
       }
-      var dt = (now - t0) / 1000; t0 = now;
       if (!reduce) spin += dt * (0.35 + cur.burst * 1.2);
       var mob = innerWidth < 760;
       disc.position.set(cur.x * (mob ? 0.35 : 1), cur.y, 0);
@@ -386,27 +457,165 @@
       discMat.opacity = 1 - cur.wire * 0.92; disc.material[0].opacity = 1 - cur.wire * 0.92;
       wire.userData.mat.opacity = cur.wire;
       wire.scale.setScalar(1.001);
-      var arr = pts.geometry.attributes.position.array, k2 = cur.burst;
-      for (var q = 0; q < arr.length; q += 3) {
-        var spread = 1 + k2 * (2.5 + (q % 7));
-        arr[q] = ptsBase[q] * spread; arr[q + 1] = ptsBase[q + 1] + k2 * ((q % 11) - 5) * 0.12; arr[q + 2] = ptsBase[q + 2] * spread;
+      // the dust only moves near the end, so skip the 1,400-point update until then
+      var k2 = Math.round(cur.burst * 1000) / 1000;
+      if (k2 !== lastBurst) {
+        lastBurst = k2;
+        var arr = pts.geometry.attributes.position.array;
+        for (var q = 0; q < arr.length; q += 3) {
+          var spread = 1 + k2 * (2.5 + (q % 7));
+          arr[q] = ptsBase[q] * spread; arr[q + 1] = ptsBase[q + 1] + k2 * ((q % 11) - 5) * 0.12; arr[q + 2] = ptsBase[q + 2] * spread;
+        }
+        pts.geometry.attributes.position.needsUpdate = true;
+        pts.material.opacity = k2 * 0.9;
+        pts.visible = k2 > 0;
       }
-      pts.geometry.attributes.position.needsUpdate = true;
-      pts.material.opacity = k2 * 0.9;
       keyLight.intensity = 1.3 + 0.5 * Math.sin(now / 1400);
       renderer.render(scene, camera);
     }
-    requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
 
   // play the record (sound only on request)
   var audio = null, btn = document.getElementById('sound');
   btn.addEventListener('click', function () {
-    if (!audio) { audio = new Audio('media/tank.m4a'); audio.loop = true; }
+    if (!audio) { audio = new Audio(new URL('media/tank.m4a', HOME).href); audio.loop = true; }
     if (audio.paused) { audio.play().catch(function () {}); btn.textContent = 'Stop the record'; btn.setAttribute('aria-pressed', 'true'); }
     else { audio.pause(); btn.textContent = 'Play the record'; btn.setAttribute('aria-pressed', 'false'); }
   });
+
+  // ---------- tracks open in place ----------
+  // The track pages are real files (tracks/<slug>/), so links, refresh and sharing work.
+  // Here they slide up over Side A in a shadow root, the URL follows, and Back slides
+  // them away to exactly where you were.
+  var sheet = document.getElementById('sheet'), host = document.getElementById('sheetHost');
+  if (!sheet || !host.attachShadow || !window.fetch || !window.DOMParser) return;
+  var shadow = host.attachShadow({ mode: 'open' });
+  var BASE = new URL('./', location.href), HOME_TITLE = document.title, cache = {}, showing = null, closeTimer = 0;
+
+  function slugOf(url) {
+    if (url.origin !== location.origin) return null;
+    if (url.pathname.indexOf(BASE.pathname) !== 0) return null;
+    var m = url.pathname.slice(BASE.pathname.length).match(/^tracks\/(?:([a-z0-9-]+)\/?)?(?:index\.html)?$/);
+    return m ? (m[1] || '') : null;
+  }
+  function isHome(url) {
+    return url.origin === location.origin && (url.pathname === BASE.pathname || url.pathname === BASE.pathname + 'index.html');
+  }
+
+  // live Merger Monitor figures, same feed and format as assets/js/merger-stats.js
+  var feed = null;
+  function pct(n, d, signed) { if (n == null || isNaN(+n)) return null; var v = +n; return (signed && v >= 0 ? '+' : '') + v.toFixed(d) + '%'; }
+  function applyFeed() {
+    if (!feed) return;
+    var map = {
+      'annualised-3pct': pct(feed.annualised_3pct, 1), 'ev-3pct': pct(feed.ev_3pct_per_deal, 2, true), 'ev-1pct': pct(feed.ev_1pct_per_deal, 2, true),
+      'breakeven': pct(feed.breakeven_pct, 2), 'break-rate': pct(feed.break_rate_pct, 1), 'break-loss': pct(feed.break_loss_median_pct, 0),
+      'cost': pct(feed.cost_pct, 2), 'carry': pct(feed.carry_pct, 2),
+      'median-days': feed.median_days_to_close == null ? null : String(feed.median_days_to_close),
+      'breaks': feed.breaks == null ? null : Number(feed.breaks).toLocaleString('en-GB'),
+      'settled': feed.settled == null ? null : Number(feed.settled).toLocaleString('en-GB')
+    };
+    Object.keys(map).forEach(function (k) {
+      if (map[k] == null) return;
+      shadow.querySelectorAll('[data-merger-' + k + ']').forEach(function (el) { el.textContent = map[k]; });
+    });
+  }
+
+  function load(slug) {
+    var url = new URL('tracks/' + (slug ? slug + '/' : ''), BASE);
+    if (!cache[slug]) {
+      cache[slug] = fetch(url.href).then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); }).then(function (html) {
+        var doc = new DOMParser().parseFromString(html, 'text/html');
+        doc.querySelectorAll('script').forEach(function (s) { s.remove(); });
+        // the page's paths are relative to its own folder; make them absolute here
+        doc.body.querySelectorAll('[src],[href],[poster]').forEach(function (el) {
+          ['src', 'href', 'poster'].forEach(function (a) { var v = el.getAttribute(a); if (v && v.charAt(0) !== '#' && v.indexOf('mailto:') !== 0) el.setAttribute(a, new URL(v, url).href); });
+        });
+        return { title: doc.title, style: doc.body.getAttribute('style') || '', bg: (doc.body.getAttribute('style') || '').match(/--bg:\s*([^;]+)/), body: doc.body.innerHTML };
+      });
+    }
+    return cache[slug];
+  }
+
+  function show(slug, push) {
+    clearTimeout(closeTimer);
+    return load(slug).then(function (page) {
+      shadow.innerHTML = '<link rel="stylesheet" href="' + new URL('tracks/track.css', BASE).href + '">' +
+        '<style>.tbody{min-height:100vh}.tbody .hero>*,.tbody .facts,.tbody .body,.tbody .media{animation:up .8s cubic-bezier(.16,1,.3,1) both}' +
+        '.tbody .hero>*:nth-child(2){animation-delay:.08s}.tbody .facts{animation-delay:.14s}.tbody .body{animation-delay:.2s}.tbody .media{animation-delay:.26s}' +
+        '@keyframes up{from{opacity:0;transform:translateY(30px)}}@media (prefers-reduced-motion:reduce){.tbody *{animation:none!important}}</style>' +
+        '<div class="tbody" style="' + page.style.replace(/"/g, '&quot;') + '">' + page.body + '</div>';
+      applyFeed();
+      if (page.bg) sheet.style.setProperty('--sheet-bg', page.bg[1].trim());
+      document.title = page.title;
+      var url = new URL('tracks/' + (slug ? slug + '/' : ''), BASE).href;
+      if (push) history.pushState({ track: slug, y: showing === null ? scrollY : (history.state && history.state.y) || 0 }, '', url);
+      sheet.scrollTop = 0;
+      if (showing === null) {
+        sheet.hidden = false;
+        void sheet.offsetHeight;
+        sheet.classList.add('open');
+        root.classList.add('sheet-on');
+        setTimeout(function () { if (showing !== null) window.__sideA.pause(true); }, reduce ? 0 : 760);
+      }
+      showing = slug;
+      sheet.focus({ preventScroll: true });
+    }).catch(function () {
+      // could not load it in place: go to the real page instead
+      location.href = new URL('tracks/' + (slug ? slug + '/' : ''), BASE).href;
+    });
+  }
+
+  function hide() {
+    if (showing === null) return;
+    showing = null;
+    window.__sideA.pause(false);
+    root.classList.remove('sheet-on');
+    sheet.classList.remove('open');
+    document.title = HOME_TITLE;
+    closeTimer = setTimeout(function () { sheet.hidden = true; shadow.innerHTML = ''; }, reduce ? 0 : 760);
+  }
+
+  function close() {
+    if (history.state && history.state.track !== undefined && history.state.track !== null) {
+      // walk back past every track opened from here, so Back and Close agree
+      var depth = history.state.depth || 1;
+      history.go(-depth);
+    } else hide();
+  }
+
+  function route(e, a) {
+    if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target === '_blank' || a.hasAttribute('download')) return;
+    var url; try { url = new URL(a.href, location.href); } catch (err) { return; }
+    var slug = slugOf(url);
+    if (slug !== null) {
+      e.preventDefault();
+      var depth = showing === null ? 1 : ((history.state && history.state.depth) || 1) + 1;
+      show(slug, true).then(function () { history.replaceState(Object.assign({}, history.state, { depth: depth }), ''); });
+    } else if (isHome(url) && showing !== null) {
+      e.preventDefault();
+      close();
+    }
+  }
+  document.addEventListener('click', function (e) { route(e, e.target.closest && e.target.closest('a')); });
+  shadow.addEventListener('click', function (e) { route(e, e.target.closest && e.target.closest('a')); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && showing !== null) close(); });
+
+  addEventListener('popstate', function (e) {
+    var st = e.state;
+    if (st && st.track !== undefined && st.track !== null) show(st.track, false);
+    else hide();
+  });
+
+  // warm the cache when a track link is hovered or comes close on a phone
+  document.addEventListener('pointerover', function (e) {
+    var a = e.target.closest && e.target.closest('a'); if (!a) return;
+    try { var s = slugOf(new URL(a.href, location.href)); if (s !== null) load(s); } catch (err) {}
+  }, { passive: true });
+
+  fetch(new URL('merger-monitor/feed_summary.json', BASE).href, { cache: 'no-store' })
+    .then(function (r) { return r.ok ? r.json() : null; }).then(function (j) { feed = j; applyFeed(); }).catch(function () {});
 })();
 </script>
 </body>
