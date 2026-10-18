@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Solana execution · Track 03 · Charlie Wuytack</title>
+<meta name="description" content="A streaming, pre-armed Solana execution layer measured down to the microsecond, then used to prove what speed can't fix.">
+<link rel="icon" href="../../media/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://charliewytk.github.io/tracks/solana/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://charliewytk.github.io/tracks/solana/">
+<meta property="og:title" content="Solana execution · Track 03 · Charlie Wuytack">
+<meta property="og:description" content="A streaming, pre-armed Solana execution layer measured down to the microsecond, then used to prove what speed can't fix.">
+<meta property="og:image" content="https://charliewytk.github.io/media/preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0d0c0b">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&amp;family=Fraunces:ital,opsz,wght@1,9..144,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../../tracks/track.css">
+</head>
+<body style="--bg:#0d0c0b;--acc:#e0a640">
+<div class="grain" aria-hidden="true"></div>
+
+<header class="wrap top">
+  <a href="../../">← Side A</a>
+  <nav><a href="../">Track 03 / 07</a><a href="../../work/">All work</a><a href="https://wuytackcharlie.gumroad.com/l/mergermonitor">Merger Monitor £5/mo</a></nav>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <p class="kick">Track 03 · on-chain infrastructure</p>
+      <h1>Solana execution</h1>
+      <p class="sub">A third of a millisecond, and why it didn't matter.</p>
+      <p class="lede">Newly graduated tokens move fastest in their first seconds on a pool. I wanted to know how much of a bad exit is latency and how much is the market, so I built the fast path first and measured it.</p>
+    </div>
+    <div class="disc" aria-hidden="true"><div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg><small>TRACK 03</small></div></div>
+  </div>
+
+  <div class="wrap"><div class="facts"><div><b>0.33 ms</b><span>p50, trigger to ready-to-sign sell bytes (p90 1.2 ms)</span></div><div><b>0.0 bps</b><span>median error of my integer AMM quote against the on-chain fill</span></div><div><b>96.9%</b><span>of 32 live migrations simulated clean at +1 s and +2 s</span></div></div></div>
+
+  <div class="wrap body">
+    <div class="story">
+    <section><h2>What is <em>built</em></h2>
+      <p><b>Exact pricing.</b> The pump AMM's Anchor IDL is fetched on-chain and pinned. Pool accounts and swap events are decoded with Borsh, and quotes use integer constant-product maths on the real reserves, fee tier included (62 of 62 tiers matched).</p>
+      <p><b>Streaming triggers.</b> Stops, take-profits, trailing and clock exits, insider sells and rug labels are evaluated on every transaction, not on a polling timer.</p>
+      <p><b>Pre-armed exits.</b> The sell is assembled at entry. At the trigger only the amount and minimum-out are filled in. The transaction builder runs in 0.035 ms at p50 with the pool cached.</p></section>
+    <section><h2>Who sees it <em>first</em></h2>
+      <p>When each feed sees a new migration, ms after the slot starts (p50):</p>
+      <div class="bars">
+        <div><span>PumpPortal websocket</span><i style="--w:100%;max-width:calc(100% - 70px);opacity:.45"><b>266 ms</b></i></div>
+        <div><span>Helius transaction subscribe</span><i style="--w:46%"><b>123 ms</b></i></div>
+        <div><span>Helius migration logs</span><i style="--w:37%"><b>98 ms</b></i></div>
+      </div>
+      <p class="note">Timed against the node's own first-shred timestamp, measured from London.</p></section>
+    <section><h2>The result that <em>mattered</em></h2>
+      <p>The dry pilot's stops were filling well past their −12% line. The obvious suspect was latency, so the streaming, pre-armed engine cut that path to a third of a millisecond. Replayed on the same positions, it improved the average stop fill by <b>0.4 points</b>.</p>
+      <div class="bars">
+        <div><span>Gap at the trigger</span><i style="--w:94%;max-width:calc(100% - 90px)"><b>−12.8 pts</b></i></div>
+        <div><span>Latency, trigger to fill</span><i style="--w:6%"><b>≈ −0.7 pts</b></i></div>
+      </div>
+      <p>One sell jumps the pool straight through the stop, and being faster cannot recover a price that never traded. That answer saved the next obvious spend: renting a server next to the validators.</p>
+      <div class="cta"><a class="btn solid" href="../../work/#solana">Full case study</a></div></section>
+    </div>
+    <dl class="liner"><dt>Status</dt><dd>Live execution test · 0.25 SOL clips since 30 Sep 2026</dd><dt>Stack</dt><dd>Python · Helius websockets · Anchor IDL + Borsh · Helius Sender</dd><dt>Safety</dt><dd>Live send needs two independent arm switches, a separate signer, hard loss stops and a sell-only guardian</dd></dl>
+  </div>
+
+  <div class="wrap"></div>
+</main>
+
+<a class="next wrap" href="../merger-monitor/"><small>Next · track 04</small><b>Merger Monitor →</b></a>
+<footer class="wrap foot"><span>Charlie Wuytack · <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></span><span>Research and engineering, not financial advice. Nothing here is trading live at a profit.</span></footer>
+</body>
+</html>
