@@ -16,7 +16,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-HOMEPAGE = (ROOT / "index.html").read_text(encoding="utf-8")
+HOMEPAGE = (ROOT / "work" / "index.html").read_text(encoding="utf-8")
 PUBLIC_ZIP = "https://charliewytk.github.io/downloads/PowerLeash.zip"
 GUMROAD = "https://wuytackcharlie.gumroad.com/l/mergermonitor"
 WEEKLY = "https://wuytackcharlie.gumroad.com/l/mergerweekly"

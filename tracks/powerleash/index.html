@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PowerLeash · Track 06 · Charlie Wuytack</title>
+<meta name="description" content="A macOS low power mode that leaves the front app alone, and a cap that matches the charger.">
+<link rel="icon" href="../../media/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://charliewytk.github.io/tracks/powerleash/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://charliewytk.github.io/tracks/powerleash/">
+<meta property="og:title" content="PowerLeash · Track 06 · Charlie Wuytack">
+<meta property="og:description" content="A macOS low power mode that leaves the front app alone, and a cap that matches the charger.">
+<meta property="og:image" content="https://charliewytk.github.io/media/preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#14130f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&amp;family=Fraunces:ital,opsz,wght@1,9..144,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../../tracks/track.css">
+</head>
+<body style="--bg:#14130f;--acc:#f2ece0">
+<div class="grain" aria-hidden="true"></div>
+
+<header class="wrap top">
+  <a href="../../">← Side A</a>
+  <nav><a href="../">Track 06 / 07</a><a href="../../work/">All work</a><a href="https://wuytackcharlie.gumroad.com/l/mergermonitor">Merger Monitor £5/mo</a></nav>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <p class="kick">Track 06 · macOS utility</p>
+      <h1>PowerLeash</h1>
+      <p class="sub">A low power mode that leaves the app in front alone.</p>
+      <p class="lede">Apple's low power mode made my Mac feel sluggish: it was cutting CPU performance by about 40% across the board. And on a 45 W charger, heavy work drained the battery while plugged in. So I made my own.</p>
+    </div>
+    <div class="disc" aria-hidden="true"><div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg><small>TRACK 06</small></div></div>
+  </div>
+
+  <div class="wrap"><div class="facts"><div><b>59.0 → 42.7 W</b><span>system load, before and after Match Charger</span></div><div><b>−15.6 → −3.5 W</b><span>battery flow while plugged in: from draining hard to nearly break-even</span></div><div><b>60 → 30 W</b><span>one heavy background app demoted; the app in front untouched</span></div></div></div>
+
+  <div class="wrap body">
+    <div class="story">
+    <section><h2>Two <em>pieces</em></h2>
+      <p><b>Eco Mode</b> moves background apps onto the efficiency cores and leaves the app in front untouched. <b>Match Charger</b> caps total draw at what the charger can actually supply.</p></section>
+    <section><h2>Holding the <em>cap</em></h2>
+      <p>Match Charger against a sustained 8-thread burn, system load per control cycle:</p>
+      <div class="bars">
+        <div><span>Burn starts</span><i style="--w:90%;max-width:calc(100% - 70px)"><b>57.8 W</b></i></div>
+        <div><span>Holding at the cap</span><i style="--w:66%"><b>42.2 W</b></i></div>
+        <div><span>Still holding</span><i style="--w:67%"><b>43.1 W</b></i></div>
+        <div><span>Burn ends, releasing</span><i style="--w:18%"><b>11.3 W</b></i></div>
+      </div>
+      <p class="note">Charger cap 42.8 W. Battery savings are not quantified yet.</p></section>
+    <section><h2>Where it's <em>at</em></h2>
+      <ul class="list">
+        <li class="done">Eco Mode: background apps to efficiency cores</li>
+        <li class="done">Match Charger: caps total draw at what the charger supplies</li>
+        <li class="done">Live power readout at 1 s, per-process watts</li>
+        <li class="done">Fixed the power model double-counting the battery while charging</li>
+        <li>Quantify the actual battery saving; the gauge only updates every ~16 s</li>
+        <li>GPU-bound workloads: there's no public API to lower GPU clocks</li>
+      </ul>
+      <div class="cta"><a class="btn solid" href="../../downloads/PowerLeash.zip" download>Download for Mac</a></div>
+      <p class="note">Apple Silicon, unsigned. Unzip, drag PowerLeash.app to /Applications, then right-click and Open. Double-click is blocked by Gatekeeper; that is expected.</p></section>
+    </div>
+    <dl class="liner"><dt>Status</dt><dd>Download · Apple Silicon</dd><dt>Pieces</dt><dd>Eco Mode · Match Charger · a live per-process power readout</dd><dt>Full case study</dt><dd><a href="../../work/#powerleash">On the work page</a></dd></dl>
+  </div>
+
+  <div class="wrap"><figure class="media" style="max-width:220px"><div class="frame"><img src="../../media/powerleash.png" width="512" height="512" alt="PowerLeash app icon" loading="lazy"></div></figure></div>
+</main>
+
+<a class="next wrap" href="../abyss-warden/"><small>Next · track 07</small><b>Abyss Warden →</b></a>
+<footer class="wrap foot"><span>Charlie Wuytack · <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></span><span>Research and engineering, not financial advice. Nothing here is trading live at a profit.</span></footer>
+</body>
+</html>

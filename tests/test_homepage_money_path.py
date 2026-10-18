@@ -15,7 +15,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-HOMEPAGE = (ROOT / "index.html").read_text(encoding="utf-8")
+HOMEPAGE = (ROOT / "work" / "index.html").read_text(encoding="utf-8")
 SUBSCRIBE = ROOT / "subscribe" / "index.html"
 TABLE = ROOT / "merger-monitor" / "index.html"
 GUMROAD = "https://wuytackcharlie.gumroad.com/l/mergermonitor"
@@ -901,7 +901,7 @@ class WorkedExamplePage(unittest.TestCase):
         self.assertIn(GUMROAD, subscribe.split('class="paybar"', 1)[1])
 
     def test_homepage_links_quietly_from_the_worked_block(self) -> None:
-        homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+        homepage = (ROOT / "work" / "index.html").read_text(encoding="utf-8")
         block = re.search(r'<section class="work" id="merger">.*?</section>', homepage, re.S)
         self.assertIsNotNone(block)
         hrefs = _hrefs(block.group(0), "example")
@@ -1120,7 +1120,7 @@ class WeeklyFreeEditionPage(unittest.TestCase):
         self.assertNotIn("<form", html)
 
     def test_does_not_replace_paid_path_on_homepage_or_subscribe(self) -> None:
-        homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+        homepage = (ROOT / "work" / "index.html").read_text(encoding="utf-8")
         fold = re.search(r'<header class="opening">.*?</header>', homepage, re.S)
         self.assertIsNotNone(fold)
         self.assertNotIn("weekly/", fold.group(0).lower())
@@ -1148,7 +1148,7 @@ class WeeklyFreeEditionPage(unittest.TestCase):
         ]
 
     def test_homepage_and_subscribe_link_quietly_to_weekly(self) -> None:
-        homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+        homepage = (ROOT / "work" / "index.html").read_text(encoding="utf-8")
         block = re.search(r'<section class="work" id="merger">.*?</section>', homepage, re.S)
         self.assertIsNotNone(block)
         hrefs = self._page_hrefs(block.group(0), "weekly")

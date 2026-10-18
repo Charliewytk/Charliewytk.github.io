@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The kill log · Track 02 · Charlie Wuytack</title>
+<meta name="description" content="About 170 pre-registered trading hypotheses across two programmes, each with an honest verdict. 50 of 65 trading lanes killed on the record.">
+<link rel="icon" href="../../media/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://charliewytk.github.io/tracks/research/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://charliewytk.github.io/tracks/research/">
+<meta property="og:title" content="The kill log · Track 02 · Charlie Wuytack">
+<meta property="og:description" content="About 170 pre-registered trading hypotheses across two programmes, each with an honest verdict. 50 of 65 trading lanes killed on the record.">
+<meta property="og:image" content="https://charliewytk.github.io/media/preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#1b0a2e">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&amp;family=Fraunces:ital,opsz,wght@1,9..144,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../../tracks/track.css">
+</head>
+<body style="--bg:#1b0a2e;--acc:#ff8a3d">
+<div class="grain" aria-hidden="true"></div>
+
+<header class="wrap top">
+  <a href="../../">← Side A</a>
+  <nav><a href="../">Track 02 / 07</a><a href="../../work/">All work</a><a href="https://wuytackcharlie.gumroad.com/l/mergermonitor">Merger Monitor £5/mo</a></nav>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <p class="kick">Track 02 · quant research</p>
+      <h1>The kill log</h1>
+      <p class="sub">Research that says no.</p>
+      <p class="lede">Most trading ideas die the moment they meet a realistic cost model or an honest holdout. I built the tooling to find that out early, and I publish the kills.</p>
+    </div>
+    <div class="disc" aria-hidden="true"><div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M8.5 8.5l5 5M13.5 8.5l-5 5M16 16l5 5"/></svg><small>TRACK 02</small></div></div>
+  </div>
+
+  <div class="wrap"><div class="facts"><div><b>~170</b><span>pre-registered hypotheses across two programmes</span></div><div><b>50 / 65</b><span>trading lanes on the second ledger killed, on the record</span></div><div><b>p ≈ 1.0</b><span>deflated Sharpe of the best of 3,038 model trials. The honest answer</span></div></div></div>
+
+  <div class="wrap body">
+    <div class="story">
+    <section><h2>Nine real, <em>zero tradeable</em></h2>
+      <p>In the first programme, about 110 hypotheses across equities, ETFs, Polymarket, factors and filings produced <b>nine real anomalies</b>. None were bigger than the cost of trading them.</p>
+      <p>Polymarket's longshot bias is real at about 2¢, and the spread is 1.5–3¢. Dip-buying made +20bp in 2016–21 and +2bp in 2021–26, below costs. 25 equity factors that survived multiple-testing correction turned out to be one levered beta bet wearing 29 hats.</p></section>
+    <section><h2>The second <em>ledger</em></h2>
+      <p>Crypto and on-chain markets, with a stricter ledger. Each lane is a pre-registered hypothesis with a written verdict. 65 of them are trading ideas:</p>
+      <div class="tally" role="img" aria-label="50 killed, 8 inconclusive, 3 accruing on paper, 2 paper candidates, 2 in live execution tests">
+        <span style="flex:50;background:#f2ece0">50</span><span style="flex:8;background:#8d8494">8</span><span style="flex:3;background:#e0a640">3</span><span style="flex:2;background:#3ddc84">2</span><span style="flex:2;background:#ff8a3d">2</span>
+      </div>
+      <div class="key"><span><i style="background:#f2ece0"></i>killed</span><span><i style="background:#8d8494"></i>inconclusive</span><span><i style="background:#e0a640"></i>accruing on paper</span><span><i style="background:#3ddc84"></i>paper candidates</span><span><i style="background:#ff8a3d"></i>small live execution tests</span></div>
+      <p class="note">From the lane ledger as of 30 September 2026. Live tests run at tiny size to measure real fills against paper. No profit is claimed.</p></section>
+    <section><h2>The <em>method</em></h2>
+      <ol class="steps">
+        <li><b>Power check</b>Work out the smallest effect the data could detect before searching.</li>
+        <li><b>Pre-register</b>Rules, split date, bars and costs, hashed before any outcome is read.</li>
+        <li><b>Develop in-sample</b>Time splits with an embargo; CIs clustered by week, month and coin.</li>
+        <li><b>One-shot holdout</b>A lock file is written before the first label is read. One look.</li>
+        <li><b>Attack it</b>Independent reviews for leakage, costs and recency, plus deflation.</li>
+        <li><b>Paper, then a gate</b>A forward paper book behind an e-process. A person decides.</li>
+      </ol></section>
+    <section><h2>A retraction, <em>in full</em></h2>
+      <div class="retract">
+        <div><b>Claimed</b><span>Buying a newly migrated token 1–2 seconds after the snipers had positive expected value. It replicated and passed a null test.</span></div>
+        <div><b>Caught</b><span>88 of 1,320 tick files were sparse, so entries were priced before the snipers moved the price. Those files alone made the result.</span></div>
+        <div><b>Corrected</b><span>On the 1,232 complete pools, entry loses at every delay: −5.2% a trade at 1 s. Verdict RED, published the same day.</span></div>
+        <div><b>Fixed</b><span>The loader now rejects sparse pools, and the model that learned the artefact was retired.</span></div>
+      </div>
+      <div class="cta">
+        <a class="btn solid" href="../../kill-log/">Read the kill log</a>
+        <a class="btn" href="../../essays/friction-sized-edges.html">The long write-up</a>
+        <a class="btn" href="../../apex/">Apex</a>
+      </div></section>
+    </div>
+    <dl class="liner"><dt>Status</dt><dd>Two strategies in small-size live execution tests. Nothing here claims a profit</dd><dt>Revenue</dt><dd>~£0. Paper and backtest numbers are labelled as such</dd><dt>Tooling</dt><dd>SHA-256-sealed pre-registrations · append-only ledgers · clustered bootstrap · deflated Sharpe · Hansen SPA</dd><dt>Full case study</dt><dd><a href="../../work/#research">On the work page</a></dd></dl>
+  </div>
+
+  <div class="wrap"></div>
+</main>
+
+<a class="next wrap" href="../solana/"><small>Next · track 03</small><b>Solana execution →</b></a>
+<footer class="wrap foot"><span>Charlie Wuytack · <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></span><span>Research and engineering, not financial advice. Nothing here is trading live at a profit.</span></footer>
+</body>
+</html>

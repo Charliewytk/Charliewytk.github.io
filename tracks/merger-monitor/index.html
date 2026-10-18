@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Merger Monitor · Track 04 · Charlie Wuytack</title>
+<meta name="description" content="Deal prices from SEC filings, priced against the market. A 3% spread is not 24.6% a year; after costs it is +1.38% a deal. Not advice.">
+<link rel="icon" href="../../media/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://charliewytk.github.io/tracks/merger-monitor/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://charliewytk.github.io/tracks/merger-monitor/">
+<meta property="og:title" content="Merger Monitor · Track 04 · Charlie Wuytack">
+<meta property="og:description" content="Deal prices from SEC filings, priced against the market. A 3% spread is not 24.6% a year; after costs it is +1.38% a deal. Not advice.">
+<meta property="og:image" content="https://charliewytk.github.io/media/preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b1430">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&amp;family=Fraunces:ital,opsz,wght@1,9..144,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../../tracks/track.css">
+<script src="../../assets/js/merger-stats.js" defer></script>
+</head>
+<body style="--bg:#0b1430;--acc:#8fb0ff">
+<div class="grain" aria-hidden="true"></div>
+
+<header class="wrap top">
+  <a href="../../">← Side A</a>
+  <nav><a href="../">Track 04 / 07</a><a href="../../work/">All work</a><a href="https://wuytackcharlie.gumroad.com/l/mergermonitor">Merger Monitor £5/mo</a></nav>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <p class="kick">Track 04 · data product · £5/month</p>
+      <h1>Merger Monitor</h1>
+      <p class="sub">A table of filings, not a tip sheet.</p>
+      <p class="lede">I extract the contractual cash price of every US cash merger that has reached a definitive proxy, and price it against the live market. Each figure carries the sentence from the filing it was read from.</p>
+    </div>
+    <div class="disc" aria-hidden="true"><div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l3 3v15H6z"/><path d="M9 16l2.5-2.5 2 2L17 11"/></svg><small>TRACK 04</small></div></div>
+  </div>
+
+  <div class="wrap"><div class="facts"><div><b><s data-merger-annualised-3pct>24.6%</s></b><span>what a 3% spread looks like annualised. That number is marketing</span></div><div><b><span data-merger-ev-3pct>+1.38%</span></b><span>per deal after break risk, costs and forgone carry</span></div><div><b><span data-merger-breakeven>1.59%</span></b><span>break-even spread. Thinner deals lose money on average</span></div></div></div>
+
+  <div class="wrap body">
+    <div class="story">
+    <section><h2>Annualising <em>flatters everything</em></h2>
+      <p>A 3% merger spread held to the median <span data-merger-median-days>49</span>-day close annualises to <b><span data-merger-annualised-3pct>24.6%</span> a year</b>. Priced properly, it is <b><span data-merger-ev-3pct>+1.38%</span> per deal</b>: the same trade after a <span data-merger-break-rate>2.4%</span> break rate, a <span data-merger-break-loss>27%</span> median loss when one breaks, <span data-merger-cost>0.40%</span> round-trip cost and <span data-merger-carry>0.49%</span> of forgone T-bill carry.</p>
+      <p>Price a 1% spread the same way and it is <b><span data-merger-ev-1pct>−0.57%</span></b> per deal. Base rate: <span data-merger-breaks>39</span> breaks in <span data-merger-settled>1,606</span> settled outcomes, a floor rather than a ceiling.</p></section>
+    <section><h2>The week-late <em>table</em></h2>
+      <p>The public table is the same product, published one week late on purpose. 19 August 2026:</p>
+      <table class="table">
+        <thead><tr><th>Deal</th><th>Offer / market</th><th>Spread</th></tr></thead>
+        <tbody>
+          <tr><td>WBD</td><td>$31.00 / $28.48</td><td>+8.85%</td></tr>
+          <tr><td>SLAB</td><td>$231.00 / $219.29</td><td>+5.34%</td></tr>
+          <tr><td>ACA</td><td>$150.00 / $145.01</td><td>+3.44%</td></tr>
+          <tr><td>AES</td><td>$15.00 / $14.74</td><td>+1.76%</td></tr>
+          <tr><td>CRNX</td><td>$85.00 / $84.75</td><td>+0.29%</td></tr>
+        </tbody>
+      </table></section>
+    <section><h2>What the £5 <em>buys</em></h2>
+      <p>The same table, emailed the evening it is built. You pay for the evening, not for a secret.</p>
+      <div class="cta">
+        <a class="btn solid" href="https://wuytackcharlie.gumroad.com/l/mergermonitor">Get tonight's table — £5/month</a>
+        <a class="btn" href="../../merger-monitor/">Week-late table</a>
+        <a class="btn" href="../../example/">A worked example</a>
+      </div>
+      <p class="note">Also: <a href="../../sizer/">the calculator</a> · <a href="../../weekly/">free weekly edition</a> · <a href="../../subscribe/">the offer</a>. Filings, not advice.</p></section>
+    </div>
+    <dl class="liner"><dt>Status</dt><dd>Live product · £5/month · not advice</dd><dt>Ledger</dt><dd>Zero subscribers so far. Take: £0</dd><dt>Scope</dt><dd>US cash mergers that have reached a definitive proxy</dd></dl>
+  </div>
+
+  <div class="wrap"></div>
+</main>
+
+<a class="next wrap" href="../doorly/"><small>Next · track 05</small><b>Doorly →</b></a>
+<footer class="wrap foot"><span>Charlie Wuytack · <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></span><span>Research and engineering, not financial advice. Nothing here is trading live at a profit.</span></footer>
+</body>
+</html>

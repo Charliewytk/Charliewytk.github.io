@@ -15,7 +15,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
-HOMEPAGE = (ROOT / "index.html").read_text(encoding="utf-8")
+HOMEPAGE = (ROOT / "work" / "index.html").read_text(encoding="utf-8")
 EXETIX = ROOT / "exetix"
 PAGES = ["index.html", "how-it-works.html", "engineering.html", "gallery.html"]
 APP_STORE = "https://apps.apple.com/gb/app/exetix/id6814591245"
@@ -172,19 +172,19 @@ class HomepageHero(unittest.TestCase):
 
     def test_hero_links_and_images(self) -> None:
         block = _section()
-        self.assertIn('href="exetix/"', block)
+        self.assertIn('href="../exetix/"', block)
         self.assertIn(LIVE_SITE, block)
         self.assertIn(APP_STORE, block)
         p = _parse(block)
         self.assertGreaterEqual(len(p.imgs), 3)
         for img in p.imgs:
             self.assertTrue((img.get("alt") or "").strip(), img.get("src"))
-            self.assertTrue((ROOT / img["src"]).is_file(), img["src"])
+            self.assertTrue((ROOT / "work" / img["src"]).resolve().is_file(), img["src"])
             self.assertEqual(img.get("loading"), "lazy", img["src"])
 
     def test_nav_points_at_exetix(self) -> None:
         mast = re.search(r'<div class="masthead">.*?</div>', HOMEPAGE, re.S).group(0)
-        self.assertIn('href="exetix/"', mast)
+        self.assertIn('href="../exetix/"', mast)
         rail = re.search(r'<nav class="rail".*?</nav>', HOMEPAGE, re.S).group(0)
         self.assertIn('href="#exetix"', rail)
         self.assertLess(rail.index("#exetix"), rail.index("#doorly"))

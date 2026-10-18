@@ -18,7 +18,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
-HOMEPAGE = (ROOT / "index.html").read_text(encoding="utf-8")
+HOMEPAGE = (ROOT / "work" / "index.html").read_text(encoding="utf-8")
 LOWER = HOMEPAGE.lower()
 BODY = HOMEPAGE.split("<body>", 1)[1]
 
@@ -104,7 +104,8 @@ class LinksResolve(unittest.TestCase):
             parts = urlsplit(ref)
             if parts.scheme or ref.startswith(("#", "mailto:", "//")):
                 continue
-            target = ROOT / parts.path
+            # the full page now lives at /work/, so relative refs resolve from there
+            target = (ROOT / "work" / parts.path).resolve()
             if parts.path.endswith("/") or parts.path == "":
                 target = target / "index.html"
             self.assertTrue(target.exists(), f"{ref} does not resolve")

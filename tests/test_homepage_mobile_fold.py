@@ -21,7 +21,7 @@ from pathlib import Path
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
-HOMEPAGE = (ROOT / "index.html").read_text(encoding="utf-8")
+HOMEPAGE = (ROOT / "work" / "index.html").read_text(encoding="utf-8")
 MEASURE = ROOT / "tests" / "measure_mobile_fold.mjs"
 GUMROAD = "https://wuytackcharlie.gumroad.com/l/mergermonitor"
 MOBILE = (390, 844)
@@ -55,7 +55,7 @@ def _served_origin() -> str:
 def _measure(width: int, height: int, scroll_y: int = 0) -> dict:
     origin = _served_origin()
     proc = subprocess.run(
-        ["node", str(MEASURE), f"{origin}/", str(width), str(height), str(scroll_y)],
+        ["node", str(MEASURE), f"{origin}/work/", str(width), str(height), str(scroll_y)],
         cwd=str(ROOT),
         capture_output=True,
         text=True,
