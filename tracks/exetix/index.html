@@ -11,8 +11,11 @@
 <meta property="og:url" content="https://charliewytk.github.io/tracks/exetix/">
 <meta property="og:title" content="ExeTix · Track 01 · Charlie Wuytack">
 <meta property="og:description" content="ExeTix pings you the second Exeter tickets drop, and sells you a verified student's spare when they're gone.">
-<meta property="og:image" content="https://charliewytk.github.io/media/preview.png">
+<meta property="og:image" content="https://charliewytk.github.io/media/og/exetix.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://charliewytk.github.io/media/og/exetix.png">
 <meta name="theme-color" content="#06120b">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,7 +27,7 @@
 
 <header class="wrap top">
   <a href="../../">← Side A</a>
-  <nav><a href="../">Track 01 / 07</a><a href="../../work/">All work</a><a href="https://wuytackcharlie.gumroad.com/l/mergermonitor">Merger Monitor £5/mo</a></nav>
+  <nav><a href="../">Track 01 / 12</a><a href="../../work/">All work</a><a href="https://wuytackcharlie.gumroad.com/l/mergermonitor">Merger Monitor £5/mo</a></nav>
 </header>
 
 <main>
@@ -74,5 +77,20 @@
 
 <a class="next wrap" href="../research/"><small>Next · track 02</small><b>The kill log →</b></a>
 <footer class="wrap foot"><span>Charlie Wuytack · <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></span><span>Research and engineering, not financial advice. Nothing here is trading live at a profit.</span></footer>
+<script>
+  // opened straight from Side A? Back takes you to where you were on it, not to the top
+  (function () {
+    try { var ref = new URL(document.referrer); } catch (e) { return; }
+    if (ref.origin !== location.origin || history.length < 2) return;
+    var home = new URL('../../', location.href).pathname;
+    if (ref.pathname !== home && ref.pathname !== home + 'index.html') return;
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a');
+      if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+      var p = new URL(a.href, location.href).pathname;
+      if (p === home || p === home + 'index.html') { e.preventDefault(); history.back(); }
+    });
+  })();
+</script>
 </body>
 </html>

@@ -13,7 +13,8 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
-TRACKS = ["exetix", "research", "solana", "merger-monitor", "doorly", "powerleash", "abyss-warden"]
+TRACKS = ["exetix", "research", "solana", "merger-monitor", "doorly", "powerleash", "abyss-warden",
+          "deskstatus", "numerai", "competitions", "chess-exchange", "chelsea-bikes"]
 GUMROAD = "https://wuytackcharlie.gumroad.com/l/mergermonitor"
 
 
@@ -43,6 +44,21 @@ def _refs(path: Path) -> _Refs:
     return p
 
 
+class NotFoundPage(unittest.TestCase):
+    def test_404_links_resolve_from_the_root(self) -> None:
+        path = ROOT / "404.html"
+        self.assertTrue(path.is_file())
+        for ref in _refs(path).refs:
+            parts = urlsplit(ref)
+            if parts.scheme or ref.startswith(("mailto:", "//")):
+                continue
+            self.assertTrue(ref.startswith("/"), f"404 link {ref} must start at the site root")
+            target = ROOT / parts.path.lstrip("/")
+            if parts.path.endswith("/"):
+                target = target / "index.html"
+            self.assertTrue(target.exists(), ref)
+
+
 class TrackPages(unittest.TestCase):
     def test_every_track_has_a_page(self) -> None:
         for slug in TRACKS:
@@ -58,7 +74,7 @@ class TrackPages(unittest.TestCase):
     def test_tracks_chain_in_order(self) -> None:
         for i, slug in enumerate(TRACKS):
             html = _page(slug).read_text(encoding="utf-8")
-            self.assertIn(f"Track {i + 1:02d} / 07", html)
+            self.assertIn(f"Track {i + 1:02d} / {len(TRACKS)}", html)
             if i + 1 < len(TRACKS):
                 self.assertIn(f'class="next wrap" href="../{TRACKS[i + 1]}/"', html)
             else:
@@ -96,6 +112,42 @@ class TrackPages(unittest.TestCase):
         self.assertIn("not advice", html.lower())
         self.assertIn("merger-stats.js", html)
         self.assertIsNone(re.search(r"[1-9][\d,]*\s+subscribers?", html.lower()))
+
+    def test_tracks_open_in_place_on_side_a(self) -> None:
+        """Side A slides a track up over itself; Back returns to the same scroll spot."""
+        home = (ROOT / "index.html").read_text(encoding="utf-8")
+        for needle in ("attachShadow", "history.pushState", "popstate", "sessionStorage"):
+            self.assertIn(needle, home, needle)
+        css = (ROOT / "tracks" / "track.css").read_text(encoding="utf-8")
+        self.assertIn(":root, :host {", css)
+        self.assertIn("body, .tbody {", css)
+
+    def test_standalone_track_goes_back_to_side_a(self) -> None:
+        for slug in TRACKS:
+            html = _page(slug).read_text(encoding="utf-8")
+            self.assertIn("history.back()", html, slug)
+            self.assertIn("document.referrer", html, slug)
+
+    def test_each_page_has_its_own_share_card(self) -> None:
+        seen = set()
+        for slug in TRACKS + ["tracklist"]:
+            path = ROOT / "tracks" / ("" if slug == "tracklist" else slug) / "index.html"
+            html = path.read_text(encoding="utf-8")
+            m = re.search(r'<meta property="og:image" content="https://charliewytk\.github\.io/(media/og/[a-z-]+\.png)">', html)
+            self.assertIsNotNone(m, slug)
+            png = ROOT / m.group(1)
+            data = png.read_bytes()
+            self.assertTrue(data.startswith(b"\x89PNG\r\n\x1a\n"), slug)
+            self.assertEqual((int.from_bytes(data[16:20], "big"), int.from_bytes(data[20:24], "big")), (1200, 630), slug)
+            seen.add(m.group(1))
+        self.assertEqual(len(seen), len(TRACKS) + 1)
+
+    def test_chess_track_stays_play_money(self) -> None:
+        html = _page("chess-exchange").read_text(encoding="utf-8").lower()
+        for needle in ("play money", "not a book", "not advice", "demo goes live after the pages click"):
+            self.assertIn(needle, html)
+        for needle in ("real money", "wallet", "stockfish"):
+            self.assertNotIn(needle, html)
 
     def test_research_track_claims_no_profit(self) -> None:
         html = _page("research").read_text(encoding="utf-8").lower()

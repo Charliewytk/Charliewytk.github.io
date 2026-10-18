@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chelsea Bikes · Track 12 · Charlie Wuytack</title>
+<meta name="description" content="A rebuild of my local bike shop's website: eleven pages, an accessibility pass, and it works offline.">
+<link rel="icon" href="../../media/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://charliewytk.github.io/tracks/chelsea-bikes/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://charliewytk.github.io/tracks/chelsea-bikes/">
+<meta property="og:title" content="Chelsea Bikes · Track 12 · Charlie Wuytack">
+<meta property="og:description" content="A rebuild of my local bike shop's website: eleven pages, an accessibility pass, and it works offline.">
+<meta property="og:image" content="https://charliewytk.github.io/media/og/chelsea-bikes.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://charliewytk.github.io/media/og/chelsea-bikes.png">
+<meta name="theme-color" content="#0b1410">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&amp;family=Fraunces:ital,opsz,wght@1,9..144,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../../tracks/track.css">
+</head>
+<body style="--bg:#0b1410;--acc:#7fd8a8">
+<div class="grain" aria-hidden="true"></div>
+
+<header class="wrap top">
+  <a href="../../">← Side A</a>
+  <nav><a href="../">Track 12 / 12</a><a href="../../work/">All work</a><a href="https://wuytackcharlie.gumroad.com/l/mergermonitor">Merger Monitor £5/mo</a></nav>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <p class="kick">Track 12 · web design</p>
+      <h1>Chelsea Bikes</h1>
+      <p class="sub">My local bike shop's website, rebuilt unasked.</p>
+      <p class="lede">I bought my bike there, second hand, and I do some repairs there too. Its website wasn't doing it justice, which probably costs it customers. So I rebuilt it to bring more of them in.</p>
+    </div>
+    <div class="disc" aria-hidden="true"><div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="16" r="4"/><circle cx="18" cy="16" r="4"/><path d="M6 16l4-8h5l3 8M10 8H8M15 8l-3 8"/></svg><small>TRACK 12</small></div></div>
+  </div>
+
+  <div class="wrap"><div class="facts"><div><b>11</b><span>pages in the prototype</span></div><div><b>Offline</b><span>it keeps working without a connection</span></div><div><b>3</b><span>pitch tools ready: a before/after view, a leave-behind and a quote template</span></div></div></div>
+
+  <div class="wrap body">
+    <div class="story">
+    <section><h2>What's <em>built</em></h2>
+      <ul class="list">
+        <li class="done">Prototype finished: 11 pages, accessibility pass, works offline</li>
+        <li class="done">Pitch materials: before/after tool, one-page leave-behind, quote template</li>
+        <li class="done">Photo-drop system, so real shop photos replace the illustrations instantly</li>
+        <li>Pitch it to the owner</li>
+      </ul>
+      <div class="cta">
+        <a class="btn solid" href="../../chelsea-bikes/compare.html">See before and after</a>
+        <a class="btn" href="../../chelsea-bikes/">Browse the prototype</a>
+      </div></section>
+    </div>
+    <dl class="liner"><dt>Status</dt><dd>Prototype · not yet pitched</dd><dt>Pieces</dt><dd>11 pages · before/after tool · leave-behind · quote template</dd></dl>
+  </div>
+
+  <div class="wrap"><figure class="media"><div class="frame"><video muted loop playsinline autoplay preload="metadata" poster="../../media/chelsea.jpg"><source src="../../media/chelsea-demo.mp4" type="video/mp4"></video></div></figure></div>
+</main>
+
+<a class="next wrap" href="../../"><small>End of side B</small><b>Back to the start →</b></a>
+<footer class="wrap foot"><span>Charlie Wuytack · <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></span><span>Research and engineering, not financial advice. Nothing here is trading live at a profit.</span></footer>
+<script>
+  // opened straight from Side A? Back takes you to where you were on it, not to the top
+  (function () {
+    try { var ref = new URL(document.referrer); } catch (e) { return; }
+    if (ref.origin !== location.origin || history.length < 2) return;
+    var home = new URL('../../', location.href).pathname;
+    if (ref.pathname !== home && ref.pathname !== home + 'index.html') return;
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a');
+      if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+      var p = new URL(a.href, location.href).pathname;
+      if (p === home || p === home + 'index.html') { e.preventDefault(); history.back(); }
+    });
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DeskStatus · Track 08 · Charlie Wuytack</title>
+<meta name="description" content="A native SwiftUI dashboard for the whole research desk. Read-only by design, and it never holds a key.">
+<link rel="icon" href="../../media/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://charliewytk.github.io/tracks/deskstatus/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://charliewytk.github.io/tracks/deskstatus/">
+<meta property="og:title" content="DeskStatus · Track 08 · Charlie Wuytack">
+<meta property="og:description" content="A native SwiftUI dashboard for the whole research desk. Read-only by design, and it never holds a key.">
+<meta property="og:image" content="https://charliewytk.github.io/media/og/deskstatus.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://charliewytk.github.io/media/og/deskstatus.png">
+<meta name="theme-color" content="#101116">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&amp;family=Fraunces:ital,opsz,wght@1,9..144,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="../../tracks/track.css">
+</head>
+<body style="--bg:#101116;--acc:#3ddc84">
+<div class="grain" aria-hidden="true"></div>
+
+<header class="wrap top">
+  <a href="../../">← Side A</a>
+  <nav><a href="../">Track 08 / 12</a><a href="../../work/">All work</a><a href="https://wuytackcharlie.gumroad.com/l/mergermonitor">Merger Monitor £5/mo</a></nav>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <p class="kick">Track 08 · macOS app</p>
+      <h1>DeskStatus</h1>
+      <p class="sub">Looking can't turn into doing by accident.</p>
+      <p class="lede">Dozens of daemons, paper books and research jobs each write their own state. DeskStatus puts all of it in one window and one menu-bar light, and it can't sign anything.</p>
+    </div>
+    <div class="disc" aria-hidden="true"><div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="1.5"/><path d="M8 21h8M12 17v4"/><circle cx="17" cy="8" r="1.2"/></svg><small>TRACK 08</small></div></div>
+  </div>
+
+  <div class="wrap"><div class="facts"><div><b>7</b><span>keyboard tabs: floor, engines, Hyperliquid, paper, printer, sleeve, Apex</span></div><div><b>1 s</b><span>polling for live state; Apex every 3 s; health check every 60 s</span></div><div><b>0</b><span>keys opened. The only action writes an intent file for a separate signer</span></div></div></div>
+
+  <div class="wrap body">
+    <div class="story">
+    <section><h2>How it <em>works</em></h2>
+      <p>Daemons and jobs write <b>JSON and JSONL snapshots</b>, pid files and heartbeats. DeskStatus reads them and shows the whole desk at once. A staleness state machine makes old data read as old instead of as calm.</p>
+      <p>The one action is <b>SELL ALL → CONFIRM</b>, two steps. It writes an intent file and wakes a separate signer over a Unix socket. The app itself never opens a key.</p></section>
+    <section><h2>What's <em>in it</em></h2>
+      <ul class="list">
+        <li class="done">Seven keyboard tabs, from the live floor to the Apex platform</li>
+        <li class="done">A menu-bar extra with a coloured status dot, visible from any app</li>
+        <li class="done">Headless modes: --screenshot renders the dashboard at 2×, --dump --text prints the floor for scripts</li>
+        <li class="done">Shipped as v1.0.3</li>
+      </ul>
+      <p class="note">The real window shows live account data, so it isn't pictured here.</p>
+      <div class="cta"><a class="btn solid" href="../../work/#deskstatus">Full case study</a></div></section>
+    </div>
+    <dl class="liner"><dt>Status</dt><dd>Shipped · v1.0.3</dd><dt>Stack</dt><dd>Swift 5 · SwiftUI · Swift Charts · MenuBarExtra · SwiftPM · macOS 14+</dd><dt>Size</dt><dd>16 Swift files · 4.6k lines</dd></dl>
+  </div>
+
+  <div class="wrap"></div>
+</main>
+
+<a class="next wrap" href="../numerai/"><small>Next · track 09</small><b>Numerai →</b></a>
+<footer class="wrap foot"><span>Charlie Wuytack · <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></span><span>Research and engineering, not financial advice. Nothing here is trading live at a profit.</span></footer>
+<script>
+  // opened straight from Side A? Back takes you to where you were on it, not to the top
+  (function () {
+    try { var ref = new URL(document.referrer); } catch (e) { return; }
+    if (ref.origin !== location.origin || history.length < 2) return;
+    var home = new URL('../../', location.href).pathname;
+    if (ref.pathname !== home && ref.pathname !== home + 'index.html') return;
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a');
+      if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+      var p = new URL(a.href, location.href).pathname;
+      if (p === home || p === home + 'index.html') { e.preventDefault(); history.back(); }
+    });
+  })();
+</script>
+</body>
+</html>
