@@ -18,7 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 EXAMPLE = ROOT / "example" / "index.html"
 WEEKLY = ROOT / "weekly" / "index.html"
-HOMEPAGE = ROOT / "index.html"
+HOMEPAGE = ROOT / "work" / "index.html"
 GUMROAD = "https://wuytackcharlie.gumroad.com/l/mergermonitor"
 WEEKLY_SKU = "https://wuytackcharlie.gumroad.com/l/mergerweekly"
 

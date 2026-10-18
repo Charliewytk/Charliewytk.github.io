@@ -317,7 +317,7 @@ class SizerPage(unittest.TestCase):
 
     def test_homepage_first_fold_is_untouched(self) -> None:
         """Do not replace Scroll / I'D RATHER BUILD. This leftover is /sizer/ only."""
-        homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+        homepage = (ROOT / "work" / "index.html").read_text(encoding="utf-8")
         fold = re.search(r'<header class="opening">.*?</header>', homepage, re.S)
         self.assertIsNotNone(fold)
         self.assertIn('id="scrollHint"', fold.group(0))
@@ -328,8 +328,8 @@ class SizerPage(unittest.TestCase):
 
     def test_homepage_index_contains_sizer_href(self) -> None:
         """Homepage notes point at the public calculator. Not a new hero."""
-        homepage = (ROOT / "index.html").read_text(encoding="utf-8")
-        self.assertIn('href="sizer/"', homepage)
+        homepage = (ROOT / "work" / "index.html").read_text(encoding="utf-8")
+        self.assertIn('href="../sizer/"', homepage)
         block = re.search(r'<section class="work" id="merger">.*?</section>', homepage, re.S)
         self.assertIsNotNone(block)
         notes = re.search(
@@ -338,12 +338,12 @@ class SizerPage(unittest.TestCase):
             re.S,
         )
         self.assertIsNotNone(notes, "merger-monitor notes block missing")
-        self.assertIn('href="sizer/"', notes.group(1))
-        self.assertIn('href="example/"', notes.group(1))
+        self.assertIn('href="../sizer/"', notes.group(1))
+        self.assertIn('href="../example/"', notes.group(1))
         self.assertNotIn("share/", homepage.lower())
 
     def test_does_not_replace_paid_path_on_homepage_or_subscribe(self) -> None:
-        homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+        homepage = (ROOT / "work" / "index.html").read_text(encoding="utf-8")
         fold = re.search(r'<header class="opening">.*?</header>', homepage, re.S)
         self.assertIsNotNone(fold)
         self.assertIn(GUMROAD, fold.group(0))

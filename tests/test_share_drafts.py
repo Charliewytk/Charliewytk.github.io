@@ -20,7 +20,7 @@ SHARE_JS = ROOT / "assets" / "js" / "share-copy.js"
 EXAMPLE = ROOT / "example" / "index.html"
 WEEKLY = ROOT / "weekly" / "index.html"
 SUBSCRIBE = ROOT / "subscribe" / "index.html"
-HOMEPAGE = ROOT / "index.html"
+HOMEPAGE = ROOT / "work" / "index.html"
 
 EXAMPLE_URL = "https://charliewytk.github.io/example/"
 WEEKLY_URL = "https://charliewytk.github.io/weekly/"

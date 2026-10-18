@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Charlie Wuytack</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Charlie Wuytack: ExeTix, an iPhone app for Exeter's ticket drops, plus macOS tools, games and a quantitative research programme covering Solana execution, online learning and pre-registered trading research, with honest verdicts.">
 <link rel="icon" href="media/favicon.svg" type="image/svg+xml">
 <link rel="canonical" href="https://charliewytk.github.io/">
@@ -17,1987 +19,392 @@
 <meta name="twitter:title" content="Charlie Wuytack — I'd rather build than consume">
 <meta name="twitter:description" content="ExeTix, macOS tools, games, and a quant research programme with honest verdicts.">
 <meta name="twitter:image" content="https://charliewytk.github.io/media/preview.png">
-<meta name="theme-color" content="#07070a">
-<meta name="color-scheme" content="dark">
-<title>Charlie Wuytack</title>
+<meta name="theme-color" content="#f7f7ef">
+<meta name="theme-color" content="#0b0a09">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,600&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
+  /* Layout: one 3D record stays on screen; seven full-height scenes scroll past it and change the room around it. Single dark-led look by choice. */
   :root {
-    --bg:     #07070a;
-    --bg2:    #0d0d12;
-    --panel:  rgba(255,255,255,0.028);
-    --panel2: rgba(255,255,255,0.05);
-    --ink:    #ededf0;   /* headings, primary prose */
-    --ink2:   #c4c5cc;   /* secondary prose         */
-    --muted:  #9294a0;   /* captions, notes         */
-    --faint:  #80838f;   /* micro-labels            */
-    --rule:   rgba(255,255,255,0.08);
-    --rule2:  rgba(255,255,255,0.14);
-    --tint:   rgba(255,255,255,0.045);
-    --good:   #3ddc84;
-    --warn:   #e8b44a;
-    /* the record sets this; without one, the first side's red */
-    --accent: #ff6a3d;
-    --accent2: #b28cff;
-    --sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-    --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
-    --serif: "Instrument Serif", Georgia, serif;
-    --r: 18px;
-    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --bg: #0b0a09;        /* set per scene by script */
+    --ink: #f2ece0;
+    --dim: rgba(242,236,224,0.62);
+    --brass: #e0a640;
+    --green: #3ddc84;
+    --red: #d8361f;
+    --display: "Bricolage Grotesque", "Arial Narrow", sans-serif;
+    --serif: "Fraunces", Georgia, serif;
+    --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+    color-scheme: dark;
   }
-  *, *::before, *::after { box-sizing: border-box; }
-  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; scroll-padding-top: 90px; }
-  body {
-    margin: 0; background: var(--bg); color: var(--ink2);
-    font-family: var(--sans); font-size: 16.5px; line-height: 1.65;
-    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
-    overflow-x: hidden;
+  html { scroll-behavior: auto; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--display); transition: background-color 0.5s linear; overflow-x: hidden; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; }
+
+  #gl { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+  .back { position: fixed; inset: 0; z-index: 0; display: grid; place-items: center; pointer-events: none; overflow: hidden; }
+  .back b { font: 800 clamp(90px, 23vw, 380px)/0.8 var(--display); letter-spacing: -0.05em; text-transform: uppercase; color: var(--ink); opacity: var(--bo, 1); white-space: nowrap;
+    transform: translateY(var(--by, 0)) scale(var(--bs, 1)); transition: opacity 0.4s ease; }
+  .grain { position: fixed; inset: -50%; z-index: 3; pointer-events: none; opacity: 0.07;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+  header { position: fixed; top: 0; left: 0; right: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: calc(16px + env(safe-area-inset-top, 0px)) max(20px, env(safe-area-inset-right, 0px)) 16px max(20px, env(safe-area-inset-left, 0px));
+    font: 500 12px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; mix-blend-mode: difference; color: #fff; }
+  header nav { display: flex; gap: 22px; align-items: center; }
+  header a { text-decoration: none; }
+  header button { font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; background: none; border: 1px solid currentColor; padding: 6px 10px; cursor: pointer; }
+  .meter { position: fixed; right: max(20px, env(safe-area-inset-right, 0px)); top: 50%; z-index: 10; transform: translateY(-50%); display: grid; gap: 8px; mix-blend-mode: difference; }
+  .meter i { width: 2px; height: 22px; background: rgba(255,255,255,0.3); }
+  .meter i.on { background: #fff; }
+
+  main { position: relative; z-index: 2; }
+  .scene { position: relative; min-height: 170vh; }
+  .stick { position: sticky; top: 0; height: 100vh; height: 100svh; display: grid; padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); padding-block: 90px 60px; box-sizing: border-box; }
+  .copy { align-self: end; max-width: 34ch; }
+  .copy.right { justify-self: end; text-align: right; }
+  .copy.top { align-self: start; margin-top: 40px; }
+  .kick { font: 500 12px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); margin: 0 0 14px; }
+  .copy h2 { margin: 0; font: 800 clamp(34px, 5.2vw, 72px)/0.92 var(--display); letter-spacing: -0.035em; text-wrap: balance; }
+  .copy h2 em { font: italic 400 1em/1 var(--serif); letter-spacing: -0.01em; }
+  .copy p { margin: 16px 0 0; font: 500 clamp(15px, 1.3vw, 18px)/1.45 var(--display); color: var(--dim); }
+  .copy .go { display: inline-block; margin-top: 22px; padding: 12px 18px; border: 1px solid currentColor; text-decoration: none; font: 500 13px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; }
+  .copy .go.solid { background: var(--ink); color: #0b0a09; border-color: var(--ink); }
+  .hint { position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%); font: 500 11px var(--mono); letter-spacing: 0.3em; color: var(--dim); }
+
+  /* technical annotations for the "thermal" research scene */
+  .notes { position: absolute; inset: 0; pointer-events: none; font: 400 12px/1.5 var(--mono); color: rgba(255,240,220,0.85); }
+  .notes span { position: absolute; padding-left: 14px; border-left: 1px solid currentColor; }
+  .notes .n1 { left: 10%; top: 50%; } .notes .n2 { right: 12%; top: 32%; text-align: right; padding: 0 14px 0 0; border-left: 0; border-right: 1px solid currentColor; }
+  .notes .n3 { left: 16%; bottom: 24%; } .notes .n4 { right: 14%; bottom: 30%; text-align: right; padding: 0 14px 0 0; border-left: 0; border-right: 1px solid currentColor; }
+  .notes b { display: block; font: 800 34px/1 var(--display); color: #fff; }
+
+  /* ExeTix phone */
+  .phone { position: absolute; right: 9vw; top: 50%; width: clamp(150px, 19vw, 270px); transform: translateY(calc(-50% + var(--py, 40px))) rotate(5deg); opacity: var(--po, 0);
+    border: 8px solid #000; border-radius: 34px; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.6); }
+  .phone img { display: block; width: 100%; }
+
+  /* editorial collage */
+  .collage { position: absolute; inset: 0; pointer-events: none; }
+  .tile { position: absolute; width: clamp(150px, 17vw, 240px); aspect-ratio: 4 / 5; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; pointer-events: auto;
+    text-decoration: none; color: #120d0b; background: var(--c); box-shadow: 0 30px 60px -20px rgba(0,0,0,0.55); transform: rotate(var(--r)) translateY(var(--ty, 60px)); opacity: var(--to, 0); transition: transform 0.25s ease; }
+  .tile:hover { transform: rotate(0deg) translateY(-6px); }
+  .tile .ic { position: absolute; top: 12px; right: 12px; width: 38px; height: 38px; display: grid; place-items: center; border: 2px solid currentColor; border-radius: 50%; }
+  .tile .ic svg { width: 20px; height: 20px; }
+  .tile { position: absolute; }
+  .tile span:last-child::after { content: " →"; }
+  .tile small { font: 500 11px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; }
+  .tile b { font: 800 clamp(30px, 3.4vw, 50px)/0.88 var(--display); letter-spacing: -0.04em; }
+  .tile span { font: 500 14px/1.25 var(--display); }
+
+  .end { text-align: center; place-items: center; }
+  .end .copy { align-self: center; max-width: min(980px, 100%); text-align: center; }
+  .end h2 { font-size: clamp(36px, 6vw, 92px); }
+  .fine { position: absolute; left: 0; right: 0; bottom: 22px; text-align: center; font: 400 11px var(--mono); color: var(--dim); padding-inline: 24px; }
+
+  @media (max-width: 760px) {
+    header nav a { display: none; }
+    .meter { display: none; }
+    .phone { right: 50%; transform: translate(50%, calc(-62% + var(--py, 40px))) rotate(4deg); width: 150px; }
+    .notes { font-size: 10px; } .notes b { font-size: 24px; }
+    .notes .n1 { left: 6%; top: 18%; } .notes .n2 { right: 6%; top: 24%; } .notes .n3 { left: 6%; bottom: 34%; } .notes .n4 { right: 6%; bottom: 40%; }
+    .tile { width: 40vw; padding: 12px; right: auto !important; }
+    .tile:nth-child(1) { left: 5% !important; top: 12% !important; }
+    .tile:nth-child(2) { left: 50% !important; top: 15% !important; }
+    .tile:nth-child(3) { left: 5% !important; top: 43% !important; }
+    .tile:nth-child(4) { left: 50% !important; top: 46% !important; }
+    .tile .ic { width: 30px; height: 30px; top: 8px; right: 8px; } .tile .ic svg { width: 16px; height: 16px; }
   }
-  ::selection { background: var(--accent); color: #0a0a0a; }
-  a { color: var(--ink); text-decoration: none; }
-  img, video, svg { max-width: 100%; }
-  code { font-family: var(--mono); font-size: 0.86em; background: var(--panel2); border: 1px solid var(--rule); border-radius: 6px; padding: 0.08em 0.38em; color: var(--ink); }
-  b, strong { color: var(--ink); font-weight: 600; }
-  h2, h3, h4 { color: var(--ink); font-weight: 600; letter-spacing: -0.02em; }
-  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
-
-  /* ---------- ambient: grain, cursor glow, progress ---------- */
-  .grain { position: fixed; inset: -50%; z-index: 1; pointer-events: none; opacity: 0.05;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-  .glow { position: fixed; left: 0; top: 0; z-index: 0; width: 640px; height: 640px; margin: -320px 0 0 -320px; pointer-events: none;
-    border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--accent) 9%, transparent), transparent 62%);
-    transform: translate3d(var(--gx, -999px), var(--gy, -999px), 0); transition: opacity 0.4s ease; opacity: 0; }
-  .glow.on { opacity: 1; }
-  .progress { position: fixed; left: 0; top: 0; z-index: 55; height: 2px; width: 100%; transform-origin: left; transform: scaleX(var(--p, 0));
-    background: linear-gradient(90deg, var(--accent), var(--accent2)); }
-  main, .opening, .ticker, footer { position: relative; z-index: 2; }
-
-  /* ---------- floating masthead ---------- */
-  .masthead {
-    position: fixed; top: 14px; left: 50%; z-index: 50; transform: translateX(-50%);
-    width: min(1080px, calc(100% - 24px));
-    display: flex; align-items: center; justify-content: space-between; gap: 14px;
-    padding: 8px 8px 8px 16px; border-radius: 999px;
-    background: rgba(12,12,16,0.62); border: 1px solid var(--rule2);
-    -webkit-backdrop-filter: blur(16px) saturate(160%); backdrop-filter: blur(16px) saturate(160%);
-    box-shadow: 0 10px 40px -12px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06);
-    font-size: 0.84rem;
-  }
-  .masthead .who { display: flex; align-items: center; gap: 10px; color: var(--ink); font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; }
-  .masthead .who::before { content: "CW"; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%;
-    font: 700 0.62rem/1 var(--mono); letter-spacing: 0.04em; color: #0a0a0a;
-    background: conic-gradient(from 210deg, var(--accent), var(--accent2), var(--accent)); }
-  .mast-end { display: flex; align-items: center; gap: 2px; }
-  .mast-end a { padding: 7px 12px; border-radius: 999px; color: var(--muted); white-space: nowrap; transition: color 0.2s ease, background 0.2s ease; }
-  .mast-end a:hover { color: var(--ink); background: var(--panel2); }
-  .mast-end a.xt-mast { color: var(--ink); }
-  .mast-end a.xt-mast::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 7px; border-radius: 50%; background: #3ddc84; box-shadow: 0 0 10px #3ddc84; vertical-align: 1px; }
-  .masthead a.pay { color: #0a0a0a; font-weight: 600; margin-left: 6px; }
-  .masthead a.touch { border: 1px solid var(--rule2); color: var(--ink); margin-left: 4px; }
-
-  /* shiny pill: the one paid button style, everywhere */
-  .pay, .shine {
-    position: relative; isolation: isolate; overflow: hidden;
-    background: linear-gradient(180deg, #fff, #d9d9de); color: #0a0a0a !important;
-    box-shadow: 0 0 0 1px rgba(255,255,255,0.25), 0 8px 26px -8px color-mix(in srgb, var(--accent) 70%, transparent);
-  }
-  .pay::after, .shine::after {
-    content: ""; position: absolute; inset: 0; z-index: -1;
-    background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.9) 45%, color-mix(in srgb, var(--accent) 45%, #fff) 50%, transparent 62%);
-    transform: translateX(-120%); animation: sheen 4.2s var(--ease) infinite;
-  }
-  .masthead a.pay:hover, .pay:hover { background: linear-gradient(180deg, #fff, #ececf0); }
-  @keyframes sheen { 0%, 55% { transform: translateX(-120%); } 85%, 100% { transform: translateX(120%); } }
-
-  /* ---------- section rail ---------- */
-  .rail { position: fixed; right: 18px; top: 50%; transform: translateY(-50%); z-index: 45;
-    display: flex; flex-direction: column; gap: 9px; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
-  .entered .rail { opacity: 1; pointer-events: auto; }
-  .rail a { position: relative; display: block; width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.22); transition: transform 0.25s var(--ease), background 0.25s ease; }
-  .rail a:hover, .rail a.on { background: var(--accent); transform: scale(1.6); }
-  .rail a::after { content: attr(data-t); position: absolute; right: 16px; top: 50%; transform: translateY(-50%) scale(0.625);
-    transform-origin: right center; white-space: nowrap; font: 500 1.1rem/1 var(--sans); color: var(--ink);
-    background: rgba(16,16,20,0.92); border: 1px solid var(--rule2); padding: 8px 12px; border-radius: 10px; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
-  .rail a:hover::after { opacity: 1; }
-
-  /* ---------- opening: the scroll wipe ---------- */
-  .opening { height: 215vh; position: relative; }
-  .pin-hero { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center; padding: 0 20px; }
-  .aurora { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
-  .aurora i { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.55; mix-blend-mode: screen; }
-  .aurora i:nth-child(1) { width: 52vw; height: 52vw; left: -12vw; top: -18vw; background: radial-gradient(circle, color-mix(in srgb, var(--accent) 60%, transparent), transparent 65%); animation: drift1 18s ease-in-out infinite alternate; }
-  .aurora i:nth-child(2) { width: 46vw; height: 46vw; right: -14vw; top: 10vh; background: radial-gradient(circle, color-mix(in srgb, var(--accent2) 55%, transparent), transparent 65%); animation: drift2 22s ease-in-out infinite alternate; }
-  .aurora i:nth-child(3) { width: 40vw; height: 40vw; left: 30vw; bottom: -24vw; background: radial-gradient(circle, rgba(61,220,200,0.35), transparent 65%); animation: drift1 26s ease-in-out infinite alternate-reverse; }
-  .aurora::after { content: ""; position: absolute; inset: 0;
-    background-image: linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
-    background-size: 64px 64px; -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 20%, transparent 75%); mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 20%, transparent 75%); }
-  @keyframes drift1 { to { transform: translate(8vw, 6vh) scale(1.12); } }
-  @keyframes drift2 { to { transform: translate(-6vw, 8vh) scale(0.92); } }
-  .pill { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 4vh; padding: 6px 14px 6px 6px; border-radius: 999px;
-    font-size: 0.8rem; color: var(--ink2); background: rgba(255,255,255,0.04); border: 1px solid var(--rule2);
-    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); transition: border-color 0.2s ease, background 0.2s ease; }
-  .pill:hover { border-color: rgba(61,220,132,0.5); background: rgba(61,220,132,0.06); }
-  .pill b { font: 600 0.66rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: #06110a; background: #3ddc84; padding: 5px 8px; border-radius: 999px; }
-  .pill span::after { content: " →"; color: var(--muted); }
-  .stage { position: relative; width: 100%; }
-  .opening h1 { margin: 0; }
-  .slab, .ital { display: block; }
-  .opening .slab {
-    font-family: var(--sans); font-weight: 800; text-transform: uppercase;
-    font-size: clamp(3rem, min(13.2vw, 19vh), 11.5rem); line-height: 0.88; letter-spacing: -0.045em;
-  }
-  .opening .ital {
-    font-family: var(--serif); font-style: italic; font-weight: 400;
-    font-size: clamp(2.3rem, min(7.4vw, 11vh), 6.4rem); line-height: 1; letter-spacing: -0.01em;
-    margin-top: 0.06em;
-  }
-  .ghost { position: absolute; inset: 0; pointer-events: none; user-select: none; }
-  .ghost .slab { color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.16); }
-  .ghost .ital { color: rgba(255,255,255,0.07); }
-  .veil { position: relative; clip-path: inset(0 calc(100% - var(--reveal, 0%)) 0 0); }
-  .veil .slab { background: linear-gradient(180deg, #fff 30%, #a9abb6); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .veil .ital { background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; padding: 0 0.08em; }
-  .scroll-hint { position: absolute; left: 50%; transform: translateX(-50%); bottom: -14vh; margin: 0;
-    font: 500 0.68rem/1 var(--mono); letter-spacing: 0.32em; text-transform: uppercase; color: var(--muted); pointer-events: none;
-    opacity: var(--hint-op, 1); transition: opacity 0.5s ease; }
-  .scroll-hint::after { content: ""; display: block; width: 22px; height: 34px; margin: 14px auto 0; border: 1.5px solid rgba(255,255,255,0.3); border-radius: 12px;
-    background: radial-gradient(circle at 50% 30%, var(--ink) 2.4px, transparent 3px) no-repeat; background-size: 100% 100%;
-    animation: wheel 1.8s ease-in-out infinite; }
-  @keyframes wheel { 0% { background-position: 0 -6px; opacity: 1; } 70% { background-position: 0 10px; opacity: 0.3; } 100% { background-position: 0 -6px; opacity: 1; } }
-  .opening .under { opacity: var(--tail-op, 0); transform: translateY(calc((1 - var(--tail-op, 0)) * 14px)); transition: opacity 0.6s ease 0.1s, transform 0.6s var(--ease) 0.1s;
-    margin: 30px auto 0; font-size: 1.04rem; color: var(--muted); max-width: 56ch; text-wrap: pretty; }
-  .opening .under b { color: var(--ink); font-weight: 500; }
-  /* after the wipe — same SKU, never the first paint */
-  .fold-sell { opacity: var(--tail-op, 0); transition: opacity 0.6s ease 0.25s; pointer-events: none;
-    margin: 26px auto 0; width: min(40rem, 100%); padding: 18px 20px; border-radius: var(--r);
-    background: rgba(255,255,255,0.03); border: 1px solid var(--rule2); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
-  .opening.opened .fold-sell { pointer-events: auto; }
-  .fold-sell .fold-nums { margin: 0 0 14px; font-size: 0.94rem; line-height: 1.5; color: var(--ink2); text-wrap: pretty; }
-  .fold-sell .fold-nums span { font-family: var(--mono); color: var(--ink); }
-  .fold-sell .fold-ledger { margin: 12px 0 0; font: 500 0.7rem/1.4 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); }
-
-  /* ---------- ticker ---------- */
-  .ticker { overflow: hidden; border-block: 1px solid var(--rule); background: rgba(255,255,255,0.015); padding: 16px 0;
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
-  .belt { display: flex; width: max-content; animation: belt 60s linear infinite; }
-  .ticker:hover .belt { animation-play-state: paused; }
-  .belt span { white-space: nowrap; padding-right: 0; font: 500 0.76rem/1 var(--mono); letter-spacing: 0.14em; color: var(--muted); }
-  .belt span i { font-style: normal; color: var(--accent); margin: 0 22px; }
-  @keyframes belt { to { transform: translateX(-50%); } }
-
-  /* ---------- layout ---------- */
-  .wrap { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
-  .chapter, .work { position: relative; }
-  .chapter { padding: 150px 0 0; }
-  .chapter-head { width: min(1180px, calc(100% - 40px)); margin: 0 auto 56px; display: grid; grid-template-columns: auto 1fr; gap: 0 36px; align-items: end; }
-  .chapter-head .no { grid-row: 1 / span 3; margin: 0; font: 700 clamp(5rem, 12vw, 9.5rem)/0.8 var(--sans); letter-spacing: -0.06em;
-    color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.18); }
-  .chapter-head .no span { display: block; font: 500 0.7rem/1 var(--mono); letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent); -webkit-text-stroke: 0; margin-top: 18px; }
-  .chapter-head h2 { margin: 0; font-size: clamp(2.3rem, 5.4vw, 4.2rem); line-height: 1; letter-spacing: -0.045em; font-weight: 650;
-    background: linear-gradient(180deg, #fff, #9c9eaa); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .chapter-head h2 em { font-family: var(--serif); font-weight: 400; letter-spacing: -0.01em; }
-  .chapter-head .lede { margin: 18px 0 0; max-width: 60ch; color: var(--muted); font-size: 1.06rem; text-wrap: pretty; }
-
-  .eyebrow, .cap, .todo-label, .kind, .xt-kick { font: 500 0.7rem/1.4 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); }
-
-  /* chips: every number says what kind of evidence it is */
-  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; border-radius: 999px; vertical-align: 1px;
-    font: 500 0.64rem/1.4 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap;
-    border: 1px solid var(--rule2); color: var(--ink2); background: var(--panel); }
-  .chip::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
-  .chip.live { color: #3ddc84; border-color: rgba(61,220,132,0.3); background: rgba(61,220,132,0.07); }
-  .chip.paper { color: #8fb4ff; border-color: rgba(143,180,255,0.3); background: rgba(143,180,255,0.07); }
-  .chip.bt { color: #e8b44a; border-color: rgba(232,180,74,0.3); background: rgba(232,180,74,0.07); }
-  .chip.res { color: #c9b6ff; border-color: rgba(178,140,255,0.3); background: rgba(178,140,255,0.07); }
-  .chip.dead { color: #ff6b6b; border-color: rgba(255,107,107,0.35); background: rgba(255,107,107,0.08); }
-
-  /* buttons */
-  .go, .xt-go { display: inline-flex; align-items: center; gap: 10px; padding: 12px 20px; border-radius: 999px;
-    font-weight: 600; font-size: 0.92rem; letter-spacing: -0.01em; color: var(--ink);
-    background: var(--panel2); border: 1px solid var(--rule2); transition: transform 0.25s var(--ease), border-color 0.2s ease, background 0.2s ease; }
-  .go::after, .xt-go::after { content: "→"; transition: transform 0.25s var(--ease); }
-  .go:hover, .xt-go:hover { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.08); }
-  .go:hover::after, .xt-go:hover::after { transform: translateX(3px); }
-  .go.pay { border: none; background: linear-gradient(180deg, #fff, #d9d9de); }
-  .go.pay:hover { background: linear-gradient(180deg, #fff, #ececf0); }
-  .doing-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin: 1.8em 0; }
-  .note { font-size: 0.86rem; color: var(--muted); }
-  .note a, .prose a, .case-body p a, .fig-note a { color: var(--ink); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--accent) 60%, transparent); text-underline-offset: 3px; }
-  .note a:hover, .case-body p a:hover { text-decoration-color: var(--accent); }
-  .mk { color: var(--ink); background: linear-gradient(transparent 62%, color-mix(in srgb, var(--accent) 34%, transparent) 62%); padding: 0 2px; }
-  .num-r, .n { font-family: var(--mono); font-size: 0.92em; color: var(--ink); }
-
-  /* reveal */
-  .rise { opacity: 0; transform: translateY(26px); filter: blur(8px); transition: opacity 0.9s var(--ease), transform 0.9s var(--ease), filter 0.9s var(--ease); }
-  .rise.in { opacity: 1; transform: none; filter: none; }
-
-  /* ---------- ExeTix feature ---------- */
-  .xt { padding: 150px 0 0; }
-  .xt .head { width: min(1180px, calc(100% - 40px)); margin: 0 auto 30px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 20px; }
-  .xt .head h2 { margin: 0; font-size: clamp(2.6rem, 6vw, 4.8rem); line-height: 1; letter-spacing: -0.05em; font-weight: 700; color: var(--ink); }
-  .xt .head .eyebrow { margin: 0; }
-  .stream { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
-  .xt-band { position: relative; border-radius: 28px; padding: 1px; overflow: hidden;
-    background: linear-gradient(140deg, rgba(61,220,132,0.6), rgba(255,255,255,0.08) 35%, rgba(255,255,255,0.04) 65%, rgba(61,220,132,0.35)); }
-  .xt-in { position: relative; border-radius: 27px; overflow: hidden; display: grid; grid-template-columns: 1.05fr 1fr; gap: 24px; padding: 54px 54px 0;
-    background: radial-gradient(ellipse 80% 70% at 85% 30%, rgba(61,220,132,0.16), transparent 60%), radial-gradient(ellipse 60% 60% at 0% 100%, rgba(61,220,132,0.06), transparent 60%), #0a0d0b; }
-  .xt-copy { padding-bottom: 54px; }
-  .xt-kick { display: flex; align-items: center; gap: 14px; margin: 0 0 26px; color: #8de8b4; }
-  .xt-kick img { width: 54px; height: 54px; border-radius: 13px; box-shadow: 0 8px 30px -6px rgba(61,220,132,0.6); }
-  .xt-pitch { margin: 0; font-size: clamp(1.9rem, 3.6vw, 2.9rem); line-height: 1.05; letter-spacing: -0.04em; font-weight: 650; color: var(--ink); text-wrap: balance; }
-  .xt-pitch span { display: block; margin-top: 0.3em; font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -0.01em; color: #8de8b4; }
-  .xt-facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 34px 0 0; }
-  .xt-facts div { padding: 16px; border-radius: 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--rule); }
-  .xt-facts b { display: block; font: 650 1.9rem/1 var(--sans); letter-spacing: -0.04em; color: var(--ink); }
-  .xt-facts b i { font-style: normal; font-size: 0.55em; color: var(--muted); margin-left: 2px; }
-  .xt-facts span { display: block; margin-top: 8px; font-size: 0.78rem; line-height: 1.4; color: var(--muted); }
-  .xt-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; margin: 30px 0 0; }
-  .xt-go { background: #3ddc84; color: #04120a; border: none; box-shadow: 0 10px 30px -10px rgba(61,220,132,0.8); }
-  .xt-go:hover { background: #5ae69a; }
-  .xt-cta > a:not(.xt-go) { color: var(--ink2); font-size: 0.9rem; }
-  .xt-cta > a:not(.xt-go):hover { color: var(--ink); }
-  .xt-soon { margin: 18px 0 0; font-size: 0.84rem; color: var(--muted); }
-  .xt-soon a { color: #8de8b4; font-weight: 600; }
-  .xt-phones { position: relative; min-height: 520px; perspective: 1400px; }
-  .xt-phone { position: absolute; bottom: -40px; margin: 0; width: 46%; border-radius: 30px; overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.14); box-shadow: 0 40px 80px -20px rgba(0,0,0,0.8), 0 0 0 6px #121514;
-    transition: transform 0.7s var(--ease); background: #000; }
-  .xt-phone img { display: block; width: 100%; height: auto; }
-  .xt-phone.l { left: 0; transform: rotate(-8deg) translateY(40px); }
-  .xt-phone.c { left: 27%; z-index: 2; transform: translateY(-10px); }
-  .xt-phone.r { right: 0; transform: rotate(8deg) translateY(40px); }
-  .xt-phones:hover .xt-phone.l { transform: rotate(-12deg) translate(-16px, 30px); }
-  .xt-phones:hover .xt-phone.c { transform: translateY(-26px); }
-  .xt-phones:hover .xt-phone.r { transform: rotate(12deg) translate(16px, 30px); }
-  .say { max-width: 46ch; margin: 1.3em 0 0; font-size: clamp(1.25rem, 2.3vw, 1.7rem); line-height: 1.35; letter-spacing: -0.025em; color: var(--ink2); }
-  .xt .stream > .say:first-of-type { margin-top: 2.2em; }
-  .say.small { font-size: 1rem; line-height: 1.6; letter-spacing: 0; color: var(--muted); max-width: 66ch; }
-
-  /* to-do lists, as a timeline */
-  .todo-label { margin: 2.2em 0 0.8em; }
-  .todo { list-style: none; margin: 0; padding: 0; position: relative; }
-  .todo li { position: relative; padding: 0 0 12px 28px; font-size: 0.95rem; color: var(--ink2); }
-  .todo li::before { content: ""; position: absolute; left: 0; top: 0.42em; width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--rule2); background: var(--bg); }
-  .todo li:not(:last-child)::after { content: ""; position: absolute; left: 6.5px; top: 1.5em; bottom: -0.1em; width: 1px; background: var(--rule); }
-  .todo li.done::before { border-color: #3ddc84; background: #3ddc84 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M3.5 7.2l2.3 2.3 4.7-4.9' fill='none' stroke='%23052' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/100% no-repeat; }
-  .todo li.doing::before { border-color: var(--warn); box-shadow: 0 0 0 4px rgba(232,180,74,0.14); animation: pulse 1.8s ease-in-out infinite; }
-  .todo li.doing { color: var(--ink); }
-  .todo.log li::before { width: 6px; height: 6px; top: 0.72em; left: 4px; border: none; background: var(--accent); }
-  .todo.log li::after { display: none; }
-  @keyframes pulse { 50% { box-shadow: 0 0 0 8px rgba(232,180,74,0); } }
-
-  /* ---------- bento ---------- */
-  .grid { width: min(1180px, calc(100% - 40px)); margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-  .card { position: relative; isolation: isolate; display: flex; flex-direction: column; gap: 12px; min-height: 270px; padding: 24px; border-radius: var(--r);
-    background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.012)); border: 1px solid var(--rule); overflow: hidden;
-    transition: transform 0.45s var(--ease), border-color 0.3s ease; }
-  .card::before { content: ""; position: absolute; inset: 0; z-index: -1; opacity: 0; transition: opacity 0.35s ease;
-    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--accent) 14%, transparent), transparent 45%); }
-  .card::after { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none; opacity: 0; transition: opacity 0.35s ease;
-    background: radial-gradient(300px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--accent) 80%, #fff), transparent 45%);
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
-  .card:hover { transform: translateY(-3px); }
-  .card:hover::before, .card:hover::after { opacity: 1; }
-  .card.wide { grid-column: span 2; }
-  .card .kind { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-  .card h3 { margin: 6px 0 0; font-size: 1.32rem; line-height: 1.18; letter-spacing: -0.03em; }
-  .card.wide h3 { font-size: 1.7rem; max-width: 24ch; }
-  .card p { margin: 0; font-size: 0.9rem; line-height: 1.55; color: var(--muted); }
-  .card .big { margin-top: auto; padding-top: 16px; border-top: 1px dashed var(--rule2); display: flex; align-items: baseline; gap: 12px; }
-  .card .big b { flex: none; font: 650 2rem/1 var(--sans); letter-spacing: -0.05em; color: var(--ink); }
-  .card.wide .big b { font-size: 2.6rem; background: linear-gradient(90deg, #fff, color-mix(in srgb, var(--accent) 60%, #fff)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .card .big span { font-size: 0.78rem; line-height: 1.4; color: var(--muted); }
-  .card .arrow { position: absolute; right: 20px; top: 20px; }
-
-  /* ---------- case studies ---------- */
-  .case { width: min(1180px, calc(100% - 40px)); margin: 0 auto 26px; display: grid; grid-template-columns: 330px 1fr; gap: 0; border-radius: 24px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.008)); border: 1px solid var(--rule); }
-  .case-side { border-right: 1px solid var(--rule); padding: 34px 30px; }
-  .case-side .sticky { position: sticky; top: 96px; }
-  .case-side .eyebrow { margin: 0 0 14px; color: var(--accent); }
-  .case-side h3 { margin: 0; font-size: 2rem; line-height: 1.04; letter-spacing: -0.045em; font-weight: 650; }
-  .case-side .tag { margin: 14px 0 0; font-size: 0.95rem; line-height: 1.5; color: var(--muted); }
-  .case-side dl { margin: 10px 0 0; }
-  .case-side dt { margin-top: 18px; font: 500 0.64rem/1 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); }
-  .case-side dd { margin: 6px 0 0; font-size: 0.86rem; line-height: 1.5; color: var(--ink2); }
-  .case-side dd .chip { margin: 0 4px 4px 0; }
-  .case-body { padding: 34px 40px 40px; min-width: 0; }
-  .case-body > p { max-width: 70ch; }
-  .case-body .lead { margin-top: 0; font-size: clamp(1.2rem, 2vw, 1.48rem); line-height: 1.38; letter-spacing: -0.025em; color: var(--ink); }
-  .case-body h4 { margin: 2.4em 0 0.6em; font-size: 1.12rem; letter-spacing: -0.02em; }
-  .case-body h4::before { content: "▍"; color: var(--accent); margin-right: 6px; }
-  .work > .case { margin-top: 0; }
-
-  .facts, .funnel, .rules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 1.8em 0; }
-  .facts div, .funnel div, .rules div { padding: 18px; border-radius: 14px; background: var(--panel); border: 1px solid var(--rule); }
-  .facts b, .funnel b { display: block; font: 650 2.1rem/1 var(--sans); letter-spacing: -0.05em; color: var(--ink); }
-  .facts b .u { font-size: 0.5em; color: var(--muted); margin-left: 2px; letter-spacing: 0; }
-  .facts > div > span, .funnel > div > span, .rules > div > span { display: block; margin-top: 10px; font-size: 0.82rem; line-height: 1.45; color: var(--muted); }
-  .funnel div:nth-child(2) { background: rgba(255,255,255,0.02); }
-  .funnel div:nth-child(3) { border-color: color-mix(in srgb, var(--accent) 50%, transparent); background: color-mix(in srgb, var(--accent) 7%, transparent); }
-  .funnel div:nth-child(3) b { color: var(--accent); }
-  .rules b { display: block; font-size: 1rem; }
-
-  .figure { margin: 2em 0; padding: 22px; border-radius: 16px; background: rgba(0,0,0,0.25); border: 1px solid var(--rule); }
-  .figure .cap { margin: 0 0 18px; }
-  .fig-note { margin: 16px 0 0; font-size: 0.8rem; line-height: 1.55; color: var(--faint); }
-  svg.fig, svg.loadchart { display: block; width: 100%; height: auto; overflow: visible; }
-  .fig .t-s { font: 500 15px var(--mono); letter-spacing: 0.04em; }
-  .fig .t-m { font: 600 17px var(--mono); }
-  .fig .t-l { font: 600 20px var(--sans); }
-  .key { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 14px 0 0; font-size: 0.78rem; color: var(--muted); }
-  .key span { display: inline-flex; align-items: center; gap: 8px; }
-  .key i { display: inline-block; width: 18px; height: 0; border-top: 2px solid var(--ink); }
-  .key i.sw { height: 10px; width: 12px; border: none; border-radius: 3px; }
-  .key i.dash { border-top: 2px dashed var(--accent); }
-
-  .tally { display: flex; height: 54px; width: 100%; gap: 3px; border-radius: 10px; overflow: hidden; }
-  .tally span { display: flex; align-items: center; justify-content: center; min-width: 28px; color: var(--bg); font: 600 0.8rem/1 var(--mono); transform-origin: left; }
-  .tally-key { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px 24px; margin: 18px 0 0; padding: 0; list-style: none; }
-  .tally-key li { display: grid; grid-template-columns: 12px 1fr; gap: 10px; font-size: 0.8rem; line-height: 1.45; color: var(--muted); }
-  .tally-key li i { width: 12px; height: 12px; margin-top: 3px; border-radius: 3px; }
-
-  .ledger { margin: 1.2em 0; border-radius: 14px; overflow: hidden; border: 1px solid var(--rule); }
-  .ledger > div { display: grid; grid-template-columns: 1fr 1fr; }
-  .ledger > div > span { padding: 12px 16px; font-size: 0.88rem; line-height: 1.45; }
-  .ledger-head span { font: 500 0.64rem/1.4 var(--mono) !important; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); background: var(--panel2); }
-  .ledger-row { border-top: 1px solid var(--rule); }
-  .ledger-row .e { color: var(--ink2); }
-  .ledger-row .c { color: var(--muted); border-left: 1px solid var(--rule); }
-  .ledger-row .c::before { content: "→ "; color: var(--accent); }
-
-  .pipe { list-style: none; counter-reset: step; margin: 0 0 1.6em; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .pipe li { counter-increment: step; position: relative; padding: 18px; border-radius: 14px; background: var(--panel); border: 1px solid var(--rule); }
-  .pipe li::before { content: "0" counter(step); display: block; font: 500 0.7rem/1 var(--mono); color: var(--faint); margin-bottom: 12px; }
-  .pipe li b { display: block; font-size: 1rem; }
-  .pipe li span { display: block; margin-top: 6px; font-size: 0.82rem; line-height: 1.45; color: var(--muted); }
-  .pipe li.gate-step { border-color: color-mix(in srgb, var(--accent) 45%, transparent); background: color-mix(in srgb, var(--accent) 6%, transparent); }
-  .pipe li.gate-step::before { color: var(--accent); }
-
-  .retract { margin: 1em 0; display: grid; gap: 8px; }
-  .retract .row { display: grid; grid-template-columns: 110px 1fr; gap: 16px; padding: 16px 18px; border-radius: 12px; border: 1px solid var(--rule); background: var(--panel); font-size: 0.9rem; }
-  .retract .row b { font: 600 0.7rem/1.6 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; }
-  .retract .row.bad { border-color: rgba(255,107,107,0.3); background: rgba(255,107,107,0.05); }
-  .retract .row.bad b { color: #ff6b6b; }
-  .retract .row.ok { border-color: rgba(61,220,132,0.3); background: rgba(61,220,132,0.05); }
-  .retract .row.ok b { color: #3ddc84; }
-  .retract s { color: var(--faint); }
-
-  .flow { display: flex; align-items: stretch; gap: 8px; margin: 1.6em 0 0; }
-  .flow.sub { margin-top: 8px; }
-  .flow .node { flex: 1; position: relative; overflow: hidden; padding: 14px 16px; border-radius: 12px; background: var(--panel); border: 1px solid var(--rule); }
-  .flow .node b { display: block; font-size: 0.92rem; }
-  .flow .node span { display: block; margin-top: 4px; font-size: 0.78rem; line-height: 1.4; color: var(--muted); }
-  .flow .key-node { border-color: color-mix(in srgb, var(--accent) 55%, transparent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
-  .flow .node::after { content: ""; position: absolute; left: -40%; top: 0; height: 1px; width: 40%; background: linear-gradient(90deg, transparent, var(--accent), transparent); animation: beam 3.2s linear infinite; }
-  .flow .node:nth-child(3)::after { animation-delay: 0.8s; } .flow .node:nth-child(5)::after { animation-delay: 1.6s; } .flow .node:nth-child(7)::after { animation-delay: 2.4s; }
-  @keyframes beam { to { left: 110%; } }
-  .flow .arr { align-self: center; color: var(--accent); font-family: var(--mono); }
-
-  .hbars { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; }
-  .hbars li { display: grid; grid-template-columns: minmax(150px, 34%) 1fr; gap: 16px; align-items: center; font-size: 0.86rem; }
-  .hbars .lbl { color: var(--ink2); line-height: 1.35; }
-  .hbars .lbl small { display: block; color: var(--faint); font-size: 0.74rem; }
-  .hbars .track { position: relative; height: 26px; border-radius: 7px; background: var(--tint); overflow: hidden; }
-  .hbars .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 7px; background: var(--ink); transform-origin: left; transform: scaleX(var(--grow, 0)); transition: transform 1.2s var(--ease); }
-  .hbars .fill.acc { background: linear-gradient(90deg, var(--accent2), var(--accent)); }
-  .hbars .fill.pale { background: rgba(255,255,255,0.22); }
-  .hbars .v { position: absolute; top: 50%; transform: translateY(-50%); font: 500 0.76rem/1 var(--mono); white-space: nowrap; color: var(--ink); }
-
-  .dots { margin: 0; padding: 0; list-style: none; }
-  .dots li { display: grid; grid-template-columns: minmax(150px, 30%) 1fr; gap: 16px; align-items: center; padding: 10px 0; border-top: 1px solid var(--rule); }
-  .dots li.grp { border-top-color: var(--rule2); margin-top: 8px; }
-  .dots .lbl { font-size: 0.84rem; line-height: 1.35; color: var(--ink2); }
-  .dots .lbl small { display: block; color: var(--faint); font-size: 0.74rem; }
-  .dots .plot { position: relative; height: 34px; }
-  .dots .zero { position: absolute; top: -10px; bottom: -10px; left: 16.667%; width: 1px; background: var(--ink); opacity: 0.4; }
-  .dots .ci { position: absolute; top: 50%; height: 2px; margin-top: -1px; background: currentColor; }
-  .dots .ci::before, .dots .ci::after { content: ""; position: absolute; top: -6px; width: 2px; height: 14px; background: currentColor; }
-  .dots .ci::before { left: 0; } .dots .ci::after { right: 0; }
-  .dots .pt { position: absolute; top: 50%; width: 13px; height: 13px; margin: -6.5px 0 0 -6.5px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 4px var(--bg); }
-  .dots .val { position: absolute; top: -4px; transform: translateX(-50%); font: 500 0.72rem/1 var(--mono); white-space: nowrap; }
-  .dots .is { color: rgba(237,238,242,0.55); }
-  .dots .ho { color: var(--accent); }
-  .dots .axis { display: grid; grid-template-columns: minmax(150px, 30%) 1fr; gap: 16px; border: none; padding-top: 4px; }
-  .dots .ticks { position: relative; height: 18px; font: 0.68rem var(--mono); color: var(--faint); }
-  .dots .ticks span { position: absolute; transform: translateX(-50%); }
-
-  .ds-win { border: 1px solid var(--rule2); border-radius: 14px; background: #101116; color: #d9dbd2; font-family: var(--mono); font-size: 0.7rem; margin: 2em 0 0; overflow: hidden; box-shadow: 0 30px 60px -30px rgba(0,0,0,0.8); }
-  .ds-bar { display: flex; align-items: center; gap: 7px; padding: 10px 12px; border-bottom: 1px solid #23252c; }
-  .ds-bar i { width: 10px; height: 10px; border-radius: 50%; background: #3b3d45; }
-  .ds-bar i:nth-child(1) { background: #ff5f57; } .ds-bar i:nth-child(2) { background: #febc2e; } .ds-bar i:nth-child(3) { background: #28c840; }
-  .ds-bar span { margin-left: 10px; letter-spacing: 0.14em; color: #8d9089; }
-  .ds-bar .dot { margin-left: auto; width: 8px; height: 8px; border-radius: 50%; background: #3ddc84; box-shadow: 0 0 10px #3ddc84; animation: pulse 2s infinite; }
-  .ds-tabs { display: flex; flex-wrap: wrap; border-bottom: 1px solid #23252c; }
-  .ds-tabs span { padding: 8px 12px; letter-spacing: 0.1em; color: #8d9089; border-right: 1px solid #23252c; }
-  .ds-tabs span b { color: #5f625c; font-weight: 400; margin-right: 6px; }
-  .ds-tabs span.on { color: #f0f1ea; background: #1a1c22; box-shadow: inset 0 -2px 0 var(--accent); }
-  .ds-body { display: grid; grid-template-columns: 1.1fr 1fr; gap: 1px; background: #23252c; }
-  .ds-body > div { background: #101116; padding: 14px; min-height: 150px; }
-  .ds-body .h { letter-spacing: 0.14em; color: #6f726b; margin-bottom: 10px; display: block; }
-  .ds-row { height: 9px; background: #1f2128; margin: 0 0 8px; border-radius: 3px; }
-  .ds-row:nth-child(3n) { width: 82%; } .ds-row:nth-child(3n+1) { width: 94%; } .ds-row:nth-child(3n+2) { width: 70%; }
-  .ds-body svg { width: 100%; height: 110px; display: block; }
-
-  /* Merger Monitor */
-  .work#merger .case { border-color: color-mix(in srgb, var(--accent) 35%, var(--rule)); box-shadow: 0 0 0 1px rgba(0,0,0,0.2), 0 40px 120px -60px color-mix(in srgb, var(--accent) 50%, transparent); }
-  .mm-preview { display: block; margin: 1.6em 0; padding: 20px; border-radius: 16px; background: rgba(0,0,0,0.3); border: 1px solid var(--rule2); transition: border-color 0.25s ease, transform 0.35s var(--ease); }
-  .mm-preview:hover { border-color: color-mix(in srgb, var(--accent) 60%, transparent); transform: translateY(-2px); }
-  .mm-preview .cap { margin: 0 0 12px; }
-  .mm-preview table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
-  .mm-preview th { text-align: left; font: 500 0.62rem/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); padding: 0 8px 10px 0; border-bottom: 1px solid var(--rule2); }
-  .mm-preview td { padding: 10px 8px 10px 0; border-bottom: 1px solid var(--rule); color: var(--ink2); }
-  .mm-preview .tk { font: 600 0.82rem var(--mono); color: var(--ink); }
-  .mm-preview .num { font-family: var(--mono); font-size: 0.8rem; text-align: right; white-space: nowrap; }
-  .mm-preview th:nth-child(n+3) { text-align: right; }
-  .mm-preview td:last-child { color: #3ddc84; }
-  .mm-preview .go-row { margin: 14px 0 0; font-weight: 600; color: var(--ink); font-size: 0.9rem; }
-  .worked { margin: 2em 0 0; padding: 26px; border-radius: 18px; background: radial-gradient(ellipse at top right, color-mix(in srgb, var(--accent) 10%, transparent), transparent 60%), var(--panel); border: 1px solid var(--rule2); }
-  .worked h4 { margin-top: 0; font-size: 1.3rem; line-height: 1.25; }
-  .worked h4::before { display: none; }
-  .twoup { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 1.2em 0; }
-  .twoup > div { padding: 18px; border-radius: 14px; border: 1px solid var(--rule); }
-  .twoup b { display: block; font: 650 2.4rem/1 var(--sans); letter-spacing: -0.05em; }
-  .twoup > div > span { display: block; margin-top: 10px; font-size: 0.82rem; line-height: 1.45; color: var(--muted); }
-  .twoup .bad b { color: var(--faint); text-decoration: line-through; text-decoration-color: #ff6b6b; text-decoration-thickness: 2px; }
-  .twoup .real { border-color: rgba(61,220,132,0.35); background: rgba(61,220,132,0.05); }
-  .twoup .real b { color: #3ddc84; }
-
-  .frame { margin: 0 0 1.6em; border-radius: 14px; overflow: hidden; border: 1px solid var(--rule2); background: #0b0b0e; box-shadow: 0 30px 70px -30px rgba(0,0,0,0.9); }
-  .frame::before { content: ""; display: block; height: 30px; border-bottom: 1px solid var(--rule);
-    background: radial-gradient(circle at 16px 15px, #ff5f57 4.5px, transparent 5px), radial-gradient(circle at 32px 15px, #febc2e 4.5px, transparent 5px), radial-gradient(circle at 48px 15px, #28c840 4.5px, transparent 5px), #121216; }
-  .frame video { display: block; width: 100%; height: auto; }
-
-  /* ---------- about + footer ---------- */
-  .about { width: min(1180px, calc(100% - 40px)); margin: 0 auto; display: grid; grid-template-columns: 1.15fr 1fr; gap: 40px; }
-  .prose p { margin: 0 0 1.1em; font-size: 1.22rem; line-height: 1.5; letter-spacing: -0.015em; color: var(--ink2); }
-  .prose p:first-child::first-line { color: var(--ink); }
-  .prose .quiet { font-size: 1rem; color: var(--muted); }
-  .stack { margin: 0; padding: 24px; border-radius: var(--r); background: var(--panel); border: 1px solid var(--rule); display: grid; gap: 16px; align-content: start; }
-  .stack dt { font: 500 0.64rem/1 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); }
-  .stack dd { margin: 8px 0 0; display: flex; flex-wrap: wrap; gap: 6px; }
-  .stack dd span { padding: 4px 10px; border-radius: 999px; font-size: 0.8rem; color: var(--ink2); background: var(--panel2); border: 1px solid var(--rule); }
-
-  .close { width: min(1180px, calc(100% - 40px)); margin: 150px auto 0; padding: 0 0 50px; }
-  .cta-big { position: relative; overflow: hidden; border-radius: 30px; padding: clamp(40px, 7vw, 90px) clamp(24px, 6vw, 70px); text-align: center; border: 1px solid var(--rule2);
-    background: radial-gradient(ellipse 60% 80% at 50% 120%, color-mix(in srgb, var(--accent) 35%, transparent), transparent 70%), radial-gradient(ellipse 40% 50% at 10% 0%, color-mix(in srgb, var(--accent2) 18%, transparent), transparent 70%), var(--bg2); }
-  .cta-big .eyebrow { margin: 0 auto 18px; }
-  .cta-big h2 { margin: 0; font-size: clamp(2.6rem, 8vw, 6.4rem); line-height: 0.95; letter-spacing: -0.055em; font-weight: 700; color: var(--ink); }
-  .cta-big h2 em { font-family: var(--serif); font-weight: 400; letter-spacing: -0.01em; background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: 0.06em; }
-  .cta-big p { margin: 22px auto 0; max-width: 46ch; color: var(--muted); }
-  .cta-big .mail { display: inline-flex; margin-top: 30px; padding: 16px 28px; border-radius: 999px; font-weight: 600; font-size: 1.05rem; }
-  .close .didnt { margin: 40px 0 0; font-size: 0.88rem; line-height: 1.6; color: var(--muted); max-width: 90ch; }
-  .close .fine { margin: 14px 0 0; font-size: 0.8rem; color: var(--faint); max-width: 90ch; }
-  .close .stamp { margin: 34px 0 0; padding-top: 22px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; gap: 16px; font: 500 0.7rem/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); }
-  .close .stamp a { color: var(--ink2); }
-
-  /* ---------- entry gate: drop the needle ---------- */
-  .gate { position: fixed; inset: 0; z-index: 60; background: radial-gradient(ellipse at 50% 40%, #15151b, var(--bg) 70%);
-    display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 8vh;
-    transition: transform 1s cubic-bezier(0.7, 0, 0.2, 1); }
-  .gate.open { transform: translateY(-101%); }
-  .gate-mast { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 18px 28px;
-    border-bottom: 1px solid var(--rule); font: 600 0.74rem/1 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink); }
-  .gate-mast > * { white-space: nowrap; }
-  .gate-end { display: flex; align-items: center; gap: 18px; }
-  .gate-mast a.gate-pay { color: var(--ink2); }
-  .gate-mast a.gate-pay:hover { color: var(--accent); }
-  .gate-skip { font: inherit; letter-spacing: inherit; text-transform: inherit; color: var(--ink); cursor: pointer;
-    background: var(--panel2); border: 1px solid var(--rule2); padding: 9px 14px; border-radius: 999px; }
-  .gate-skip:hover { border-color: var(--accent); color: var(--accent); }
-  .gate-mid { display: flex; flex-direction: column; align-items: center; gap: 30px; }
-  .vinyl { width: clamp(240px, 32vw, 360px); height: auto; display: block; filter: drop-shadow(0 30px 60px rgba(0,0,0,0.7)) drop-shadow(0 0 1px rgba(255,255,255,0.35)); }
-  .spinning .vinyl, .mini.playing .vinyl { animation: spin 1.8s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .needle { margin: 0; font: 500 0.7rem/1 var(--mono); letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); }
-  .picks { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; padding: 0 16px; }
-  .pick { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 140px; padding: 16px 20px; cursor: pointer; color: var(--ink);
-    background: rgba(255,255,255,0.035); border: 1px solid var(--rule2); border-radius: 16px; font-family: var(--sans);
-    transition: background 0.25s ease, border-color 0.25s ease, transform 0.3s var(--ease); }
-  .pick .mood { font: 600 0.72rem/1 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; }
-  .pick .track { font-family: var(--serif); font-style: italic; font-size: 1.05rem; color: var(--muted); }
-  .pick:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.3); transform: translateY(-3px); }
-  .pick.missing { display: none; }
-  .vinyl .label-fill, .vinyl .label-text, .vinyl .label-dot { transition: fill 0.75s ease; }
-  .deck.picked .vinyl .label-fill { fill: var(--accent); }
-  .deck.picked .vinyl .label-text { fill: #0a0a0a; }
-  .deck.picked .vinyl .label-text.sub { fill: rgba(10,10,10,0.7); }
-  .deck.picked .vinyl .label-dot { fill: #0a0a0a; }
-  .gate-mast, .deck, .needle, .picks { opacity: 0; }
-  .gate-mast { animation: gate-in 0.8s ease 0.4s both; }
-  .deck { animation: gate-in 0.01s linear 0.7s both; }
-  .deck .vinyl { animation: record-in 1.05s var(--ease) 0.7s both; }
-  .needle { animation: gate-in 0.7s ease 1.5s both; }
-  .picks { animation: gate-in 0.7s ease 1.7s both; }
-  @keyframes gate-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-  @keyframes record-in { from { opacity: 0; transform: translateY(-16px) scale(0.96) rotate(-160deg); } to { opacity: 1; transform: translateY(-16px) scale(0.96) rotate(0); } }
-  @keyframes cue-spin { to { transform: rotate(360deg); } }
-  .deck { position: relative; display: inline-block; }
-  .deck .vinyl { position: relative; z-index: 2; transform: translateY(-16px) scale(0.96); transition: transform 0.85s cubic-bezier(0.65, 0, 0.25, 1); }
-  .deck.cueing .vinyl { animation: none; }
-  .deck.loading .vinyl, .deck.loading.cueing .vinyl { animation: cue-spin 2.6s linear infinite; }
-  .platter { position: absolute; left: 50%; top: 50%; width: 104%; height: 104%; border-radius: 50%; transform: translate(-50%, -50%) scale(0.55);
-    background: radial-gradient(circle, #1d1d23, #111115); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08); opacity: 0; z-index: 1;
-    transition: opacity 0.6s ease, transform 0.85s cubic-bezier(0.65, 0, 0.25, 1); }
-  .tonearm { position: absolute; right: -4%; top: -7%; width: 54%; height: auto; z-index: 3; transform-origin: 82.5% 17.5%; transform: rotate(-26deg); opacity: 0;
-    transition: opacity 0.5s ease, transform 1s cubic-bezier(0.5, 0, 0.2, 1); }
-  .deck.cueing .platter { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-  .deck.cueing .vinyl { transform: translateY(0) scale(1); }
-  .deck.cueing .tonearm { opacity: 1; transform: rotate(10deg); }
-  body.locked { overflow: hidden; }
-
-  /* corner record */
-  .mini { position: fixed; left: 20px; bottom: 20px; z-index: 40; width: 64px; height: 64px; padding: 0; background: none; border: none; cursor: pointer;
-    opacity: 0; pointer-events: none; transition: opacity 0.6s ease; }
-  .entered .mini { opacity: 1; pointer-events: auto; }
-  .mini .vinyl.small { width: 64px; filter: drop-shadow(0 8px 20px rgba(0,0,0,0.7)) drop-shadow(0 0 1px rgba(255,255,255,0.4)); }
-  .mini:not(.playing) .vinyl { animation: none; }
-  .mini::after { content: "Change the record"; position: absolute; left: 0; bottom: calc(100% + 10px); font: 500 0.62rem/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--ink); background: rgba(16,16,20,0.92); padding: 7px 10px; border-radius: 8px; white-space: nowrap; border: 1px solid var(--rule2); opacity: 0; transition: opacity 0.25s ease; pointer-events: none; }
-  .mini:hover::after, .mini:focus-visible::after { opacity: 1; }
-  .now-playing { position: fixed; left: 96px; bottom: 40px; z-index: 40; font: 500 0.66rem/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--faint); opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
-  .entered .now-playing { opacity: 1; }
-  .now-playing b { color: var(--accent); font-weight: 600; }
-  .note-fly { position: fixed; z-index: 39; pointer-events: none; font-size: 22px; color: var(--accent); animation: floatnote 2.4s ease-out forwards; }
-  @keyframes floatnote { from { opacity: 0.9; transform: translate(0, 0) rotate(0); } to { opacity: 0; transform: translate(var(--dx), -110px) rotate(var(--rot)); } }
-  .vinyl-clone { position: fixed; z-index: 70; transition: transform 1.05s cubic-bezier(0.7, 0, 0.2, 1); transform-origin: top left; }
-
-  /* ---------- responsive ---------- */
-  @media (max-width: 1080px) {
-    .rail { display: none; }
-    .case { grid-template-columns: 1fr; }
-    .case-side { border-right: none; border-bottom: 1px solid var(--rule); }
-    .case-side .sticky { position: static; }
-    .xt-in { grid-template-columns: 1fr; padding: 40px 34px 0; }
-    .xt-copy { padding-bottom: 0; }
-    .xt-phones { min-height: 0; height: clamp(360px, 70vw, 560px); }
-  }
-  @media (max-width: 860px) {
-    .grid { grid-template-columns: 1fr 1fr; }
-    .pipe { grid-template-columns: 1fr 1fr; }
-    .about { grid-template-columns: 1fr; }
-    .mast-end a.opt { display: none; }
-  }
-  @media (max-width: 640px) {
-    body { font-size: 16px; }
-    .masthead { top: 10px; padding: 6px 6px 6px 10px; font-size: 0.78rem; gap: 6px; }
-    .masthead .who { font-size: 0; gap: 0; }
-    .masthead .who::before { font-size: 0.6rem; }
-    .mast-end a { padding: 7px 10px; }
-    .grid { grid-template-columns: 1fr; }
-    .card.wide { grid-column: auto; }
-    .card { min-height: 0; }
-    .facts, .funnel, .rules, .pipe, .xt-facts, .twoup { grid-template-columns: 1fr; }
-    .chapter, .xt { padding-top: 110px; }
-    .chapter-head { grid-template-columns: 1fr; }
-    .chapter-head .no { grid-row: auto; font-size: 4.4rem; margin-bottom: 12px; }
-    .case { width: calc(100% - 24px); border-radius: 20px; }
-    .case-side { padding: 26px 20px; }
-    .case-body { padding: 26px 20px 30px; }
-    .xt-in { padding: 30px 20px 0; }
-    .xt-phones { height: 112vw; }
-    .figure { padding: 16px; margin-inline: -6px; }
-    .hbars li, .dots li, .dots .axis { grid-template-columns: 1fr; gap: 4px; }
-    .dots .axis > span:first-child { display: none; }
-    .ledger > div { grid-template-columns: 1fr; }
-    .ledger-row .c { border-left: none; padding-top: 0 !important; }
-    .ledger-head span:last-child { display: none; }
-    .retract .row { grid-template-columns: 1fr; gap: 4px; }
-    .flow { flex-direction: column; }
-    .flow .arr { transform: rotate(90deg); }
-    .ds-body { grid-template-columns: 1fr; }
-    .ds-tabs span { padding: 7px 8px; }
-    .gate { gap: 6vh; }
-    .gate-mast { padding: 12px 14px; font-size: 0.6rem; letter-spacing: 0.06em; flex-wrap: wrap; row-gap: 8px; }
-    .gate-end { gap: 10px; }
-    .gate-skip .long { display: none; }
-    .now-playing { display: none; }
-    .mini { width: 44px; height: 44px; left: 10px; bottom: 10px; }
-    .mini .vinyl.small { width: 44px; }
-    .mini::after { display: none; }
-    .opening .slab { font-size: min(15.5vw, 11vh); }
-    .opening .ital { font-size: min(10vw, 7vh); }
-    .opening .under { font-size: 0.92rem; margin-top: 20px; }
-    .fold-sell { padding: 14px; }
-    .fold-sell .fold-nums { font-size: 0.86rem; }
-    .pill { font-size: 0.72rem; }
-    .close .stamp { flex-direction: column; }
-  }
-  @media (hover: none) { .glow { display: none; } }
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    .aurora i, .belt, .pay::after, .shine::after, .flow .node::after, .scroll-hint::after, .todo li.doing::before, .ds-bar .dot { animation: none !important; }
-    .rise { opacity: 1; transform: none; filter: none; transition: none; }
-    .gate-mast, .deck, .deck .vinyl, .needle, .picks { animation: none; opacity: 1; }
-    .deck.loading .vinyl, .spinning .vinyl, .mini.playing .vinyl { animation: none; }
-    .deck .vinyl, .platter, .tonearm, .gate, .hbars .fill { transition: none; }
-    .note-fly { display: none; }
-  }
+  @media (prefers-reduced-motion: reduce) { body { transition: none; } }
 </style>
-<script src="assets/js/merger-stats.js" defer></script>
 </head>
 <body>
 
-<div class="gate" id="gate">
-  <div class="gate-mast"><span>Charlie Wuytack</span><span class="gate-end"><a class="gate-pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table — £5/month</a><button class="gate-skip" id="gateSkip" type="button" aria-label="Enter without sound">Skip<span class="long"> — no sound</span></button></span></div>
-  <div class="gate-mid">
-    <div class="deck" id="deck">
-      <span class="platter" aria-hidden="true"></span>
-      <svg class="tonearm" viewBox="0 0 120 120" aria-hidden="true">
-        <circle cx="99" cy="21" r="9" fill="#d8d9de"/>
-        <circle cx="99" cy="21" r="3.4" fill="#07070a"/>
-        <rect x="95.5" y="24" width="7" height="58" rx="3.5" fill="#d8d9de"/>
-        <rect class="head" x="90" y="78" width="18" height="13" rx="2.4" fill="#d8d9de"/>
-      </svg>
-      <svg class="vinyl" viewBox="0 0 200 200" aria-hidden="true">
-        <circle cx="100" cy="100" r="97" fill="#0e0e11"/>
-        <circle cx="100" cy="100" r="96.5" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="0.8"/>
-        <g fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="1">
-          <circle cx="100" cy="100" r="44"/><circle cx="100" cy="100" r="52"/><circle cx="100" cy="100" r="60"/>
-          <circle cx="100" cy="100" r="68"/><circle cx="100" cy="100" r="76"/><circle cx="100" cy="100" r="84"/><circle cx="100" cy="100" r="91"/>
-        </g>
-        <path d="M30 100 a70 70 0 0 1 140 0" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="1.5"/>
-        <circle class="label-fill" cx="100" cy="100" r="34" fill="#ededf0"/>
-        <text class="label-text" x="100" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" letter-spacing="2" fill="#07070a">C.W.</text>
-        <text class="label-text sub" x="100" y="112" text-anchor="middle" font-family="Arial, sans-serif" font-size="5.5" letter-spacing="1.5" fill="rgba(7,7,10,0.6)">SIDE A · 45 RPM</text>
-        <circle class="label-dot" cx="100" cy="100" r="3.2" fill="#07070a"/>
-      </svg>
-    </div>
-    <p class="needle">Drop the needle</p>
-    <div class="picks">
-      <button class="pick" type="button" data-src="media/tank.m4a" data-a="49.91315" data-b="71.82735" data-accent="#ff6a3d" data-gain="0.56">
-        <span class="mood">Locked in</span><span class="track">Tank!</span>
-      </button>
-      <button class="pick" type="button" data-src="media/backdrop.m4a" data-accent="#5b9dff" data-gain="0.78">
-        <span class="mood">Late night</span><span class="track">Jazz noir</span>
-      </button>
-      <button class="pick" type="button" data-src="media/third.m4a" data-accent="#3ddc84" data-gain="0.64">
-        <span class="mood">Sunday</span><span class="track">Bossa nova</span>
-      </button>
-    </div>
-  </div>
-</div>
-<span class="now-playing" id="nowPlaying" aria-live="polite"></span>
-<button class="mini" id="mini" type="button" title="Change the record" aria-label="Change the record — back to the start">
-  <svg class="vinyl small" viewBox="0 0 200 200" aria-hidden="true">
-    <circle cx="100" cy="100" r="97" fill="#0e0e11"/>
-    <g fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1">
-      <circle cx="100" cy="100" r="52"/><circle cx="100" cy="100" r="68"/><circle cx="100" cy="100" r="84"/>
-    </g>
-    <circle cx="100" cy="100" r="34" fill="var(--accent)"/>
-    <text x="100" y="105" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" letter-spacing="2" fill="#07070a">C.W.</text>
-  </svg>
-</button>
 
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="back" aria-hidden="true"><b id="backword">Side A</b></div>
 <div class="grain" aria-hidden="true"></div>
-<div class="glow" id="glow" aria-hidden="true"></div>
-<div class="progress" id="progress" aria-hidden="true"></div>
 
-<nav class="rail" aria-label="sections">
-  <a href="#exetix" data-t="ExeTix"></a>
-  <a href="#work" data-t="Selected work"></a>
-  <a href="#research" data-t="Research programme"></a>
-  <a href="#method" data-t="The method"></a>
-  <a href="#apex" data-t="Research platform"></a>
-  <a href="#solana" data-t="Solana execution"></a>
-  <a href="#events" data-t="Event-driven shorts"></a>
-  <a href="#merger" data-t="Merger Monitor"></a>
-  <a href="#deskstatus" data-t="DeskStatus"></a>
-  <a href="#numerai" data-t="Numerai"></a>
-  <a href="#competitions" data-t="Competitions"></a>
-  <a href="#builds" data-t="Products and tools"></a>
-  <a href="#doorly" data-t="Doorly"></a>
-  <a href="#powerleash" data-t="PowerLeash"></a>
-  <a href="#chess" data-t="Chess Exchange"></a>
-  <a href="#chelsea" data-t="Chelsea Bikes"></a>
-  <a href="#abyss" data-t="Abyss Warden"></a>
-  <a href="#about" data-t="About"></a>
-</nav>
-
-<div class="masthead">
-  <a class="who" href="#top">Charlie Wuytack</a>
-  <span class="mast-end">
-    <a class="xt-mast opt" href="exetix/">ExeTix</a>
-    <a class="mm opt" href="merger-monitor/">Merger Monitor</a>
-    <a class="opt" href="#work">Work</a>
-    <a class="opt" href="#research">Research</a>
-    <a class="pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener" aria-label="Get tonight's table — £5/month">£5/month</a>
-    <a class="touch" href="mailto:charlie@wuytack.net">Get in touch</a>
-  </span>
-</div>
-
-<span id="top"></span>
-<header class="opening">
-  <div class="pin-hero">
-    <span class="aurora" aria-hidden="true"><i></i><i></i><i></i></span>
-    <a class="pill" href="#exetix"><b>New</b><span>ExeTix is on the App Store</span></a>
-    <div class="stage">
-      <p class="scroll-hint" id="scrollHint">Scroll</p>
-      <span class="ghost" aria-hidden="true"><span class="slab">I'D RATHER BUILD</span><span class="ital">than consume.</span></span>
-      <h1 class="veil"><span class="slab">I'D RATHER BUILD</span><span class="ital">than consume.</span></h1>
-    </div>
-    <p class="under">An iPhone app for Exeter's ticket drops, macOS tools, games, and a quantitative research programme: <b>on-chain execution, an online-learning platform and about 170 pre-registered trading hypotheses</b>, each with an honest verdict.</p>
-    <div class="fold-sell">
-      <p class="fold-nums">Merger Monitor: a 3% spread is not <span data-merger-annualised-3pct>24.6%</span> a year. After costs it is <span data-merger-ev-3pct>+1.38%</span> a deal. Break-even is <span data-merger-breakeven>1.59%</span>.</p>
-      <a class="go pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table — £5/month</a>
-      <p class="fold-ledger">Zero subscribers. Take: £0. Filings, not advice.</p>
-    </div>
-  </div>
+<header>
+  <span>Charlie Wuytack</span>
+  <nav>
+    <a href="work/">All work</a>
+    <a href="https://wuytackcharlie.gumroad.com/l/mergermonitor">Merger Monitor £5/mo</a>
+    <button type="button" id="sound" aria-pressed="false">Play the record</button>
+  </nav>
 </header>
-
-<div class="ticker" aria-hidden="true"><div class="belt"><span>PINGED THE SECOND EXETER TICKETS DROP<i>✦</i>0.33 MS FROM TRIGGER TO A READY-TO-SIGN EXIT<i>✦</i>50 OF 65 TRADING LANES KILLED, ON THE RECORD<i>✦</i>A FALSE POSITIVE, CAUGHT AND RETRACTED<i>✦</i>THE CHEAPEST FLIGHT ISN'T ALWAYS THE CHEAPEST TRIP<i>✦</i>64W DRAW, HELD AT A 42.8W CAP<i>✦</i>HOLD THE TRENCH. KEEP THE LIGHTS ON<i>✦</i></span><span>PINGED THE SECOND EXETER TICKETS DROP<i>✦</i>0.33 MS FROM TRIGGER TO A READY-TO-SIGN EXIT<i>✦</i>50 OF 65 TRADING LANES KILLED, ON THE RECORD<i>✦</i>A FALSE POSITIVE, CAUGHT AND RETRACTED<i>✦</i>THE CHEAPEST FLIGHT ISN'T ALWAYS THE CHEAPEST TRIP<i>✦</i>64W DRAW, HELD AT A 42.8W CAP<i>✦</i>HOLD THE TRENCH. KEEP THE LIGHTS ON<i>✦</i></span></div></div>
+<div class="meter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
 
 <main>
-<!-- EXETIX -->
-<section class="work xt" id="exetix">
-  <div class="head">
-    <h2>ExeTix</h2>
-    <p class="eyebrow">My biggest project · Exeter's ticket drops, on your phone</p>
-  </div>
-  <div class="stream">
-    <div class="xt-band rise">
-      <div class="xt-in">
-        <div class="xt-copy">
-          <p class="xt-kick"><img src="exetix/img/icon-green.png" width="240" height="240" alt="ExeTix app icon: a black ticket on bright green" loading="lazy">iPhone app on the App Store · live on the web</p>
-          <p class="xt-pitch">Get pinged the second Exeter tickets drop. <span>Sold out? Buy a verified student's spare.</span></p>
-          <div class="xt-facts">
-            <div><b>~1–2<i>s</i></b><span>from a known release time to the alert</span></div>
-            <div><b>£0</b><span>seller fees. Sellers keep 100% of their price</span></div>
-            <div><b>≈⅓</b><span>of a typical student-resale booking fee: card processing, nothing on top</span></div>
-          </div>
-          <div class="xt-cta">
-            <a class="xt-go" href="exetix/">Inside ExeTix</a>
-            <a href="https://www.exeterticketexchange.com" target="_blank" rel="noopener">exeterticketexchange.com ↗</a>
-          </div>
-          <p class="xt-soon"><a href="https://apps.apple.com/gb/app/exetix/id6814591245" target="_blank" rel="noopener">On the App Store</a> · released 29 Sep 2026</p>
-        </div>
-        <div class="xt-phones">
-          <figure class="xt-phone l"><img src="exetix/img/screen-alerts.webp" width="540" height="1173" alt="ExeTix onboarding screen ‘Be first, every time’ with sample alerts: dropping in 10 min, tickets just dropped, restock, resale listed" loading="lazy" decoding="async"></figure>
-          <figure class="xt-phone c"><img src="exetix/img/screen-explore.webp" width="540" height="1173" alt="ExeTix Explore tab: ‘5 club nights tonight’ with a flyer for Indie Thursday at Timepiece and a Dropping soon rail" loading="lazy" decoding="async"></figure>
-          <figure class="xt-phone r"><img src="exetix/img/screen-drops.webp" width="540" height="1173" alt="ExeTix Drops tab: the next drop counting down and sold-out nights watched for restocks" loading="lazy" decoding="async"></figure>
-        </div>
+  <section class="scene" data-word="I'd rather build" aria-label="Intro">
+    <div class="stick">
+      <div class="copy">
+        <p class="kick">Exeter · apps, Mac tools, games, research</p>
+        <h2>I'd rather build <em>than consume.</em></h2>
       </div>
+      <span class="hint">SCROLL</span>
     </div>
-    <p class="say rise">Big nights in Exeter sell out in minutes, and the spares go round group chats with no way to know who you are paying.</p>
-    <p class="say rise">ExeTix watches the clubs' and societies' ticket pages, <span class="mk">pings you the second tickets go live</span>, and when they are gone, sells you a spare from a verified Exeter student.</p>
-    <p class="say small rise">A native SwiftUI app with a widget, Live Activities and rich pushes. A Next.js marketplace on Stripe Connect, priced at cost. A two-machine Python watcher with a one-second fast lane around known release times.</p>
-    <div class="doing-row rise">
-      <a class="go" href="exetix/">See how it works, and how it's built</a>
-      <span class="note"><a href="exetix/how-it-works.html">How it works</a> · <a href="exetix/engineering.html">Engineering</a> · <a href="exetix/gallery.html">Gallery</a></span>
-    </div>
-    <p class="todo-label rise">Where it's at</p>
-    <ul class="todo rise">
-      <li class="done"><span>exeterticketexchange.com is live: drop alerts, resale, referrals, seller payouts</span></li>
-      <li class="done"><span>Native iPhone app with a widget, Lock Screen countdowns and pushes that carry the night's flyer</span></li>
-      <li class="done"><span>Two watchers and a one-second fast lane, merged into one alert per drop</span></li>
-      <li class="done"><span>TestFlight beta</span></li>
-      <li class="done"><span>Released on the App Store, 29 Sep 2026</span></li>
-    </ul>
-  </div>
-</section>
-
-<!-- 01 SELECTED WORK -->
-<section class="chapter" id="work" aria-labelledby="work-h">
-  <div class="chapter-head">
-    <p class="no">01<span>Selected work</span></p>
-    <h2 id="work-h">The rest <em>of it</em></h2>
-    <p class="lede">ExeTix is the biggest thing I've shipped. Since then most of my time has gone into quantitative research and the engineering under it. Every card links to a short case study.</p>
-  </div>
-  <div class="grid">
-    <a class="card wide rise" href="#research">
-      <span class="kind"><span>Quant research · 2026</span><span class="chip res">Research</span></span>
-      <h3>A research programme that publishes its failures</h3>
-      <p>Pre-registered hypotheses, one-shot holdouts, independent attacks on every candidate, and a public retraction when one of them turned out to be a data artefact.</p>
-      <span class="big"><b data-count>~170</b><span>hypotheses tested across two programmes. Two now in small live execution tests; no profit claimed.</span></span>
-    </a>
-    <a class="card rise" href="#apex">
-      <span class="kind"><span>ML platform</span><span class="chip paper">Paper</span></span>
-      <h3>Online learners behind an anytime-valid gate</h3>
-      <p>Streaming models that score before they learn, promoted only when an e-process says the evidence is real.</p>
-      <span class="big"><b data-count>956</b><span>tests across 88k lines of Python</span></span>
-    </a>
-    <a class="card rise" href="#solana">
-      <span class="kind"><span>On-chain infrastructure</span><span class="chip live">Live test</span></span>
-      <h3>Solana execution, measured in microseconds</h3>
-      <p>Helius streams, exact AMM pricing and pre-armed exits. Now carrying a pre-registered microstructure strategy, forward-tested on 300+ new pools, in a live execution test at 0.25 SOL clips.</p>
-      <span class="big"><b>0.33 ms</b><span>p50, trigger to a ready-to-sign exit</span></span>
-    </a>
-    <a class="card rise" href="#events">
-      <span class="kind"><span>Event-driven research</span><span class="chip live">Live canary</span></span>
-      <h3>Shorting token unlocks and exchange listings</h3>
-      <p>Two event studies on crypto perps, split at a fixed date and attacked three ways. One held up; the other decayed by 70%. New event types tested since were all killed.</p>
-      <span class="big"><b>+5.56%</b><span>per event, held-out mean (n = 69). Tiny live canary since 25 Sep; sealed forward test running</span></span>
-    </a>
-    <a class="card rise" href="#deskstatus">
-      <span class="kind"><span>macOS app</span><span class="chip live">Shipped</span></span>
-      <h3>DeskStatus</h3>
-      <p>A native SwiftUI dashboard for the whole research desk. Read-only by design, and it never holds a key.</p>
-      <span class="big"><b data-count>7</b><span>tabs, a menu-bar status light and a headless mode for scripts</span></span>
-    </a>
-    <a class="card wide rise" href="#merger">
-      <span class="kind"><span>Data product · SEC filings</span><span class="chip live">Live · £5/month</span></span>
-      <h3>Merger Monitor</h3>
-      <p>The contractual cash price of every US cash merger with a definitive proxy, priced against the market, each figure tied to the filing sentence it came from. A table of filings, not a tip sheet.</p>
-      <span class="big"><b>24.6% → +1.38%</b><span>a 3% spread annualised, then priced after break risk and costs</span></span>
-    </a>
-    <a class="card rise" href="#numerai">
-      <span class="kind"><span>Tournament ML</span><span class="chip live">Live, unstaked</span></span>
-      <h3>Numerai</h3>
-      <p>Classic, Signals and Crypto models submitting on schedule, plus a fix for a deadline that moves every week.</p>
-      <span class="big"><b data-count>1.47</b><span>out-of-sample Sharpe of correlation over 93 eras</span></span>
-    </a>
-    <a class="card rise" href="#competitions">
-      <span class="kind"><span>Competitions</span><span class="chip live">Selected</span></span>
-      <h3>Quantiacs, BRAIN, Structural Break</h3>
-      <p>One strategy selected to trade live, Gold on WorldQuant BRAIN, and a leaderboard that taught me to read deltas, not levels.</p>
-      <span class="big"><b>1 of 15</b><span>strategies selected in the Quantiacs Q25 contest</span></span>
-    </a>
-    <a class="card rise" href="#doorly">
-      <span class="kind"><span>Web + iOS</span><span class="chip res">Demo</span></span>
-      <h3>Doorly</h3>
-      <p>Flight search that ranks the whole door-to-door trip, not just the fare.</p>
-      <span class="big"><b>£120 &lt; £130</b><span>until you add the journey to the airport</span></span>
-    </a>
-    <a class="card rise" href="#powerleash">
-      <span class="kind"><span>macOS utility</span><span class="chip live">Download</span></span>
-      <h3>PowerLeash</h3>
-      <p>A low power mode that leaves the app in front alone, and a cap that matches the charger.</p>
-      <span class="big"><b>42.8 W</b><span>held under a sustained 8-thread burn</span></span>
-    </a>
-    <a class="card rise" href="#chess">
-      <span class="kind"><span>Markets + engines</span><span class="chip res">Play money</span></span>
-      <h3>Chess Exchange</h3>
-      <p>Live prediction markets on chess games, priced by a small engine and an LMSR market maker.</p>
-      <span class="big"><b>W / D / B</b><span>from any position you paste in</span></span>
-    </a>
-    <a class="card rise" href="#chelsea">
-      <span class="kind"><span>Web design</span><span class="chip res">Prototype</span></span>
-      <h3>Chelsea Bikes</h3>
-      <p>My local bike shop's website, rebuilt without being asked.</p>
-      <span class="big"><b data-count>11</b><span>pages, works offline</span></span>
-    </a>
-    <a class="card rise" href="#abyss">
-      <span class="kind"><span>Game</span><span class="chip live">Playable</span></span>
-      <h3>Abyss Warden</h3>
-      <p>A deep-sea tower defence game in the spirit of Kingdom Rush.</p>
-      <span class="big"><b data-count>5</b><span>bosses, playable in the browser</span></span>
-    </a>
-  </div>
-</section>
-
-<!-- 02 RESEARCH -->
-<section class="chapter" id="research" aria-labelledby="research-h">
-  <div class="chapter-head">
-    <p class="no">02<span>Quant research</span></p>
-    <h2 id="research-h">Research that <em>says no</em></h2>
-    <p class="lede">Most trading ideas die the moment they meet a realistic cost model or an honest holdout. I built the tooling to find that out early, and I publish the kills.</p>
-  </div>
-
-  <article class="case rise" id="programme">
-    <div class="case-side"><div class="sticky">
-      <p class="eyebrow">The programme · Aug–Sep 2026</p>
-      <h3>The scoreboard</h3>
-      <p class="tag">Two programmes: equities and prediction markets first, then crypto and on-chain.</p>
-      <dl>
-        <dt>Status</dt><dd><span class="chip live">Live tests</span> Two strategies in small-size live execution tests. Nothing here claims a profit yet</dd>
-        <dt>Revenue</dt><dd>~£0. Live tests run at tiny size to measure real fills against paper; paper and backtest numbers are labelled as such throughout.</dd>
-      </dl>
-    </div></div>
-    <div class="case-body">
-      <p class="lead">In the first programme, about 110 hypotheses produced nine real anomalies. <span class="mk">None</span> were bigger than the cost of trading them.</p>
-      <div class="funnel">
-        <div><b>~110</b><span>hypotheses tested: equities, ETFs, Polymarket, factors, filings</span></div>
-        <div><b>9</b><span>produced a real, measurable anomaly</span></div>
-        <div><b>0</b><span>survived their own trading costs</span></div>
-      </div>
-      <p>The second programme moved to crypto and on-chain markets, with a stricter ledger. Each lane is a pre-registered hypothesis with a written verdict. Leaving out infrastructure work, a blocked venue, a duplicate entry and non-trading side projects, 65 of them are trading ideas:</p>
-      <div class="figure">
-        <p class="cap">Every trading lane on the second ledger, by verdict (n = 65)</p>
-        <div class="tally" role="img" aria-label="50 killed, 8 inconclusive, 3 still accruing on paper, 2 paper candidates, 2 in live execution tests">
-          <span style="flex:50;background:var(--ink)">50</span>
-          <span style="flex:8;background:rgba(237,238,242,0.42)">8</span>
-          <span style="flex:3;background:var(--warn)">3</span>
-          <span style="flex:2;background:var(--good)">2</span>
-          <span style="flex:2;background:transparent;border:1px solid var(--accent);color:var(--accent)">2</span>
-        </div>
-        <ul class="tally-key">
-          <li><i style="background:var(--ink)"></i><span><b>50 killed.</b> Negative out of sample, eaten by fees, no capacity, or the wrong sign.</span></li>
-          <li><i style="background:rgba(237,238,242,0.42)"></i><span><b>8 inconclusive.</b> Too few independent events to decide. Said so rather than guessing.</span></li>
-          <li><i style="background:var(--warn)"></i><span><b>3 accruing.</b> Forward paper tests with a sealed sample-size target.</span></li>
-          <li><i style="background:var(--good)"></i><span><b>2 candidates, on paper.</b> The unlock short below, and the book that combines the event shorts.</span></li>
-          <li><i style="background:transparent;border:1px solid var(--accent)"></i><span><b>2 in live execution tests.</b> The listing short and a Solana microstructure strategy, each at tiny size to measure real fills against paper. Scaling up needs a separate, pre-registered live test.</span></li>
-        </ul>
-        <p class="fig-note">From the lane ledger as of 30 September 2026. Separately, the meme-desk auditor has closed about 70 entry and exit variants as failed or inconclusive, with no pass standing.</p>
-      </div>
-
-      <h4>What ate the edges, first programme</h4>
-      <div class="ledger">
-        <div class="ledger-head"><span>The edge</span><span>What eats it</span></div>
-        <div class="ledger-row"><span class="e">Polymarket longshot bias, real: <span class="n">~2¢</span></span><span class="c">the spread is <span class="n">1.5–3¢</span></span></div>
-        <div class="ledger-row"><span class="e">Dip-buying, 503 stocks + 90 ETFs: <span class="n">+20bp</span> in 2016–21</span><span class="c"><span class="n">+2bp</span> in 2021–26, below costs</span></div>
-        <div class="ledger-row"><span class="e">Polymarket liquidity provision, liquid markets</span><span class="c"><span class="n">−$102.59</span>/day per $1,000 (paper), <i>after</i> rewards</span></div>
-        <div class="ledger-row"><span class="e">Following analyst upgrades</span><span class="c">the whole reaction is in the untradeable gap</span></div>
-        <div class="ledger-row"><span class="e">25 equity factors, 29 survivors of multiple-testing correction</span><span class="c">one levered beta bet wearing 29 hats</span></div>
-        <div class="ledger-row"><span class="e">13F cloning, 19,000 filings</span><span class="c">survivorship, plus a single regime</span></div>
-        <div class="ledger-row"><span class="e">Merger spreads: 3% annualises to <span class="n">24.6%</span> a year</span><span class="c">after break risk and costs, <span class="n">+1.38%</span> a deal; break-even 1.59%</span></div>
-      </div>
-      <p class="note">Longer write-up: <a href="essays/friction-sized-edges.html">I pre-registered 110 market hypotheses. Nine were real. Zero were tradeable.</a> · <a href="essays/90-Hypotheses-Zero-Edges-short.pdf">90 Hypotheses, Zero Edges (pdf, earlier count)</a></p>
-      <p class="note">Third programme, closed October 2026: <a href="apex/">Apex — on-chain trading research, written up honestly</a>.</p>
-    </div>
-  </article>
-
-  <article class="case rise" id="method">
-    <div class="case-side"><div class="sticky">
-      <p class="eyebrow">Methodology</p>
-      <h3>The method</h3>
-      <p class="tag">Measure the instrument before you trust it, and write down what would prove you wrong before you look.</p>
-      <dl>
-        <dt>Tooling</dt><dd>SHA-256-sealed pre-registrations and evaluators · append-only ledgers · bootstrap CIs clustered by week, month and coin · deflated Sharpe, Hansen SPA, White's reality check</dd>
-      </dl>
-    </div></div>
-    <div class="case-body">
-      <ol class="pipe" aria-label="Research pipeline">
-        <li><b>Power check</b><span>Work out the smallest effect the data could detect. If the target is below it, don't run the search.</span></li>
-        <li><b>Pre-register</b><span>Rules, split date, bars and costs, hashed before any outcome is read.</span></li>
-        <li><b>Develop in-sample</b><span>Time splits with an embargo; CIs clustered by week, month and coin; drop-the-top-5 as a gate.</span></li>
-        <li class="gate-step"><b>One-shot holdout</b><span>A lock file is written before the first label is read. One look, no retries.</span></li>
-        <li class="gate-step"><b>Attack it</b><span>Independent reviews for leakage, costs and recency, plus deflation for every trial ever run.</span></li>
-        <li class="gate-step"><b>Paper, then a gate</b><span>A forward paper book behind an e-process. Promotion only writes a proposal; a person decides.</span></li>
-      </ol>
-      <div class="rules">
-        <div><b>Count every trial</b><span>3,038 model trials sit in one ledger. The best of them, deflated for all 3,038, has a deflated-Sharpe p of about 1.0. That is the honest answer.</span></div>
-        <div><b>Run a canary</b><span>A model trained on permuted labels scores AUC 0.47, against 0.82–0.94 on the real ones. If a canary ever passes a gate, every promotion freezes.</span></div>
-        <div><b>Count events, not trades</b><span>Sample sizes are counted in independent events. 21 live Numerai rounds turn out to be about one independent observation.</span></div>
-      </div>
-
-      <h4 id="retraction">A retraction, in full</h4>
-      <div class="retract">
-        <div class="row bad"><b>Claimed</b><span>Buying a newly migrated token 1–2 seconds after the snipers had positive expected value. It replicated on a holdout and passed a grid-null test. <s>Verdict: candidate.</s></span></div>
-        <div class="row"><b>Caught</b><span>An audit of the raw data found 88 of 1,320 tick files were sparse. They skipped the trades between the pool opening and my fill, so entries were priced before the snipers had moved the price. That produced phantom winners of +400% to +4,500%. Those 88 files alone made the positive mean, the "replication" and the null pass.</span></div>
-        <div class="row ok"><b>Corrected</b><span>On the 1,232 complete pools, entry loses at every delay: −5.2% a trade at 1 s (t −5.3), −3.9% at 5 s, −5.4% at 22 s (t −8.6). Verdict: RED, published the same day.</span></div>
-        <div class="row"><b>Fixed</b><span>The loader now rejects sparse pools. The ML selector that had learned "few transactions means a winner" was retired, because it had learned the artefact.</span></div>
-      </div>
-      <h4>Other things the process caught</h4>
-      <ul class="todo log">
-        <li><span>A meme-momentum result of +1.07% a day came from corrupted third-party price data. On clean data it is −0.72% a day.</span></li>
-        <li><span>Shorting new perp listings made +2,666 bps an event over 18 months (t 4.69), and +295 bps (t 0.6) on the full 2023–26 tape.</span></li>
-        <li><span>A sealed entry model was marked PASS. The internal auditor overturned it: the deflated-Sharpe gate was missing and the baseline compared totals with totals. A "17 PASS" meta-result became 0 of 47 once every trial was counted.</span></li>
-        <li><span>A market maker's paper profit was mostly fiction: 60% of its paper fills had no matching volume on the real trade tape.</span></li>
-        <li><span>Reusing one holdout inflated measured gains 3.2×. It also hid the small negatives that would have closed a project months earlier.</span></li>
-        <li><span>A pre-registration file was edited after the results existed. It was disclosed, and that result was downgraded.</span></li>
-      </ul>
-    </div>
-  </article>
-
-  <article class="case rise" id="apex">
-    <div class="case-side"><div class="sticky">
-      <p class="eyebrow">Research platform · 2026</p>
-      <h3>Apex</h3>
-      <p class="tag">The platform the second programme runs on: chain truth, a single cost model, replay, online learning and promotion gates.</p>
-      <dl>
-        <dt>Status</dt><dd><span class="chip paper">Paper only</span> It never signs or sends</dd>
-        <dt>Scale</dt><dd>333 modules · 88.6k lines · 956 tests · 14 subpackages · plus ~105k lines of research code</dd>
-        <dt>Stack</dt><dd>Python · polars · LightGBM · river · solders · websockets · Parquet/zstd · launchd services</dd>
-      </dl>
-    </div></div>
-    <div class="case-body">
-      <p class="lead">One question drives the design: can a model learn a trading policy from a live stream without fooling itself? The answer so far is "not profitably". The machinery that says so is the part worth showing.</p>
-      <h4>Streaming ingest and state</h4>
-      <p>Free public log streams for the pump.fun and PumpSwap programs are decoded in real time, about 215 events a second or roughly 19 million a day. Exact state is kept for the bonding curve and the constant-product pools, and decoders cover Raydium CPMM and LaunchLab and Meteora DBC and DAMM v2. A replay engine rebuilds 1,611 clean migrations from chain history to test against.</p>
-      <h4>Online learners</h4>
-      <p>Models score each event before learning from it, so every prediction is out of sample by construction. They include logistic regression, adaptive random forests with ADWIN drift detection, Mondrian forests and stochastic gradient trees, all with online Platt and isotonic calibration. An hourly LightGBM Q-model picks among 120 actions: three entry delays, five sizes and eight exit rules.</p>
-      <h4>Promotion by e-process</h4>
-      <p>A challenger is promoted only when a betting-martingale e-process (Waudby-Smith &amp; Ramdas) on its forward per-trade returns clears <code>max(20, K/α)</code>. K is the number of challengers in the epoch, and it never goes down, so running more models makes promotion harder. The gate also needs n ≥ 100, at least 50 distinct tokens and a positive result with the top five trades removed. Books hold one position at a time, which keeps the e-process valid when trades would overlap. Passing writes a proposal file; it never flips a switch.</p>
-      <div class="flow" aria-label="Promotion path">
-        <div class="node"><b>Candidate</b><span>screened on labels, n ≥ 200</span></div>
-        <div class="arr">→</div>
-        <div class="node"><b>Challenger</b><span>forward paper ledger, one position at a time</span></div>
-        <div class="arr">→</div>
-        <div class="node"><b>e ≥ max(20, K/α)</b><span>n ≥ 100, ≥ 50 tokens, drop-top-5 &gt; 0</span></div>
-        <div class="arr">→</div>
-        <div class="node key-node"><b>Proposal file</b><span>a person reads it and decides</span></div>
-      </div>
-
-      <h4>The hindsight-optimal policy learner</h4>
-      <p>For about 5,000 pools I priced every way each one could have been traded: 15 entry times, 7 sizes, 637 exit rules and 3 latencies, with exact AMM maths and real fees. That gives a hindsight-best action for every pool. A model then tried to predict that action from 214 features known at decision time. Split 3,016 / 999 / 1,009, holdout run once.</p>
-      <div class="facts">
-        <div><b>98.9<span class="u">%</span></b><span>of training pools had a profitable action in hindsight</span></div>
-        <div><b>0.90</b><span>AUC predicting which pools will be rugged</span></div>
-        <div><b>−0.020</b><span>SOL a trade on the one-shot holdout (n = 674). <span class="chip dead">RED</span></span></div>
-      </div>
-      <p>It learned which pools die, not which ones pay after fees, price impact and the rug tail. That is a clean negative, and the model now runs as a forward shadow ledger rather than being tuned until it looks better.</p>
-    </div>
-  </article>
-
-<!-- SOLANA EXECUTION -->
-<article class="case rise" id="solana">
-  <div class="case-side"><div class="sticky">
-    <p class="eyebrow">On-chain infrastructure · 2026</p>
-    <h3>Solana execution</h3>
-    <p class="tag">A streaming, pre-armed execution layer for PumpSwap pools, measured down to the microsecond, then used to prove what speed can't fix.</p>
-    <dl>
-      <dt>Status</dt><dd><span class="chip live">Live execution test</span> 0.25 SOL clips since 30 Sep 2026</dd>
-      <dt>Stack</dt><dd>Python · Helius websockets (<code>transactionSubscribe</code>, <code>accountSubscribe</code>) · Anchor IDL + Borsh decoding · Helius Sender</dd>
-      <dt>Safety</dt><dd>No send path in the dry pilot (AST-checked); live send needs two independent arm switches, a separate signer, hard daily and lifetime loss stops and an independent sell-only guardian</dd>
-    </dl>
-  </div></div>
-  <div class="case-body">
-    <p class="lead">Newly graduated tokens move fastest in their first seconds on a pool. I wanted to know how much of a bad exit is latency and how much is the market, so I built the fast path first and measured it.</p>
-    <div class="facts">
-      <div><b>0.33<span class="u">ms</span></b><span>p50, trigger to ready-to-sign sell bytes (p90 1.2 ms; every tick-triggered exit ≤ 0.64 ms)</span></div>
-      <div><b>0.0<span class="u">bps</span></b><span>median error of my integer constant-product quote against the on-chain fill event</span></div>
-      <div><b>96.9<span class="u">%</span></b><span>of 32 live migrations simulated clean at both +1 s and +2 s after detection</span></div>
-    </div>
-    <h4>What is built</h4>
-    <ul class="todo">
-      <li class="done"><span><b>Exact pricing.</b> The pump AMM's Anchor IDL is fetched on-chain and pinned against the published copy. Pool accounts and swap events are decoded with Borsh, and quotes use integer constant-product maths on the real reserves, fee tier included (62 of 62 tiers matched).</span></li>
-      <li class="done"><span><b>Streaming triggers.</b> Each position subscribes to its pool's transactions from the moment it is detected. Stops, take-profits, trailing and clock exits, creator or insider sells, whale buys and rug labels are all evaluated on every transaction, not on a polling timer.</span></li>
-      <li class="done"><span><b>Pre-armed exits.</b> The sell is assembled at entry: accounts, fee tier, tip account, compute-unit limit and a per-trigger plan. A background thread keeps the blockhash fresh. At the trigger only the amount and minimum-out are filled in.</span></li>
-      <li class="done"><span><b>Transaction builder.</b> p50 0.035 ms with the pool cached (n = 1,000). Buys come to 1,091 bytes, well under Solana's 1,232-byte limit.</span></li>
-      <li class="done"><span><b>Fees and routing.</b> The fee policy targets priority fees per percentile. Priced at the live market, a round trip's fees and tips fall from 0.00209 to 0.0000368 SOL. Urgent exits deliberately pay more, because landing a stop matters more than the fee.</span></li>
-    </ul>
-
-    <div class="figure">
-      <p class="cap">Detection: when each feed sees a new migration, ms after the slot starts (p50)</p>
-      <ul class="hbars" data-bars>
-        <li><span class="lbl">PumpPortal websocket<small>hosted in New Jersey</small></span><span class="track"><span class="fill pale" style="width:100%"></span><span class="v" style="left:calc(100% - 64px);color:var(--bg)">266 ms</span></span></li>
-        <li><span class="lbl">Helius transaction subscribe</span><span class="track"><span class="fill" style="width:46.2%"></span><span class="v" style="left:calc(46.2% + 8px)">123 ms</span></span></li>
-        <li><span class="lbl">Helius migration logs</span><span class="track"><span class="fill acc" style="width:36.8%"></span><span class="v" style="left:calc(36.8% + 8px)">98 ms</span></span></li>
-      </ul>
-      <p class="fig-note">Timed against the Helius node's own first-shred timestamp for each slot (clock within ±5 ms). A Solana slot is about 254 ms at the median, so the free websocket feed arrives roughly a full slot later than the Helius feeds. Measured from London; a server beside the validators is modelled to save a further ~70 ms at the median.</p>
-    </div>
-
-    <h4>The result that mattered</h4>
-    <p>The dry pilot's stops were filling well past their −12% line. The obvious suspect was latency: two-second polling, and a sell built and simulated one step after another (70–130 ms). The streaming, pre-armed engine cut that path to a third of a millisecond.</p>
-    <p>Replayed on the same positions, it improved the average stop fill by <span class="mk">0.4 points</span>.</p>
-    <div class="figure">
-      <p class="cap">Where a stop-loss actually loses, n = 16 stops, stop set at −12%</p>
-      <svg class="fig" viewBox="0 0 1000 156" role="img" aria-label="Of the 13.5 points lost past the stop, 12.8 are the price gapping through the stop on a single transaction and 0.7 are the time from trigger to fill" xmlns="http://www.w3.org/2000/svg">
-        <text class="t-s" x="0" y="22" fill="var(--muted)">STOP −12%</text>
-        <text class="t-s" x="1000" y="22" text-anchor="end" fill="var(--muted)">MEAN FILL −25.5%</text>
-        <rect x="0" y="36" width="946" height="58" fill="var(--accent)"/>
-        <rect x="949" y="36" width="51" height="58" fill="var(--ink)"/>
-        <text class="t-l" x="18" y="71" fill="var(--bg)">Gap at the trigger: −12.8 pts</text>
-        <line x1="974" y1="94" x2="974" y2="126" stroke="var(--ink)" stroke-width="1.2"/>
-        <text class="t-s" x="1000" y="146" text-anchor="end" fill="var(--ink)">latency: ≈ −0.7 pts</text>
-      </svg>
-      <p class="fig-note">One sell jumps the pool straight through the stop, and being faster cannot recover a price that never traded. Stream pilot, three live dry runs on 24 September 2026, 63 positions. A 3,911-pool tick replay agrees: with tick-level triggers, fill minus trigger is between −0.1 and +0.7 points at one, two and three slots. Fills are simulated at the estimated landing slot, not landed.</p>
-    </div>
-    <p>That answer saved the next obvious spend: renting a server next to the validators. It would shave ~70 ms off each decision, and none of that reaches P&amp;L when the loss is in the gap. The exit engine stays, because a stop that fires on the right transaction is still worth having. The money goes elsewhere.</p>
-  </div>
-</article>
-
-
-  <article class="case rise" id="events">
-    <div class="case-side"><div class="sticky">
-      <p class="eyebrow">Event-driven research · 2026</p>
-      <h3>Event shorts</h3>
-      <p class="tag">Do perpetual futures fall around token unlocks and new exchange listings, after real costs?</p>
-      <dl>
-        <dt>Status</dt><dd><span class="chip bt">Backtest</span> <span class="chip paper">Paper forward from 24 Sep 2026</span> <span class="chip live">Live canary, tiny size</span></dd>
-        <dt>Design</dt><dd>Hyperliquid perps, 1× short, hedged with an equal BTC long. 18 bps taker fee plus measured slippage and funding.</dd>
-        <dt>Split</dt><dd>In-sample before July 2025, held out from 1 July 2025. Week-clustered bootstrap, B = 10,000.</dd>
-      </dl>
-    </div></div>
-    <div class="case-body">
-      <p class="lead">Two families survived. One kept its size out of sample; the other lost about 70% of it. Both are candidates on paper, not results.</p>
-      <div class="figure">
-        <p class="cap">Mean return per event, net of costs, with 90% intervals</p>
-        <ul class="dots">
-          <li class="grp"><span class="lbl">Token unlocks · in-sample<small>n = 257, before Jul 2025</small></span>
-            <span class="plot is"><span class="zero"></span><span class="ci" style="left:38.08%;right:36.83%"></span><span class="pt" style="left:51.17%"></span><span class="val" style="left:51.17%;top:-12px">+4.14%</span></span></li>
-          <li><span class="lbl">Token unlocks · held out<small>n = 228, from Jul 2025</small></span>
-            <span class="plot ho"><span class="zero"></span><span class="ci" style="left:9.67%;right:56.17%"></span><span class="pt" style="left:27.17%"></span><span class="val" style="left:27.17%;top:-12px">+1.26%</span></span></li>
-          <li class="grp"><span class="lbl">CEX listings · all events<small>n = 149</small></span>
-            <span class="plot is"><span class="zero"></span><span class="ci" style="left:44.25%;right:15.33%"></span><span class="pt" style="left:64.58%"></span><span class="val" style="left:64.58%;top:-12px">+5.75%</span></span></li>
-          <li><span class="lbl">CEX listings · held out<small>n = 69, from Jul 2025</small></span>
-            <span class="plot ho"><span class="zero"></span><span class="ci" style="left:41.33%;right:14.5%"></span><span class="pt" style="left:63%"></span><span class="val" style="left:63%;top:-12px">+5.56%</span></span></li>
-          <li class="axis"><span></span><span class="ticks"><span style="left:0%">−2%</span><span style="left:16.667%">0</span><span style="left:33.33%">+2%</span><span style="left:50%">+4%</span><span style="left:66.67%">+6%</span><span style="left:83.33%">+8%</span><span style="left:100%">+10%</span></span></li>
-        </ul>
-        <div class="key"><span><i class="sw" style="background:rgba(237,238,242,0.55)"></i>in-sample or full sample</span><span><i class="sw" style="background:var(--accent)"></i>held out</span></div>
-        <p class="fig-note">Backtest. The unlock hold-out interval crosses zero under every clustering (week, month, coin). The per-event standard deviation of listing shorts is 17.7%, so a hold-out mean of 5.6% sits only just above its detection floor of about 5.3%.</p>
-      </div>
-      <h4>Token unlocks</h4>
-      <p>The hypothesis: insiders sell into scheduled unlocks of at least 1% of supply. The rule is to short at the open seven days before and exit two days after. Across 485 events on 44 coins it made +2.78% an event, and the effect grows with unlock size, from +1.5% for 1–2% of supply to +10.1% above 25%. The drift happens before the unlock, not after it. A 150-cell parameter grid added nothing: its best in-sample cell (+23% an event) lost 0.70% on the holdout, so only the fixed, pre-registered window counts. One data trap is worth mentioning: the exchange's candle API backfills fake pre-listing candles with zero trades, which created 48 events that never happened.</p>
-      <h4>Exchange listings</h4>
-      <p>The hypothesis: when a coin that already trades as a perp gets its first spot listing on a major exchange, the pump reverts. The rule is to short the day after and hold seven days. It held out of sample (t 3.24; +3.59% with the top five events removed), and it survived three independent attacks on data and leakage, execution and costs, and recency. It was still downgraded from GREEN, for three reasons: true first listings alone fail and the effect lives in later-venue listings, the pre-registration file was edited after the results, and the last 26 weeks are thin. My expectation going forward is +2–3% an event, not +5.6%.</p>
-      <h4>What didn't survive</h4>
-      <ul class="todo log">
-        <li><span>Buying on-chain after a listing announcement: 92% of the move happens within five seconds.</span></li>
-        <li><span>Trading exchange notices: 86–94% of the move is done before a one-to-two-minute entry.</span></li>
-        <li><span>Treasury unlocks: +4.6% in-sample, −1.0% held out. Treasury tokens mostly aren't sold.</span></li>
-        <li><span>Leverage on the combined book. At 1× the holdout Sharpe was 1.46, but most of it came from one crash in autumn 2025 (about +7.7% a year without it). The pre-registered 3× failed out of sample.</span></li>
-      </ul>
-      <p class="note">Research, not advice. Real costs measured since then (32–39 bps a round trip) are higher than the 23 bps the studies assumed. That is part of why the forward paper book, not the backtest, is the test.</p>
-    </div>
-  </article>
-
-
-  <!-- MERGER MONITOR -->
-  <section class="work" id="merger">
-  <article class="case rise">
-    <div class="case-side"><div class="sticky">
-      <p class="eyebrow">Data product · live</p>
-      <h3>Merger Monitor</h3>
-      <p class="tag">Deal prices from SEC filings, priced against the market. The one piece of research with a price attached.</p>
-      <dl>
-        <dt>Status</dt><dd><span class="chip live">Live product</span> £5/month · not advice</dd>
-        <dt>Ledger</dt><dd>Zero subscribers so far. Take: £0.</dd>
-        <dt>Scope</dt><dd>US cash mergers that have reached a definitive proxy</dd>
-      </dl>
-    </div></div>
-    <div class="case-body">
-      <p class="lead">I extract the contractual cash price of every US cash merger that has reached a definitive proxy, and price it against the live market. Each figure carries the sentence from the filing it was read from.</p>
-      <p>It is a table of filings, not a tip sheet. A 3% spread annualises to <span data-merger-annualised-3pct>24.6%</span>; after costs it is <span data-merger-ev-3pct>+1.38%</span> a deal. Most thin ones die. The paid edition is <span class="mk">£5/month</span>: the same table, emailed the evening it is built. A sealed re-run of the same 3% case in my research harness measured about +1.37% a deal (bootstrap CI roughly 1.35–1.39%).</p>
-
-      <div class="doing-row">
-        <a class="go pay" href="subscribe/">Get tonight's table — £5/month</a>
-        <span class="note"><a href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Pay on Gumroad</a> · <a href="merger-monitor/">Week-late public table</a></span>
-      </div>
-
-      <p>The public table at <a href="merger-monitor/">/merger-monitor</a> is the same product, published one week late on purpose. A week-old table is the worse entry on deals that complete.</p>
-
-      <a class="mm-preview" href="merger-monitor/">
-        <p class="cap">Week-late public table · 19 August 2026</p>
-        <table>
-          <thead>
-            <tr><th>Deal</th><th>Company</th><th>Offer / market</th><th>Spread</th></tr>
-          </thead>
-          <tbody>
-            <tr><td class="tk">WBD</td><td class="co">Warner Bros. Discovery</td><td class="num">$31.00 / $28.48</td><td class="num">+8.85%</td></tr>
-            <tr><td class="tk">SLAB</td><td class="co">Silicon Laboratories</td><td class="num">$231.00 / $219.29</td><td class="num">+5.34%</td></tr>
-            <tr><td class="tk">ACA</td><td class="co">Arcosa</td><td class="num">$150.00 / $145.01</td><td class="num">+3.44%</td></tr>
-            <tr><td class="tk">AES</td><td class="co">AES Corp</td><td class="num">$15.00 / $14.74</td><td class="num">+1.76%</td></tr>
-            <tr><td class="tk">CRNX</td><td class="co">Crinetics</td><td class="num">$85.00 / $84.75</td><td class="num">+0.29%</td></tr>
-          </tbody>
-        </table>
-        <p class="go-row">See every deal, with the filing sentence →</p>
-      </a>
-
-      <div class="worked rise">
-        <h4>Annualising flatters everything. Here is the one I sell, done properly.</h4>
-        <p>A 3% merger spread held to the median <span data-merger-median-days>49</span>-day close annualises to <b><span data-merger-annualised-3pct>24.6%</span> a year</b>. That number is worthless, and it is the number this whole business would normally be sold on.</p>
-        <div class="twoup">
-          <div class="bad"><b data-merger-annualised-3pct>24.6%</b><span>a year: what a 3% spread over <span data-merger-median-days>49</span> days looks like when you annualise it</span></div>
-          <div class="real"><b data-merger-ev-3pct>+1.38%</b><span>per deal: the same trade after a <span data-merger-break-rate>2.4%</span> break rate, a <span data-merger-break-loss>27%</span> median loss when one breaks, <span data-merger-cost>0.40%</span> round-trip cost and <span data-merger-carry>0.49%</span> of forgone T-bill carry</span></div>
-        </div>
-        <p>Price a 1% spread the same way (still a healthy-looking annualised number) and it is <span class="mk" data-merger-ev-1pct>−0.57%</span> per deal. Break-even sits at <span class="mk" data-merger-breakeven>1.59%</span>.</p>
-        <p>On the 19 August table, nine of the seventeen cash-priced rows clear that 1.59% break-even. The rest are published anyway, because a wide spread and a thin one look identical until you price the break risk. Base rate <span data-merger-break-rate>2.4%</span>: <span data-merger-breaks>39</span> breaks in <span data-merger-settled>1,606</span> settled outcomes. A floor, not a ceiling: deals that die before a definitive proxy never enter the sample.</p>
-        <p>That is the whole method in one line: the annualised number is marketing, the expected value is the trade. You pay £5/month for the evening the table is built, not for a secret. A named row from that table is walked through at <a href="example/">/example/</a>. The same frozen 3% case (24.6% annualised, +1.38% after costs) is a public calculator at <a href="sizer/">/sizer/</a>.</p>
-      </div>
-      <div class="doing-row">
-        <a class="go pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Pay on Gumroad — £5/month</a>
-        <span class="note"><a href="subscribe/">The offer</a> · <a href="weekly/">Free weekly edition</a>: same table, one week late</span>
-      </div>
-    </div>
-  </article>
   </section>
 
-  <article class="case rise" id="deskstatus">
-    <div class="case-side"><div class="sticky">
-      <p class="eyebrow">macOS app · Sep 2026</p>
-      <h3>DeskStatus</h3>
-      <p class="tag">A native trading-floor dashboard for the research desk, built so that looking can't turn into doing by accident.</p>
-      <dl>
-        <dt>Status</dt><dd><span class="chip live">Shipped · v1.0.3</span></dd>
-        <dt>Stack</dt><dd>Swift 5 · SwiftUI · Swift Charts · MenuBarExtra · Swift Package Manager · macOS 14+</dd>
-        <dt>Size</dt><dd>16 Swift files · 4.6k lines</dd>
-      </dl>
-    </div></div>
-    <div class="case-body">
-      <p class="lead">Dozens of daemons, paper books and research jobs each write their own state. DeskStatus puts all of it in one window and one menu-bar light, and it can't sign anything.</p>
-      <div class="ds-win" role="img" aria-label="Schematic of the DeskStatus window: a title bar with a status light, seven tabs and two panels. No data is shown.">
-        <div class="ds-bar"><i></i><i></i><i></i><span>DESKSTATUS</span><span class="dot"></span></div>
-        <div class="ds-tabs"><span class="on"><b>1</b>FLOOR</span><span><b>2</b>ENGINES</span><span><b>3</b>HL</span><span><b>4</b>PAPER</span><span><b>5</b>PRINTER</span><span><b>6</b>DP2</span><span><b>7</b>APEX</span></div>
-        <div class="ds-body">
-          <div><span class="h">BLOTTER</span><div class="ds-row"></div><div class="ds-row"></div><div class="ds-row"></div><div class="ds-row"></div><div class="ds-row"></div><div class="ds-row"></div></div>
-          <div><span class="h">CHART</span>
-            <svg viewBox="0 0 300 110" aria-hidden="true"><polyline points="0,80 30,74 60,78 90,60 120,64 150,48 180,55 210,40 240,46 270,30 300,36" fill="none" stroke="#8d9089" stroke-width="2" stroke-dasharray="4 4"/></svg>
-          </div>
-        </div>
-      </div>
-      <p class="fig-note">A schematic of the layout, not a screenshot. The real window shows live account data, so it isn't pictured.</p>
-      <h4>How it works</h4>
-      <div class="flow">
-        <div class="node"><b>Daemons and jobs</b><span>desk, paper books, Apex, research engines</span></div>
-        <div class="arr">→</div>
-        <div class="node"><b>State files</b><span>JSON / JSONL snapshots, pid and heartbeat files</span></div>
-        <div class="arr">→</div>
-        <div class="node key-node"><b>DeskStatus</b><span>polls every 1 s (Apex every 3 s); health check every 60 s</span></div>
-      </div>
-      <div class="flow sub">
-        <div class="node"><b>SELL ALL → CONFIRM</b><span>the only action, two steps</span></div>
-        <div class="arr">→</div>
-        <div class="node"><b>Intent file</b><span>plus a wake-up over a Unix socket</span></div>
-        <div class="arr">→</div>
-        <div class="node"><b>Separate signer</b><span>the app never opens a key</span></div>
-      </div>
-      <ul class="todo">
-        <li class="done"><span>Seven keyboard tabs: the live floor, background engines, a Hyperliquid watch, paper books, a research "printer" with a luck bar, the entry-model sleeve and the Apex platform.</span></li>
-        <li class="done"><span>A staleness state machine, so old data reads as old instead of as calm.</span></li>
-        <li class="done"><span>A menu-bar extra with a coloured status dot, so the desk's state is visible from any app.</span></li>
-        <li class="done"><span>Headless modes: <code>--screenshot</code> renders the dashboard at 2× with ImageRenderer, and <code>--dump --text</code> prints the floor for scripts and agents.</span></li>
-      </ul>
-    </div>
-  </article>
-
-  <article class="case rise" id="numerai">
-    <div class="case-side"><div class="sticky">
-      <p class="eyebrow">Tournament ML</p>
-      <h3>Numerai</h3>
-      <p class="tag">Three tournaments submitting on schedule. The interesting parts are the audit and a deadline that moves.</p>
-      <dl>
-        <dt>Status</dt><dd><span class="chip live">Live submissions</span> <span class="chip res">Unstaked</span></dd>
-        <dt>Model</dt><dd>LightGBM, 2,000 trees, all 3,555 features, target <code>ender_60</code></dd>
-      </dl>
-    </div></div>
-    <div class="case-body">
-      <p class="lead">The model Numerai runs is byte-identical to the one in my repo. Run in a copy of their environment, it reproduces a live round's ranks exactly. After that, the question is only whether it's any good.</p>
-      <div class="facts">
-        <div><b>0.0222</b><span>mean CORR60 on 93 eras held out from a twin model (Sharpe 1.47, positive in 95% of eras)</span></div>
-        <div><b>1.27</b><span>Sharpe of the payout score out of sample, with no losing quarter</span></div>
-        <div><b>2</b><span>live rounds resolved so far (93rd and 98th percentile). Too few to stake on; the policy asks for ten.</span></div>
-      </div>
-      <p>Eleven challengers were tested against the champion. The best, a blend with Numerai's benchmark, added 12% to the payout score but had a Holm-adjusted p of 0.14. It failed the gate and runs as an unstaked live A/B test instead. On Signals, I measured survivorship bias directly: scoring only the names I could map inflated correlation by +0.0109 (t 3.5). The fix was a point-in-time ticker map built from SEC fails-to-deliver data, which recovers 88% of dead names against 31% for the usual mapping service.</p>
-      <div class="figure">
-        <p class="cap">Crypto: where the submission landed against a deadline that moves</p>
-        <svg class="fig" viewBox="0 0 1000 250" role="img" aria-label="Timeline: the old job fired at 13:10Z, after a deadline band of 13:03 to 13:07; the fixed job now uploads at 12:21:50Z, 41 minutes inside" xmlns="http://www.w3.org/2000/svg">
-          <rect x="761.6" y="84" width="35.2" height="88" fill="rgba(237,238,242,0.12)"/>
-          <line x1="761.6" y1="84" x2="761.6" y2="172" stroke="var(--muted)" stroke-width="1" stroke-dasharray="2 3"/>
-          <line x1="796.8" y1="84" x2="796.8" y2="172" stroke="var(--muted)" stroke-width="1" stroke-dasharray="2 3"/>
-          <line x1="64" y1="128" x2="944" y2="128" stroke="var(--ink)" stroke-width="1.8"/>
-          <line x1="64.0" y1="122" x2="64.0" y2="134" stroke="var(--ink)" stroke-width="1.8"/>
-          <text class="t-s" x="64.0" y="236" text-anchor="start" fill="var(--muted)">12:00Z</text>
-          <line x1="394.0" y1="122" x2="394.0" y2="134" stroke="var(--ink)" stroke-width="1.8"/>
-          <text class="t-s" x="394.0" y="236" text-anchor="middle" fill="var(--muted)">12:30</text>
-          <line x1="724.0" y1="122" x2="724.0" y2="134" stroke="var(--ink)" stroke-width="1.8"/>
-          <text class="t-s" x="724.0" y="236" text-anchor="middle" fill="var(--muted)">13:00</text>
-          <line x1="944.0" y1="122" x2="944.0" y2="134" stroke="var(--ink)" stroke-width="1.8"/>
-          <text class="t-s" x="944.0" y="236" text-anchor="end" fill="var(--muted)">13:20</text>
-          <line x1="304.2" y1="128" x2="304.2" y2="80.0" stroke="var(--accent)" stroke-width="1.6" stroke-dasharray="3 3"/>
-          <circle cx="304.2" cy="128.0" r="6" fill="var(--accent)"/>
-          <text class="t-m" x="304.2" y="70.0" text-anchor="middle" fill="var(--accent)">12:21:50Z</text>
-          <line x1="834.0" y1="128" x2="834.0" y2="184.0" stroke="var(--ink)" stroke-width="1.6" stroke-dasharray="3 3"/>
-          <circle cx="834.0" cy="128.0" r="6" fill="var(--ink)"/>
-          <text class="t-m" x="834.0" y="200.0" text-anchor="end" fill="var(--ink)">13:10Z</text>
-        </svg>
-        <div class="key"><span><i style="border-color:var(--accent)"></i>now: 41 min inside</span><span><i></i>old job: late every weekday</span><span><i class="sw" style="background:rgba(237,238,242,0.12)"></i>deadline, drifting ~3 min</span></div>
-        <p class="fig-note">Every Crypto submission was silently ineligible for payouts for months: my log recorded success while the platform recorded late. The fix fires eight times across summer and winter time, takes a lock, checks whether the round is already in and refuses stale data. Along the way it caught three of its own bugs. Round 1341 was the first on time.</p>
+  <section class="scene" data-word="it's" aria-label="Not just a record">
+    <div class="stick">
+      <div class="copy right">
+        <p class="kick">Side A, 12 tracks</p>
+        <h2>Not just <em>a record.</em></h2>
+        <p>Every groove is something I shipped, tested or killed. Keep scrolling and it plays them in order.</p>
       </div>
     </div>
-  </article>
+  </section>
 
-  <article class="case rise" id="competitions">
-    <div class="case-side"><div class="sticky">
-      <p class="eyebrow">Competitions</p>
-      <h3>Quantiacs, BRAIN, Structural Break</h3>
-      <p class="tag">Three platforms, three different lessons about measurement.</p>
-      <dl>
-        <dt>Quantiacs Q25</dt><dd><span class="chip live">Selected</span> Trades 1 Oct – 31 Jan</dd>
-        <dt>WorldQuant BRAIN</dt><dd><span class="chip live">Gold</span> ~14 alphas live</dd>
-        <dt>CrunchDAO</dt><dd>Structural Break 263rd of 1,332; DataCrunch around 15th of 13,534</dd>
-      </dl>
-    </div></div>
-    <div class="case-body">
-      <p class="lead">A defended dual-momentum strategy was selected to trade live, one of fifteen. In-sample Sharpe 1.22, maximum drawdown 23.6%. The platform's drawdown matched my from-source engine exactly.</p>
-      <div class="figure">
-        <p class="cap">Quantiacs · £100 through the strategy, 2014–2025 <span class="chip bt">Backtest</span></p>
-        <svg class="fig" viewBox="0 0 1000 300" role="img" aria-label="Equity curve: 100 grows to 654 between 2014 and 2025, with most of the gain in 2017 and 2021" xmlns="http://www.w3.org/2000/svg">
-          <line x1="64" y1="258.0" x2="948" y2="258.0" stroke="rgba(237,238,242,0.18)" stroke-width="1"/>
-          <text class="t-s" x="54" y="262.0" text-anchor="end" fill="var(--muted)">0</text>
-          <line x1="64" y1="197.4" x2="948" y2="197.4" stroke="rgba(237,238,242,0.18)" stroke-width="1"/>
-          <text class="t-s" x="54" y="201.4" text-anchor="end" fill="var(--muted)">200</text>
-          <line x1="64" y1="136.9" x2="948" y2="136.9" stroke="rgba(237,238,242,0.18)" stroke-width="1"/>
-          <text class="t-s" x="54" y="140.9" text-anchor="end" fill="var(--muted)">400</text>
-          <line x1="64" y1="76.3" x2="948" y2="76.3" stroke="rgba(237,238,242,0.18)" stroke-width="1"/>
-          <text class="t-s" x="54" y="80.3" text-anchor="end" fill="var(--muted)">600</text>
-          <path d="M64.0 227.7 L137.7 227.1 L211.3 227.3 L285.0 223.6 L358.7 172.1 L432.3 180.0 L506.0 176.1 L579.7 164.5 L653.3 116.1 L727.0 124.8 L800.7 87.0 L874.3 58.9 L948.0 59.9" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linejoin="round"/>
-          <text class="t-s" x="64.0" y="286" text-anchor="start" fill="var(--muted)">2013</text>
-          <text class="t-s" x="358.7" y="286" text-anchor="middle" fill="var(--muted)">2017</text>
-          <circle cx="358.7" cy="172.1" r="5" fill="var(--accent)"/>
-          <text class="t-m" x="358.7" y="158.1" text-anchor="middle" fill="var(--accent)">284</text>
-          <text class="t-s" x="653.3" y="286" text-anchor="middle" fill="var(--muted)">2021</text>
-          <circle cx="653.3" cy="116.1" r="5" fill="var(--accent)"/>
-          <text class="t-m" x="653.3" y="102.1" text-anchor="middle" fill="var(--accent)">469</text>
-          <text class="t-s" x="948.0" y="286" text-anchor="end" fill="var(--muted)">2025</text>
-          <circle cx="948.0" cy="59.9" r="5" fill="var(--accent)"/>
-          <text class="t-m" x="948.0" y="45.9" text-anchor="end" fill="var(--accent)">654</text>
-        </svg>
-        <p class="fig-note">Compounded through the annual net returns, slippage included. Two years carry it, 2017 and 2021, and the rest is defence. A best-of-100 search on the same data manufactured a fake +0.30 of Sharpe against a detection floor of 0.68, which is why I stopped tuning it.</p>
+  <section class="scene" data-word="" aria-label="ExeTix">
+    <div class="stick">
+      <div class="copy">
+        <p class="kick">Track 01 · on the App Store</p>
+        <h2>Pinged the second <em>Exeter tickets drop.</em></h2>
+        <p>Sold out anyway? Buy a verified student's spare. Sellers pay no fees. About one to two seconds from release to your lock screen.</p>
+        <a class="go solid" href="exetix/">See ExeTix</a>
       </div>
-      <h4>WorldQuant BRAIN</h4>
-      <p>Three days stuck at zero accepted submissions. It broke when I stopped submitting single expressions and started submitting two-term combinations: correlation fell from 0.79 to 0.51 and fitness rose from 1.04 to 1.68. Gold (10,000 points) followed, with about 14 alphas live from a 416-simulation sweep. The components that made it work had each failed on their own and would have been filed as dead ends. Submissions are now paused on purpose, because each new alpha raises the correlation wall for the next.</p>
-      <h4>Structural Break</h4>
-      <p>Two shipped improvements gained +0.0144 on my own holdout and moved the live score by −0.0003. My holdout matched live almost exactly in level, and I used that to justify believing a delta. Levels agreeing says nothing about whether improvements transfer.</p>
-      <div class="figure">
-        <p class="cap">Two lines that should move together, and don't</p>
-        <svg class="fig" viewBox="0 0 1000 300" role="img" aria-label="Holdout score climbs from 57.31 to 58.75 while the live score stays flat, ending at 57.43" xmlns="http://www.w3.org/2000/svg">
-          <line x1="74" y1="216.8" x2="944" y2="216.8" stroke="rgba(237,238,242,0.18)" stroke-width="1"/>
-          <text class="t-s" x="64" y="220.8" text-anchor="end" fill="var(--muted)">57.5</text>
-          <line x1="74" y1="157.9" x2="944" y2="157.9" stroke="rgba(237,238,242,0.18)" stroke-width="1"/>
-          <text class="t-s" x="64" y="161.9" text-anchor="end" fill="var(--muted)">58.0</text>
-          <line x1="74" y1="99.0" x2="944" y2="99.0" stroke="rgba(237,238,242,0.18)" stroke-width="1"/>
-          <text class="t-s" x="64" y="103.0" text-anchor="end" fill="var(--muted)">58.5</text>
-          <path d="M74.0 239.2 L509.0 227.4 L944.0 69.6" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-dasharray="8 5"/>
-          <path d="M74.0 221.5 L509.0 223.8 L944.0 225.0" fill="none" stroke="var(--ink)" stroke-width="2.6"/>
-          <circle cx="74.0" cy="239.2" r="5" fill="var(--accent)"/>
-          <circle cx="74.0" cy="221.5" r="5" fill="var(--ink)"/>
-          <text class="t-s" x="74.0" y="286" text-anchor="start" fill="var(--muted)">v5</text>
-          <circle cx="509.0" cy="227.4" r="5" fill="var(--accent)"/>
-          <circle cx="509.0" cy="223.8" r="5" fill="var(--ink)"/>
-          <text class="t-s" x="509.0" y="286" text-anchor="middle" fill="var(--muted)">v6</text>
-          <circle cx="944.0" cy="69.6" r="5" fill="var(--accent)"/>
-          <circle cx="944.0" cy="225.0" r="5" fill="var(--ink)"/>
-          <text class="t-s" x="944.0" y="286" text-anchor="end" fill="var(--muted)">v11</text>
-          <text class="t-m" x="944.0" y="54.6" text-anchor="end" fill="var(--accent)">58.75</text>
-          <text class="t-m" x="944.0" y="251.0" text-anchor="end" fill="var(--ink)">57.43</text>
-        </svg>
-        <div class="key"><span><i class="dash"></i>my holdout</span><span><i></i>live leaderboard</span></div>
-        <p class="fig-note">Three shipped models, same metric, same axis. The holdout climbs 1.44 points; live moves −0.03.</p>
-      </div>
-      <h4>Checking someone else's numbers</h4>
-      <p>A Polymarket trader turned $2,895 into $257,000 and an article explained how. I pulled 478,021 of their public on-chain events. The profit was real, +$221,120 over 97 days (t 7.52), but the mechanism everyone assumed was wrong. A second wallet in the same study looked profitable until the same filter removed 72% of its apparent profit, nearly all of it on one day. Those were redemptions of positions opened before the measurement window: an artefact I had to catch before it fooled me too.</p>
+      <figure class="phone" id="phone" style="margin:0"><img src="exetix/img/screen-explore.webp" alt="ExeTix Explore tab: five club nights tonight"></figure>
     </div>
-  </article>
-</section>
+  </section>
 
-
-<!-- 03 PRODUCTS AND TOOLS -->
-<section class="chapter" id="builds" aria-labelledby="builds-h">
-  <div class="chapter-head">
-    <p class="no">03<span>Products and tools</span></p>
-    <h2 id="builds-h">Things you <em>can use</em></h2>
-    <p class="lede">Smaller builds, most of them started by a price being wrong or an annoyance I couldn't leave alone. Most of them work right here on the page.</p>
-  </div>
-</section>
-
-<!-- DOORLY -->
-<section class="work" id="doorly">
-  <article class="case rise">
-    <div class="case-side"><div class="sticky">
-      <p class="eyebrow">Web + iOS</p>
-      <h3>Doorly</h3>
-      <p class="tag">The cheapest flight is rarely the cheapest trip.</p>
-      <dl>
-        <dt>Status</dt><dd><span class="chip res">Demo</span> Demo fares, labelled as such</dd>
-        <dt>Stack</dt><dd>Vite · web workers · Capacitor for the iOS build</dd>
-      </dl>
-    </div></div>
-    <div class="case-body">
-      <div class="frame">
-        <video muted loop playsinline preload="none" poster="media/doorly.jpg">
-          <source src="media/doorly-demo.mp4" type="video/mp4">
-        </video>
+  <section class="scene" data-word="" aria-label="Research">
+    <div class="stick">
+      <div class="notes" id="notes" style="opacity:0">
+        <span class="n1"><b>50</b>trading ideas killed<br>out of sample, on the record</span>
+        <span class="n2"><b>~170</b>pre-registered hypotheses<br>SHA-256 sealed before results</span>
+        <span class="n3"><b>p ≈ 1.0</b>deflated Sharpe of the best<br>of 3,038 trials. The honest answer.</span>
+        <span class="n4"><b>2</b>in small live tests<br>no profit claimed</span>
       </div>
-      <p>You only fly to get from A to B, but flight search sites don't count <span class="mk">the cost and time of getting to and from the airport at either end</span>.</p>
-      <p>For example, a flight from Heathrow might cost <span class="num-r">£120</span> and one from City <span class="num-r">£130</span>. A normal tracker recommends Heathrow because it's cheaper. From where I live, City works out cheaper door to door. Doorly ranks the whole trip.</p>
-      <div class="doing-row">
-        <a class="go" href="doorly/" target="_blank" rel="noopener">Try the demo</a>
-        <span class="note">Demo fares, labelled as such. The real thing pulls live prices.</span>
+      <div class="copy top">
+        <p class="kick">Track 02 · the kill log</p>
+        <h2>Research that <em>says no.</em></h2>
       </div>
-      <p class="todo-label">Where it's at</p>
-      <ul class="todo">
-        <li class="done"><span>Live provider data, door-to-door ranking, iOS build via Capacitor</span></li>
-        <li><span>Connecting flights: it only searches direct for now</span></li>
-        <li><span>Host it publicly rather than running it locally</span></li>
-      </ul>
     </div>
-  </article>
-</section>
+  </section>
 
-<!-- POWERLEASH -->
-<section class="work" id="powerleash">
-  <article class="case rise">
-    <div class="case-side"><div class="sticky">
-      <p class="eyebrow">macOS utility</p>
-      <h3>PowerLeash</h3>
-      <p class="tag">Apple's low power mode made my Mac worse, so I made my own.</p>
-      <dl>
-        <dt>Status</dt><dd><span class="chip live">Download</span> Apple Silicon</dd>
-        <dt>Pieces</dt><dd>Eco Mode · Match Charger · a live per-process power readout</dd>
-      </dl>
-    </div></div>
-    <div class="case-body">
-      <p>Apple's low power mode made macOS feel sluggish: the cursor lagged and movement felt off. It turned out to be cutting CPU performance by <span class="mk">about 40%</span> across the board. I also only have a <span class="num-r">45W</span> charger on a Mac that can draw far more, so I was losing battery on heavy work while plugged in.</p>
-      <p>Eco Mode moves background apps onto the efficiency cores and leaves the app in front untouched. Match Charger caps total draw at what the charger can actually supply.</p>
-      <div class="figure">
-        <p class="cap">Match Charger against a sustained 8-thread burn · system load, one sample per control cycle</p>
-        <svg class="loadchart" viewBox="0 0 980 230" role="img" aria-label="System load falling from 57.8W to hold at the 42.8W charger cap, then dropping to idle">
-          <g stroke="rgba(237,238,242,0.18)" stroke-width="1">
-            <line x1="46" y1="16" x2="960" y2="16"/>
-            <line x1="46" y1="103" x2="960" y2="103"/>
-            <line x1="46" y1="190" x2="960" y2="190"/>
-          </g>
-          <g fill="rgba(237,238,242,0.5)" font-family="ui-monospace, Menlo, monospace" font-size="11">
-            <text x="8" y="20">64W</text><text x="8" y="107">32W</text><text x="8" y="194">0W</text>
-          </g>
-          <line x1="46" y1="73.6" x2="960" y2="73.6" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="6 5"/>
-          <text x="960" y="66" text-anchor="end" fill="var(--accent)" font-family="ui-monospace, Menlo, monospace" font-size="11">CHARGER CAP 42.8W</text>
-          <polyline points="60,32.9 280,75.3 500,72.9 720,159.2 940,163.1" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-          <g fill="var(--ink)">
-            <circle cx="60" cy="32.9" r="5"/><circle cx="280" cy="75.3" r="5"/>
-            <circle cx="500" cy="72.9" r="5"/><circle cx="720" cy="159.2" r="5"/><circle cx="940" cy="163.1" r="5"/>
-          </g>
-          <g font-family="ui-monospace, Menlo, monospace" font-size="12" fill="var(--ink)">
-            <text x="60" y="22" text-anchor="middle">57.8</text>
-            <text x="280" y="96" text-anchor="middle">42.2</text>
-            <text x="500" y="62" text-anchor="middle">43.1</text>
-            <text x="720" y="180" text-anchor="middle">11.3</text>
-            <text x="940" y="184" text-anchor="end">9.9</text>
-          </g>
-          <g font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="10.5" fill="rgba(237,238,242,0.5)" letter-spacing="1.2">
-            <text x="60" y="216" text-anchor="middle">BURN STARTS</text>
-            <text x="390" y="216" text-anchor="middle">HOLDING AT THE CAP</text>
-            <text x="820" y="216" text-anchor="middle">BURN ENDS · RELEASING</text>
-          </g>
-        </svg>
+  <section class="scene" data-word="0.33 ms" aria-label="Solana execution">
+    <div class="stick">
+      <div class="copy right">
+        <p class="kick">Track 03 · Solana execution</p>
+        <h2>Trigger to exit in <em>a third of a millisecond.</em></h2>
+        <p>Then I measured it, and speed bought 0.4 points. The loss was in the gap, not the latency. So I didn't rent the server.</p>
       </div>
-      <div class="facts">
-        <div><b>59.0 → 42.7<span class="u">W</span></b><span>system load, before and after Match Charger</span></div>
-        <div><b>−15.6 → −3.5<span class="u">W</span></b><span>battery flow: draining hard while plugged in, to nearly break-even</span></div>
-        <div><b>60 → 30<span class="u">W</span></b><span>one heavy background app demoted; the app in front untouched</span></div>
-      </div>
-      <div class="doing-row">
-        <a class="go" href="https://charliewytk.github.io/downloads/PowerLeash.zip" download>Download for Mac</a>
-        <span class="note">Apple Silicon, unsigned. Unzip → drag PowerLeash.app to /Applications → right-click Open. Double-click is blocked by Gatekeeper; that is expected. Battery savings are not quantified yet.</span>
-      </div>
-      <p class="todo-label">Where it's at</p>
-      <ul class="todo">
-        <li class="done"><span>Eco Mode: background apps to efficiency cores</span></li>
-        <li class="done"><span>Match Charger: caps total draw at what the charger supplies</span></li>
-        <li class="done"><span>Live power readout at 1 s, per-process watts, brightness break-even</span></li>
-        <li class="done"><span>Fixed the power model double-counting the battery while charging</span></li>
-        <li><span>Quantify the actual battery saving; the gauge only updates every ~16 s</span></li>
-        <li><span>GPU-bound workloads: there's no public API to lower GPU clocks</span></li>
-      </ul>
     </div>
-  </article>
-</section>
+  </section>
 
-<!-- CHESS EXCHANGE -->
-<section class="work" id="chess">
-  <article class="case rise">
-    <div class="case-side"><div class="sticky">
-      <p class="eyebrow">Markets + engines</p>
-      <h3>Chess Exchange</h3>
-      <p class="tag">Live prediction markets on chess games, with play money.</p>
-      <dl>
-        <dt>Status</dt><dd><span class="chip res">Play money</span></dd>
-        <dt>Stack</dt><dd>Node, zero dependencies · LMSR market maker · in-process alpha-beta engine</dd>
-      </dl>
-    </div></div>
-    <div class="case-body">
-      <div class="frame">
-        <video muted loop playsinline preload="none" poster="media/chess.jpg">
-          <source src="media/chess-demo.mp4" type="video/mp4">
-        </video>
+  <section class="scene" data-word="" aria-label="More tracks">
+    <div class="stick">
+      <div class="collage" id="collage">
+        <a class="tile" href="merger-monitor/" style="--c:#8fb0ff;--r:-6deg;left:8%;top:18%"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15H6z"/><path d="M9 16l2.5-2.5 2 2L17 11"/></svg></span><small>Track 04 · £5/mo</small><b>+1.38%</b><span>Merger Monitor. Not 24.6% a year.</span></a>
+        <a class="tile" href="doorly/" style="--c:#e0a640;--r:5deg;left:30%;top:46%"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-8-7 18-3-7z"/><path d="M11 14L21 3"/></svg></span><small>Track 05</small><b>Doorly</b><span>The cheapest flight isn't the cheapest trip.</span></a>
+        <a class="tile" href="work/#powerleash" style="--c:#f2ece0;--r:-3deg;right:28%;top:14%"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span><small>Track 06</small><b>42.8 W</b><span>PowerLeash holds the charger's cap.</span></a>
+        <a class="tile" href="abyss-warden/" style="--c:#7fd0e8;--r:7deg;right:8%;top:44%"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10c2-2.6 6.5-2.6 9 0-2.5 2.6-7 2.6-9 0z"/><path d="M16 10l3-2.2v4.4z"/><path d="M2 17c2.5 1.8 4.5 1.8 7 0s4.5-1.8 7 0 4.5 1.8 6 .8"/></svg></span><small>Track 07</small><b>Abyss</b><span>Deep-sea tower defence. Five bosses.</span></a>
       </div>
-      <p>The idea: a market on a live chess game, priced move by move. Chess has far less luck than most things people price. What's left is mostly whether a player finds the move you think is best, which makes it an interesting thing to put a price on.</p>
-      <div class="doing-row">
-        <a class="go" href="https://charliewytk.github.io/chess-exchange/" target="_blank" rel="noopener">Try the FEN → WDL demo</a>
-        <span class="note">Play money. Paste a FEN, see White / Draw / Black. Not a book, not advice. Demo goes live after Pages click.</span>
+      <div class="copy">
+        <p class="kick">Tracks 04–07</p>
+        <h2>And the <em>B-sides.</em></h2>
       </div>
-      <p class="todo-label">Where it's at</p>
-      <ul class="todo">
-        <li class="done"><span>Live boards from lichess TV, markets on chess.com titled games</span></li>
-        <li class="done"><span>LMSR market maker, six liquidity bots, replays at true clock speed</span></li>
-        <li class="done"><span>Compact in-process alpha-beta engine: White/Draw/Black from WDL when a FEN exists; Elo is the no-board fallback</span></li>
-        <li class="doing"><span>Static FEN→WDL demo on GitHub Pages, live after the Pages click</span></li>
-      </ul>
     </div>
-  </article>
-</section>
+  </section>
 
-<!-- CHELSEA BIKES -->
-<section class="work" id="chelsea">
-  <article class="case rise">
-    <div class="case-side"><div class="sticky">
-      <p class="eyebrow">Web design</p>
-      <h3>Chelsea Bikes</h3>
-      <p class="tag">Rebuilding my local bike shop's website, unasked.</p>
-      <dl>
-        <dt>Status</dt><dd><span class="chip res">Prototype</span> Not yet pitched</dd>
-      </dl>
-    </div></div>
-    <div class="case-body">
-      <div class="frame">
-        <video muted loop playsinline preload="none" poster="media/chelsea.jpg">
-          <source src="media/chelsea-demo.mp4" type="video/mp4">
-        </video>
+  <section class="scene end" data-word="" aria-label="Contact">
+    <div class="stick end">
+      <div class="copy">
+        <p class="kick">End of side A</p>
+        <h2>I made a record spin for a homepage. <em>Imagine what I'd build for you.</em></h2>
+        <a class="go solid" href="mailto:charlie@wuytack.net">charlie@wuytack.net</a>
+        <a class="go" href="work/" style="margin-left:8px">See all the work</a>
       </div>
-      <p>My local bike shop. I bought my bike there, second hand (most things are better value that way), and I do some repairs there too. Its website wasn't doing it justice, which probably costs it customers. So I rebuilt it, <span class="mk">to bring more of them in</span>, and haven't pitched it yet.</p>
-      <div class="doing-row">
-        <a class="go" href="chelsea-bikes/compare.html" target="_blank" rel="noopener">See before and after</a>
-        <span class="note"><a href="chelsea-bikes/" target="_blank" rel="noopener">Or browse the full prototype</a>: eleven pages, works offline.</span>
-      </div>
-      <p class="todo-label">Where it's at</p>
-      <ul class="todo">
-        <li class="done"><span>Prototype finished: 11 pages, accessibility pass, works offline</span></li>
-        <li class="done"><span>Pitch materials: before/after tool, one-page leave-behind, quote template</span></li>
-        <li class="done"><span>Photo-drop system, so real shop photos replace the illustrations instantly</span></li>
-        <li><span>Pitch it to the owner</span></li>
-      </ul>
+      <p class="fine">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
     </div>
-  </article>
-</section>
-
-<!-- ABYSS WARDEN -->
-<section class="work" id="abyss">
-  <article class="case rise">
-    <div class="case-side"><div class="sticky">
-      <p class="eyebrow">Game</p>
-      <h3>Abyss Warden</h3>
-      <p class="tag">A personal take on my favourite strategy game.</p>
-      <dl>
-        <dt>Status</dt><dd><span class="chip live">Playable</span></dd>
-        <dt>Stack</dt><dd>Plain JavaScript, canvas, synthesised audio, installable offline</dd>
-      </dl>
-    </div></div>
-    <div class="case-body">
-      <div class="frame">
-        <video muted loop playsinline preload="none" poster="media/abyss-poster.jpg">
-          <source src="media/abyss.mp4" type="video/mp4">
-        </video>
-      </div>
-      <p>My favourite video game of all time is Kingdom Rush, a niche indie tower defence game. This is my attempt at something similar, set in the deep sea.</p>
-      <div class="doing-row">
-        <a class="go" href="abyss-warden/" target="_blank" rel="noopener">Play it in your browser</a>
-      </div>
-      <p class="todo-label">Where it's at</p>
-      <ul class="todo">
-        <li class="done"><span>Finished: all levels, 5 bosses, balance passed</span></li>
-        <li class="done"><span>Builds packaged for itch.io, Newgrounds, Poki and four other portals</span></li>
-        <li class="doing"><span>Submitting them to the portals</span></li>
-      </ul>
-    </div>
-  </article>
-</section>
-
-
-<!-- 04 ABOUT -->
-<section class="chapter" id="about" aria-labelledby="about-h">
-  <div class="chapter-head">
-    <p class="no">04<span>About</span></p>
-    <h2 id="about-h">About</h2>
-  </div>
-  <div class="about rise">
-    <div class="prose">
-      <p>I'm Charlie Wuytack. I'd rather build than consume. Most of what's on this page started as something that annoyed me: a ticket that sold out in minutes, a flight that was only cheap on paper, a laptop that throttled itself.</p>
-      <p>The trading work taught me my most useful habit: decide what would prove me wrong before I look, then go looking for it. Most of what I've tested didn't survive that, and I'd rather show you the kill log than a backtest that flatters me.</p>
-      <p class="quiet">Happy to walk through any of it in more depth: the code, the data, or the failures.</p>
-    </div>
-    <dl class="stack">
-      <dt>Languages</dt><dd><span>Python</span><span>Swift / SwiftUI</span><span>TypeScript</span><span>JavaScript</span><span>SQL</span></dd>
-      <dt>Data and ML</dt><dd><span>polars</span><span>pandas</span><span>LightGBM</span><span>river (online learning)</span><span>scikit-learn</span></dd>
-      <dt>Statistics</dt><dd><span>Clustered bootstrap</span><span>e-processes</span><span>deflated Sharpe</span><span>SPA / reality check</span><span>power analysis</span></dd>
-      <dt>Markets and infrastructure</dt><dd><span>Solana RPC and websockets</span><span>AMM maths</span><span>Hyperliquid</span><span>event studies</span><span>launchd services</span></dd>
-      <dt>Products</dt><dd><span>Next.js</span><span>Stripe Connect</span><span>Capacitor</span><span>WidgetKit</span><span>Live Activities</span></dd>
-    </dl>
-  </div>
-</section>
+  </section>
 </main>
 
-<footer class="close">
-  <div class="cta-big rise">
-    <p class="eyebrow">Code, data, or the failures</p>
-    <h2>Let's <em>talk.</em></h2>
-    <p>Happy to walk through any of it: how ExeTix catches a drop, how a lane gets killed, or what I'd build next.</p>
-    <a class="mail shine" href="mailto:charlie@wuytack.net">charlie@wuytack.net</a>
-  </div>
-  <p class="didnt">Also built, didn't make the cut: Resale Radar (resale margin maths with real fees and return rates), a trading bot retired after its own audit, an ETF cost tool that deliberately ranks nothing, a tender-offer scanner that reads SEC filings, fifteen programmatic SEO sites, and a handful of small Mac tools: a doomscroll tracker, a cleaner that dry-runs everything, and a companion that refuses coding jobs the machine can't finish.</p>
-  <p class="fine">Research and engineering, not financial advice. Backtest and paper results are labelled as such, and nothing on this page is trading live at a profit. Merger Monitor is a table of filings, not a tip sheet.</p>
-  <p class="stamp"><span>Updated 17 Oct 2026</span><span><a href="https://github.com/Charliewytk">github</a> · <a href="#top">back to top ↑</a></span></p>
-</footer>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-  (function () {
-    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+(function () {
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var root = document.documentElement;
+  var scenes = [].slice.call(document.querySelectorAll('.scene'));
+  var meter = [].slice.call(document.querySelectorAll('.meter i'));
+  var backword = document.getElementById('backword');
 
-    // ---------- the record: play a measured loop with Web Audio ----------
-    var audio = null;
-    function makeAudio(src, loopA, loopB, level) {
-      var TAIL = 3.2;
-      var VOL = level || 0.8, LOOP_VOL = VOL * 0.65;
-      var Ctor = window.AudioContext || window.webkitAudioContext;
-      if (!Ctor) return null;
+  // per scene: record pose, room colour, label colour, wireframe amount, big word under the record
+  var K = [
+    { rx: 1.05, ry: 0.0, rz: 0.25, x: 0.0, y: 0.05, s: 1.0,  bg: '#0b0a09', lab: '#e0a640', wire: 0, bo: 1, burst: 0 },
+    { rx: 0.05, ry: 0.0, rz: 0.0,  x: 0.0, y: 0.0,  s: 1.15, bg: '#16110c', lab: '#e0a640', wire: 0, bo: 1, burst: 0 },
+    { rx: 1.25, ry: 0.5, rz: 0.4,  x: -0.95,y: 0.15, s: 0.85, bg: '#06120b', lab: '#3ddc84', wire: 0, bo: 0, burst: 0 },
+    { rx: 1.57, ry: 0.0, rz: 0.0,  x: 0.0, y: 0.0,  s: 1.25, bg: '#1b0a2e', lab: '#ff7a2f', wire: 1, bo: 0, burst: 0 },
+    { rx: 1.2,  ry: 0.0, rz: 0.9,  x: 0.6, y: -0.9, s: 3.4,  bg: '#0d0c0b', lab: '#e0a640', wire: 0, bo: 0.9, burst: 0 },
+    { rx: 0.9,  ry: -0.4,rz: -0.3, x: 0.0, y: 0.0,  s: 0.7,  bg: '#c8321c', lab: '#f2ece0', wire: 0, bo: 0, burst: 0 },
+    { rx: 1.1,  ry: 0.0, rz: 0.0,  x: 0.0, y: 0.15, s: 0.9,  bg: '#080706', lab: '#e0a640', wire: 0, bo: 0, burst: 1 }
+  ];
 
-      var ctx = new Ctor();
-      var out = ctx.createGain(); out.gain.value = 1;
-      var an = ctx.createAnalyser(); an.fftSize = 256;
-      out.connect(an); an.connect(ctx.destination);
-      window.__analyser = an;
-
-      var songGain = ctx.createGain(); songGain.gain.value = VOL;
-      var loopGain = ctx.createGain(); loopGain.gain.value = 0.0001;
-      songGain.connect(out); loopGain.connect(out);
-
-      var buffer = null, started = false, wantStart = false, node = null;
-      var onReady = null, onFail = null;
-
-      function launch() {
-        if (started || !buffer) return;
-        started = true;
-        var t0 = ctx.currentTime + 0.02;
-        if (loopA && loopB) {
-          // measured loop points: play through, then crossfade into the seamless section
-          var song = ctx.createBufferSource(); song.buffer = buffer;
-          song.connect(songGain); song.start(t0);
-          var handoff = t0 + Math.max(1, buffer.duration - TAIL);
-          var loop = ctx.createBufferSource();
-          loop.buffer = buffer; loop.loop = true;
-          loop.loopStart = loopA; loop.loopEnd = loopB;
-          loop.connect(loopGain);
-          loop.start(handoff, loopA);
-          songGain.gain.setValueAtTime(VOL, handoff);
-          songGain.gain.exponentialRampToValueAtTime(0.0001, handoff + TAIL);
-          loopGain.gain.setValueAtTime(0.0001, handoff);
-          loopGain.gain.linearRampToValueAtTime(LOOP_VOL, handoff + TAIL);
-        } else {
-          node = ctx.createBufferSource();
-          node.buffer = buffer; node.loop = true;
-          node.connect(songGain);
-          songGain.gain.setValueAtTime(0.0001, t0);
-          songGain.gain.linearRampToValueAtTime(VOL, t0 + 0.35);
-          node.start(t0);
-        }
-        if (onReady) onReady();
-      }
-
-      // decode starts the instant the record is chosen, not when the needle lands
-      fetch(src)
-        .then(function (r) { return r.arrayBuffer(); })
-        .then(function (a) { return ctx.decodeAudioData(a); })
-        .then(function (buf) { buffer = buf; if (wantStart) launch(); })
-        .catch(function () { if (typeof onFail === 'function') onFail(); });
-
-      return {
-        ready: function () { return !!buffer; },
-        whenPlaying: function (cb) { onReady = cb; },
-        whenFailed: function (cb) { onFail = cb; },
-        start: function () { wantStart = true; ctx.resume(); launch(); },
-        pause: function () { ctx.suspend(); }
-      };
-    }
-
-    // ---------- the record's colour: restore it for returning visitors ----------
+  var hasGL = !!window.THREE;
+  var renderer, scene, camera, disc, wire, pts, labelCtx, labelTex, discMat, keyLight, ptsBase;
+  if (hasGL) {
     try {
-      var savedAccent = localStorage.getItem('cw-accent-v2');
-      if (savedAccent && /^#[0-9a-f]{6}$/i.test(savedAccent)) document.documentElement.style.setProperty('--accent', savedAccent);
-    } catch (e) {}
+      renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('gl'), antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+    } catch (e) { hasGL = false; }
+  }
+  if (hasGL) {
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100); camera.position.set(0, 0, 7);
 
-    // ---------- entry gate ----------
-    var gate = document.getElementById('gate');
-    var mini = document.getElementById('mini');
-    var playing = false;
-
-    function setPlaying(on) {
-      playing = on;
-      if (mini) mini.classList.toggle('playing', on);
-      if (gate) gate.classList.toggle('spinning', on);
-    }
-    function flyVinyl() {
-      if (reduce || !mini) return 0;
-      var gv = document.querySelector('.gate .deck');
-      if (!gv) return 0;
-      var from = gv.getBoundingClientRect();
-      var to = mini.getBoundingClientRect();
-      var clone = gv.cloneNode(true);
-      clone.classList.add('vinyl-clone');
-      clone.classList.remove('loading');
-      // a running CSS animation outranks an inline transform, so clear them on the clone
-      clone.style.animation = 'none';
-      var kids = clone.querySelectorAll('*');
-      for (var i = 0; i < kids.length; i++) { kids[i].style.animation = 'none'; }
-      clone.style.left = from.left + 'px'; clone.style.top = from.top + 'px';
-      clone.style.width = from.width + 'px'; clone.style.height = from.height + 'px';
-      clone.style.transform = 'translate(0px, 0px) scale(1)';
-      document.body.appendChild(clone);
-      gv.style.visibility = 'hidden';
-      void clone.offsetWidth;
-      requestAnimationFrame(function () {
-        var sc = to.width / from.width;
-        clone.style.transform = 'translate(' + (to.left - from.left) + 'px,' + (to.top - from.top) + 'px) scale(' + sc + ')';
-      });
-      setTimeout(function () { clone.remove(); }, 1150);
-      return 1050;
-    }
-    function enter() {
-      var wait = flyVinyl();
-      if (gate) {
-        gate.classList.add('open');
-        setTimeout(function () { gate.style.display = 'none'; }, 1100);
+    // record face: grooves + label drawn on a canvas
+    var cv = document.createElement('canvas'); cv.width = cv.height = 1024; labelCtx = cv.getContext('2d');
+    function drawFace(col) {
+      var g = labelCtx, c = 512;
+      g.fillStyle = '#0c0c0e'; g.fillRect(0, 0, 1024, 1024);
+      for (var r = 200; r < 506; r += 2.2) {
+        g.strokeStyle = 'rgba(255,255,255,' + (0.025 + 0.03 * Math.abs(Math.sin(r * 0.37))) + ')';
+        g.lineWidth = 1; g.beginPath(); g.arc(c, c, r, 0, Math.PI * 2); g.stroke();
       }
-      document.body.classList.remove('locked');
-      try { localStorage.setItem('cw-entered', '1'); } catch (e) {}
-      setTimeout(function () { document.body.classList.add('entered'); }, wait);
+      [300, 380, 450].forEach(function (r) { g.strokeStyle = 'rgba(0,0,0,0.9)'; g.lineWidth = 5; g.beginPath(); g.arc(c, c, r, 0, Math.PI * 2); g.stroke(); });
+      g.fillStyle = col; g.beginPath(); g.arc(c, c, 180, 0, Math.PI * 2); g.fill();
+      g.fillStyle = '#111'; g.textAlign = 'center';
+      g.font = '800 64px "Bricolage Grotesque", sans-serif'; g.fillText('C.W.', c, c - 40);
+      g.font = '500 24px "JetBrains Mono", monospace'; g.fillText('SIDE A · 45 RPM', c, c + 70);
+      g.fillText('EXETER 2026', c, c + 104);
+      g.beginPath(); g.arc(c, c, 12, 0, Math.PI * 2); g.fillStyle = '#0c0c0e'; g.fill();
     }
+    drawFace('#e0a640');
+    labelTex = new THREE.CanvasTexture(cv); labelTex.anisotropy = 8;
+    discMat = new THREE.MeshStandardMaterial({ map: labelTex, roughness: 0.32, metalness: 0.35, transparent: true });
+    var edgeMat = new THREE.MeshStandardMaterial({ color: 0x111113, roughness: 0.4, metalness: 0.4, transparent: true });
+    disc = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 0.035, 128), [edgeMat, discMat, discMat]);
+    scene.add(disc);
 
-    // notes float off the record on the beat
-    var noteGlyphs = ['♪', '♫', '♩', '♬'];
-    function spawnNote() {
-      if (!mini || !document.body.classList.contains('entered')) return;
-      var r = mini.getBoundingClientRect();
-      var n = document.createElement('span');
-      n.className = 'note-fly';
-      n.textContent = noteGlyphs[Math.floor(Math.random() * noteGlyphs.length)];
-      n.style.left = (r.left + r.width * 0.55) + 'px';
-      n.style.top = (r.top - 4) + 'px';
-      n.style.setProperty('--dx', (Math.random() * 90 - 25).toFixed(0) + 'px');
-      n.style.setProperty('--rot', (Math.random() * 40 - 20).toFixed(0) + 'deg');
-      n.addEventListener('animationend', function () { n.remove(); });
-      document.body.appendChild(n);
-    }
-    (function beatLoop() {
-      var data = null, avg = 0, lastN = 0, quiet = 0, silent = false;
-      var step = function () {
-        var an = window.__analyser;
-        if (playing && an && !reduce && !silent) {
-          if (!data || data.length !== an.frequencyBinCount) data = new Uint8Array(an.frequencyBinCount);
-          an.getByteFrequencyData(data);
-          var e = 0; for (var i = 1; i < 10; i++) e += data[i];
-          e /= 9;
-          avg = avg * 0.95 + e * 0.05;
-          quiet = e < 2 ? quiet + 1 : 0;
-          if (quiet > 300) silent = true;
-          var now = performance.now();
-          if (e > avg * 1.1 && e > 80 && now - lastN > 280) { lastN = now; spawnNote(); }
-        } else if (playing && (!an || silent) && !reduce) {
-          var t = performance.now();
-          if (t - lastN > 390) { lastN = t; spawnNote(); }
-        }
-        requestAnimationFrame(step);
-      };
-      requestAnimationFrame(step);
-    })();
-
-    var seenBefore = false, forceGate = false;
-    try {
-      seenBefore = localStorage.getItem('cw-entered') === '1';
-      forceGate = sessionStorage.getItem('cw-showgate') === '1';
-      if (forceGate) sessionStorage.removeItem('cw-showgate');
-    } catch (e) {}
-    if (forceGate) seenBefore = false;
-    if (seenBefore) {
-      // been here before: skip the ceremony, the corner record still offers it
-      if (gate) gate.style.display = 'none';
-      document.body.classList.add('entered');
-    } else {
-      document.body.classList.add('locked');
-    }
-
-    var picks = [].slice.call(document.querySelectorAll('.pick'));
-    picks.forEach(function (btn) {
-      var src = btn.getAttribute('data-src');
-      fetch(src, { method: 'HEAD' }).then(function (r) {
-        if (!r.ok) btn.classList.add('missing');
-      }).catch(function () { btn.classList.add('missing'); });
-
-      btn.addEventListener('click', function () {
-        var a = parseFloat(btn.getAttribute('data-a')) || null;
-        var b = parseFloat(btn.getAttribute('data-b')) || null;
-        var accent = btn.getAttribute('data-accent');
-        if (accent) {
-          document.documentElement.style.setProperty('--accent', accent);
-          try { localStorage.setItem('cw-accent-v2', accent); } catch (e) {}
-        }
-        var deck = document.getElementById('deck');
-        picks.forEach(function (o) { o.disabled = true; });
-        if (deck) deck.classList.add('picked');
-
-        // 1. record settles onto the platter, tonearm swings down
-        if (deck && !reduce) {
-          deck.classList.add('cueing');
-          ['.picks', '.needle'].forEach(function (sel) {
-            var el = document.querySelector(sel);
-            if (el) { el.style.transition = 'opacity 0.45s ease'; el.style.opacity = '0'; }
-          });
-        }
-
-        // 2. start fetching + decoding straight away, and say so
-        if (deck) deck.classList.add('loading');
-        var np = document.getElementById('nowPlaying');
-        if (np) np.innerHTML = '<b>' + btn.querySelector('.mood').textContent + '</b> — ' + btn.querySelector('.track').textContent;
-        var g = parseFloat(btn.getAttribute('data-gain')) || 0.8;
-        audio = makeAudio(src, a, b, g);
-        if (audio) audio.start();
-
-        // 3. hold the needle until sound is actually ready (capped so it never stalls)
-        var advanced = false;
-        var advance = function () {
-          if (advanced) return;
-          advanced = true;
-          if (deck) deck.classList.remove('loading');
-          setPlaying(true);
-          setTimeout(enter, reduce ? 0 : 420);
-        };
-        if (reduce || !audio) { advance(); }
-        else {
-          audio.whenPlaying(advance);
-          audio.whenFailed(function () {
-            if (np) np.innerHTML = '<b>Sound unavailable</b> — the rest of the site works';
-            advance();
-          });
-          setTimeout(function () { if (audio.ready()) advance(); }, 950);
-          setTimeout(advance, 4000);
-        }
-      });
+    // wireframe twin for the "thermal" scene
+    wire = new THREE.Group();
+    var lm = new THREE.LineBasicMaterial({ color: 0xffc58a, transparent: true, opacity: 0, depthTest: false });
+    [0.18, 0.36, 0.55, 0.72, 0.88, 1.0].forEach(function (r) {
+      var pts2 = []; for (var i = 0; i <= 96; i++) { var a = i / 96 * Math.PI * 2; pts2.push(new THREE.Vector3(Math.cos(a) * r, 0, Math.sin(a) * r)); }
+      wire.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts2), lm));
     });
-    // the corner record is the way back: pick a different side
-    function backToStart() {
-      if (audio) { try { audio.pause(); } catch (e) {} }
-      try { sessionStorage.setItem('cw-showgate', '1'); } catch (e) {}
-      location.href = location.pathname;
+    for (var j = 0; j < 24; j++) { var a2 = j / 24 * Math.PI * 2; wire.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(Math.cos(a2) * 0.18, 0, Math.sin(a2) * 0.18), new THREE.Vector3(Math.cos(a2), 0, Math.sin(a2))]), lm)); }
+    wire.userData.mat = lm; disc.add(wire);
+
+    // dust that bursts out at the end
+    var N = 1400, pos = new Float32Array(N * 3); ptsBase = new Float32Array(N * 3);
+    for (var p = 0; p < N; p++) {
+      var ang = Math.random() * Math.PI * 2, rad = 0.2 + Math.random() * 0.8;
+      ptsBase[p * 3] = Math.cos(ang) * rad; ptsBase[p * 3 + 1] = (Math.random() - 0.5) * 0.04; ptsBase[p * 3 + 2] = Math.sin(ang) * rad;
     }
-    if (mini) mini.addEventListener('click', backToStart);
-    var skip = document.getElementById('gateSkip');
-    if (skip) skip.addEventListener('click', function () {
-      var np = document.getElementById('nowPlaying');
-      if (np) np.innerHTML = '<b>No record</b> — the corner record plays one';
-      enter();
-    });
-    document.addEventListener('keydown', function (ev) {
-      if (ev.key === 'Enter' && document.body.classList.contains('locked')) {
-        ev.preventDefault();
-        var first = document.querySelector('.pick:not(.missing)');
-        if (first) first.click();
+    var pg = new THREE.BufferGeometry(); pg.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    pts = new THREE.Points(pg, new THREE.PointsMaterial({ color: 0xe0a640, size: 0.022, transparent: true, opacity: 0 }));
+    disc.add(pts);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.35));
+    keyLight = new THREE.PointLight(0xffd9a0, 1.6, 30); keyLight.position.set(3, 4, 5); scene.add(keyLight);
+    var rim = new THREE.PointLight(0x8fb0ff, 0.8, 30); rim.position.set(-4, -2, 3); scene.add(rim);
+  } else {
+    document.getElementById('gl').remove();
+  }
+
+  function resize() {
+    if (!hasGL) return;
+    renderer.setSize(innerWidth, innerHeight, false);
+    camera.aspect = innerWidth / innerHeight;
+    camera.position.z = innerWidth < 760 ? 10 : 7;
+    camera.updateProjectionMatrix();
+  }
+  resize(); addEventListener('resize', resize);
+
+  function hex(h) { return [parseInt(h.substr(1, 2), 16), parseInt(h.substr(3, 2), 16), parseInt(h.substr(5, 2), 16)]; }
+  function mixHex(a, b, t) { var A = hex(a), B = hex(b); return 'rgb(' + A.map(function (v, i) { return Math.round(v + (B[i] - v) * t); }).join(',') + ')'; }
+  function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  // where are we: scene index + how far into the next
+  function progress() {
+    var vh = innerHeight, mid = vh * 0.5;
+    for (var i = 0; i < scenes.length; i++) {
+      var r = scenes[i].getBoundingClientRect();
+      if (r.bottom > mid) {
+        var f = Math.min(1, Math.max(0, (mid - r.top) / r.height));
+        // hold each pose for the first half of its scene, then travel to the next
+        return { i: i, f: Math.max(0, (f - 0.5) * 2) };
       }
-    });
+    }
+    return { i: scenes.length - 1, f: 0 };
+  }
 
-    // ---------- reveal on scroll ----------
-    var io = new IntersectionObserver(function (es) {
-      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, { rootMargin: '0px 0px -10% 0px' });
-    document.querySelectorAll('.rise').forEach(function (el, i) {
-      if (reduce) { el.classList.add('in'); return; }
-      // cards in the bento stagger in
-      if (el.classList.contains('card')) el.style.transitionDelay = ((i % 3) * 70) + 'ms';
-      io.observe(el);
-    });
+  var lastLab = '', spin = 0, lastWord = null, t0 = performance.now();
+  function frame(now) {
+    var pr = progress(), a = K[pr.i], b = K[Math.min(pr.i + 1, K.length - 1)], t = ease(pr.f);
+    var cur = {}; ['rx', 'ry', 'rz', 'x', 'y', 's', 'wire', 'bo', 'burst'].forEach(function (k) { cur[k] = lerp(a[k], b[k], t); });
+    var bg = mixHex(a.bg, b.bg, t);
+    document.body.style.backgroundColor = bg;
+    meter.forEach(function (m, i) { m.classList.toggle('on', i === pr.i); });
 
-    // ---------- the headline wipes in, left to right, as you scroll ----------
-    var veil = document.querySelector('.veil');
-    var opening = document.querySelector('.opening');
-    var bar = document.getElementById('progress');
-    var pend = false;
-    var onScroll = function () {
-      var vh = window.innerHeight;
-      if (veil && !reduce) {
-        var p = Math.min(1, Math.max(0, window.scrollY / (vh * 0.9)));
-        var e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
-        veil.style.setProperty('--reveal', (e * 100) + '%');
-        opening.style.setProperty('--tail-op', e > 0.97 ? 1 : 0);
-        opening.style.setProperty('--hint-op', e > 0.04 ? 0 : 1);
-        opening.classList.toggle('opened', e > 0.97);
+    var word = t < 0.5 ? scenes[pr.i].dataset.word : scenes[Math.min(pr.i + 1, scenes.length - 1)].dataset.word;
+    if (word !== lastWord) { backword.textContent = word; lastWord = word; }
+    backword.style.setProperty('--bo', word ? cur.bo : 0);
+    backword.style.setProperty('--by', ((pr.f - 0.5) * -40) + 'px');
+
+    // scene-specific overlays
+    var phone = document.getElementById('phone');
+    var inX = pr.i === 2 ? 1 - Math.abs(pr.f - 0) : (pr.i === 1 ? t : 0);
+    phone.style.setProperty('--po', pr.i === 2 ? 1 - t : (pr.i === 1 ? t : 0));
+    phone.style.setProperty('--py', ((1 - (pr.i === 2 ? 1 : t)) * 60 + (pr.i === 2 ? t * -60 : 0)) + 'px');
+    document.getElementById('notes').style.opacity = pr.i === 3 ? 1 - t : (pr.i === 2 ? t : 0);
+    var cTiles = document.querySelectorAll('.tile'), cv2 = pr.i === 5 ? 1 - t : (pr.i === 4 ? t : 0);
+    cTiles.forEach(function (el, k) { el.style.setProperty('--to', cv2); el.style.setProperty('--ty', ((1 - cv2) * (60 + k * 20)) + 'px'); });
+
+    if (hasGL) {
+      var lab = t < 0.5 ? a.lab : b.lab;
+      if (lab !== lastLab) {
+        lastLab = lab;
+        // redraw once fonts are ready so the label text uses them
+        (document.fonts && document.fonts.ready || Promise.resolve()).then(function () {
+          var g = labelCtx; g.clearRect(0, 0, 1024, 1024);
+          var c = 512; g.fillStyle = '#0c0c0e'; g.fillRect(0, 0, 1024, 1024);
+          for (var r = 200; r < 506; r += 2.2) { g.strokeStyle = 'rgba(255,255,255,' + (0.025 + 0.03 * Math.abs(Math.sin(r * 0.37))) + ')'; g.lineWidth = 1; g.beginPath(); g.arc(c, c, r, 0, Math.PI * 2); g.stroke(); }
+          [300, 380, 450].forEach(function (r) { g.strokeStyle = 'rgba(0,0,0,0.9)'; g.lineWidth = 5; g.beginPath(); g.arc(c, c, r, 0, Math.PI * 2); g.stroke(); });
+          g.fillStyle = lab; g.beginPath(); g.arc(c, c, 180, 0, Math.PI * 2); g.fill();
+          g.fillStyle = '#111'; g.textAlign = 'center';
+          g.font = '800 64px "Bricolage Grotesque", sans-serif'; g.fillText('C.W.', c, c - 40);
+          g.font = '500 24px "JetBrains Mono", monospace'; g.fillText('SIDE A · 45 RPM', c, c + 70); g.fillText('EXETER 2026', c, c + 104);
+          g.beginPath(); g.arc(c, c, 12, 0, Math.PI * 2); g.fillStyle = '#0c0c0e'; g.fill();
+          labelTex.needsUpdate = true;
+        });
       }
-      if (bar) {
-        var max = document.documentElement.scrollHeight - vh;
-        bar.style.setProperty('--p', max > 0 ? (window.scrollY / max).toFixed(4) : 0);
+      var dt = (now - t0) / 1000; t0 = now;
+      if (!reduce) spin += dt * (0.35 + cur.burst * 1.2);
+      var mob = innerWidth < 760;
+      disc.position.set(cur.x * (mob ? 0.35 : 1), cur.y, 0);
+      disc.scale.setScalar(cur.s * (mob ? 0.95 : 1));
+      disc.rotation.set(cur.rx, cur.ry + spin, cur.rz, 'XZY');
+      discMat.opacity = 1 - cur.wire * 0.92; disc.material[0].opacity = 1 - cur.wire * 0.92;
+      wire.userData.mat.opacity = cur.wire;
+      wire.scale.setScalar(1.001);
+      var arr = pts.geometry.attributes.position.array, k2 = cur.burst;
+      for (var q = 0; q < arr.length; q += 3) {
+        var spread = 1 + k2 * (2.5 + (q % 7));
+        arr[q] = ptsBase[q] * spread; arr[q + 1] = ptsBase[q + 1] + k2 * ((q % 11) - 5) * 0.12; arr[q + 2] = ptsBase[q + 2] * spread;
       }
-      pend = false;
-    };
-    window.addEventListener('scroll', function () {
-      if (!pend) { pend = true; requestAnimationFrame(onScroll); }
-    }, { passive: true });
-    if (veil && reduce) {
-      veil.style.setProperty('--reveal', '100%');
-      opening.style.setProperty('--tail-op', 1);
-      opening.classList.add('opened');
+      pts.geometry.attributes.position.needsUpdate = true;
+      pts.material.opacity = k2 * 0.9;
+      keyLight.intensity = 1.3 + 0.5 * Math.sin(now / 1400);
+      renderer.render(scene, camera);
     }
-    onScroll();
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
 
-    // ---------- rail: highlight the section you are in ----------
-    var railLinks = [].slice.call(document.querySelectorAll('.rail a'));
-    if (railLinks.length) {
-      var secs = railLinks.map(function (a) { return document.querySelector(a.getAttribute('href')); });
-      var spy = new IntersectionObserver(function (es) {
-        es.forEach(function (e) {
-          var i = secs.indexOf(e.target);
-          if (i > -1 && e.isIntersecting) {
-            railLinks.forEach(function (a) { a.classList.remove('on'); });
-            railLinks[i].classList.add('on');
-          }
-        });
-      }, { rootMargin: '-45% 0px -45% 0px' });
-      secs.forEach(function (sec) { if (sec) spy.observe(sec); });
-    }
-
-    // ---------- bars grow when they scroll into view ----------
-    var bio = new IntersectionObserver(function (es) {
-      es.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        e.target.querySelectorAll('.fill').forEach(function (f, i) {
-          setTimeout(function () { f.style.setProperty('--grow', 1); }, reduce ? 0 : i * 140);
-        });
-        bio.unobserve(e.target);
-      });
-    }, { threshold: 0.35 });
-    document.querySelectorAll('[data-bars]').forEach(function (b) { bio.observe(b); });
-
-    // ---------- numbers count up once ----------
-    var cio = new IntersectionObserver(function (es) {
-      es.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        cio.unobserve(e.target);
-        var el = e.target, txt = el.textContent, m = txt.match(/^(\D*)(\d+(?:\.\d+)?)(.*)$/);
-        if (!m) return;
-        var end = parseFloat(m[2]), dp = (m[2].split('.')[1] || '').length, t0 = performance.now(), dur = 1200;
-        var tick = function (now) {
-          var k = Math.min(1, (now - t0) / dur), v = end * (1 - Math.pow(1 - k, 3));
-          el.textContent = m[1] + v.toFixed(dp) + m[3];
-          if (k < 1) requestAnimationFrame(tick); else el.textContent = txt;
-        };
-        requestAnimationFrame(tick);
-      });
-    }, { threshold: 0.6 });
-    if (!reduce) document.querySelectorAll('[data-count]').forEach(function (el) { cio.observe(el); });
-
-    // ---------- spotlight cards, cursor glow, magnetic pay buttons ----------
-    if (fine && !reduce) {
-      document.querySelectorAll('.card').forEach(function (c) {
-        c.addEventListener('pointermove', function (ev) {
-          var r = c.getBoundingClientRect();
-          c.style.setProperty('--mx', (ev.clientX - r.left) + 'px');
-          c.style.setProperty('--my', (ev.clientY - r.top) + 'px');
-        });
-      });
-      var glow = document.getElementById('glow');
-      window.addEventListener('pointermove', function (ev) {
-        if (!glow) return;
-        glow.classList.add('on');
-        glow.style.setProperty('--gx', ev.clientX + 'px');
-        glow.style.setProperty('--gy', ev.clientY + 'px');
-      }, { passive: true });
-      document.querySelectorAll('.go.pay, .xt-go, .cta-big .mail').forEach(function (btn) {
-        btn.style.transition = 'transform 0.35s cubic-bezier(0.22,1,0.36,1)';
-        btn.addEventListener('pointermove', function (ev) {
-          var r = btn.getBoundingClientRect();
-          var dx = (ev.clientX - r.left - r.width / 2) * 0.18, dy = (ev.clientY - r.top - r.height / 2) * 0.28;
-          btn.style.transform = 'translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px)';
-        });
-        btn.addEventListener('pointerleave', function () { btn.style.transform = ''; });
-      });
-    }
-
-    // ---------- demo videos play only while on screen ----------
-    var player = new IntersectionObserver(function (es) {
-      es.forEach(function (e) {
-        var v = e.target;
-        if (e.isIntersecting) {
-          if (v.getAttribute('preload') === 'none') { v.setAttribute('preload', 'auto'); v.load(); }
-          if (!reduce) v.play().catch(function () {});
-        } else { v.pause(); }
-      });
-    }, { threshold: 0.25 });
-    document.querySelectorAll('video').forEach(function (v) { player.observe(v); });
-  })();
+  // play the record (sound only on request)
+  var audio = null, btn = document.getElementById('sound');
+  btn.addEventListener('click', function () {
+    if (!audio) { audio = new Audio('media/tank.m4a'); audio.loop = true; }
+    if (audio.paused) { audio.play().catch(function () {}); btn.textContent = 'Stop the record'; btn.setAttribute('aria-pressed', 'true'); }
+    else { audio.pause(); btn.textContent = 'Play the record'; btn.setAttribute('aria-pressed', 'false'); }
+  });
+})();
 </script>
-
 </body>
 </html>
