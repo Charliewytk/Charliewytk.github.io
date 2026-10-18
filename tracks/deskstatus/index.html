@@ -6,6 +6,8 @@
 <title>DeskStatus · Track 08 · Charlie Wuytack</title>
 <meta name="description" content="A native SwiftUI dashboard for the whole research desk. Read-only by design, and it never holds a key.">
 <link rel="icon" href="../../media/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../../media/icons/apple-touch-icon.png">
 <link rel="canonical" href="https://charliewytk.github.io/tracks/deskstatus/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://charliewytk.github.io/tracks/deskstatus/">
@@ -81,6 +83,8 @@
       if (p === home || p === home + 'index.html') { e.preventDefault(); history.back(); }
     });
   })();
+  // keep Side A and the tracks for offline listening
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register(new URL('../../sw.js', location.href).href).catch(function () {});
   // flip through tracks: arrow keys, or swipe sideways on a phone
   (function () {
     function go(dir) { var a = document.querySelector(dir < 0 ? 'a.prev' : 'a.next'); if (a) a.click(); }

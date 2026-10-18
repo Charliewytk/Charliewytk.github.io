@@ -6,6 +6,8 @@
 <title>The kill log · Track 02 · Charlie Wuytack</title>
 <meta name="description" content="About 170 pre-registered trading hypotheses across two programmes, each with an honest verdict. 50 of 65 trading lanes killed on the record.">
 <link rel="icon" href="../../media/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../../media/icons/apple-touch-icon.png">
 <link rel="canonical" href="https://charliewytk.github.io/tracks/research/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://charliewytk.github.io/tracks/research/">
@@ -100,6 +102,8 @@
       if (p === home || p === home + 'index.html') { e.preventDefault(); history.back(); }
     });
   })();
+  // keep Side A and the tracks for offline listening
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register(new URL('../../sw.js', location.href).href).catch(function () {});
   // flip through tracks: arrow keys, or swipe sideways on a phone
   (function () {
     function go(dir) { var a = document.querySelector(dir < 0 ? 'a.prev' : 'a.next'); if (a) a.click(); }
