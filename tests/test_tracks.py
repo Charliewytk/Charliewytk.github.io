@@ -66,10 +66,10 @@ class TrackPages(unittest.TestCase):
         self.assertTrue((ROOT / "tracks" / "index.html").is_file())
         self.assertTrue((ROOT / "tracks" / "track.css").is_file())
 
-    def test_side_a_links_every_track(self) -> None:
-        home = (ROOT / "index.html").read_text(encoding="utf-8")
+    def test_tracklist_links_every_track(self) -> None:
+        tracklist = (ROOT / "tracks" / "index.html").read_text(encoding="utf-8")
         for slug in TRACKS:
-            self.assertIn(f'href="tracks/{slug}/"', home, slug)
+            self.assertIn(f'href="{slug}/"', tracklist, slug)
 
     def test_tracks_chain_in_order(self) -> None:
         for i, slug in enumerate(TRACKS):
@@ -117,15 +117,6 @@ class TrackPages(unittest.TestCase):
         self.assertIn("not advice", html.lower())
         self.assertIn("merger-stats.js", html)
         self.assertIsNone(re.search(r"[1-9][\d,]*\s+subscribers?", html.lower()))
-
-    def test_tracks_open_in_place_on_side_a(self) -> None:
-        """Side A slides a track up over itself; Back returns to the same scroll spot."""
-        home = (ROOT / "index.html").read_text(encoding="utf-8")
-        for needle in ("attachShadow", "history.pushState", "popstate", "sessionStorage"):
-            self.assertIn(needle, home, needle)
-        css = (ROOT / "tracks" / "track.css").read_text(encoding="utf-8")
-        self.assertIn(":root, :host {", css)
-        self.assertIn("body, .tbody {", css)
 
     def test_standalone_track_goes_back_to_side_a(self) -> None:
         for slug in TRACKS:

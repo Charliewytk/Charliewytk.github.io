@@ -28,7 +28,7 @@
 <div class="grain" aria-hidden="true"></div>
 
 <header class="wrap top">
-  <a href="../../">← Side A</a>
+  <a href="../../">← Shelf</a>
   <nav><a href="../">Track 08 / 12</a><a href="../../work/">All work</a><a href="https://wuytackcharlie.gumroad.com/l/mergermonitor">Merger Monitor £5/mo</a></nav>
 </header>
 
@@ -70,7 +70,7 @@
 <a class="next wrap" href="../numerai/"><small>Next · track 09</small><b>Numerai →</b></a>
 <footer class="wrap foot"><span>Charlie Wuytack · <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></span><span>Research and engineering, not financial advice. Nothing here is trading live at a profit.</span></footer>
 <script>
-  // opened straight from Side A? Back takes you to where you were on it, not to the top
+  // opened straight from the homepage? Back takes you to where you were on it, not to the top
   (function () {
     try { var ref = new URL(document.referrer); } catch (e) { return; }
     if (ref.origin !== location.origin || history.length < 2) return;
@@ -83,7 +83,7 @@
       if (p === home || p === home + 'index.html') { e.preventDefault(); history.back(); }
     });
   })();
-  // keep Side A and the tracks for offline listening
+  // keep the homepage and the tracks for offline listening
   if ('serviceWorker' in navigator) navigator.serviceWorker.register(new URL('../../sw.js', location.href).href).catch(function () {});
   // flip through tracks: arrow keys, or swipe sideways on a phone
   (function () {
