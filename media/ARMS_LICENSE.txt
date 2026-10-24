@@ -1,0 +1,3 @@
+arms.glb + arms-skin.jpg: "FPS Arms (Rigged Only)", OpenGameArt, CC0 1.0.
+https://opengameart.org/content/fps-arms-rigged-only
+Converted from FBX with FBX2glTF 0.9.7.

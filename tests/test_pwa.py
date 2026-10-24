@@ -81,14 +81,11 @@ class ServiceWorker(unittest.TestCase):
 
 
 class Wiring(unittest.TestCase):
-    def test_side_a(self):
+    def test_homepage(self):
         html = (ROOT / 'index.html').read_text()
         self.assertIn('<link rel="manifest" href="manifest.webmanifest">', html)
         self.assertIn('<link rel="apple-touch-icon" href="media/icons/apple-touch-icon.png">', html)
-        self.assertIn("serviceWorker.register(new URL('sw.js', HOME)", html)
-        self.assertIn('<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>', html)
-        # the manifest link must survive the address bar changing to a track
-        self.assertIn('link[rel="manifest"]', html)
+        self.assertIn("serviceWorker.register('sw.js')", html)
 
     def test_every_track_page(self):
         for t in TRACKS + ['']:
@@ -98,19 +95,10 @@ class Wiring(unittest.TestCase):
             self.assertIn(f"serviceWorker.register(new URL('{up}sw.js'", html, t)
 
 
-class PhoneMenu(unittest.TestCase):
-    def test_menu_button(self):
-        html = (ROOT / 'index.html').read_text()
-        self.assertIn('<button type="button" class="menu" id="menu" aria-expanded="false" aria-controls="links">Menu</button>', html)
-        self.assertIn('<nav id="links">', html)
-        self.assertIn("menu.setAttribute('aria-expanded'", html)
-
-    def test_side_a_opens_the_work_gate(self):
+class WorkGate(unittest.TestCase):
+    def test_homepage_opens_the_work_gate(self):
         self.assertIn("localStorage.setItem('cw-entered', '1')", (ROOT / 'index.html').read_text())
         self.assertIn("localStorage.getItem('cw-entered') === '1'", (ROOT / 'work/index.html').read_text())
-
-    def test_neighbour_tracks_prefetched(self):
-        self.assertIn("shadow.querySelectorAll('a.next, a.prev')", (ROOT / 'index.html').read_text())
 
 
 if __name__ == '__main__':
