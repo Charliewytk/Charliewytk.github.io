@@ -1,0 +1,432 @@
+/* Homepage: a tiny operating system.
+   Layout: menu bar, desktop (who + apps + honesty line), dock, windows.
+   Phone, tablet portrait and short landscape screens (<= 900px wide or <= 560px tall):
+   status bar, home screen, dock, full-screen sheets. app.js uses the same query. */
+
+:root {
+  /* Motion tokens (concepts/_content/motion-brief.md). JS springs live in desktop.js. */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --spring-bouncy: linear(0, 0.101 6%, 0.305 12%, 0.529 19%, 0.712 25%, 0.852 31%, 0.940 38%, 0.993 44%, 1.018 50%, 1.026 56%, 1.025 62%, 1.021 69%, 1.015 75%, 1.009 81%, 1.005 88%, 1.002 94%, 1);
+  --spring-bouncy-dur: 400ms;
+  --dur-press: 100ms; --dur-fast: 125ms; --dur-base: 180ms;
+
+  /* Colour: light. */
+  --wall: #e6e2d8;
+  --wall-dot: rgba(23, 24, 22, 0.075);
+  --ink: #171816;
+  --ink-2: #3b3a36;
+  --muted: #645f57;
+  --win: #fbfaf7;
+  --panel: #f1eee7;
+  --line: rgba(23, 24, 22, 0.1);
+  --bar: rgba(242, 239, 232, 0.72);
+  --bar-line: rgba(23, 24, 22, 0.08);
+  --bar-solid: #efebe4;   /* --bar as it looks over --wall, for when the blur is off */
+  --light-off: rgba(23, 24, 22, 0.16);
+  --accent: #1d8a4f;
+  --select: #2f6fe4;
+  --icon-ring: rgba(0, 0, 0, 0.12);
+  --scrim: rgba(20, 18, 12, 0.32);
+  --shadow-front: 0 0 0 0.5px rgba(0, 0, 0, 0.14), 0 2px 6px rgba(30, 24, 12, 0.08), 0 24px 64px rgba(30, 24, 12, 0.26);
+  --shadow-back: 0 0 0 0.5px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(30, 24, 12, 0.06), 0 10px 30px rgba(30, 24, 12, 0.14);
+
+  --sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+  color-scheme: light dark;
+}
+@supports not (transition-timing-function: linear(0, 1)) { :root { --spring-bouncy: var(--ease-out); } }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --wall: #0d0e0c;
+    --wall-dot: rgba(236, 232, 223, 0.06);
+    --ink: #ece8df;
+    --ink-2: #cdc8bc;
+    --muted: #a19c90;
+    --win: #1a1b19;
+    --panel: #121311;
+    --line: rgba(236, 232, 223, 0.1);
+    --bar: rgba(22, 23, 21, 0.66);
+    --bar-line: rgba(236, 232, 223, 0.08);
+    --bar-solid: #131412;
+    --light-off: rgba(236, 232, 223, 0.18);
+    --accent: #3ddc84;
+    --select: #3b7cf0;
+    --icon-ring: rgba(255, 255, 255, 0.16);
+    --scrim: rgba(0, 0, 0, 0.5);
+    --shadow-front: 0 0 0 0.5px rgba(255, 255, 255, 0.1), 0 2px 6px rgba(0, 0, 0, 0.3), 0 24px 64px rgba(0, 0, 0, 0.6);
+    --shadow-back: 0 0 0 0.5px rgba(255, 255, 255, 0.08), 0 10px 30px rgba(0, 0, 0, 0.45);
+  }
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font: 400 15px/1.5 var(--sans);
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  background-color: var(--wall);
+  /* Wallpaper: a fine dot screen, like an old desktop pattern. */
+  background-image: radial-gradient(var(--wall-dot) 0.9px, transparent 1.1px);
+  background-size: 7px 7px;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
+}
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+ul { list-style: none; margin: 0; padding: 0; }
+:focus-visible { outline: 2px solid var(--select); outline-offset: 2px; }
+::selection { background: color-mix(in srgb, var(--select) 28%, transparent); }
+
+/* ---------- Icons (shared by desktop, dock and phone) ---------- */
+.icon {
+  --size: 64px;
+  display: block; width: var(--size); height: var(--size);
+  border-radius: 22.5%;
+  background: var(--c);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.14);
+  overflow: hidden; position: relative;
+}
+/* Hairline ring drawn above the glyph, so dark tiles still read on a dark wallpaper. */
+.icon::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 0.5px var(--icon-ring); pointer-events: none; }
+.icon--own::after { display: none; }
+.icon svg {
+  display: block; width: 100%; height: 100%; color: var(--g, #fff);
+  fill: none; stroke: currentColor; stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round;
+}
+.icon img { display: block; width: 100%; height: 100%; }
+.icon--own { background: none; box-shadow: none; overflow: visible; }
+.icon--own img { transform: scale(1.21); } /* the PNG carries its own padded shape */
+
+/* ---------- Menu bar ---------- */
+.menubar {
+  position: fixed; inset: 0 0 auto 0; z-index: 900; height: 28px;
+  display: flex; align-items: center; gap: 18px; padding: 0 16px;
+  font-size: 13px; font-weight: 500;
+  background: var(--bar);
+  -webkit-backdrop-filter: blur(24px) saturate(1.6); backdrop-filter: blur(24px) saturate(1.6);
+  box-shadow: 0 0.5px 0 var(--bar-line);
+}
+.menubar__app { font-weight: 650; text-decoration: none; margin-right: auto; }
+.menubar__clock { font-variant-numeric: tabular-nums; min-width: 9.5ch; text-align: right; }
+
+/* ---------- Desktop ---------- */
+/* Name and honesty line top-left, icons top-right, windows between: the dock (bottom centre) can grow without reaching either. */
+.desktop { --h1: clamp(2.5rem, 4vw + 1rem, 4rem); position: fixed; inset: 28px 0 0 0; }
+
+.hello { position: absolute; left: 40px; top: 22px; max-width: 46rem; }
+.hello h1 {
+  margin: 0; font-size: var(--h1); font-weight: 600;
+  letter-spacing: -0.035em; line-height: 1.02; text-wrap: balance;
+}
+
+.honesty {
+  position: absolute; left: 42px; top: calc(22px + 1.02 * var(--h1) + 10px); margin: 0; max-width: 20rem;
+  font-size: 0.8125rem; line-height: 1.45; color: var(--muted); text-wrap: pretty;
+}
+
+.apps { position: absolute; top: 20px; right: 16px; }
+.apps ul { display: grid; grid-template-columns: repeat(3, 100px); grid-auto-rows: 106px; }
+.app {
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
+  padding: 6px 2px 0; text-decoration: none; border-radius: 10px; outline: none;
+  user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+}
+.app .icon { transition: transform var(--spring-bouncy-dur) var(--spring-bouncy); }
+.app:active .icon { transform: scale(0.94); transition-duration: var(--dur-press); transition-timing-function: var(--ease-out); }
+.app .label {
+  font-size: 12px; font-weight: 500; line-height: 1.25; text-align: center;
+  padding: 1px 6px; border-radius: 4px; max-width: 96px;
+}
+.app:focus-visible .icon { outline: 2px solid var(--select); outline-offset: 3px; }
+.app:focus-visible .label { background: var(--select); color: #fff; }
+@media (hover: hover) and (pointer: fine) {
+  .app:hover .icon { transform: translateY(-3px); }
+  .app:active .icon { transform: scale(0.94); }
+}
+
+/* ---------- Dock ---------- */
+.dock { position: fixed; left: 16px; right: 16px; bottom: 8px; z-index: 800; width: fit-content; margin-inline: auto; }   /* centred, never wider than the screen: tiles shrink instead */
+.dock__list { position: relative; display: flex; align-items: flex-end; gap: 8px; padding: 6px 8px; }
+.dock__list > li:not(.dock__sep) { flex: 0 1 50px; min-width: 28px; }
+/* The glass is its own layer so it can stretch (FLIP) when tiles come and go. */
+.dock__list::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: 20px;
+  background: var(--bar);
+  -webkit-backdrop-filter: blur(24px) saturate(1.6); backdrop-filter: blur(24px) saturate(1.6);
+  box-shadow: inset 0 0 0 0.5px var(--bar-line), 0 8px 30px rgba(0, 0, 0, 0.12);
+  transition: transform var(--spring-bouncy-dur) var(--spring-bouncy);
+}
+/* Behind a phone sheet the dock is scaled and dimmed every frame: drop the live blur for a flat tint. */
+.dock.is-sunk .dock__list::before { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--bar-solid); }
+.dock__list.is-flipping::before { transform: scaleX(var(--from, 1)); transition: none; }
+.dock__list > li { position: relative; transform-origin: 50% 100%; transition: transform var(--spring-bouncy-dur) var(--spring-bouncy), opacity var(--dur-base) var(--ease-out); }
+.dock__sep { width: 1px; height: 44px; align-self: center; margin: 0 2px; background: var(--line); display: none; }
+.dock.has-running .dock__sep { display: block; }
+.tile {
+  position: relative; display: block; padding: 0; border: 0; background: none; cursor: pointer;
+  text-decoration: none; border-radius: 12px;
+}
+.tile { width: 100%; }
+.tile .icon { width: 100%; height: auto; aspect-ratio: 1; transition: transform var(--dur-press) var(--ease-out); }
+.tile:active .icon { transform: scale(0.92); }
+.tile:focus-visible { outline: none; }
+.tile:focus-visible .icon { outline: 2px solid var(--select); outline-offset: 2px; }
+.tile__label {
+  position: absolute; left: 50%; bottom: calc(100% + 12px); white-space: nowrap;
+  padding: 3px 9px; border-radius: 6px; font-size: 12px; font-weight: 500;
+  background: var(--win); box-shadow: var(--shadow-back);
+  opacity: 0; transform: translate(-50%, 2px); pointer-events: none;
+  transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+.tile:focus-visible .tile__label { opacity: 1; transform: translate(-50%, 0); }
+@media (hover: hover) and (pointer: fine) {
+  .tile:hover .tile__label { opacity: 1; transform: translate(-50%, 0); }
+}
+.tile--run::after {          /* running light */
+  content: ""; position: absolute; left: 50%; bottom: -4px; width: 4px; height: 4px; margin-left: -2px;
+  border-radius: 50%; background: var(--ink); opacity: 0.55;
+}
+.tile--min::after { background: transparent; box-shadow: inset 0 0 0 1px var(--ink); }   /* hollow light: minimised */
+.dock__list > li.is-entering { transform: scale(0.4); opacity: 0; }
+
+/* ---------- Windows ---------- */
+.windows { position: fixed; inset: 0; pointer-events: none; z-index: 100; }
+.windows--fly { z-index: 850; }     /* a window flying into the dock passes in front of it */
+.win {
+  position: absolute; left: 0; top: 0; pointer-events: auto;
+  display: flex; flex-direction: column; outline: none; contain: layout;
+}
+/* Keyboard-opened windows show where focus went (a click-opened one doesn't need telling). */
+/* A thin ring on the window's own outline, drawn by the shadow layer so the content never covers it. */
+.win.is-kbd:focus-visible::before { box-shadow: 0 0 0 1.5px var(--select), var(--shadow-front); }
+.win[hidden] { display: none; }
+/* The shadow is its own layer at the window's resting rect: it fades out for a flight and back in on landing,
+   so the morphing frame never repaints a 64 px blur. */
+.win::before {
+  content: ""; position: absolute; inset: 0; border-radius: 12px; pointer-events: none;
+  box-shadow: var(--shadow-back); transition: opacity var(--dur-base) var(--ease-out);
+}
+.win.is-front::before { box-shadow: var(--shadow-front); }
+.win.is-flying::before { opacity: 0; transition: none; }
+.frame {
+  position: relative; isolation: isolate; display: flex; flex-direction: column; flex: 1; min-height: 0;
+  background: var(--win); border-radius: 12px; overflow: hidden;
+  transform-origin: 0 0;
+}
+/* The frame is the backing that morphs; .chrome is counter-scaled so text never stretches. */
+.chrome { display: flex; flex-direction: column; flex: 1; min-height: 0; transform-origin: 0 0; }
+.win.is-moving .frame, .win.is-moving .chrome, .win.is-moving .genie { will-change: transform, opacity; }
+/* The icon copy that the flight starts and ends as (see app.js): stretched over the frame, hidden at rest. */
+.genie { position: absolute; inset: 0; width: auto; height: auto; border-radius: 0; box-shadow: none; opacity: 0; pointer-events: none; }
+.genie::after { display: none; }
+.genie.icon--own { background: linear-gradient(#27b083, #0f636d); }   /* PowerLeash's PNG has a transparent margin: fill it with the PNG's own teal */
+.win:not(.is-flying) .genie { visibility: hidden; }
+.scrim { position: fixed; inset: 0; background: var(--scrim); opacity: 0; pointer-events: none; display: none; }
+
+.titlebar {
+  flex: none; height: 40px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+  padding: 0 14px; user-select: none; -webkit-user-select: none; touch-action: none; cursor: default;
+  box-shadow: 0 0.5px 0 var(--line);
+}
+.title { margin: 0; font-size: 13px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.win:not(.is-front) .title { color: var(--muted); }
+.lights { display: flex; gap: 8px; }
+.light {
+  position: relative; width: 12px; height: 12px; padding: 0; border: 0; border-radius: 50%; cursor: default;
+  background: var(--light-off); box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.12);
+}
+.light::before { content: ""; position: absolute; inset: -6px -4px; } /* bigger hit area */
+.light svg { position: absolute; inset: 0; width: 12px; height: 12px; opacity: 0; stroke: rgba(0, 0, 0, 0.6); stroke-width: 1.3; fill: none; stroke-linecap: round; }
+.win.is-front .light--close, .lights:hover .light--close { background: #ff5f57; }
+.win.is-front .light--min, .lights:hover .light--min { background: #febc2e; }
+.win.is-front .light--zoom, .lights:hover .light--zoom { background: #28c840; }
+.lights:hover .light svg, .light:focus-visible svg { opacity: 1; }
+.grabber { display: none; }
+
+.body { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; container-type: inline-size; }
+.resize { position: absolute; right: 0; bottom: 0; z-index: 1; width: 24px; height: 24px; cursor: nwse-resize; touch-action: none; }
+/* A faint diagonal grip, shown only while the pointer is over the window. */
+.resize::after {
+  content: ""; position: absolute; right: 4px; bottom: 4px; width: 9px; height: 9px; opacity: 0;
+  background: linear-gradient(135deg, transparent 0 calc(50% - 0.5px), var(--muted) 0 calc(50% + 0.5px), transparent 0 calc(75% - 0.5px), var(--muted) 0 calc(75% + 0.5px), transparent 0);
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) { .win:not(.is-flying):hover .resize::after { opacity: 0.5; } }
+
+/* Window content */
+.media { margin: 0; background: var(--panel); }
+.media video, .media img { display: block; width: 100%; height: auto; }
+.media--phones { display: flex; justify-content: center; gap: 12px; padding: 18px 20px; background: color-mix(in srgb, #00c800 10%, var(--panel)); }
+.media--phones img { width: auto; height: 248px; border-radius: 16px; box-shadow: 0 0 0 0.5px var(--line), 0 6px 18px rgba(0, 0, 0, 0.12); }
+.copy { padding: 20px 24px 22px; max-width: 36rem; margin-inline: auto; }   /* ~68ch; centred when a window is zoomed */
+.lede { margin: 0; font-size: 1.375rem; font-weight: 600; letter-spacing: -0.022em; line-height: 1.2; text-wrap: balance; }
+.meta { margin: 6px 0 0; font-size: 0.8125rem; font-weight: 500; color: var(--muted); text-wrap: pretty; }
+.nums { display: grid; grid-template-columns: 1fr; margin: 20px 0 0; border-top: 0.5px solid var(--line); }
+.nums > div { padding: 12px 0; border-bottom: 0.5px solid var(--line); }
+.nums dt { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.nums dd { margin: 2px 0 0; font-size: 0.875rem; color: var(--ink-2); text-wrap: pretty; }
+.nums small { display: block; margin-top: 3px; font-size: 0.75rem; color: var(--muted); }
+.nums > div:only-child { grid-column: 1 / -1; }
+@container (min-width: 520px) {
+  .nums { grid-template-columns: 1fr 1fr; column-gap: 24px; }
+  .nums > div:last-child:nth-child(odd) { grid-column: 1 / -1; }   /* no half-empty last row */
+}
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin: 20px 0 0; }
+.btn {
+  display: inline-flex; align-items: center; height: 34px; padding: 0 14px; border-radius: 8px;
+  background: var(--ink); color: var(--win); font-size: 13.5px; font-weight: 600; text-decoration: none;
+  transition: transform var(--dur-press) var(--ease-out), opacity var(--dur-fast) var(--ease-out);
+}
+.btn:active { transform: scale(0.97); }
+.link { font-size: 13.5px; font-weight: 500; color: var(--ink-2); text-underline-offset: 3px; text-decoration-color: var(--line); }
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover { opacity: 0.88; }
+  .link:hover { text-decoration-color: currentColor; }
+}
+.note { margin: 14px 0 0; font-size: 0.75rem; line-height: 1.45; color: var(--muted); text-wrap: pretty; }
+.note + .note { margin-top: 6px; }
+
+/* App panels: each window's top strip, drawn from its own numbers. Static: nothing waits to appear. */
+.viz { --gut: max(24px, calc((100% - 36rem) / 2 + 24px)); margin: 0; padding: 22px var(--gut) 18px; background: var(--panel); box-shadow: 0 0.5px 0 var(--line); }
+.viz figcaption { margin-top: 12px; font-size: 0.75rem; line-height: 1.4; color: var(--muted); text-wrap: pretty; }
+.viz--tally svg { display: block; width: 100%; max-width: 420px; height: auto; overflow: visible; fill: none; stroke-linecap: round; }
+.viz--tally .k { stroke: var(--muted); stroke-width: 2.4; opacity: 0.55; }
+.viz--tally .x { stroke: #e5484d; stroke-width: 2.8; }
+.viz--tally .s { stroke: var(--ink-2); stroke-width: 2.4; opacity: 0.8; }
+
+.viz--term { background: #141514; color: #d7d4cb; font: 500 12.5px/1.6 ui-monospace, "SF Mono", Menlo, monospace; padding: 20px var(--gut); }
+.viz--term p { margin: 0; }
+.term__row { display: grid; grid-template-columns: 3.5ch 1fr; align-items: center; gap: 12px; }
+.term__row + .term__row { margin-top: 6px; }
+.term__row span { color: #8b887f; }
+.term__row i { display: block; height: 6px; border-radius: 3px; background: #3ddc84; width: calc(var(--v) * 100%); }
+
+/* Merger Monitor: the 3% spread as a bar, with the break-even spread marked on it. */
+.spread { position: relative; display: block; max-width: 420px; height: 10px; border-radius: 5px; background: linear-gradient(90deg, color-mix(in srgb, #3b6fe0 22%, var(--line)) calc(var(--v) * 100%), #3b6fe0 0); }
+.spread i { position: absolute; top: -6px; bottom: -6px; left: calc(var(--v) * 100%); width: 2px; margin-left: -1px; border-radius: 1px; background: var(--ink); }
+
+.viz--menu { position: relative; padding: 36px var(--gut) 22px; background: linear-gradient(160deg, color-mix(in srgb, #1f9b85 18%, var(--panel)), var(--panel)); }
+.menu__bar { position: absolute; inset: 0 0 auto 0; display: flex; justify-content: flex-end; align-items: center; height: 26px; padding: 0 calc(var(--gut) + 6px); background: color-mix(in srgb, var(--win) 60%, transparent); box-shadow: 0 0.5px 0 var(--line); }
+.menu__bar img { display: block; width: 18px; height: 18px; }
+.menu__pop { margin-left: auto; width: min(100%, 300px); padding: 12px 14px; border-radius: 10px; background: var(--win); box-shadow: var(--shadow-back); font-size: 12.5px; }
+.menu__pop p { margin: 0; }
+.menu__row { padding: 6px 0; }
+.menu__row i { display: block; height: 5px; border-radius: 3px; background: linear-gradient(90deg, #1f9b85 calc(var(--v) * 100%), var(--light-off) 0); }
+
+.sch { width: min(100%, 360px); border-radius: 9px; background: var(--win); box-shadow: var(--shadow-back); overflow: hidden; }
+.sch i { display: block; }
+.sch__bar { display: flex; align-items: center; gap: 5px; height: 22px; padding: 0 9px; box-shadow: 0 0.5px 0 var(--line); }
+.sch__bar i { width: 7px; height: 7px; border-radius: 50%; background: var(--light-off); }
+.sch__light { margin-left: auto; width: 7px; height: 7px; border-radius: 50%; background: #3ddc84; box-shadow: 0 0 0 3px color-mix(in srgb, #3ddc84 22%, transparent); }
+.sch__tabs { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; padding: 9px; }
+.sch__tabs i { height: 12px; border-radius: 4px; background: var(--line); }
+.sch__tabs i.is-on { background: color-mix(in srgb, var(--ink) 70%, transparent); }
+.sch__body { display: grid; gap: 7px; padding: 4px 9px 12px; }
+.sch__body i { height: 7px; border-radius: 3.5px; background: var(--line); }
+.sch__body i.is-short { width: 55%; }
+
+.dots, .picks { display: flex; gap: 8px; }
+.dots i { width: 22px; height: 22px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px color-mix(in srgb, #7457f0 45%, transparent); }
+.dots i.is-on { background: #7457f0; box-shadow: none; }
+.viz--ranks { display: grid; gap: 12px; }
+.rank { display: grid; grid-template-columns: 8.5em minmax(0, 1fr); align-items: center; gap: 12px; font-size: 12.5px; }
+.rank__name { color: var(--muted); font-weight: 500; white-space: nowrap; }
+.picks { gap: 4px; min-width: 0; }
+.picks i { flex: 0 1 10px; min-width: 3px; aspect-ratio: 1; border-radius: 3px; background: var(--line); }
+.picks i.is-on { background: #d9a422; }
+.track { position: relative; display: block; height: 6px; border-radius: 3px; background: var(--line); }
+.track i { position: absolute; top: 50%; left: calc(var(--v) * 100%); width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: #d9a422; box-shadow: 0 0 0 2px var(--panel); }
+
+
+/* ---------- Phone: home screen + sheets ---------- */
+@media (max-width: 900px), (max-height: 560px) {
+  body { overflow: auto; }
+  .menubar { display: none; }      /* the phone already shows its own clock */
+
+  .desktop {
+    position: static; min-height: 100%;
+    display: flex; flex-direction: column; gap: 28px;
+    padding: calc(40px + env(safe-area-inset-top)) 16px calc(116px + env(safe-area-inset-bottom));
+  }
+  .hello { position: static; padding: 4px 6px 0; }
+  .hello h1 { font-size: 2.5rem; letter-spacing: -0.035em; }
+
+  .apps { position: static; }
+  .apps ul { grid-template-columns: repeat(4, 1fr); grid-auto-rows: auto; row-gap: 20px; }
+  .apps, .hello, .honesty { width: 100%; max-width: 720px; margin-inline: auto; }
+  .app { gap: 6px; padding: 0; }
+  .app .icon { --size: 60px; }
+  .app .label { font-size: 11.5px; padding: 0 2px; max-width: 84px; }
+
+  .honesty { position: static; max-width: none; margin-top: auto; padding: 0 6px; font-size: 0.75rem; text-align: center; }   /* pinned above the dock, like page dots */
+
+  .dock { left: 16px; right: 16px; bottom: calc(12px + env(safe-area-inset-bottom)); width: auto; max-width: 420px; }
+  .dock__list { justify-content: space-evenly; padding: 12px 8px 8px; }
+  .dock__list::before { border-radius: 30px; }
+  .dock__list > li:not(.dock__sep) { flex: none; }
+  .tile { width: auto; }
+  .tile .icon { width: 56px; height: 56px; }
+  .tile__label { position: static; display: block; margin-top: 4px; padding: 0; background: none; box-shadow: none; opacity: 1; transform: none; text-align: center; font-size: 11px; color: var(--ink-2); }
+  .tile:focus-visible .tile__label { transform: none; }
+  .dock__sep, .dock.has-running .dock__sep, .dock__list > li.is-run { display: none; }
+
+  .windows { z-index: 1000; }
+  .scrim { display: block; }
+  .frame { border-radius: 0; }
+  .win::before { display: none; }
+  .win.is-kbd:focus-visible .frame { outline: 2px solid var(--select); outline-offset: -2px; }
+  .titlebar {
+    position: relative; height: calc(56px + env(safe-area-inset-top)); padding: env(safe-area-inset-top) 12px 0 16px;
+    grid-template-columns: 44px 1fr 44px;
+  }
+  .title { grid-column: 2; text-align: center; font-size: 16px; }
+  .grabber { display: block; position: absolute; top: calc(6px + env(safe-area-inset-top)); left: 50%; width: 36px; height: 5px; margin-left: -18px; border-radius: 3px; background: var(--light-off); }
+  .lights { grid-column: 3; grid-row: 1; justify-content: flex-end; }
+  .light--min, .light--zoom, .resize { display: none; }
+  .light--close, .win.is-front .light--close, .lights:hover .light--close {
+    width: 30px; height: 30px; background: color-mix(in srgb, var(--ink) 9%, transparent); box-shadow: none; cursor: pointer;
+  }
+  .light--close svg { inset: 9px; width: 12px; height: 12px; opacity: 1; stroke: var(--ink-2); stroke-width: 1.6; }
+  .light::before { inset: -8px; }
+  .copy { padding: 20px 16px calc(32px + env(safe-area-inset-bottom)); }
+  .viz { --gut: max(16px, calc((100% - 36rem) / 2 + 16px)); }
+  .btn, .link { min-height: 44px; display: inline-flex; align-items: center; }
+  .btn { height: 44px; padding: 0 18px; border-radius: 10px; font-size: 15px; }
+  .link { font-size: 15px; }
+  .actions { gap: 4px 18px; }
+  .media--phones { gap: 8px; padding: 18px 12px; overflow: hidden; }
+  .media--phones img { height: 240px; border-radius: 13px; }
+}
+
+/* Tablets and landscape phones: a wider home screen, six icons a row. */
+@media (min-width: 561px) and (max-width: 900px), (min-width: 561px) and (max-height: 560px) {
+  .apps ul { grid-template-columns: repeat(6, 1fr); }
+}
+/* Short landscape screens: name and honesty line on the left, icons on the right, all above the dock. */
+@media (max-height: 560px) {
+  .desktop {
+    display: grid; grid-template-columns: minmax(180px, 1fr) minmax(0, 2.4fr); grid-template-rows: auto 1fr; gap: 10px 24px; align-items: start;
+    padding-top: calc(16px + env(safe-area-inset-top)); padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); padding-bottom: calc(96px + env(safe-area-inset-bottom));
+  }
+  .hello { grid-column: 1; grid-row: 1; padding-top: 6px; }
+  .hello h1 { font-size: 2rem; }
+  .honesty { grid-column: 1; grid-row: 2; margin: 0; padding: 0 6px; text-align: left; }
+  .apps { grid-column: 2; grid-row: 1 / 3; }
+  .apps ul { grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); row-gap: 12px; }
+  .app .icon { --size: 54px; }
+  .dock { bottom: calc(8px + env(safe-area-inset-bottom)); }
+  .dock__list { padding: 8px 8px 6px; }
+  .tile .icon { width: 48px; height: 48px; }
+  .titlebar { height: calc(48px + env(safe-area-inset-top)); }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important; transition-delay: 0s !important; scroll-behavior: auto !important;
+  }
+  .tile__label { transition: opacity var(--dur-fast) var(--ease-out) !important; }
+}

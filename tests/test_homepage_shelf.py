@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
-"""Rails for the shelf homepage (Oct 2026).
+"""Rails for the shelf page (/shelf/), the homepage from Oct 2026 until Nov 2026.
 
-The homepage is one 3D scene: two shelves, one object per project, and a hand
+The Desktop homepage replaced it on 3 Nov 2026 (rails in test_homepage_desktop.py).
+The page is kept at /shelf/ with <base href="../">, so its root-relative links still resolve.
+
+The page is one 3D scene: two shelves, one object per project, and a hand
 with a laser pointer that picks an object up and throws it into its project
 page. The full portfolio, case studies and Merger Monitor money path stay on
 /work/ and keep their own rails in the other test files. This page must still:
@@ -20,7 +23,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
-HOMEPAGE = (ROOT / "index.html").read_text(encoding="utf-8")
+HOMEPAGE = (ROOT / "shelf" / "index.html").read_text(encoding="utf-8")
 LOWER = HOMEPAGE.lower()
 
 
@@ -34,6 +37,8 @@ class _Refs(HTMLParser):
         a = dict(attrs)
         if tag == "img":
             self.imgs.append(a)
+        if tag == "base":   # the base itself; every other ref resolves against it
+            return
         for key in ("href", "src"):
             if a.get(key) and "${" not in a[key]:
                 self.refs.append(a[key])
@@ -54,6 +59,9 @@ def _resolves(path: str) -> bool:
 
 
 class ShelfHomepage(unittest.TestCase):
+    def test_resolves_against_site_root(self) -> None:
+        self.assertIn('<base href="../">', HOMEPAGE)
+
     def test_top_bar_only_work_github_contact(self) -> None:
         bar = re.search(r'<header class="bar">(.*?)</header>', HOMEPAGE, re.S)
         self.assertIsNotNone(bar)

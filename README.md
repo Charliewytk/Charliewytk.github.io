@@ -6,13 +6,14 @@ Charlie Wuytack's portfolio: apps, Mac tools, games and quantitative trading res
 
 | Path | What it is |
 | --- | --- |
-| `index.html` | Homepage (the shelf). |
+| `index.html` | Homepage: a tiny desktop. Twelve app icons open each project as a window (a sheet on a phone). Styles and script in `assets/desktop.css` and `assets/desktop.js`. Every icon is a plain link, so it works without JS. |
+| `shelf/` | The previous 3D shelf homepage, kept as is. Unlinked. Uses `<base href="../">`. |
 | `work/` | The long-form portfolio page: ExeTix, other projects, research, tools, about. |
 | `tracks/` | Tracklist (`tracks/index.html`) and one page per project (`tracks/<name>/`). Shared styles in `tracks/track.css`. |
 | `research.html`, `apex/`, `kill-log/`, `example/`, `sizer/`, `weekly/`, `essays/` | Research write-ups and tools. |
 | `merger-monitor/`, `subscribe/`, `share/` | Merger Monitor pages, sign-up and share drafts. |
 | `doorly/`, `abyss-warden/`, `chelsea-bikes/`, `exetix/` | Standalone apps. They are styled separately on purpose. Do not move them onto `site.css`. |
-| `concepts/` | Gallery of homepage design concepts (`concepts/index.html`). |
+| `concepts/` | Gallery of homepage design concepts (`concepts/index.html`). The Desktop concept became the homepage on 3 Nov 2026; edit the homepage, not `concepts/desktop/`. |
 | `assets/site.css` | The shared design system. |
 | `assets/js/` | Shared scripts. |
 | `media/`, `downloads/` | Images, icons, audio and downloadable files. |

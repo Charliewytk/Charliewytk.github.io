@@ -62,9 +62,12 @@ class ServiceWorker(unittest.TestCase):
             target = ROOT / p / 'index.html' if p == '' or p.endswith('/') else ROOT / p
             self.assertTrue(target.exists(), p)
 
-    def test_three_matches_the_page(self):
-        cdn = re.search(r"var THREE = '([^']+)'", self.sw).group(1)
-        self.assertIn(f'<script src="{cdn}"></script>', (ROOT / 'index.html').read_text())
+    def test_keeps_only_own_files(self):
+        # the homepage loads no third-party script, so nothing off-site is kept or served
+        keep = re.search(r"var KEEP = \[(.*?)\]", self.sw, re.S).group(1)
+        self.assertNotIn('http', keep)
+        self.assertIn('if (!own) return;', self.sw)
+        self.assertNotRegex((ROOT / 'index.html').read_text(), r'<script src="https?://')
 
     def test_live_data_and_media_are_never_cached(self):
         self.assertIn(r'\.json$', self.sw)
