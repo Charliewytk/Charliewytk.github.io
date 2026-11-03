@@ -227,7 +227,7 @@
       "shelf_tag": "Systems",
       "status": "Live execution test",
       "status_detail": {
-        "text": "0.25 SOL clips since 30 Sep 2026",
+        "text": "5 SOL clips, live since 30 Sep 2026",
         "source": "work/index.html"
       },
       "primary_href": "/tracks/solana/",
@@ -1141,7 +1141,7 @@
     {
       "topic": "solana live status",
       "where": "/work/#solana and /tracks/solana/",
-      "site_says": "Live execution test, 0.25 SOL clips since 30 Sep 2026",
+      "site_says": "Live execution test since 30 Sep 2026, 5 SOL clips",
       "elsewhere": "/apex/ says 'programme closed' (sep–oct 2026); whale-follow ran live six days",
       "pack_uses": "site text as written; may be stale"
     },
