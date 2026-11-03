@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Charlie Wuytack</title>
+<meta name="description" content="I&#x27;d rather build than consume.">
+<meta name="theme-color" content="#f1eee6">
+<link rel="icon" href="/media/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="style.css">
+<script src="app.js" defer></script>
+</head>
+<body>
+<div class="page">
+
+  <header class="mast">
+    <nav aria-label="Site">
+      <a class="u tap" href="/work/">Work</a>
+      <a class="u tap" href="https://github.com/Charliewytk">GitHub</a>
+      <a class="u tap" href="mailto:charlie@wuytack.net">Contact</a>
+    </nav>
+  </header>
+
+  <h1 class="cover"><span class="line"><span style="--i:0">Charlie</span></span> <span class="line"><span style="--i:1">Wuytack</span></span></h1>
+
+  <!-- The index: a contents list on phones, a sticky rail on desktop. app.js marks the current item. -->
+  <nav class="index" id="index" aria-label="Projects">
+    <ol>
+      <li><a href="#exetix"><span class="n">01</span> <span class="t">ExeTix</span></a></li>
+      <li><a href="#kill-log"><span class="n">02</span> <span class="t">The Kill Log</span></a></li>
+      <li><a href="#solana"><span class="n">03</span> <span class="t">Solana execution</span></a></li>
+      <li><a href="#merger-monitor"><span class="n">04</span> <span class="t">Merger Monitor</span></a></li>
+      <li><a href="#doorly"><span class="n">05</span> <span class="t">Doorly</span></a></li>
+      <li><a href="#powerleash"><span class="n">06</span> <span class="t">PowerLeash</span></a></li>
+      <li><a href="#abyss-warden"><span class="n">07</span> <span class="t">Abyss Warden</span></a></li>
+      <li><a href="#deskstatus"><span class="n">08</span> <span class="t">DeskStatus</span></a></li>
+      <li><a href="#numerai"><span class="n">09</span> <span class="t">Numerai</span></a></li>
+      <li><a href="#competitions"><span class="n">10</span> <span class="t">Competitions</span></a></li>
+      <li><a href="#chess-exchange"><span class="n">11</span> <span class="t">Chess Exchange</span></a></li>
+      <li><a href="#chelsea-bikes"><span class="n">12</span> <span class="t">Chelsea Bikes</span></a></li>
+    </ol>
+    <span class="marker" aria-hidden="true"></span>
+  </nav>
+
+  <main id="works">
+      <article class="spread pic" id="exetix" aria-labelledby="exetix-t">
+        <p class="meta"><span class="n">01</span><span>Built and sold</span></p>
+        <h2 class="name" id="exetix-t"><a href="/exetix/"><span class="line"><span>ExeTix<span class="arrow" aria-hidden="true">→</span></span></span></a></h2>
+        <p class="lede">Pinged the second Exeter tickets drop.</p>
+        <a class="fig plate" href="/exetix/" tabindex="-1" aria-hidden="true"><span class="frame"><span class="phones"><img class="phone" style="--d:6%" src="/exetix/img/screen-alerts.webp" alt="ExeTix onboarding screen ‘Be first, every time’ with sample alerts: dropping in 10 min, tickets just dropped, restock, resale listed" width="540" height="1173" loading="lazy" decoding="async"><img class="phone" style="--d:-4%" src="/exetix/img/screen-explore.webp" alt="ExeTix Explore tab: ‘5 club nights tonight’ with a flyer for Indie Thursday at Timepiece and a Dropping soon rail" width="540" height="1173" loading="lazy" decoding="async"><img class="phone" style="--d:9%" src="/exetix/img/screen-drops.webp" alt="ExeTix Drops tab: the next drop counting down and sold-out nights watched for restocks" width="540" height="1173" loading="lazy" decoding="async"></span></span></a>
+        <dl class="nums">
+          <div><dt>~1–2 s</dt><dd>from a known release time to the alert</dd></div>
+          <div><dt>£0</dt><dd>seller fees. Sellers keep 100% of their price</dd></div>
+          <div><dt>≈⅓</dt><dd>of a typical student-resale booking fee: card processing, nothing on top</dd></div>
+        </dl>
+        <div class="note"><p><a class="u hit" href="https://apps.apple.com/gb/app/exetix/id6814591245">On the App Store</a> · released 29 Sep 2026 · sold Oct 2026</p><p>ExeTix is independent. It is not affiliated with the University of Exeter, any venue, or any ticketing platform, and it never buys tickets on other platforms for you.</p></div>
+      </article>
+      <article class="spread type wide" id="kill-log" aria-labelledby="kill-log-t">
+        <p class="meta"><span class="n">02</span><span>Research</span></p>
+        <h2 class="name" id="kill-log-t"><a href="/kill-log/"><span class="line"><span>The</span></span> <span class="line"><span>Kill Log<span class="arrow" aria-hidden="true">→</span></span></span></a></h2>
+        <p class="lede">Research that says no.</p>
+        <dl class="nums">
+          <div class="lead"><dt>50 / 65</dt><dd>trading lanes on the second ledger killed, on the record</dd><dd class="q">From the lane ledger as of 30 September 2026.</dd></div>
+          <div><dt>~170</dt><dd>pre-registered hypotheses across two programmes</dd></div>
+          <div><dt>p ≈ 1.0</dt><dd>deflated Sharpe of the best of 3,038 model trials. The honest answer</dd></div>
+          <div><dt>110</dt><dd>paper hypotheses. They died to costs.</dd><dd class="q">This is a paper book. No live P&amp;L is claimed. No live book is implied.</dd></div>
+        </dl>
+        <div class="note"><p>Two strategies in small-size live execution tests. Nothing here claims a profit yet</p><p>~£0. Live tests run at tiny size to measure real fills against paper; paper and backtest numbers are labelled as such throughout.</p><p>Scaling up needs a separate, pre-registered live test.</p></div>
+      </article>
+      <article class="spread type" id="solana" aria-labelledby="solana-t">
+        <!-- FOR CHARLES TO CONFIRM: content.json conflicts[] "solana live status". The pack status and the clip-size note for Solana may be stale (/apex/ says the programme closed), so both are withheld here. The meta row uses the pack shelf_tag until you confirm. -->
+        <p class="meta"><span class="n">03</span><span>Systems</span></p>
+        <h2 class="name" id="solana-t"><a href="/tracks/solana/"><span class="line"><span>Solana</span></span> <span class="line"><span>execution<span class="arrow" aria-hidden="true">→</span></span></span></a></h2>
+        <p class="lede">Fast enough. Then I measured whether fast mattered.</p>
+        <dl class="nums">
+          <div><dt>0.33 ms</dt><dd>p50, trigger to ready-to-sign sell bytes (p90 1.2 ms)</dd></div>
+          <div><dt>0.4 points</dt><dd>Replayed on the same positions, it improved the average stop fill by 0.4 points</dd><dd class="q">Fills are simulated at the estimated landing slot, not landed.</dd></div>
+          <div><dt>0.0 bps</dt><dd>median error of my integer AMM quote against the on-chain fill</dd></div>
+        </dl>
+      </article>
+      <article class="spread type wide" id="merger-monitor" aria-labelledby="merger-monitor-t">
+        <p class="meta"><span class="n">04</span><span>Live · £5/month</span></p>
+        <h2 class="name" id="merger-monitor-t"><a href="/merger-monitor/"><span class="line"><span>Merger</span></span> <span class="line"><span>Monitor<span class="arrow" aria-hidden="true">→</span></span></span></a></h2>
+        <p class="lede">A table of filings, not a tip sheet.</p>
+        <dl class="nums">
+          <div><dt>24.6%</dt><dd>what a 3% spread looks like annualised. That number is marketing</dd></div>
+          <div><dt>+1.38%</dt><dd>per deal after break risk, costs and forgone carry</dd><dd class="q">Filings, not advice.</dd></div>
+          <div><dt>1.59%</dt><dd>break-even spread. Thinner deals lose money on average</dd></div>
+          <div><dt>£5/month</dt><dd>the same table, emailed the evening it is built</dd><dd class="q">Zero subscribers so far. Take: £0.</dd></div>
+        </dl>
+        <div class="note"><p>Nothing here is investment advice. No position is held in anything listed.</p></div>
+      </article>
+      <article class="spread pic" id="doorly" aria-labelledby="doorly-t">
+        <p class="meta"><span class="n">05</span><span>Demo</span></p>
+        <h2 class="name" id="doorly-t"><a href="/doorly/"><span class="line"><span>Doorly<span class="arrow" aria-hidden="true">→</span></span></span></a></h2>
+        <p class="lede">The cheapest flight isn&#x27;t the cheapest trip.</p>
+        <a class="fig" href="/doorly/" tabindex="-1" aria-hidden="true"><span class="frame"><video class="media" width="1120" height="700" muted loop playsinline preload="none" poster="/media/doorly.jpg" aria-label="Doorly search page: ‘The cheapest flight isn&#x27;t always the cheapest trip.’ with example routes and address fields"><source src="/media/doorly-demo.mp4" type="video/mp4"></video></span></a>
+        <dl class="nums">
+          <div><dt>£120 &lt; £130</dt><dd>until you add the journey to the airport</dd><dd class="q">Demo fares, labelled as such.</dd></div>
+        </dl>
+      </article>
+      <article class="spread type" id="powerleash" aria-labelledby="powerleash-t">
+        <p class="meta"><span class="n">06</span><span>Download</span></p>
+        <h2 class="name" id="powerleash-t"><a href="/tracks/powerleash/"><span class="line"><span>PowerLeash<span class="arrow" aria-hidden="true">→</span></span></span></a></h2>
+        <p class="lede">A Mac menu-bar tool with one job.</p>
+        <dl class="nums">
+          <div><dt>42.8 W</dt><dd>held under a sustained 8-thread burn</dd></div>
+          <div><dt>59.0 → 42.7 W</dt><dd>system load, before and after Match Charger</dd></div>
+          <div><dt>−15.6 → −3.5 W</dt><dd>battery flow while plugged in: from draining hard to nearly break-even</dd><dd class="q">Battery savings are not quantified yet.</dd></div>
+        </dl>
+        <div class="note get">
+          <p class="dl"><img class="icon" src="/media/powerleash.png" alt="PowerLeash app icon: a white leaf on a green tile" width="512" height="512" loading="lazy" decoding="async"><a class="u tap" href="/downloads/PowerLeash.zip" download>Download PowerLeash.zip</a></p>
+          <p>Apple Silicon, unsigned. Unzip → drag PowerLeash.app to /Applications → right-click Open. Double-click is blocked by Gatekeeper; that is expected. Battery savings are not quantified yet.</p>
+        </div>
+      </article>
+      <article class="spread pic flip" id="abyss-warden" aria-labelledby="abyss-warden-t">
+        <p class="meta"><span class="n">07</span><span>Playable</span></p>
+        <h2 class="name" id="abyss-warden-t"><a href="/abyss-warden/"><span class="line"><span>Abyss</span></span> <span class="line"><span>Warden<span class="arrow" aria-hidden="true">→</span></span></span></a></h2>
+        <p class="lede">Deep-sea tower defence.</p>
+        <a class="fig" href="/abyss-warden/" tabindex="-1" aria-hidden="true"><span class="frame"><video class="media" width="960" height="540" muted loop playsinline preload="none" poster="/media/abyss-poster.jpg" aria-label="Abyss Warden: towers guarding a winding path across the sea floor"><source src="/media/abyss.mp4" type="video/mp4"></video></span></a>
+        <dl class="nums">
+          <div><dt>5</dt><dd>bosses, playable in the browser</dd></div>
+          <div><dt>20</dt><dd>levels, all finished and balance-passed</dd></div>
+        </dl>
+      </article>
+      <article class="spread type" id="deskstatus" aria-labelledby="deskstatus-t">
+        <p class="meta"><span class="n">08</span><span>Shipped · v1.0.3</span></p>
+        <h2 class="name" id="deskstatus-t"><a href="/tracks/deskstatus/"><span class="line"><span>DeskStatus<span class="arrow" aria-hidden="true">→</span></span></span></a></h2>
+        <p class="lede">The whole trading desk in one window.</p>
+        <dl class="nums">
+          <div><dt>7</dt><dd>tabs, a menu-bar status light and a headless mode for scripts</dd></div>
+          <div><dt>Read-only</dt><dd>it can&#x27;t sign anything</dd></div>
+        </dl>
+      </article>
+      <article class="spread type wide" id="numerai" aria-labelledby="numerai-t">
+        <p class="meta"><span class="n">09</span><span>Live, unstaked</span></p>
+        <h2 class="name" id="numerai-t"><a href="/tracks/numerai/"><span class="line"><span>Numerai<span class="arrow" aria-hidden="true">→</span></span></span></a></h2>
+        <p class="lede">The audit, and a deadline that moves.</p>
+        <dl class="nums">
+          <div><dt>1.47</dt><dd>Sharpe of CORR60 over 93 held-out eras, positive in 95% of them</dd></div>
+          <div><dt>1.27</dt><dd>Sharpe of the payout score out of sample, with no losing quarter</dd></div>
+          <div><dt>2</dt><dd>live rounds resolved so far. Too few to stake on; the policy asks for ten</dd></div>
+        </dl>
+      </article>
+      <article class="spread type wide" id="competitions" aria-labelledby="competitions-t">
+        <p class="meta"><span class="n">10</span><span>Selected</span></p>
+        <h2 class="name" id="competitions-t"><a href="/tracks/competitions/"><span class="line"><span>Competitions<span class="arrow" aria-hidden="true">→</span></span></span></a></h2>
+        <p class="lede">Read deltas, not levels.</p>
+        <dl class="nums">
+          <div><dt>1 of 15</dt><dd>strategies selected in the Quantiacs Q25 contest</dd><dd class="q">In-sample Sharpe 1.22, maximum drawdown 23.6%.</dd></div>
+          <div><dt>Gold</dt><dd>on WorldQuant BRAIN, with about 14 alphas live</dd></div>
+          <div><dt>263rd of 1,332</dt><dd>Structural Break</dd></div>
+          <div><dt>−0.0003</dt><dd>live change from two improvements that gained +0.0144 on my holdout</dd></div>
+        </dl>
+      </article>
+      <article class="spread pic" id="chess-exchange" aria-labelledby="chess-exchange-t">
+        <p class="meta"><span class="n">11</span><span>Play money</span></p>
+        <h2 class="name" id="chess-exchange-t"><a href="/tracks/chess-exchange/"><span class="line"><span>Chess</span></span> <span class="line"><span>Exchange<span class="arrow" aria-hidden="true">→</span></span></span></a></h2>
+        <p class="lede">Markets on live games. Play money.</p>
+        <a class="fig" href="/tracks/chess-exchange/" tabindex="-1" aria-hidden="true"><span class="frame"><video class="media" width="1120" height="700" muted loop playsinline preload="none" poster="/media/chess.jpg" aria-label="Chess Exchange: live boards priced White, Draw and Black, a play-money leaderboard of bots and a trade tape"><source src="/media/chess-demo.mp4" type="video/mp4"></video></span></a>
+        <dl class="nums">
+          <div><dt>W / D / B</dt><dd>from any position you paste in</dd><dd class="q">Play money. Not a book, not advice.</dd></div>
+          <div><dt>6</dt><dd>liquidity bots around an LMSR market maker</dd></div>
+        </dl>
+      </article>
+      <article class="spread pic flip" id="chelsea-bikes" aria-labelledby="chelsea-bikes-t">
+        <p class="meta"><span class="n">12</span><span>Prototype</span></p>
+        <h2 class="name" id="chelsea-bikes-t"><a href="/chelsea-bikes/"><span class="line"><span>Chelsea</span></span> <span class="line"><span>Bikes<span class="arrow" aria-hidden="true">→</span></span></span></a></h2>
+        <p class="lede">My local bike shop, rebuilt unasked.</p>
+        <a class="fig" href="/chelsea-bikes/" tabindex="-1" aria-hidden="true"><span class="frame"><video class="media" width="1120" height="700" muted loop playsinline preload="none" poster="/media/chelsea.jpg" aria-label="Chelsea Bikes prototype homepage: ‘Your local bike shop, for every kind of rider.’"><source src="/media/chelsea-demo.mp4" type="video/mp4"></video></span></a>
+        <dl class="nums">
+          <div><dt>11</dt><dd>pages, works offline</dd></div>
+        </dl>
+        <div class="note"><p>Not yet pitched</p></div>
+      </article>
+  </main>
+
+  <footer class="colophon">
+    <p class="motto"><span class="line"><span>I'd rather build</span></span> <span class="line"><span>than consume.</span></span></p>
+    <nav class="out" aria-label="More">
+      <a class="u tap" href="/work/">Everything, in full</a>
+      <a class="u tap" href="https://github.com/Charliewytk">GitHub</a>
+      <a class="u tap" href="mailto:charlie@wuytack.net">charlie@wuytack.net</a>
+    </nav>
+    <p class="fine">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
+    <p class="fine">Charlie Wuytack, Exeter</p>
+  </footer>
+
+</div>
+
+<!-- Phone running head: the current project, rolling like an odometer. Links back to the index. -->
+<a class="runhead" href="#index" aria-label="01 ExeTix, back to the index" inert>
+  <span class="rh-n" aria-hidden="true"><span class="roll"><span>01</span><span>02</span><span>03</span><span>04</span><span>05</span><span>06</span><span>07</span><span>08</span><span>09</span><span>10</span><span>11</span><span>12</span></span></span>
+  <span class="rh-t" aria-hidden="true"><span class="roll"><span>ExeTix</span><span>The Kill Log</span><span>Solana execution</span><span>Merger Monitor</span><span>Doorly</span><span>PowerLeash</span><span>Abyss Warden</span><span>DeskStatus</span><span>Numerai</span><span>Competitions</span><span>Chess Exchange</span><span>Chelsea Bikes</span></span></span>
+  <span class="rh-of" aria-hidden="true">/ 12</span>
+  <span class="rh-bar" aria-hidden="true"></span>
+</a>
+</body>
+</html>

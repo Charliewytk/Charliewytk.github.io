@@ -18,30 +18,43 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://charliewytk.github.io/media/og/merger-monitor.png">
-<meta name="theme-color" content="#0b1430">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&amp;family=Fraunces:ital,opsz,wght@1,9..144,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+<meta name="theme-color" content="#fbfbf9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0c0b" media="(prefers-color-scheme: dark)">
+<link rel="stylesheet" href="../../assets/site.css">
 <link rel="stylesheet" href="../../tracks/track.css">
 <script src="../../assets/js/merger-stats.js" defer></script>
+<script>
+  // flipping tracks slides the page the way you went (cross-document view transitions; ignored where unsupported)
+  addEventListener('pagereveal', function (e) {
+    var from = e.viewTransition && window.navigation && navigation.activation && navigation.activation.from;
+    if (!from) return;
+    var url = function (sel) { var a = document.querySelector(sel); return a && new URL(a.getAttribute('href'), location.href).href; };
+    if (from.url === url('a.prev')) e.viewTransition.types.add('forward');
+    else if (from.url === url('a.next')) e.viewTransition.types.add('back');
+  });
+</script>
 </head>
-<body style="--bg:#0b1430;--acc:#8fb0ff">
-<div class="grain" aria-hidden="true"></div>
-
-<header class="wrap top">
-  <a href="../../">← Shelf</a>
-  <nav><a href="../">Track 04 / 12</a><a href="../../work/">All work</a><a href="https://wuytackcharlie.gumroad.com/l/mergermonitor">Merger Monitor £5/mo</a></nav>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="site-name" href="../../">Charlie Wuytack</a>
+  <nav class="site-nav" aria-label="Site">
+    <a href="../../work/">Work</a>
+    <a class="opt" href="https://github.com/Charliewytk">GitHub</a>
+    <a class="opt" href="mailto:charlie@wuytack.net">Contact</a>
+    <a class="pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor">Merger Monitor £5/mo</a>
+  </nav>
 </header>
 
-<main>
+<main id="main" style="--hue:#e7c46a">
   <div class="wrap hero">
     <div>
-      <p class="kick">Track 04 · data product · £5/month</p>
-      <h1>Merger Monitor</h1>
+      <p class="kick"><a href="../">Track 04 / 12</a> · data product · £5/month</p>
+      <h1 style="view-transition-name:t-merger-monitor">Merger Monitor</h1>
       <p class="sub">A table of filings, not a tip sheet.</p>
       <p class="lede">I extract the contractual cash price of every US cash merger that has reached a definitive proxy, and price it against the live market. Each figure carries the sentence from the filing it was read from.</p>
     </div>
-    <div class="disc" aria-hidden="true"><div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l3 3v15H6z"/><path d="M9 16l2.5-2.5 2 2L17 11"/></svg><small>TRACK 04</small></div></div>
+    <div class="disc" aria-hidden="true"></div>
   </div>
 
   <div class="wrap"><div class="facts"><div><b><s data-merger-annualised-3pct>24.6%</s></b><span>what a 3% spread looks like annualised. That number is marketing</span></div><div><b><span data-merger-ev-3pct>+1.38%</span></b><span>per deal after break risk, costs and forgone carry</span></div><div><b><span data-merger-breakeven>1.59%</span></b><span>break-even spread. Thinner deals lose money on average</span></div></div></div>
@@ -54,33 +67,37 @@
     <section><h2>The week-late <em>table</em></h2>
       <p>The public table is the same product, published one week late on purpose. 19 August 2026:</p>
       <table class="table">
-        <thead><tr><th>Deal</th><th>Offer / market</th><th>Spread</th></tr></thead>
+        <thead><tr><th>Deal</th><th>Offer / market</th><th class="num">Spread</th></tr></thead>
         <tbody>
-          <tr><td>WBD</td><td>$31.00 / $28.48</td><td>+8.85%</td></tr>
-          <tr><td>SLAB</td><td>$231.00 / $219.29</td><td>+5.34%</td></tr>
-          <tr><td>ACA</td><td>$150.00 / $145.01</td><td>+3.44%</td></tr>
-          <tr><td>AES</td><td>$15.00 / $14.74</td><td>+1.76%</td></tr>
-          <tr><td>CRNX</td><td>$85.00 / $84.75</td><td>+0.29%</td></tr>
+          <tr><td>WBD</td><td>$31.00 / $28.48</td><td class="num">+8.85%</td></tr>
+          <tr><td>SLAB</td><td>$231.00 / $219.29</td><td class="num">+5.34%</td></tr>
+          <tr><td>ACA</td><td>$150.00 / $145.01</td><td class="num">+3.44%</td></tr>
+          <tr><td>AES</td><td>$15.00 / $14.74</td><td class="num">+1.76%</td></tr>
+          <tr><td>CRNX</td><td>$85.00 / $84.75</td><td class="num">+0.29%</td></tr>
         </tbody>
       </table></section>
     <section><h2>What the £5 <em>buys</em></h2>
       <p>The same table, emailed the evening it is built. You pay for the evening, not for a secret.</p>
       <div class="cta">
-        <a class="btn solid" href="https://wuytackcharlie.gumroad.com/l/mergermonitor">Get tonight's table — £5/month</a>
-        <a class="btn" href="../../merger-monitor/">Week-late table</a>
-        <a class="btn" href="../../example/">A worked example</a>
+        <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergermonitor">Get tonight's table — £5/month</a>
+        <a class="btn secondary" href="../../merger-monitor/">Week-late table</a>
+        <a class="btn secondary" href="../../example/">A worked example</a>
       </div>
       <p class="note">Also: <a href="../../sizer/">the calculator</a> · <a href="../../weekly/">free weekly edition</a> · <a href="../../subscribe/">the offer</a>. Filings, not advice.</p></section>
     </div>
     <dl class="liner"><dt>Status</dt><dd>Live product · £5/month · not advice</dd><dt>Ledger</dt><dd>Zero subscribers so far. Take: £0</dd><dt>Scope</dt><dd>US cash mergers that have reached a definitive proxy</dd></dl>
   </div>
-
-  <div class="wrap"></div>
 </main>
 
 <a class="prev wrap" href="../solana/"><small>← Previous · track 03</small> Solana execution</a>
 <a class="next wrap" href="../doorly/"><small>Next · track 05</small><b>Doorly →</b></a>
-<footer class="wrap foot"><span>Charlie Wuytack · <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></span><span>Research and engineering, not financial advice. Nothing here is trading live at a profit.</span></footer>
+<footer class="site-footer">
+  <p class="site-legal">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
+  <nav class="site-nav" aria-label="Contact">
+    <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a>
+    <a href="https://github.com/Charliewytk">GitHub</a>
+  </nav>
+</footer>
 <script>
   // opened straight from the homepage? Back takes you to where you were on it, not to the top
   (function () {
@@ -111,6 +128,12 @@
       if (Math.abs(dx) > 80 && Math.abs(dx) > Math.abs(dy) * 1.8) go(dx < 0 ? 1 : -1);
     }, { passive: true });
   })();
+</script>
+<script>
+  // reduced motion: demo videos wait for a tap instead of looping on their own
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('video[autoplay]').forEach(function (v) { v.removeAttribute('autoplay'); v.pause(); v.controls = true; });
+  }
 </script>
 </body>
 </html>

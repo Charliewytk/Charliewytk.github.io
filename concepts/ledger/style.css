@@ -1,0 +1,321 @@
+/* Ledger — one monospace table of everything shipped or killed.
+   Light: Swiss timetable (paper, ink, signal red). Dark: terminal (black, amber). */
+
+:root {
+  /* Motion tokens (concepts/_content/motion-brief.md §1) */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --spring-bouncy: linear(0, 0.101 6%, 0.305 12%, 0.529 19%, 0.712 25%, 0.852 31%, 0.940 38%, 0.993 44%, 1.018 50%, 1.026 56%, 1.025 62%, 1.021 69%, 1.015 75%, 1.009 81%, 1.005 88%, 1.002 94%, 1);
+  --spring-bouncy-dur: 400ms;
+  --dur-press: 100ms; --dur-exit: 120ms; --dur-fast: 125ms;
+
+  /* Colour */
+  --bg: #f2f1ec;
+  --card: #fbfaf6;
+  --ink: #121211;
+  --muted: #64635c;
+  --rule: rgba(18, 18, 17, 0.13);
+  --rule-strong: #121211;
+  --hover: rgba(18, 18, 17, 0.055);
+  --accent: #d0281b;          /* focus */
+  --killed: #d0281b;
+  --flag: #8a5a00;            /* qualifiers: paper, as-of, not advice */
+  --live: #13804a;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 18px 48px -12px rgba(0, 0, 0, 0.28);
+
+  --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --gutter: 32px;
+  --tools-h: 46px;            /* sticky filter bar; the column heads stick under it */
+  --head-h: 34px;
+  color-scheme: light dark;
+}
+@supports not (transition-timing-function: linear(0, 1)) { :root { --spring-bouncy: var(--ease-out); } }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0a0a09;
+    --card: #141412;
+    --ink: #ebe7dc;
+    --muted: #8d897e;
+    --rule: rgba(235, 231, 220, 0.11);
+    --rule-strong: #ebe7dc;
+    --hover: rgba(255, 176, 0, 0.075);
+    --accent: #ffb000;
+    --killed: #ff5b4c;
+    --flag: #cf9f55;
+    --live: #3ddc84;
+    --shadow: 0 0 0 1px rgba(235, 231, 220, 0.1), 0 18px 48px -12px rgba(0, 0, 0, 0.8);
+  }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 13px/1.45 var(--mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  padding: 0 var(--gutter);
+}
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--accent); color: var(--bg); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ── Header: name left, three links right ───────────────────────────── */
+.top {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+  padding: 28px 0 22px;
+}
+.top h1 { margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 0; }
+.top nav { display: flex; gap: 3ch; }
+.top nav a { color: var(--muted); transition: color var(--dur-fast) var(--ease-out); }
+@media (hover: hover) and (pointer: fine) { .top nav a:hover { color: var(--ink); } }
+
+/* ── Filter bar: sits on the table's top rule, and stays on screen ──── */
+.ledger { position: relative; }
+.tools {
+  position: sticky; top: 0; z-index: 4;
+  display: flex; align-items: center; gap: 16px;
+  height: var(--tools-h); padding-top: 2px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--rule);
+}
+/* The top rule draws once, left to right, on load. */
+.tools::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px;
+  background: var(--rule-strong); transform-origin: 0 50%;
+}
+@keyframes draw { from { transform: scaleX(0); } }
+html.js .tools::before { animation: draw 720ms var(--ease-out) 80ms backwards; }
+.filter { flex: 1; display: flex; align-items: center; position: relative; }
+.filter input {
+  flex: 1; min-width: 0;
+  font: inherit; color: inherit; letter-spacing: inherit;
+  background: none; border: 0; border-radius: 0;
+  padding: 12px 0; outline: none;
+  -webkit-appearance: none; appearance: none;
+}
+.filter input::placeholder { color: var(--muted); opacity: 1; }
+.filter input::-webkit-search-cancel-button { display: none; }
+.tools:has(input:focus-visible) { box-shadow: inset 0 -2px 0 var(--accent); }
+.filter kbd {
+  font: inherit; font-size: 11px; color: var(--muted);
+  border: 1px solid var(--rule); border-radius: 3px; padding: 0 5px; line-height: 16px;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+.filter:has(input:focus) kbd, .filter:has(input:not(:placeholder-shown)) kbd { opacity: 0; }
+#count { color: var(--muted); min-width: 7ch; text-align: right; }
+@media (hover: none), (max-width: 640px) { .filter kbd { display: none; } }
+
+/* ── Table ──────────────────────────────────────────────────────────── */
+/* separate (not collapse) borders, so each row's rule moves with the row during a sort */
+table { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; position: relative; }
+.c-n { width: 4ch; }
+.c-name { width: 16%; }
+.c-kind { width: 15%; }
+.c-status { width: 29%; }
+.c-val { width: 15ch; }
+th, td { text-align: left; vertical-align: top; padding: 11px 16px 11px 0; font-weight: 400; }
+/* Figure: one right edge, shared by the head and the values (px, not ch: the head is a smaller size). */
+td.val { text-align: right; font-weight: 600; padding-right: 16px; white-space: nowrap; }
+
+thead th {
+  position: sticky; top: var(--tools-h); z-index: 3; background: var(--bg);
+  height: var(--head-h); padding: 0; color: var(--muted); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; border-bottom: 1px solid var(--rule);
+}
+thead th.val { padding: 9px 16px 9px 0; text-align: right; }
+thead button {
+  all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 0.75ch;
+  padding: 9px 0; color: inherit;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+thead button:focus-visible { outline: 2px solid var(--accent); outline-offset: 0; }
+thead button::after { content: "↑"; opacity: 0; transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out); }
+thead th[aria-sort] button { color: var(--ink); }
+thead th[aria-sort] button::after { opacity: 1; }
+thead th[aria-sort="descending"] button::after { transform: rotate(180deg); }
+@media (hover: hover) and (pointer: fine) { thead button:hover { color: var(--ink); } }
+
+tbody tr { position: relative; scroll-margin-top: calc(var(--tools-h) + var(--head-h) + 8px); }
+tbody th, tbody td { border-bottom: 1px solid var(--rule); }
+tbody.sorting tr { background-color: var(--bg); } /* opaque while rows settle after a sort */
+tbody tr[hidden] { display: none !important; }
+tbody td.thumb { display: none; }
+tbody td.n { color: var(--muted); }
+tbody th.name { font-weight: 500; }
+/* The whole row opens its link: app.js forwards clicks on the other cells
+   (no table-row overlay, which WebKit may not contain). Phone rows are grids, so there the link itself covers the row. */
+@media (hover: hover) and (pointer: fine) { html.js tbody tr { cursor: pointer; } }
+tbody th.name a:focus-visible { outline: none; }
+tbody tr:has(a:focus-visible) { outline: 2px solid var(--accent); outline-offset: -2px; }
+tbody td.kind { color: var(--muted); }
+tbody td.label { color: var(--muted); text-wrap: pretty; }
+tbody .status small { display: block; color: var(--muted); font-size: 11.5px; margin-top: 2px; text-wrap: pretty; }
+/* Qualifiers ship next to their number, in the flag colour. Never hidden. */
+tbody em, .spec em { font-style: normal; color: var(--flag); }
+tbody td.label em { display: block; font-size: 11.5px; margin-top: 2px; }
+
+/* Status marker: a small square, colour by tone. Text always says the status. */
+tbody .status span::before {
+  content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 1ch; vertical-align: 1px;
+  background: var(--ink);
+}
+tbody tr[data-tone="live"]  .status span::before { background: var(--live); }
+tbody tr[data-tone="paper"] .status span::before { background: var(--flag); }
+tbody tr[data-tone="result"] .status span::before { background: var(--muted); }
+tbody tr[data-tone="demo"]  .status span::before { background: none; box-shadow: inset 0 0 0 1px var(--ink); }
+tbody tr[data-tone="killed"] .status span { color: var(--killed); }
+tbody tr[data-tone="killed"] .status span::before { background: var(--killed); }
+tbody tr[data-tone="killed"] th.name { font-weight: 400; }
+
+/* Touch: press feedback only (no hover anywhere on touch). */
+tbody tr { transition: background-color var(--dur-press) var(--ease-out); }
+@media (hover: none) { tbody tr:active { background: var(--hover); } }
+
+/* ── Hover slab: one element, moved with transform only ─────────────── */
+.slab {
+  position: absolute; left: -12px; right: -12px; top: 0; height: 100px;
+  transform-origin: 0 0; background: var(--hover);
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--dur-exit) var(--ease-out);
+}
+.slab::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--accent); }
+.slab.on { opacity: 1; transition-duration: var(--dur-fast); }
+@media not ((hover: hover) and (pointer: fine)) { .slab { display: none; } }
+/* With the slab on the focused row, its accent bar is the focus ring. */
+@media (hover: hover) and (pointer: fine) {
+  .ledger:has(.slab.on.focus) tbody tr:has(a:focus-visible) { outline: none; }
+}
+/* The filter needs JS; without it the table is simply complete. */
+html:not(.js) .filter, html:not(.js) #count { visibility: hidden; }
+
+/* ── Floating preview ───────────────────────────────────────────────── */
+.preview { position: fixed; left: 0; top: 0; z-index: 10; pointer-events: none; }
+.preview .card {
+  position: relative; --sx: 1; --sy: 1;
+  opacity: 0; transform: scale(0.96); transform-origin: var(--ox, 0) 0;
+  transition: opacity var(--dur-exit) var(--ease-out), transform var(--dur-exit) var(--ease-out);
+}
+.preview.on .card {
+  opacity: 1; transform: none;
+  transition: opacity var(--dur-fast) var(--ease-out), transform var(--spring-bouncy-dur) var(--spring-bouncy);
+}
+/* One opaque surface under the items. It morphs to each item's size with transform
+   only, so a crossfade never shows the table through two half-faded cards. */
+.preview .bg {
+  position: absolute; left: 0; top: 0; width: 320px; height: 240px;
+  border-radius: 4px; background: var(--card);
+  transform: scale(var(--sx), var(--sy)); transform-origin: 0 0;
+  transition: transform 260ms var(--ease-out);
+}
+.preview .card.up .bg { top: auto; bottom: 0; transform-origin: 0 100%; }
+/* Each row's media is cloned once and kept; switching rows crossfades them.
+   Each item keeps its own anchor (.up) until its exit ends, so an outgoing item never jumps. */
+.preview .item {
+  position: absolute; left: 0; top: 0;
+  transform: scale(var(--fit, 1)); transform-origin: 0 0;
+  opacity: 0; filter: blur(2px);
+  transition: opacity 90ms var(--ease-out), filter 90ms var(--ease-out);
+}
+.preview .item.up { top: auto; bottom: 0; transform-origin: 0 100%; }
+.preview .card.snap .bg, .preview .card.snap .item { transition: none !important; }
+.preview .item.on { opacity: 1; filter: none; transition-duration: var(--dur-fast); z-index: 1; }
+.preview img, .preview video {
+  display: block; width: 320px; height: auto; max-width: none;
+  border-radius: 4px; background: var(--card); box-shadow: var(--shadow);
+}
+.preview .portrait img { width: 168px; }
+.preview .spec, .preview .spec-note {
+  width: 320px; margin: 0; padding: 14px 16px;
+  list-style: none; font-size: 12px; line-height: 1.45;
+  background: var(--card); border-radius: 4px; box-shadow: var(--shadow);
+}
+.spec li + li { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--rule); }
+.spec b { display: block; font-weight: 600; font-size: 15px; margin-bottom: 2px; }
+.spec span { color: var(--muted); }
+.spec em { display: block; margin-top: 2px; }
+.spec-note { color: var(--muted); }
+@media (max-width: 640px) { .preview { display: none; } }
+
+/* ── Footer: the site-wide honesty line ─────────────────────────────── */
+.foot { padding: 20px 0 40px; color: var(--muted); }
+.foot p { margin: 0; max-width: 68ch; }
+
+/* ── Mid widths: drop Kind, keep one table ──────────────────────────── */
+@media (max-width: 1080px) {
+  .c-kind, th.kind, td.kind { display: none; }
+  .c-name { width: 21%; }
+  .c-status { width: 30%; }
+}
+
+/* ── Phone: each row becomes a small grid card, still one list ──────── */
+@media (max-width: 640px) {
+  :root { --gutter: 16px; --head-h: 45px; }
+  .top { padding: 8px 0 4px; align-items: center; }
+  .top nav { gap: 0; margin-right: -10px; }
+  /* 44 px tap targets (WCAG 2.5.8 asks for 24) */
+  .top nav a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; }
+  table, thead, tbody, tr, th, td, caption { display: block; }
+  colgroup { display: none; }
+  thead { position: sticky; top: var(--tools-h); z-index: 3; background: var(--bg); }
+  thead tr { display: flex; gap: 20px; border-bottom: 1px solid var(--rule); }
+  thead th { position: static; height: auto; border: 0; }
+  thead button { min-height: 44px; padding: 0; }
+  /* "#" reaches into the gutter, so Name still lines up with the names below */
+  thead th.n { margin-right: -20px; }
+  thead th.n button { box-sizing: border-box; min-width: 44px; margin-left: -13px; padding-left: 13px; }
+  thead th.val, thead th.label { display: none; }
+  thead th.kind { display: block; }
+  /* One tab stop: the figure sits above its label, both on the name's left edge. */
+  tbody tr {
+    display: grid; column-gap: 1ch;
+    grid-template-columns: 3ch minmax(0, 1fr) auto;
+    grid-template-areas:
+      "n name  status"
+      ". kind  kind"
+      ". val   val"
+      ". label label"
+      ". det   det";
+    padding: 12px 0; border-bottom: 1px solid var(--rule);
+  }
+  /* Rows with media carry a still at the right edge, under the status. */
+  tbody tr.has-thumb {
+    grid-template-columns: 3ch minmax(0, 1fr) auto 72px;
+    grid-template-areas:
+      "n name  status status"
+      ". kind  kind   thumb"
+      ". val   val    thumb"
+      ". label label  thumb"
+      ". det   det    thumb";
+  }
+  tbody td.thumb { display: block; grid-area: thumb; justify-self: end; align-self: start; padding: 0; margin: 6px 0 0 4px; }
+  .thumb img {
+    display: block; width: 72px; height: 45px; object-fit: cover;
+    border-radius: 3px; background: var(--card); box-shadow: 0 0 0 1px var(--rule);
+  }
+  .thumb.portrait img { width: 40px; height: 87px; }
+  .thumb.square img { width: 45px; height: 45px; }
+  tbody th.name a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+  tbody th, tbody td { padding: 0; border: 0; }
+  tbody td.n { grid-area: n; }
+  tbody th.name { grid-area: name; }
+  tbody td.kind { grid-area: kind; display: block; font-size: 12px; }
+  tbody td.status { display: contents; }
+  tbody .status span { grid-area: status; text-align: right; white-space: nowrap; padding-left: 1ch; }
+  tbody .status small { grid-area: det; margin-top: 4px; }
+  tbody td.val { grid-area: val; text-align: left; padding: 6px 0 0; }
+  tbody td.val:empty { display: none; }
+  tbody td.label { grid-area: label; padding-top: 1px; }
+  tbody td.val:empty + td.label { padding-top: 6px; }
+}
+
+/* ── Reduced motion (brief §11): nothing moves; fades stay ───────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; transition-delay: 0s !important; }
+  .preview .card, .preview .item, .slab { transition: opacity var(--dur-fast) var(--ease-out) !important; }
+  .preview .card { transform: none; }
+  html.js .tools::before { animation: none; }
+}

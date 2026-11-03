@@ -7,38 +7,45 @@
 <meta name="robots" content="index,follow">
 <meta property="og:title" content="I pre-registered 110 market hypotheses. Nine were real. Zero were tradeable.">
 <meta property="og:type" content="article">
+<link rel="icon" href="../media/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#fbfbf9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0c0b" media="(prefers-color-scheme: dark)">
+<link rel="stylesheet" href="../assets/site.css">
 <style>
-:root{--bg:#f7f7ef;--ink:#22201d;--muted:#5c5850;--line:#c9c6b4;--accent:#a9331f}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-size:16px;line-height:1.72;
- font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
-.shell{max-width:680px;margin:0 auto;padding:64px 24px 96px}
-a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
-a:hover{color:var(--accent);border-color:var(--accent)}
-.eyebrow{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
-h1{font-size:clamp(1.9rem,4.6vw,2.7rem);line-height:1.15;letter-spacing:-.02em;margin:0 0 28px;font-weight:700}
-h2{font-size:1.22rem;margin:44px 0 12px;letter-spacing:-.01em}
-h3{font-size:1.02rem;margin:30px 0 8px}
-p{margin:0 0 18px}
-.note{color:var(--muted);font-size:.92rem;font-style:italic}
-hr{border:0;border-top:1px solid var(--line);margin:38px 0}
-blockquote{margin:20px 0;padding:12px 18px;border-left:3px solid var(--accent);color:var(--muted)}
-code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;background:#efeee4;padding:1px 5px;border-radius:3px}
-.tw{overflow-x:auto;margin:22px 0}
-table{border-collapse:collapse;width:100%;font-size:.9rem;min-width:520px}
-th{text-align:left;padding:9px 10px;border-bottom:2px solid var(--ink);font-size:.7rem;
- letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
-td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-tr:last-child td{border-bottom:0}
-.foot{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);font-size:.88rem;color:var(--muted)}
-</style></head><body><div class="shell">
-<div class="eyebrow"><a href="/">Charlie Wuytack</a> &middot; 28 Aug 2026</div>
+  main { padding: clamp(var(--space-6), 5vw, var(--space-8)) var(--gutter) 0; }
+  .prose { margin-inline: auto; }
+  .prose > time { display: block; font-size: var(--text-sm); color: var(--fg-3); }
+  .prose h1 { margin-top: var(--space-3); font-size: clamp(2rem, 2.2vw + 1.25rem, 3rem); line-height: var(--leading-tight); letter-spacing: var(--tracking-tight); }
+  .prose > * + p { margin-top: 1em; }   /* site.css zeroes p margins after its own flow rule */
+  .prose > :where(h2, h3) + p { margin-top: var(--space-3); }
+  .prose > h1 + .lead { margin-top: var(--space-6); }
+  .prose h2 { font-size: clamp(1.375rem, 1vw + 1rem, 1.75rem); }
+  .prose .table-scroll { margin-block: var(--space-6); }
+  .prose .table td:first-child { color: var(--fg); }
+  .prose hr { margin-block: var(--space-7) 0; }
+  .prose hr + .note { margin-top: var(--space-6); }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="site-name" href="../">Charlie Wuytack</a>
+  <nav class="site-nav" aria-label="Site">
+    <a href="../work/">Work</a>
+    <a href="https://github.com/Charliewytk">GitHub</a>
+    <a href="mailto:charlie@wuytack.net">Contact</a>
+  </nav>
+</header>
+
+<main id="main">
+<article class="prose">
+<time datetime="2026-08-28">28 Aug 2026</time>
 <h1>I pre-registered 110 market hypotheses. Nine were real. Zero were tradeable.</h1>
-<p class='note' style='font-size:1.05rem;font-style:normal;color:var(--muted);margin:-14px 0 26px'>Every anomaly I found was the size of its own trading costs.</p>
+<p class="lead">Every anomaly I found was the size of its own trading costs.</p>
 <p>I spent a year pre-registering hypotheses about markets and testing them. Around 110 of them. Nine produced a real, measurable anomaly. Zero produced one bigger than the cost of trading it.</p>
 <p>That is not a story about markets being efficient. It is a story about a specific, boring, repeatable size: <strong>the edge and the friction turn out to be the same order of magnitude, over and over, in unrelated places.</strong> Once you have seen it nine times you can predict in advance which searches will fail, which is worth more than any of the individual results.</p>
 <p>Here is the whole list, with the number that killed each one.</p>
-<div class='tw'><table><thead><tr><th>the edge</th><th>what eats it</th></tr></thead><tbody><tr><td>Polymarket longshot bias — real, ~2¢</td><td>the spread is 1.5–3¢</td></tr><tr><td>Dip-buying, 503 stocks + 90 ETFs — +20bp in 2016–21</td><td>+2bp in 2021–26, below costs</td></tr><tr><td>The same trade, intraday</td><td>−4bp before any costs at all</td></tr><tr><td>Polymarket liquidity provision, liquid markets</td><td>−$102.59/day per $1,000, <em>after</em> rewards</td></tr><tr><td>Buying both sides to hedge</td><td>−8% locked in at entry</td></tr><tr><td>Following analyst upgrades</td><td>the whole reaction is in the untradeable gap</td></tr><tr><td>A firm&#x27;s track record as a signal</td><td>ρ = 0.005. Three domains, nothing in any</td></tr><tr><td>25 equity factors, 29 &quot;survivors&quot; of multiple-testing correction</td><td>one levered beta bet wearing 29 hats</td></tr><tr><td>13F cloning, 19,000 filings</td><td>survivorship, plus a single regime</td></tr></tbody></table></div>
+<div class="table-scroll"><table class="table"><thead><tr><th>the edge</th><th>what eats it</th></tr></thead><tbody><tr><td>Polymarket longshot bias — real, ~2¢</td><td>the spread is 1.5–3¢</td></tr><tr><td>Dip-buying, 503 stocks + 90 ETFs — +20bp in 2016–21</td><td>+2bp in 2021–26, below costs</td></tr><tr><td>The same trade, intraday</td><td>−4bp before any costs at all</td></tr><tr><td>Polymarket liquidity provision, liquid markets</td><td>−$102.59/day per $1,000, <em>after</em> rewards</td></tr><tr><td>Buying both sides to hedge</td><td>−8% locked in at entry</td></tr><tr><td>Following analyst upgrades</td><td>the whole reaction is in the untradeable gap</td></tr><tr><td>A firm&#x27;s track record as a signal</td><td>ρ = 0.005. Three domains, nothing in any</td></tr><tr><td>25 equity factors, 29 &quot;survivors&quot; of multiple-testing correction</td><td>one levered beta bet wearing 29 hats</td></tr><tr><td>13F cloning, 19,000 filings</td><td>survivorship, plus a single regime</td></tr></tbody></table></div>
 <h2>The part that actually cost me</h2>
 <p>The failures I care about are not the strategies. They are the three times my <em>method</em> was wrong in a way that produced a confident, reproducible, completely false number.</p>
 <p><strong>Filtering on cumulative volume.</strong> I filtered a sample on trading volume to remove illiquid names. Cumulative volume is partly <em>caused by</em> the outcome being measured. That single filter flipped a result from −8bp to +4bp. It was reproducible. It was stable. It was lookahead.</p>
@@ -53,13 +60,22 @@ tr:last-child td{border-bottom:0}
 <p><strong>And one thing I can actually sell.</strong> Merger arbitrage spreads, where the deal price is contractual and printed in an SEC filing rather than inferred. Sixteen live cash deals, every figure carrying the sentence from the filing it came from. A 3% spread over the median 49-day close annualises to 24.6% a year — which is exactly the kind of number this business is normally sold on, and it is worthless. Price it properly, against a 2.4% break rate measured over 1,606 settled deals, a 27% median loss when one breaks, round-trip costs and forgone T-bill carry, and it is worth +1.38% per deal. A 1% spread, which still annualises to something respectable, is −0.57%. Break-even sits at 1.59%.</p>
 <p>That gap — 24.6% versus +1.38% — is the whole thing in one line. The annualised number is marketing. The expected value is the trade.</p>
 <hr>
-<p class='note'>Everything above is measured, and the measurements are wrong in ways I have tried hard to find. If you spot one I missed, I would genuinely rather know.</p>
-<div class="foot">
-The live merger table this ends on is published weekly at
-<a href="/merger-monitor/">charliewytk.github.io/merger-monitor</a>, one week
+<p class="note">Everything above is measured, and the measurements are wrong in ways I have tried hard to find. If you spot one I missed, I would genuinely rather know.</p>
+<p class="note">The live merger table this ends on is published weekly at
+<a href="../merger-monitor/">charliewytk.github.io/merger-monitor</a>, one week
 behind the daily edition. The daily edition is
-<a href="/subscribe/">£5/month</a>. The longer write-up is
-<a href="/essays/90-Hypotheses-Zero-Edges.pdf">here as a PDF</a>, written at an
-earlier count.
-</div>
-</div></body></html>
+<a href="../subscribe/">£5/month</a>. The longer write-up is
+<a href="90-Hypotheses-Zero-Edges.pdf">here as a PDF</a>, written at an
+earlier count.</p>
+</article>
+</main>
+
+<footer class="site-footer">
+  <p class="site-legal">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
+  <nav class="site-nav" aria-label="Contact">
+    <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a>
+    <a href="https://github.com/Charliewytk">GitHub</a>
+  </nav>
+</footer>
+</body>
+</html>

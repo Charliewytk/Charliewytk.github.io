@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Charlie Wuytack</title>
+<meta name="description" content="Charlie Wuytack builds apps, Mac tools, games and honest quant research.">
+<meta name="theme-color" content="#0d0e0c" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#e6e2d8" media="(prefers-color-scheme: light)">
+<link rel="icon" href="/media/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/media/icons/apple-touch-icon.png">
+<script>
+  // Old homepage anchors (/#merger) now live on /work/.
+  (function () {
+    var old = ['merger', 'solana', 'research', 'doorly', 'powerleash', 'abyss', 'exetix', 'chess', 'chelsea', 'numerai', 'competitions', 'deskstatus'];
+    function go() { var id = location.hash.slice(1); if (old.indexOf(id) > -1) location.replace('/work/#' + id); }
+    go();
+    addEventListener('hashchange', go);
+  })();
+</script>
+<link rel="stylesheet" href="style.css">
+<script src="app.js" defer></script>
+</head>
+<body>
+
+<!-- Menu bar: the focused app's name on the left, the clock on the right. -->
+<header class="menubar">
+  <span class="menubar__app" id="app-name">Charlie Wuytack</span>
+  <time class="menubar__clock" id="clock"><span class="clock__date"></span> <span class="clock__time"></span></time>
+</header>
+
+<!-- Desktop: the name, the twelve apps and the honesty line. Everything here is visible without JS. -->
+<main class="desktop" id="desktop">
+  <section class="hello">
+    <h1>Charlie Wuytack</h1>
+  </section>
+
+  <nav class="apps" aria-label="Projects">
+    <ul>
+      <li><a class="app" href="/exetix/" data-app="exetix"><span class="icon icon--img" style="--c:#00c800"><img src="/exetix/img/icon-green.png" alt="" width="64" height="64" draggable="false"></span><span class="label">ExeTix</span></a></li>
+      <li><a class="app" href="/kill-log/" data-app="kill-log"><span class="icon" style="--c:#e5484d"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-tally"/></svg></span><span class="label">The Kill Log</span></a></li>
+      <li><a class="app" href="/tracks/solana/" data-app="solana"><span class="icon" style="--c:#141514"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-watch"/></svg></span><span class="label">Solana execution</span></a></li>
+      <li><a class="app" href="/merger-monitor/" data-app="merger-monitor"><span class="icon" style="--c:#3b6fe0"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-table"/></svg></span><span class="label">Merger Monitor</span></a></li>
+      <li><a class="app" href="/doorly/" data-app="doorly"><span class="icon" style="--c:#f0883e"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-door"/></svg></span><span class="label">Doorly</span></a></li>
+      <li><a class="app" href="/tracks/powerleash/" data-app="powerleash"><span class="icon icon--img icon--own" style="--c:transparent"><img src="/media/powerleash.png" alt="" width="64" height="64" draggable="false"></span><span class="label">PowerLeash</span></a></li>
+      <li><a class="app" href="/abyss-warden/" data-app="abyss-warden"><span class="icon" style="--c:#0e2f47"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-tower"/></svg></span><span class="label">Abyss Warden</span></a></li>
+      <li><a class="app" href="/tracks/deskstatus/" data-app="deskstatus"><span class="icon" style="--c:#2c2d30"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-window"/></svg></span><span class="label">DeskStatus</span></a></li>
+      <li><a class="app" href="/tracks/numerai/" data-app="numerai"><span class="icon" style="--c:#7457f0"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-scatter"/></svg></span><span class="label">Numerai</span></a></li>
+      <li><a class="app" href="/tracks/competitions/" data-app="competitions"><span class="icon" style="--c:#d9a422"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-medal"/></svg></span><span class="label">Competitions</span></a></li>
+      <li><a class="app" href="/tracks/chess-exchange/" data-app="chess-exchange"><span class="icon" style="--c:#efe9dc;--g:#1b1d1f"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-pawn"/></svg></span><span class="label">Chess Exchange</span></a></li>
+      <li><a class="app" href="/chelsea-bikes/" data-app="chelsea-bikes"><span class="icon" style="--c:#1f9bd7"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-bike"/></svg></span><span class="label">Chelsea Bikes</span></a></li>
+    </ul>
+  </nav>
+
+  <p class="honesty">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
+</main>
+
+<!-- Dock: the owner's links, then a tile for each open window. -->
+<nav class="dock" aria-label="Dock">
+  <ul class="dock__list" id="dock">
+    <li><a class="tile" href="/work/"><span class="icon" style="--c:#4b8bf5"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-folder"/></svg></span><span class="tile__label">Work</span></a></li>
+    <li><a class="tile" href="https://github.com/Charliewytk" rel="noopener"><span class="icon" style="--c:#1b1d1f"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-github"/></svg></span><span class="tile__label">GitHub</span></a></li>
+    <li><a class="tile" href="mailto:charlie@wuytack.net"><span class="icon" style="--c:#f2efe8;--g:#1b1d1f"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-mail"/></svg></span><span class="tile__label">Contact</span></a></li>
+    <li class="dock__sep" aria-hidden="true"></li>
+  </ul>
+</nav>
+
+<!-- Open windows (desktop) and sheets (phone) are mounted here from the templates below. -->
+<div class="windows" id="windows"></div>
+
+<!-- Window bodies, cloned on open so closed windows load nothing. Copy is verbatim from concepts/_content/content.json.
+     Each number is written once, in the window's <dl>; the top panels are unlabelled, aria-hidden pictures of those numbers.
+     Two source links are left out until they resolve: the ExeTix web domain (HTTP 402) and the Kill Log file on GitHub (HTTP 404), checked 3 Nov 2026. -->
+<template id="tpl-exetix">
+  <figure class="media media--phones">
+    <img src="/exetix/img/screen-alerts.webp" alt="ExeTix onboarding screen ‘Be first, every time’ with sample alerts: dropping in 10 min, tickets just dropped, restock, resale listed" width="540" height="1173" decoding="async">
+    <img src="/exetix/img/screen-explore.webp" alt="ExeTix Explore tab: ‘5 club nights tonight’ with a flyer for Indie Thursday at Timepiece and a Dropping soon rail" width="540" height="1173" decoding="async">
+    <img src="/exetix/img/screen-drops.webp" alt="ExeTix Drops tab: the next drop counting down and sold-out nights watched for restocks" width="540" height="1173" decoding="async">
+  </figure>
+  <div class="copy">
+    <p class="lede">Pinged the second Exeter tickets drop.</p>
+    <p class="meta">Built and sold · released 29 Sep 2026 · sold Oct 2026</p>
+    <dl class="nums">
+      <div><dt>~1–2 s</dt><dd>from a known release time to the alert</dd></div>
+      <div><dt>£0</dt><dd>seller fees. Sellers keep 100% of their price</dd></div>
+      <div><dt>≈⅓</dt><dd>of a typical student-resale booking fee: card processing, nothing on top</dd></div>
+    </dl>
+    <p class="actions">
+      <a class="btn" href="/exetix/">Open ExeTix</a>
+      <a class="link" href="https://apps.apple.com/gb/app/exetix/id6814591245" rel="noopener">On the App Store</a>
+    </p>
+    <p class="note">ExeTix is independent. It is not affiliated with the University of Exeter, any venue, or any ticketing platform, and it never buys tickets on other platforms for you.</p>
+  </div>
+</template>
+<template id="tpl-kill-log">
+  <figure class="viz viz--tally" aria-hidden="true">
+    <svg viewBox="-4 0 418 76"><path class="k" d="M2 2v26M9 2v26M16 2v26M23 2v26M30 2v26"/><path class="x" d="M-3 25L35 5"/><path class="k" d="M44 2v26M51 2v26M58 2v26M65 2v26M72 2v26"/><path class="x" d="M39 25L77 5"/><path class="k" d="M86 2v26M93 2v26M100 2v26M107 2v26M114 2v26"/><path class="x" d="M81 25L119 5"/><path class="k" d="M128 2v26M135 2v26M142 2v26M149 2v26M156 2v26"/><path class="x" d="M123 25L161 5"/><path class="k" d="M170 2v26M177 2v26M184 2v26M191 2v26M198 2v26"/><path class="x" d="M165 25L203 5"/><path class="k" d="M212 2v26M219 2v26M226 2v26M233 2v26M240 2v26"/><path class="x" d="M207 25L245 5"/><path class="k" d="M254 2v26M261 2v26M268 2v26M275 2v26M282 2v26"/><path class="x" d="M249 25L287 5"/><path class="k" d="M296 2v26M303 2v26M310 2v26M317 2v26M324 2v26"/><path class="x" d="M291 25L329 5"/><path class="k" d="M338 2v26M345 2v26M352 2v26M359 2v26M366 2v26"/><path class="x" d="M333 25L371 5"/><path class="k" d="M380 2v26M387 2v26M394 2v26M401 2v26M408 2v26"/><path class="x" d="M375 25L413 5"/><path class="s" d="M2 48v26M9 48v26M16 48v26M23 48v26M30 48v26"/><path class="s" d="M44 48v26M51 48v26M58 48v26M65 48v26M72 48v26"/><path class="s" d="M86 48v26M93 48v26M100 48v26M107 48v26M114 48v26"/></svg>
+  </figure>
+  <div class="copy">
+    <p class="lede">Research that says no.</p>
+    <p class="meta">Two strategies in small-size live execution tests. Nothing here claims a profit yet</p>
+    <dl class="nums">
+      <div><dt>~170</dt><dd>pre-registered hypotheses across two programmes</dd></div>
+      <div><dt>50 / 65</dt><dd>trading lanes on the second ledger killed, on the record<small>From the lane ledger as of 30 September 2026. Scaling up needs a separate, pre-registered live test.</small></dd></div>
+      <div><dt>p ≈ 1.0</dt><dd>deflated Sharpe of the best of 3,038 model trials. The honest answer</dd></div>
+      <div><dt>110</dt><dd>paper hypotheses. They died to costs.<small>This is a paper book. No live P&amp;L is claimed. No live book is implied.</small></dd></div>
+    </dl>
+    <p class="actions">
+      <a class="btn" href="/kill-log/">Open The Kill Log</a>
+    </p>
+    <p class="note">~£0. Live tests run at tiny size to measure real fills against paper; paper and backtest numbers are labelled as such throughout.</p>
+    <p class="note">Separately, the meme-desk auditor has closed about 70 entry and exit variants as failed or inconclusive, with no pass standing. No position is held in anything listed.</p>
+  </div>
+</template>
+<template id="tpl-solana">
+  <figure class="viz viz--term" aria-hidden="true">
+    <p class="term__row"><span>p50</span><i style="--v:0.275"></i></p>
+    <p class="term__row"><span>p90</span><i style="--v:1"></i></p>
+  </figure>
+  <div class="copy">
+    <p class="lede">Fast enough. Then I measured whether fast mattered.</p>
+    <p class="meta">Live execution test · 0.25 SOL clips since 30 Sep 2026</p>
+    <dl class="nums">
+      <div><dt>0.33 ms</dt><dd>p50, trigger to ready-to-sign sell bytes (p90 1.2 ms)</dd></div>
+      <div><dt>0.4 points</dt><dd>Replayed on the same positions, it improved the average stop fill by 0.4 points<small>Fills are simulated at the estimated landing slot, not landed.</small></dd></div>
+      <div><dt>0.0 bps</dt><dd>median error of my integer AMM quote against the on-chain fill</dd></div>
+    </dl>
+    <p class="actions">
+      <a class="btn" href="/tracks/solana/">Open Solana execution</a>
+    </p>
+  </div>
+</template>
+<template id="tpl-merger-monitor">
+  <!-- Pack line "Zero subscribers. Take: £0. Filings, not advice." is carried by its two verbatim halves, each kept next to its number below:
+       "Zero subscribers so far. Take: £0." (the £5/month qualifier) and "Filings, not advice." (the +1.38% qualifier). Printing it a third time would only repeat them. -->
+  <figure class="viz viz--spread" aria-hidden="true">
+    <span class="spread" style="--v:0.53"><i></i></span>
+  </figure>
+  <div class="copy">
+    <p class="lede">A table of filings, not a tip sheet.</p>
+    <p class="meta">Live · £5/month · not advice</p>
+    <dl class="nums">
+      <div><dt>24.6%</dt><dd>what a 3% spread looks like annualised. That number is marketing</dd></div>
+      <div><dt>+1.38%</dt><dd>per deal after break risk, costs and forgone carry<small>Filings, not advice. A floor, not a ceiling: deals that die before a definitive proxy never enter the sample.</small></dd></div>
+      <div><dt>1.59%</dt><dd>break-even spread. Thinner deals lose money on average</dd></div>
+      <div><dt>£5/month</dt><dd>the same table, emailed the evening it is built<small>Zero subscribers so far. Take: £0.</small></dd></div>
+    </dl>
+    <p class="actions">
+      <a class="btn" href="/merger-monitor/">Open Merger Monitor</a>
+      <a class="link" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" rel="noopener">Pay on Gumroad</a>
+    </p>
+    <p class="note">£5/month on Gumroad. Cancel there. 7-day refund. Nothing here is investment advice. No position is held in anything listed.</p>
+  </div>
+</template>
+<template id="tpl-doorly">
+  <figure class="media">
+    <video src="/media/doorly-demo.mp4" poster="/media/doorly.jpg" muted loop playsinline preload="none" aria-label="Doorly demo video" width="1400" height="972"></video>
+  </figure>
+  <div class="copy">
+    <p class="lede">The cheapest flight isn&#x27;t the cheapest trip.</p>
+    <p class="meta">Demo</p>
+    <dl class="nums">
+      <div><dt>£120 &lt; £130</dt><dd>until you add the journey to the airport<small>Demo fares, labelled as such.</small></dd></div>
+    </dl>
+    <p class="actions">
+      <a class="btn" href="/doorly/">Open Doorly</a>
+    </p>
+  </div>
+</template>
+<template id="tpl-powerleash">
+  <figure class="viz viz--menu" aria-hidden="true">
+    <div class="menu__bar"><img src="/media/powerleash.png" alt="" width="18" height="18"></div>
+    <div class="menu__pop">
+      <p class="menu__row"><i style="--v:0.983"></i></p>
+      <p class="menu__row"><i style="--v:0.712"></i></p>
+    </div>
+  </figure>
+  <div class="copy">
+    <p class="lede">A Mac menu-bar tool with one job.</p>
+    <p class="meta">Download</p>
+    <dl class="nums">
+      <div><dt>42.8 W</dt><dd>held under a sustained 8-thread burn</dd></div>
+      <div><dt>59.0 → 42.7 W</dt><dd>system load, before and after Match Charger</dd></div>
+      <div><dt>−15.6 → −3.5 W</dt><dd>battery flow while plugged in: from draining hard to nearly break-even<small>Battery savings are not quantified yet.</small></dd></div>
+    </dl>
+    <p class="actions">
+      <a class="btn" href="/tracks/powerleash/">Open PowerLeash</a>
+      <a class="link" href="/downloads/PowerLeash.zip" download>PowerLeash.zip</a>
+    </p>
+    <p class="note">Apple Silicon, unsigned. Unzip → drag PowerLeash.app to /Applications → right-click Open. Double-click is blocked by Gatekeeper; that is expected. Battery savings are not quantified yet.</p>
+  </div>
+</template>
+<template id="tpl-abyss-warden">
+  <figure class="media">
+    <video src="/media/abyss.mp4" poster="/media/abyss-poster.jpg" muted loop playsinline preload="none" aria-label="Abyss Warden demo video" width="1400" height="875"></video>
+  </figure>
+  <div class="copy">
+    <p class="lede">Deep-sea tower defence.</p>
+    <p class="meta">Playable</p>
+    <dl class="nums">
+      <div><dt>5</dt><dd>bosses, playable in the browser</dd></div>
+      <div><dt>20</dt><dd>levels, all finished and balance-passed</dd></div>
+    </dl>
+    <p class="actions">
+      <a class="btn" href="/abyss-warden/">Open Abyss Warden</a>
+    </p>
+  </div>
+</template>
+<template id="tpl-deskstatus">
+  <figure class="viz viz--schematic">
+    <div class="sch" aria-hidden="true">
+      <div class="sch__bar"><i></i><i></i><i></i><span class="sch__light"></span></div>
+      <div class="sch__tabs"><i class="is-on"></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="sch__body"><i></i><i></i><i></i><i class="is-short"></i></div>
+    </div>
+    <figcaption>A schematic of the layout, not a screenshot. The real window shows live account data, so it isn't pictured.</figcaption>
+  </figure>
+  <div class="copy">
+    <p class="lede">The whole trading desk in one window.</p>
+    <p class="meta">Shipped · v1.0.3</p>
+    <dl class="nums">
+      <div><dt>7</dt><dd>tabs, a menu-bar status light and a headless mode for scripts</dd></div>
+      <div><dt>Read-only</dt><dd>it can&#x27;t sign anything</dd></div>
+    </dl>
+    <p class="actions">
+      <a class="btn" href="/tracks/deskstatus/">Open DeskStatus</a>
+    </p>
+  </div>
+</template>
+<template id="tpl-numerai">
+  <figure class="viz viz--rounds" aria-hidden="true">
+    <div class="dots"><i class="is-on"></i><i class="is-on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </figure>
+  <div class="copy">
+    <p class="lede">The audit, and a deadline that moves.</p>
+    <p class="meta">Live, unstaked</p>
+    <dl class="nums">
+      <div><dt>1.47</dt><dd>Sharpe of CORR60 over 93 held-out eras, positive in 95% of them</dd></div>
+      <div><dt>1.27</dt><dd>Sharpe of the payout score out of sample, with no losing quarter</dd></div>
+      <div><dt>2</dt><dd>live rounds resolved so far. Too few to stake on; the policy asks for ten</dd></div>
+    </dl>
+    <p class="actions">
+      <a class="btn" href="/tracks/numerai/">Open Numerai</a>
+    </p>
+  </div>
+</template>
+<template id="tpl-competitions">
+  <figure class="viz viz--ranks" aria-hidden="true">
+    <div class="rank">
+      <span class="rank__name">Quantiacs Q25</span>
+      <span class="picks"><i class="is-on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+    </div>
+    <div class="rank">
+      <span class="rank__name">Structural Break</span>
+      <span class="track"><i style="--v:0.197"></i></span>
+    </div>
+  </figure>
+  <div class="copy">
+    <p class="lede">Read deltas, not levels.</p>
+    <p class="meta">Selected</p>
+    <dl class="nums">
+      <div><dt>1 of 15</dt><dd>strategies selected in the Quantiacs Q25 contest<small>In-sample Sharpe 1.22, maximum drawdown 23.6%.</small></dd></div>
+      <div><dt>Gold</dt><dd>on WorldQuant BRAIN, with about 14 alphas live</dd></div>
+      <div><dt>263rd of 1,332</dt><dd>Structural Break</dd></div>
+      <div><dt>−0.0003</dt><dd>live change from two improvements that gained +0.0144 on my holdout</dd></div>
+    </dl>
+    <p class="actions">
+      <a class="btn" href="/tracks/competitions/">Open Competitions</a>
+    </p>
+  </div>
+</template>
+<template id="tpl-chess-exchange">
+  <figure class="media">
+    <video src="/media/chess-demo.mp4" poster="/media/chess.jpg" muted loop playsinline preload="none" aria-label="Chess Exchange demo video" width="1400" height="950"></video>
+  </figure>
+  <div class="copy">
+    <p class="lede">Markets on live games. Play money.</p>
+    <p class="meta">Play money</p>
+    <dl class="nums">
+      <div><dt>W / D / B</dt><dd>from any position you paste in<small>Play money. Not a book, not advice.</small></dd></div>
+      <div><dt>6</dt><dd>liquidity bots around an LMSR market maker</dd></div>
+    </dl>
+    <p class="actions">
+      <a class="btn" href="/tracks/chess-exchange/">Open Chess Exchange</a>
+      <a class="link" href="https://charliewytk.github.io/chess-exchange/" rel="noopener">Try the FEN → WDL demo</a>
+    </p>
+  </div>
+</template>
+<template id="tpl-chelsea-bikes">
+  <figure class="media">
+    <video src="/media/chelsea-demo.mp4" poster="/media/chelsea.jpg" muted loop playsinline preload="none" aria-label="Chelsea Bikes demo video" width="1400" height="972"></video>
+  </figure>
+  <div class="copy">
+    <p class="lede">My local bike shop, rebuilt unasked.</p>
+    <p class="meta">Prototype · Not yet pitched</p>
+    <dl class="nums">
+      <div><dt>11</dt><dd>pages, works offline</dd></div>
+    </dl>
+    <p class="actions">
+      <a class="btn" href="/chelsea-bikes/">Open Chelsea Bikes</a>
+    </p>
+  </div>
+</template>
+
+<!-- Icon glyphs: 60 x 60 grid, 3.4 px strokes in currentColor (set per icon with --g). -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="g-tally" viewBox="0 0 60 60"><path d="M19 17v26M25.5 17v26M32 17v26M38.5 17v26M14 38.5 45 21.5"/></symbol>
+  <symbol id="g-watch" viewBox="0 0 60 60"><circle cx="30" cy="33" r="13"/><path d="M26 13.5h8M30 13.5V20"/><path stroke="#3ddc84" d="M30 33l6-6.5"/></symbol>
+  <symbol id="g-table" viewBox="0 0 60 60"><rect x="14" y="17" width="32" height="26" rx="4"/><path d="M14 25.5h32M14 34.5h32M25 17v26"/></symbol>
+  <symbol id="g-door" viewBox="0 0 60 60"><path d="M21 45V17a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v28M15 45h30"/><circle fill="currentColor" stroke="none" cx="34.5" cy="31" r="2"/></symbol>
+  <symbol id="g-tower" viewBox="0 0 60 60"><path fill="currentColor" stroke="none" d="M22 43V24h-2.5v-8h5v3.5h3.5V16h4v3.5h3.5V16h5v8H38v19z"/><rect fill="#ffd66b" stroke="none" x="28" y="27" width="4" height="7" rx="1"/><path d="M13 48.5q4.25-3 8.5 0t8.5 0 8.5 0 8.5 0"/></symbol>
+  <symbol id="g-window" viewBox="0 0 60 60"><rect x="13" y="16" width="34" height="28" rx="4"/><path d="M13 23.5h34"/><circle fill="#3ddc84" stroke="none" cx="30" cy="34" r="4"/></symbol>
+  <symbol id="g-scatter" viewBox="0 0 60 60"><g fill="currentColor" stroke="none"><circle cx="17.5" cy="41" r="3.3"/><circle cx="24" cy="34" r="3.3"/><circle cx="30.5" cy="37.5" r="3.3"/><circle cx="36.5" cy="27" r="3.3"/><circle cx="43" cy="19.5" r="3.3"/></g></symbol>
+  <symbol id="g-medal" viewBox="0 0 60 60"><path d="M23 13l7 13 7-13"/><circle cx="30" cy="36" r="10.5"/><path fill="currentColor" stroke="none" d="M30 30.5l1.7 3.4 3.8.5-2.7 2.7.6 3.7-3.4-1.8-3.4 1.8.6-3.7-2.7-2.7 3.8-.5z"/></symbol>
+  <symbol id="g-pawn" viewBox="0 0 60 60"><g fill="currentColor" stroke="none"><circle cx="30" cy="19.5" r="6"/><path d="M24.5 27h11l-1.8 3.5c0 5.5 1.8 8.5 5.3 11.5H21c3.5-3 5.3-6 5.3-11.5z"/><rect x="19" y="42" width="22" height="4.5" rx="2.25"/></g></symbol>
+  <symbol id="g-bike" viewBox="0 0 60 60"><circle cx="17.5" cy="37" r="7.5"/><circle cx="42.5" cy="37" r="7.5"/><path d="M17.5 37 25 23.5 29.5 37zM25 23.5h12.5M29.5 37l8-13.5 5 13.5M22 22.5h6.5M35.5 19.5l2 4"/></symbol>
+  <symbol id="g-folder" viewBox="0 0 60 60"><path d="M13 21a3 3 0 0 1 3-3h8.5l3.5 3.5h16a3 3 0 0 1 3 3V40a3 3 0 0 1-3 3H16a3 3 0 0 1-3-3z"/><path d="M13 27h34"/></symbol>
+  <symbol id="g-mail" viewBox="0 0 60 60"><rect x="13" y="18" width="34" height="24" rx="4"/><path d="M14.5 20.5 30 32l15.5-11.5"/></symbol>
+  <symbol id="g-github" viewBox="0 0 60 60"><path fill="currentColor" stroke="none" transform="translate(14 14) scale(2)" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></symbol>
+</svg>
+
+</body>
+</html>

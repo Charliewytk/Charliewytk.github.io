@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Charlie Wuytack</title>
+<meta name="description" content="Charlie Wuytack builds apps, Mac tools, games and honest quant research. Built and sold ExeTix, an iPhone app for Exeter's ticket drops.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f2f1ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a0a09" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/media/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js')</script>
+<link rel="stylesheet" href="style.css">
+<script src="app.js" defer></script>
+</head>
+<body>
+
+<header class="top">
+  <h1>Charlie Wuytack</h1>
+  <nav aria-label="Primary">
+    <a href="/work/">Work</a>
+    <a href="https://github.com/Charliewytk">GitHub</a>
+    <a href="mailto:charlie@wuytack.net">Contact</a>
+  </nav>
+</header>
+
+<main class="ledger" id="ledger">
+  <div class="tools">
+    <label class="filter">
+      <span class="sr">Filter</span>
+      <input id="q" type="search" placeholder="Filter" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go" aria-controls="table">
+      <kbd aria-hidden="true">/</kbd>
+    </label>
+    <output id="count" for="q" aria-live="polite">18</output>
+  </div>
+
+  <!-- The hover highlight. Springs between rows (app.js). -->
+  <div class="slab" aria-hidden="true"></div>
+
+  <table id="table">
+    <caption class="sr">Work</caption>
+    <colgroup>
+      <col class="c-n"><col class="c-name"><col class="c-kind"><col class="c-status"><col class="c-val"><col class="c-label">
+    </colgroup>
+    <thead>
+      <tr>
+        <th scope="col" class="n" aria-sort="ascending"><button type="button" data-sort="n" aria-label="Number">#</button></th>
+        <th scope="col" class="name"><button type="button" data-sort="name">Name</button></th>
+        <th scope="col" class="kind"><button type="button" data-sort="kind">Kind</button></th>
+        <th scope="col" class="status"><button type="button" data-sort="status">Status</button></th>
+        <th scope="col" class="val">Figure</th>
+        <th scope="col" class="label"><span class="sr">Detail</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-n="01" data-tone="done">
+        <td class="n">01</td>
+        <th scope="row" class="name"><a href="/exetix/">ExeTix</a><template><img src="/exetix/img/screen-drops.webp" width="540" height="1173" alt="ExeTix Drops tab: the next drop counting down and sold-out nights watched for restocks" decoding="async"></template></th>
+        <td class="kind">iPhone app</td>
+        <td class="status"><span>Built and sold</span><small>On the App Store · released 29 Sep 2026 · sold Oct 2026</small></td>
+        <td class="val">~1–2 s</td>
+        <td class="label">from a known release time to the alert</td>
+      </tr>
+      <tr data-n="02" data-tone="paper">
+        <td class="n">02</td>
+        <th scope="row" class="name"><a href="/kill-log/">The Kill Log</a><template><ul class="spec"><li><b>~170</b><span>pre-registered hypotheses across two programmes</span></li><li><b>p ≈ 1.0</b><span>deflated Sharpe of the best of 3,038 model trials. The honest answer</span></li><li><b>110</b><span>paper hypotheses. They died to costs.<em>This is a paper book. No live P&amp;L is claimed. No live book is implied.</em></span></li></ul></template></th>
+        <td class="kind">Quant research</td>
+        <td class="status"><span>Research</span><small>Two strategies in small-size live execution tests. Nothing here claims a profit</small></td>
+        <td class="val">50 / 65</td>
+        <td class="label">trading lanes on the second ledger killed, on the record <em>From the lane ledger as of 30 September 2026.</em></td>
+      </tr>
+      <tr data-n="03" data-tone="live">
+        <td class="n">03</td>
+        <th scope="row" class="name"><a href="/tracks/solana/">Solana execution</a><template><ul class="spec"><li><b>0.33 ms</b><span>p50, trigger to ready-to-sign sell bytes (p90 1.2 ms)</span></li><li><b>0.4 points</b><span>Replayed on the same positions, it improved the average stop fill by 0.4 points<em>Fills are simulated at the estimated landing slot, not landed.</em></span></li><li><b>0.0 bps</b><span>median error of my integer AMM quote against the on-chain fill</span></li></ul></template></th>
+        <td class="kind">On-chain infrastructure</td>
+        <td class="status"><span>Live execution test</span><small>0.25 SOL clips since 30 Sep 2026</small></td>
+        <td class="val">0.33 ms</td>
+        <td class="label">p50, trigger to ready-to-sign sell bytes (p90 1.2 ms)</td>
+      </tr>
+      <tr data-n="04" data-tone="live">
+        <td class="n">04</td>
+        <th scope="row" class="name"><a href="/merger-monitor/">Merger Monitor</a><template><ul class="spec"><li><b>24.6%</b><span>what a 3% spread looks like annualised. That number is marketing</span></li><li><b>+1.38%</b><span>per deal after break risk, costs and forgone carry<em>Filings, not advice.</em></span></li><li><b>1.59%</b><span>break-even spread. Thinner deals lose money on average</span></li><li><b>£5/month</b><span>the same table, emailed the evening it is built<em>Zero subscribers so far. Take: £0.</em></span></li></ul></template></th>
+        <td class="kind">Data product · SEC filings</td>
+        <td class="status"><span>Live · £5/month</span><small>Zero subscribers so far. Take: £0.</small></td>
+        <td class="val">+1.38%</td>
+        <td class="label">per deal after break risk, costs and forgone carry <em>Filings, not advice.</em></td>
+      </tr>
+      <tr data-n="05" data-tone="demo">
+        <td class="n">05</td>
+        <th scope="row" class="name"><a href="/doorly/">Doorly</a><template><video src="media/doorly-demo-640.mp4" poster="media/doorly-demo-640.jpg" width="640" height="400" muted loop playsinline preload="none"></video></template></th>
+        <td class="kind">Web + iOS</td>
+        <td class="status"><span>Demo</span></td>
+        <td class="val">£120 &lt; £130</td>
+        <td class="label">until you add the journey to the airport <em>Demo fares, labelled as such</em></td>
+      </tr>
+      <tr data-n="06" data-tone="done">
+        <td class="n">06</td>
+        <th scope="row" class="name"><a href="/tracks/powerleash/">PowerLeash</a><template><img src="/media/powerleash.png" width="512" height="512" alt="" decoding="async"></template></th>
+        <td class="kind">macOS utility</td>
+        <td class="status"><span>Download</span><small>Apple Silicon, unsigned.</small></td>
+        <td class="val">42.8 W</td>
+        <td class="label">held under a sustained 8-thread burn</td>
+      </tr>
+      <tr data-n="07" data-tone="done">
+        <td class="n">07</td>
+        <th scope="row" class="name"><a href="/abyss-warden/">Abyss Warden</a><template><video src="media/abyss-640.mp4" poster="media/abyss-640.jpg" width="640" height="360" muted loop playsinline preload="none"></video></template></th>
+        <td class="kind">Game</td>
+        <td class="status"><span>Playable</span></td>
+        <td class="val">20</td>
+        <td class="label">levels, all finished and balance-passed</td>
+      </tr>
+      <tr data-n="08" data-tone="done">
+        <td class="n">08</td>
+        <th scope="row" class="name"><a href="/tracks/deskstatus/">DeskStatus</a><template><p class="spec-note">The real window shows live account data, so it isn&#x27;t pictured.</p></template></th>
+        <td class="kind">macOS app</td>
+        <td class="status"><span>Shipped · v1.0.3</span></td>
+        <td class="val">Read-only</td>
+        <td class="label">it can&#x27;t sign anything</td>
+      </tr>
+      <tr data-n="09" data-tone="live">
+        <td class="n">09</td>
+        <th scope="row" class="name"><a href="/tracks/numerai/">Numerai</a><template><ul class="spec"><li><b>1.47</b><span>Sharpe of CORR60 over 93 held-out eras, positive in 95% of them</span></li><li><b>1.27</b><span>Sharpe of the payout score out of sample, with no losing quarter</span></li><li><b>2</b><span>live rounds resolved so far. Too few to stake on; the policy asks for ten</span></li></ul></template></th>
+        <td class="kind">Tournament ML</td>
+        <td class="status"><span>Live, unstaked</span></td>
+        <td class="val">2</td>
+        <td class="label">live rounds resolved so far. Too few to stake on; the policy asks for ten</td>
+      </tr>
+      <tr data-n="10" data-tone="result">
+        <td class="n">10</td>
+        <th scope="row" class="name"><a href="/tracks/competitions/">Competitions</a><template><ul class="spec"><li><b>1 of 15</b><span>strategies selected in the Quantiacs Q25 contest<em>In-sample Sharpe 1.22, maximum drawdown 23.6%.</em></span></li><li><b>Gold</b><span>on WorldQuant BRAIN, with about 14 alphas live</span></li><li><b>263rd of 1,332</b><span>Structural Break</span></li><li><b>−0.0003</b><span>live change from two improvements that gained +0.0144 on my holdout</span></li></ul></template></th>
+        <td class="kind">Competitions</td>
+        <td class="status"><span>Selected</span></td>
+        <td class="val">1 of 15</td>
+        <td class="label">strategies selected in the Quantiacs Q25 contest <em>In-sample Sharpe 1.22, maximum drawdown 23.6%.</em></td>
+      </tr>
+      <tr data-n="11" data-tone="demo">
+        <td class="n">11</td>
+        <th scope="row" class="name"><a href="/tracks/chess-exchange/">Chess Exchange</a><template><video src="media/chess-demo-640.mp4" poster="media/chess-demo-640.jpg" width="640" height="400" muted loop playsinline preload="none"></video></template></th>
+        <td class="kind">Markets + engines</td>
+        <td class="status"><span>Play money</span><small>Play money. Not a book, not advice.</small></td>
+        <td class="val">6</td>
+        <td class="label">liquidity bots around an LMSR market maker</td>
+      </tr>
+      <tr data-n="12" data-tone="demo">
+        <td class="n">12</td>
+        <th scope="row" class="name"><a href="/chelsea-bikes/">Chelsea Bikes</a><template><video src="media/chelsea-demo-640.mp4" poster="media/chelsea-demo-640.jpg" width="640" height="400" muted loop playsinline preload="none"></video></template></th>
+        <td class="kind">Web design</td>
+        <td class="status"><span>Prototype</span><small>Not yet pitched</small></td>
+        <td class="val">11</td>
+        <td class="label">pages, works offline</td>
+      </tr>
+      <tr data-n="" data-tone="killed">
+        <td class="n"></td>
+        <th scope="row" class="name"><a href="/work/#programme">Polymarket longshot bias, real: ~2¢</a></th>
+        <td class="kind">Quant research</td>
+        <td class="status"><span>Killed</span></td>
+        <td class="val"></td>
+        <td class="label">the spread is 1.5–3¢</td>
+      </tr>
+      <tr data-n="" data-tone="killed">
+        <td class="n"></td>
+        <th scope="row" class="name"><a href="/work/#programme">Dip-buying, 503 stocks + 90 ETFs: +20bp in 2016–21</a></th>
+        <td class="kind">Quant research</td>
+        <td class="status"><span>Killed</span></td>
+        <td class="val">+2bp</td>
+        <td class="label">in 2021–26, below costs</td>
+      </tr>
+      <tr data-n="" data-tone="killed">
+        <td class="n"></td>
+        <th scope="row" class="name"><a href="/work/#programme">Polymarket liquidity provision, liquid markets</a></th>
+        <td class="kind">Quant research</td>
+        <td class="status"><span>Killed</span></td>
+        <td class="val">−$102.59/day</td>
+        <td class="label">per $1,000 (paper), after rewards</td>
+      </tr>
+      <tr data-n="" data-tone="killed">
+        <td class="n"></td>
+        <th scope="row" class="name"><a href="/work/#programme">Following analyst upgrades</a></th>
+        <td class="kind">Quant research</td>
+        <td class="status"><span>Killed</span></td>
+        <td class="val"></td>
+        <td class="label">the whole reaction is in the untradeable gap</td>
+      </tr>
+      <tr data-n="" data-tone="killed">
+        <td class="n"></td>
+        <th scope="row" class="name"><a href="/work/#programme">25 equity factors, 29 survivors of multiple-testing correction</a></th>
+        <td class="kind">Quant research</td>
+        <td class="status"><span>Killed</span></td>
+        <td class="val"></td>
+        <td class="label">one levered beta bet wearing 29 hats</td>
+      </tr>
+      <tr data-n="" data-tone="killed">
+        <td class="n"></td>
+        <th scope="row" class="name"><a href="/work/#programme">13F cloning, 19,000 filings</a></th>
+        <td class="kind">Quant research</td>
+        <td class="status"><span>Killed</span></td>
+        <td class="val"></td>
+        <td class="label">survivorship, plus a single regime</td>
+      </tr>
+    </tbody>
+  </table>
+</main>
+
+<footer class="foot">
+  <p>Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
+</footer>
+
+<!-- Floating media preview. Follows the pointer (or the focused row) on a spring. -->
+<div class="preview" aria-hidden="true"><div class="card"><div class="bg"></div></div></div>
+
+</body>
+</html>

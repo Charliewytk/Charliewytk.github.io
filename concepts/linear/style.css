@@ -1,0 +1,391 @@
+/* Linear concept — near-black, 8px grid, one glow, one light sweep, one spring system.
+   Every size and gap is a multiple of 8px (4px for hairline details). */
+
+:root {
+  color-scheme: dark;
+
+  /* colour. --faint is 5.9:1 on --surface and 5.3:1 on the lightest panel, so the
+     honesty lines that use it pass WCAG AA at 12px. */
+  --bg: #08090a;
+  --surface: #0e0f11;
+  --surface-2: #131417;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-hi: rgba(255, 255, 255, 0.16);
+  --ink: #f7f8f8;
+  --muted: #9a9fa8;
+  --faint: #8a8f98;
+  --glow: rgba(140, 160, 255, 0.26);
+
+  /* type */
+  --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* layout */
+  --gutter: 32px;
+  --gap: 16px;
+  --radius: 16px;
+  --tap: 40px;
+
+  /* motion tokens (house rules, motion-brief.md §1). Card lift and press are real
+     springs in app.js; the ExeTix fan rides --spring-bouncy. */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --spring-bouncy: linear(0, 0.101 6%, 0.305 12%, 0.529 19%, 0.712 25%, 0.852 31%, 0.940 38%, 0.993 44%, 1.018 50%, 1.026 56%, 1.025 62%, 1.021 69%, 1.015 75%, 1.009 81%, 1.005 88%, 1.002 94%, 1);
+  --spring-bouncy-dur: 400ms;
+  --dur-press: 100ms; --dur-fast: 125ms; --dur-base: 180ms; --dur-slow: 260ms; --stagger: 40ms;
+  --dur-sweep: 700ms;
+  --dur-fan: 640ms; /* the bouncy curve, stretched so the fan's overshoot reads */
+}
+@supports not (transition-timing-function: linear(0, 1)) {
+  :root { --spring-bouncy: var(--ease-out); }
+}
+
+/* ---------- base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; background: var(--bg); overflow-x: clip; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 400 16px/1.5 var(--sans); letter-spacing: -0.005em;
+  font-optical-sizing: auto; font-feature-settings: "cv11", "ss01";
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+h1, h2, p { margin: 0; }
+a { color: inherit; text-decoration: none; }
+a, button { -webkit-tap-highlight-color: transparent; }
+img, video { display: block; max-width: 100%; }
+::selection { background: rgba(140, 160, 255, 0.32); }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 8px; }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+.wrap { width: 100%; max-width: 1248px; margin-inline: auto; padding-inline: var(--gutter); }
+
+.skip { position: absolute; left: 16px; top: -64px; z-index: 100; padding: 8px 16px; border-radius: 8px; background: var(--ink); color: var(--bg); font-weight: 500; }
+.skip:focus-visible { top: 16px; }
+
+/* ---------- nav: frosted bar fades in once you scroll ---------- */
+.nav { position: sticky; top: 0; z-index: 50; height: 64px; }
+.nav::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: rgba(8, 9, 10, 0.8);
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+}
+.nav::after { content: ""; position: absolute; inset: auto 0 0 0; height: 1px; background: var(--line); }
+.nav-in { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.mark { font-weight: 600; font-size: 15px; letter-spacing: -0.015em; min-height: var(--tap); display: inline-flex; align-items: center; }
+.nav nav { display: flex; gap: 8px; margin-right: -8px; }
+.nav nav a, .foot-row a {
+  font-size: 14px; color: var(--muted); padding: 0 8px; border-radius: 8px;
+  min-height: var(--tap); display: inline-flex; align-items: center;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+/* ---------- hero: the page's single glow, a wide ellipse behind the headline ----------
+   It spans most of the first screen and drifts slowly (transform only); body clips it. */
+.hero { position: relative; isolation: isolate; padding-top: 96px; padding-bottom: 64px; }
+.hero::before {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  left: calc(var(--gutter) - 320px); top: -240px; width: 1360px; height: 760px;
+  background: radial-gradient(closest-side, var(--glow), rgba(140, 160, 255, 0.08) 55%, transparent);
+  will-change: transform;
+}
+.hero h1 {
+  max-width: 14ch;
+  font-size: clamp(2.75rem, 6vw + 1rem, 5rem); font-weight: 600;
+  line-height: 1.02; letter-spacing: -0.04em; text-wrap: balance;
+}
+
+/* ---------- bento ---------- */
+.bento {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--gap);
+}
+.cell { position: relative; display: flex; min-width: 0; }
+.w2 { grid-column: span 2; } .w3 { grid-column: span 3; }
+.w4 { grid-column: span 4; } .w6 { grid-column: span 6; }
+
+.card {
+  position: relative; isolation: isolate; flex: 1; min-width: 0;
+  display: flex; flex-direction: column;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+
+/* Each card takes two shared rows (preview, footer) through subgrid, so footers line up
+   across a row whatever their text length. Comes after .card so it wins; tablet and up only.
+   (No container-type on .card: layout containment would turn the subgrid off.) */
+@media (min-width: 641px) {
+  @supports (grid-template-rows: subgrid) {
+    .cell, .card { grid-row: span 2; display: grid; grid-template-rows: subgrid; row-gap: 0; }
+  }
+}
+/* lift shadow lives on its own layer; only its opacity moves */
+.card::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+  box-shadow: 0 32px 64px -24px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  opacity: 0; transition: opacity var(--dur-base) var(--ease-out);
+}
+.card:focus-visible { outline-offset: 4px; border-radius: var(--radius); border-color: var(--line-hi); }
+.card:focus-visible::before { opacity: 1; }
+
+/* .sw = clipped overlay: pointer highlight (::before) and the light sweep (::after).
+   app.js writes --mx/--my here only, so the card's media never restyles. */
+.sw { position: absolute; inset: 0; z-index: 2; border-radius: inherit; overflow: hidden; pointer-events: none; }
+.sw::before {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, 0.06), transparent 70%);
+  opacity: 0; transition: opacity var(--dur-base) var(--ease-out);
+}
+.sw::after {
+  content: ""; position: absolute; inset: -1px; width: 50%;
+  background: linear-gradient(100deg, transparent 0%, rgba(255, 255, 255, 0.14) 50%, transparent 100%);
+  transform: translateX(-120%) skewX(-12deg); opacity: 0;
+}
+
+/* preview area */
+.pv { position: relative; flex: 1; min-height: 240px; overflow: clip; border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0; }
+.tall .pv { min-height: 400px; }
+
+/* card footer: name + line, then status. Narrow cards stack; wide cards put status on the right. */
+.meta {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 16px 24px 24px; border-top: 1px solid var(--line);
+}
+@media (min-width: 1025px) {
+  :is(.w4, .w6) .meta { flex-direction: row; align-items: baseline; justify-content: space-between; gap: 24px; }
+}
+@media (min-width: 641px) and (max-width: 1024px) {
+  :is(.cell:first-child, .cell:last-child) .meta { flex-direction: row; align-items: baseline; justify-content: space-between; gap: 24px; }
+}
+.meta h2 { font-size: 15px; font-weight: 400; line-height: 1.45; letter-spacing: -0.01em; color: var(--muted); text-wrap: pretty; }
+.meta .nm { color: var(--ink); font-weight: 600; }
+
+/* One style for every honesty line: the preview's last line (.q) and the status (.st). */
+.q, .st { font: 500 12px/1.45 var(--mono); letter-spacing: 0; color: var(--faint); max-width: 48ch; text-wrap: pretty; }
+
+/* ---------- stat previews: number on top, its picture at the bottom (numbers never animate) ---------- */
+.pv-stat { display: flex; flex-direction: column; gap: 8px; padding: 24px; }
+.pv-stat > :is(.lanes, .ruler, .dots, .ds) { margin-top: auto; }
+.pv-stat > :is(.lanes, .ruler, .dots, .ds) + .q { margin-top: 8px; }
+.pv-stat > .lab + .q { margin-top: auto; } /* a card without a picture keeps its honesty line at the foot */
+.num {
+  font-size: clamp(2.5rem, 2vw + 1.75rem, 3.5rem); font-weight: 600; line-height: 1;
+  letter-spacing: -0.04em; font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.lab { font-size: 14px; line-height: 1.45; color: var(--muted); max-width: 40ch; text-wrap: pretty; }
+.num-word { font-variant-numeric: normal; }
+/* product icons sit above their number, so the picture alone fills the lower half */
+.app-icon { width: 48px; height: 48px; border-radius: 11px; box-shadow: 0 0 0 1px var(--line); margin-bottom: 16px; }
+
+/* Kill Log: 65 lanes, 13 × 5, filling the card's width so 50/65 is the picture.
+   Filled = killed (50); outlined = everything else (15). The fill is its own layer: the
+   first time the grid is in view (app.js adds .in) the 50 fills spring in on a diagonal,
+   staggered over 300 ms at most (--d). Opacity and transform only; the numbers never move. */
+.lanes { display: grid; grid-template-columns: repeat(13, minmax(0, 1fr)); gap: 4px; }
+.lanes i { position: relative; aspect-ratio: 1; border-radius: 4px; box-shadow: inset 0 0 0 1px var(--line-hi); }
+.lanes .k::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; background: rgba(255, 255, 255, 0.6);
+  transition: opacity var(--dur-fast) var(--ease-out) var(--d, 0ms), transform var(--spring-bouncy-dur) var(--spring-bouncy) var(--d, 0ms);
+}
+.spring .lanes:not(.in) .k::after { opacity: 0; transform: scale(0.4); }
+
+/* Rulers. Solana: p50 / p90 on 0–1.5 ms, minor ticks every 0.25 ms. PowerLeash: 59.0 → 42.7 W
+   on 0–80 W (--seg = 10 W). Merger Monitor (.plain): one ink band, +1.38% of a 24.6% track. */
+.ruler {
+  position: relative; height: 32px; margin-bottom: 16px;
+  background: repeating-linear-gradient(90deg, var(--line-hi) 0 1px, transparent 1px var(--seg, calc(100% / 6))) bottom / 100% 8px no-repeat;
+  border-bottom: 1px solid var(--line-hi);
+}
+.ruler.plain { height: 8px; background: none; }
+.band { position: absolute; left: 0; bottom: -2px; width: var(--w); height: 3px; border-radius: 2px; background: var(--ink); }
+.tick { position: absolute; left: var(--at); bottom: 0; transform: translateX(-50%); padding-bottom: 16px; font: 500 12px/1 var(--mono); color: var(--muted); }
+.tick::after { content: ""; position: absolute; left: 50%; bottom: -1px; width: 2px; height: 16px; margin-left: -1px; background: var(--ink); border-radius: 1px; }
+.tick.was { color: var(--faint); }
+.tick.was::after { background: var(--faint); }
+.end { position: absolute; top: calc(100% + 4px); left: 0; font: 500 12px/1 var(--mono); color: var(--faint); }
+.end + .end { left: auto; right: 0; }
+
+/* DeskStatus: the /work/ schematic, reduced to shapes. Frame, status light, seven tabs,
+   two blank panels; no text and no data. */
+.ds { border: 1px solid var(--line-hi); border-radius: 8px; overflow: hidden; background: var(--bg); }
+.ds-bar { display: flex; align-items: center; gap: 4px; height: 16px; padding: 0 8px; border-bottom: 1px solid var(--line); }
+.ds-bar i { width: 6px; height: 6px; border-radius: 50%; background: var(--line-hi); }
+.ds-bar b { width: 6px; height: 6px; margin-left: auto; border-radius: 50%; background: var(--ink); }
+.ds-tabs { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; padding: 4px 8px; border-bottom: 1px solid var(--line); }
+.ds-tabs i { height: 8px; border-radius: 2px; background: var(--line); }
+.ds-tabs i:first-child { background: rgba(255, 255, 255, 0.32); }
+.ds-body { display: grid; grid-template-columns: 1.2fr 1fr; gap: 1px; background: var(--line); }
+.ds-body > div { display: flex; flex-direction: column; gap: 8px; min-height: 56px; padding: 8px; background: var(--bg); }
+.ds-body i { height: 4px; border-radius: 2px; background: var(--line-hi); }
+.ds-body i:nth-child(2) { width: 72%; } .ds-body i:nth-child(3) { width: 86%; }
+
+/* Numerai / Competitions dots */
+.dots { display: flex; flex-wrap: wrap; gap: 4px; }
+.dots i { width: 12px; height: 12px; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--line-hi); }
+.dots .on { background: var(--ink); box-shadow: none; }
+
+/* ExeTix: number left, three screens fanned right. Phones are sized and spread in % of
+   their own width, so the fan stays inside the card at every width. */
+.pv-exetix { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); }
+.pv-exetix .stat { display: flex; flex-direction: column; gap: 8px; padding: 24px; }
+.fan { position: relative; }
+.fan img {
+  position: absolute; left: 50%; bottom: -24px; width: clamp(120px, 40%, 200px); height: auto; translate: -50% 0;
+  border-radius: 24px; box-shadow: 0 0 0 1px var(--line-hi), 0 24px 48px -8px rgba(0, 0, 0, 0.7);
+  transition: transform var(--dur-fan) var(--spring-bouncy);
+}
+.fan img:nth-child(2) { z-index: 1; }
+/* resting fan; --stack is where the entry starts (see motion) */
+.fan img:nth-child(1) { transform: translate(-58%, 6%) rotate(-6deg); --stack: translate(-8%, 14%) rotate(-2deg); }
+.fan img:nth-child(2) { transform: translateY(-2%); --stack: translateY(12%); }
+.fan img:nth-child(3) { transform: translate(58%, 6%) rotate(6deg); --stack: translate(8%, 14%) rotate(2deg); }
+/* hover or keyboard focus opens it wider (CSS transitions retarget, so it never jumps) */
+.card:focus-visible .fan img:nth-child(1) { transform: translate(-60%, 2%) rotate(-8deg); }
+.card:focus-visible .fan img:nth-child(2) { transform: translateY(-6%); }
+.card:focus-visible .fan img:nth-child(3) { transform: translate(60%, 2%) rotate(8deg); }
+
+/* media previews: poster and video fill the box identically (object-fit applies to both).
+   On wider screens Doorly drops its bright lower tray (16:7, top-anchored). The Abyss Warden
+   clip itself is 21:9 with the HUD cropped out; on phone the 16:9 box trims its sides. */
+.pv-media { min-height: 0; aspect-ratio: 16 / 10; background: var(--surface-2); }
+.pv-wide { aspect-ratio: 16 / 9; }
+.pv-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+@media (min-width: 641px) {
+  .pv-top { aspect-ratio: 16 / 7; }
+  .pv-top video { object-position: top; }
+  .pv-wide { aspect-ratio: 21 / 9; }
+}
+
+/* Pause / play: always there for a looping clip (WCAG 2.2.2), quiet until the card is
+   hovered or focused. It follows its card link in the tab order and sits at the preview's
+   bottom right, clear of in-game HUDs: a margin % is a share of the cell's width, so
+   --pvr (= 1 / the preview's aspect ratio) puts it on the preview's bottom edge. */
+.cell { --pvr: 62.5%; }
+.cell:has(.pv-wide) { --pvr: 56.25%; }
+@media (min-width: 641px) {
+  .cell:has(.pv-top) { --pvr: 43.75%; }
+  .cell:has(.pv-wide) { --pvr: 42.857%; }
+}
+.play {
+  position: absolute; top: 0; right: 16px; z-index: 3; margin-top: calc(var(--pvr) - 60px);
+  width: 44px; height: 44px; display: grid; place-items: center; padding: 0;
+  border-radius: 50%; border: 1px solid var(--line-hi); color: var(--ink); cursor: pointer;
+  background: rgba(8, 9, 10, 0.8); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  opacity: 0.72;
+  transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-press) var(--ease-out);
+}
+.play[hidden] { display: none; }
+/* Where anchor positioning exists, pin it to the preview's real corner (a stretched
+   preview in a tall row is taller than its aspect ratio). */
+@supports (anchor-scope: all) {
+  .cell { anchor-scope: --pv; }
+  .pv-media { anchor-name: --pv; }
+  .play { position-anchor: --pv; top: auto; right: anchor(right); bottom: anchor(bottom); margin: 0 16px 16px 0; }
+}
+/* Chelsea Bikes' clip has its own WhatsApp pill in that corner, so its button sits 48px
+   higher and the two never stack. */
+.cell:has(.pv-busy) .play { margin-top: calc(var(--pvr) - 108px); }
+@supports (anchor-scope: all) { .cell:has(.pv-busy) .play { margin: 0 16px 64px 0; } }
+.cell:hover .play, .cell:focus-within .play { opacity: 1; }
+.play:active { transform: scale(0.94); }
+@media (hover: none), (prefers-reduced-motion: reduce) { .play { opacity: 1; } }
+.play::before { content: ""; width: 12px; height: 14px; margin-left: 2px; background: currentColor; clip-path: polygon(0 0, 100% 50%, 0 100%); }
+.play[data-playing]::before { margin-left: 0; clip-path: polygon(0 0, 35% 0, 35% 100%, 0 100%, 0 0, 65% 0, 100% 0, 100% 100%, 65% 100%, 65% 0); }
+
+
+/* ---------- footer ---------- */
+.foot { padding-top: 96px; padding-bottom: 48px; }
+.honest { font-size: 13px; color: var(--muted); padding: 24px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.foot-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding-top: 24px; font-size: 14px; color: var(--faint); }
+.foot-row a { margin-right: -8px; }
+
+/* ---------- hover: fine pointers only, so touch never sticks ---------- */
+@media (hover: hover) and (pointer: fine) {
+  .nav nav a:hover, .foot-row a:hover { color: var(--ink); }
+  .card:hover { border-color: var(--line-hi); }
+  .card:hover::before, .card:hover .sw::before { opacity: 1; }
+  .card:hover .fan img:nth-child(1) { transform: translate(-60%, 2%) rotate(-8deg); }
+  .card:hover .fan img:nth-child(2) { transform: translateY(-6%); }
+  .card:hover .fan img:nth-child(3) { transform: translate(60%, 2%) rotate(8deg); }
+}
+
+/* ---------- motion ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not(.spring) .card { transition: transform var(--spring-bouncy-dur) var(--spring-bouncy), border-color var(--dur-fast) var(--ease-out); }
+  :root:not(.spring) .card:active { transform: scale(0.985); transition-duration: var(--dur-press); }
+
+  /* hero lands once: blur + 8px, under 300ms total */
+  .hero h1 { animation: enter var(--dur-slow) var(--ease-out) backwards; }
+  @keyframes enter { from { opacity: 0; transform: translateY(8px); filter: blur(4px); } }
+
+  /* the glow breathes: a 24 s drift on transform only */
+  .hero::before { animation: drift 24s var(--ease-in-out) infinite alternate; }
+  @keyframes drift { to { transform: translate3d(14%, 8%, 0) scale(1.1); } }
+
+  /* ExeTix fan springs open once, just after the hero lands (it sits above the fold) */
+  .fan img { animation: fan-in var(--dur-fan) var(--spring-bouncy) 200ms backwards; }
+  .fan img:nth-child(2) { animation-delay: 160ms; }
+  @keyframes fan-in { from { transform: var(--stack); } }
+
+  /* one light sweep per card, the first time it comes into view (app.js adds .lit) */
+  .cell.lit .sw::after { animation: sweep var(--dur-sweep) var(--ease-in-out) calc(min(var(--i, 0), 7) * var(--stagger)) both; }
+}
+@keyframes sweep {
+  0% { opacity: 1; }
+  100% { opacity: 1; transform: translateX(320%) skewX(-12deg); }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .cell { view-timeline: --cell block; }
+    /* media settles in as it enters; numbers and labels never fade */
+    .pv-media video {
+      animation: settle linear both;
+      animation-timeline: --cell;
+      animation-range: entry 0% entry 60%;
+    }
+    @keyframes settle { from { opacity: 0.4; transform: scale(1.04); } }
+
+    /* nav bar and hairline fade in over the first 64px of scroll; at the top the glow runs under it */
+    .nav::before, .nav::after { animation: hairline linear both; animation-timeline: scroll(root); animation-range: 0 64px; }
+    @keyframes hairline { from { opacity: 0; } }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important; transition-delay: 0s !important; scroll-behavior: auto !important;
+  }
+  .sw::after { display: none; }
+}
+
+/* ---------- tablet: 2 columns ---------- */
+@media (max-width: 1024px) {
+  .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .w2, .w3, .w4, .w6 { grid-column: span 1; }
+  .cell:first-child, .cell:last-child { grid-column: span 2; }
+  .tall .pv { min-height: 400px; }
+}
+
+/* ---------- phone: 1 column, 16px gutters, 44px targets ---------- */
+@media (max-width: 640px) {
+  :root { --gutter: 16px; --gap: 16px; --tap: 44px; }
+  .nav { height: 56px; }
+  .nav nav { gap: 0; }
+  .hero { padding-top: 88px; padding-bottom: 48px; }
+  .hero::before { left: -240px; top: -200px; width: calc(100vw + 240px); height: 600px; }
+  .bento { grid-template-columns: minmax(0, 1fr); }
+  .cell:first-child, .cell:last-child { grid-column: auto; }
+  .pv-stat, .pv-exetix .stat { min-height: 0; padding: 24px 16px 16px; }
+  .pv-stat > :is(.lanes, .ruler, .dots, .ds) { margin-top: 16px; }
+  .pv-exetix { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 240px; }
+  .tall .pv { min-height: 0; }
+  /* Chess Exchange: a square framed on the first live board and its price row. The video box
+     is the full 1120×700 frame scaled up (x 0–360, y 80–440 is in view), so no transform. */
+  .pv-board { aspect-ratio: 1; }
+  .pv-board video { inset: auto; left: 0; top: -22.222%; width: 311.111%; height: 194.444%; max-width: none; object-fit: fill; transform-origin: 16% 37%; }
+  .cell:has(.pv-board) { --pvr: 100%; }
+  .fan img { bottom: -88px; width: clamp(120px, 37%, 148px); border-radius: 20px; } /* ≤ 321px tall, so it never reaches the label */
+  .meta { padding: 16px; }
+}

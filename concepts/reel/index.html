@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Charlie Wuytack</title>
+<meta name="description" content="Charlie Wuytack. I'd rather build than consume.">
+<meta name="theme-color" content="#070807">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="/media/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Inter with the optical-size axis: the big titles render as Inter Display -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#exetix">Skip to ExeTix</a>
+
+<!--
+  REEL. One chapter per project, each exactly one screen tall.
+  Every chapter has the same two layers:
+    .cap    title, status and honesty notes (sits on top)
+    .media  the picture: a film, phone screens, or a "plate" (the key number, set huge)
+  Plates set data-shot="side|right|centre|icon" so each cut lands on a different composition.
+  The scroll-driven wipe lives in style.css (section 7). app.js plays and pauses films,
+  marks the current chapter, and turns rail clicks into an interruptible cut.
+  Copy and numbers come verbatim from concepts/_content/content.json.
+  Films in ./media are the site's own recordings, re-cut: Abyss without its 0.5 s title flash,
+  Doorly from its results (4.9 s) and Chess from its first 3 s (its own top bar cropped),
+  each played forward then back so it loops without a jump. Chelsea is the original, copied.
+  Films start below the header, so our header never sits on a recording's own UI.
+-->
+
+<header class="top">
+  <a class="top__name" href="/">Charlie Wuytack</a>
+  <nav class="top__nav" aria-label="Site">
+    <a href="/work/">Work</a>
+    <a href="https://github.com/Charliewytk">GitHub</a>
+    <a href="mailto:charlie@wuytack.net">Contact</a>
+  </nav>
+</header>
+
+<!-- Progress rail. The fill is a CSS scroll timeline; app.js marks the current tick. -->
+<nav class="rail" aria-label="Chapters">
+  <span class="rail__fill" aria-hidden="true"></span>
+  <ol>
+    <li style="--i:1"><a href="#exetix"><span>ExeTix</span></a></li>
+    <li style="--i:2"><a href="#kill-log"><span>The Kill Log</span></a></li>
+    <li style="--i:3"><a href="#solana"><span>Solana execution</span></a></li>
+    <li style="--i:4"><a href="#merger"><span>Merger Monitor</span></a></li>
+    <li style="--i:5"><a href="#doorly"><span>Doorly</span></a></li>
+    <li style="--i:6"><a href="#powerleash"><span>PowerLeash</span></a></li>
+    <li style="--i:7"><a href="#abyss"><span>Abyss Warden</span></a></li>
+    <li style="--i:8"><a href="#deskstatus"><span>DeskStatus</span></a></li>
+    <li style="--i:9"><a href="#numerai"><span>Numerai</span></a></li>
+    <li style="--i:10"><a href="#competitions"><span>Competitions</span></a></li>
+    <li style="--i:11"><a href="#chess"><span>Chess Exchange</span></a></li>
+    <li style="--i:12"><a href="#chelsea"><span>Chelsea Bikes</span></a></li>
+  </ol>
+</nav>
+
+<main id="reel">
+
+  <!-- Title card -->
+  <section class="ch intro" id="top" aria-labelledby="intro-t">
+    <div class="cap">
+      <h1 class="intro__name" id="intro-t"><span>Charlie</span> <span>Wuytack</span></h1>
+      <p class="intro__line">I'd rather build than consume.</p>
+    </div>
+    <div class="media" aria-hidden="true">
+      <!-- the reel's own first frames, dimmed and drifting: a preview of what follows -->
+      <div class="intro__wall">
+        <img src="media/abyss-play.webp" width="960" height="540" alt="" decoding="async">
+        <img src="media/chess-live.webp" width="1120" height="654" alt="" decoding="async">
+        <img src="media/chelsea-demo.webp" width="1120" height="700" alt="" decoding="async">
+        <img src="media/doorly-results.webp" width="1120" height="700" alt="" decoding="async">
+        <img src="media/chess-live.webp" width="1120" height="654" alt="" decoding="async">
+        <img src="media/chelsea-demo.webp" width="1120" height="700" alt="" decoding="async">
+        <img src="media/doorly-results.webp" width="1120" height="700" alt="" decoding="async">
+        <img src="media/abyss-play.webp" width="960" height="540" alt="" decoding="async">
+      </div>
+    </div>
+  </section>
+
+  <!-- ExeTix: real App Store screens -->
+  <section class="ch phones" id="exetix" aria-labelledby="exetix-t" style="--tint:#3ddc84; --bg:#06130b">
+    <div class="cap">
+      <h2 class="cap__title" id="exetix-t"><a href="/exetix/">ExeTix<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a></h2>
+      <p class="cap__meta">Built and sold</p>
+      <p class="cap__note">On the App Store · released 29 Sep 2026 · sold Oct 2026</p>
+      <p class="fig"><b>~1–2 s</b> <span>from a known release time to the alert</span></p>
+    </div>
+    <div class="media">
+      <div class="phones__row">
+        <img src="/exetix/img/screen-alerts.webp" width="540" height="1173" decoding="async" alt="ExeTix onboarding screen ‘Be first, every time’ with sample alerts: dropping in 10 min, tickets just dropped, restock, resale listed">
+        <img src="/exetix/img/screen-drops.webp" width="540" height="1173" decoding="async" alt="ExeTix Drops tab: the next drop counting down and sold-out nights watched for restocks">
+        <img src="/exetix/img/screen-explore.webp" width="540" height="1173" decoding="async" alt="ExeTix Explore tab: ‘5 club nights tonight’ with a flyer for Indie Thursday at Timepiece and a Dropping soon rail">
+      </div>
+    </div>
+  </section>
+
+  <!-- The Kill Log: the number is the picture -->
+  <section class="ch plate" id="kill-log" data-shot="side" aria-labelledby="kill-log-t" style="--em:1.3; --tint:#ff8a4c; --bg:#150c22">
+    <div class="cap">
+      <h2 class="cap__title" id="kill-log-t"><a href="/kill-log/">The Kill Log<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a></h2>
+      <p class="cap__meta">Research</p>
+      <p class="cap__note">Two strategies in small-size live execution tests. Nothing here claims a profit</p>
+    </div>
+    <div class="media">
+      <p class="fig"><b>110</b> <span>paper hypotheses. They died to costs.</span> <small>This is a paper book. No live P&amp;L is claimed. No live book is implied.</small></p>
+    </div>
+  </section>
+
+  <!-- Solana execution -->
+  <section class="ch plate" id="solana" data-shot="right" aria-labelledby="solana-t" style="--em:3.35; --tint:#f2b33d; --bg:#120d06">
+    <div class="cap">
+      <h2 class="cap__title" id="solana-t"><a href="/tracks/solana/">Solana execution<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a></h2>
+      <p class="cap__meta">Live execution test</p>
+      <p class="cap__note">0.25 SOL clips since 30 Sep 2026</p>
+    </div>
+    <div class="media">
+      <p class="fig"><b>0.33 ms</b> <span>p50, trigger to ready-to-sign sell bytes (p90 1.2 ms)</span></p>
+    </div>
+  </section>
+
+  <!-- Merger Monitor -->
+  <section class="ch plate" id="merger" data-shot="centre" aria-labelledby="merger-t" style="--em:3.12; --tint:#8fb0ff; --bg:#09112b">
+    <div class="cap">
+      <h2 class="cap__title" id="merger-t"><a href="/merger-monitor/">Merger Monitor<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a></h2>
+      <p class="cap__meta">Live · £5/month</p>
+      <p class="cap__note">Zero subscribers so far. Take: £0.</p>
+    </div>
+    <div class="media">
+      <p class="fig"><b>+1.38%</b> <span>per deal after break risk, costs and forgone carry</span> <small>Filings, not advice.</small></p>
+    </div>
+  </section>
+
+  <!-- Doorly: demo recording (the results, looped forward and back) -->
+  <section class="ch film film--screen" id="doorly" aria-labelledby="doorly-t" style="--tint:#8e9bff; --bg:#0d0b26; --fx:62%">
+    <div class="cap">
+      <h2 class="cap__title" id="doorly-t"><a href="/doorly/">Doorly<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a></h2>
+      <p class="cap__meta">Demo</p>
+      <p class="fig"><b>£120 &lt; £130</b> <span>until you add the journey to the airport</span> <small>Demo fares, labelled as such</small></p>
+    </div>
+    <div class="media">
+      <div class="frame"><video src="media/doorly-results.mp4" poster="media/doorly-results.webp" width="1120" height="700" muted loop playsinline preload="none" aria-label="Screen recording of the Doorly demo: door-to-door journeys ranked by the whole trip's price"></video></div>
+    </div>
+  </section>
+
+  <!-- PowerLeash: icon + number -->
+  <section class="ch plate" id="powerleash" data-shot="icon" aria-labelledby="powerleash-t" style="--em:3; --tint:#3cc79a; --bg:#06140f">
+    <div class="cap">
+      <h2 class="cap__title" id="powerleash-t"><a href="/tracks/powerleash/">PowerLeash<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a></h2>
+      <p class="cap__meta"><a class="dl" href="/downloads/PowerLeash.zip" download><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5v8M4.5 7 8 10.5 11.5 7M3 13.5h10"/></svg>Download</a> <span class="cap__aside">Apple Silicon, unsigned.</span></p>
+    </div>
+    <div class="media">
+      <p class="fig"><b>42.8 W</b> <span>held under a sustained 8-thread burn</span></p>
+      <img class="plate__icon" src="/media/powerleash.png" width="512" height="512" decoding="async" alt="PowerLeash app icon: a white leaf on a green tile">
+    </div>
+  </section>
+
+  <!-- Abyss Warden: gameplay -->
+  <section class="ch film" id="abyss" aria-labelledby="abyss-t" style="--tint:#b48cff; --ar:1.7778; --f0:0.08; --f1:0.92">
+    <div class="cap">
+      <h2 class="cap__title" id="abyss-t"><a href="/abyss-warden/">Abyss Warden<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a></h2>
+      <p class="cap__meta">Playable</p>
+      <p class="fig"><b>20</b> <span>levels, all finished and balance-passed</span></p>
+    </div>
+    <div class="media">
+      <div class="frame"><video src="media/abyss-play.mp4" poster="media/abyss-play.webp" width="960" height="540" muted loop playsinline preload="none" aria-label="Abyss Warden gameplay: towers guarding a winding path across the sea floor"></video></div>
+    </div>
+  </section>
+
+  <!-- DeskStatus: nothing to picture, by design -->
+  <section class="ch plate" id="deskstatus" data-shot="right" aria-labelledby="deskstatus-t" style="--em:4.25; --desc:1; --tint:#3ddc84; --bg:#0b100d">
+    <div class="cap">
+      <h2 class="cap__title" id="deskstatus-t"><a href="/tracks/deskstatus/">DeskStatus<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a></h2>
+      <p class="cap__meta">Shipped · v1.0.3</p>
+      <p class="cap__note">The real window shows live account data, so it isn't pictured.</p>
+    </div>
+    <div class="media">
+      <p class="fig"><b>Read-only</b> <span>it can't sign anything</span></p>
+    </div>
+  </section>
+
+  <!-- Numerai -->
+  <section class="ch plate" id="numerai" data-shot="side" aria-labelledby="numerai-t" style="--em:1.6; --tint:#a6b6ff; --bg:#0a0d1f">
+    <div class="cap">
+      <h2 class="cap__title" id="numerai-t"><a href="/tracks/numerai/">Numerai<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a></h2>
+      <p class="cap__meta">Live, unstaked</p>
+      <p class="cap__note">2 live rounds resolved so far. Too few to stake on; the policy asks for ten</p>
+    </div>
+    <div class="media">
+      <p class="fig"><b>1.47</b> <span>Sharpe of CORR60 over 93 held-out eras, positive in 95% of them</span></p>
+    </div>
+  </section>
+
+  <!-- Competitions -->
+  <section class="ch plate" id="competitions" data-shot="centre" aria-labelledby="competitions-t" style="--em:2.4; --tint:#e6c46a; --bg:#13110a">
+    <div class="cap">
+      <h2 class="cap__title" id="competitions-t"><a href="/tracks/competitions/">Competitions<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a></h2>
+      <p class="cap__meta">Selected</p>
+    </div>
+    <div class="media">
+      <p class="fig"><b>1 of 15</b> <span>strategies selected in the Quantiacs Q25 contest</span> <small>In-sample Sharpe 1.22, maximum drawdown 23.6%.</small></p>
+    </div>
+  </section>
+
+  <!-- Chess Exchange: demo recording -->
+  <section class="ch film" id="chess" aria-labelledby="chess-t" style="--tint:#9fd36a; --ar:1.7125; --f0:0.02; --f1:0.9">
+    <div class="cap">
+      <h2 class="cap__title" id="chess-t"><a href="/tracks/chess-exchange/">Chess Exchange<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a></h2>
+      <p class="cap__meta">Play money</p>
+      <p class="fig"><b>W / D / B</b> <span>from any position you paste in</span> <small>Play money. Not a book, not advice.</small></p>
+    </div>
+    <div class="media">
+      <div class="frame"><video src="media/chess-live.mp4" poster="media/chess-live.webp" width="1120" height="654" muted loop playsinline preload="none" aria-label="Screen recording of Chess Exchange: live boards with play-money markets, a leaderboard and a trade tape"></video></div>
+    </div>
+  </section>
+
+  <!-- Chelsea Bikes: demo recording -->
+  <section class="ch film" id="chelsea" aria-labelledby="chelsea-t" style="--tint:#f5a524; --ar:1.6; --f0:0.02; --f1:0.92">
+    <div class="cap">
+      <h2 class="cap__title" id="chelsea-t"><a href="/chelsea-bikes/">Chelsea Bikes<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a></h2>
+      <p class="cap__meta">Prototype</p>
+      <p class="cap__note">Not yet pitched</p>
+      <p class="fig"><b>11</b> <span>pages, works offline</span></p>
+    </div>
+    <div class="media">
+      <div class="frame"><video src="media/chelsea-demo.mp4" poster="media/chelsea-demo.webp" width="1120" height="700" muted loop playsinline preload="none" aria-label="Screen recording of the Chelsea Bikes prototype: a bike shop homepage with shop, repairs and hire"></video></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- End credits: every project again, the owner links, the honesty line -->
+<footer class="ch end" id="credits" aria-label="Credits">
+  <div class="end__in">
+    <ol class="credits">
+      <li><a href="/exetix/">ExeTix</a></li>
+      <li><a href="/kill-log/">The Kill Log</a></li>
+      <li><a href="/tracks/solana/">Solana execution</a></li>
+      <li><a href="/merger-monitor/">Merger Monitor</a></li>
+      <li><a href="/doorly/">Doorly</a></li>
+      <li><a href="/tracks/powerleash/">PowerLeash</a></li>
+      <li><a href="/abyss-warden/">Abyss Warden</a></li>
+      <li><a href="/tracks/deskstatus/">DeskStatus</a></li>
+      <li><a href="/tracks/numerai/">Numerai</a></li>
+      <li><a href="/tracks/competitions/">Competitions</a></li>
+      <li><a href="/tracks/chess-exchange/">Chess Exchange</a></li>
+      <li><a href="/chelsea-bikes/">Chelsea Bikes</a></li>
+    </ol>
+    <div class="end__foot">
+      <div class="end__owner">
+        <p class="end__name">Charlie Wuytack</p>
+        <ul class="end__links">
+          <li><a href="/work/">Everything, in full</a></li>
+          <li><a href="https://github.com/Charliewytk">GitHub</a></li>
+          <li><a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></li>
+        </ul>
+      </div>
+      <p class="end__honesty">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

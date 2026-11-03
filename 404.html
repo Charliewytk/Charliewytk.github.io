@@ -3,43 +3,90 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Track not found · Charlie Wuytack</title>
+<title>Page not found · Charlie Wuytack</title>
 <meta name="robots" content="noindex">
 <link rel="icon" href="/media/favicon.svg" type="image/svg+xml">
-<meta name="theme-color" content="#0b0a09">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&amp;family=Fraunces:ital,opsz,wght@1,9..144,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+<meta name="theme-color" content="#fbfbf9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0c0b" media="(prefers-color-scheme: dark)">
 <!-- GitHub Pages serves this at any missing path, so every link here is from the site root -->
-<link rel="stylesheet" href="/tracks/track.css">
+<link rel="stylesheet" href="/assets/site.css">
 <style>
-  .skip { animation: skip 2.4s steps(1) infinite; }
-  @keyframes skip { 0%, 46%, 54%, 100% { transform: rotate(0deg); } 48% { transform: rotate(-14deg); } 50% { transform: rotate(9deg); } 52% { transform: rotate(-4deg); } }
-  @media (prefers-reduced-motion: reduce) { .skip { animation: none; } }
+  body { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
+  .err { flex: 1; padding-block: clamp(var(--space-8), 16vh, var(--space-10)) var(--space-8); }
+  .err .lead { max-width: 44ch; margin: var(--space-4) 0 0; color: var(--fg-2); }
+  .err .actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-6); }
+  .site-footer { width: 100%; margin-top: 0; }
+  /* one left edge: header, content and footer all sit on the header's gutter
+     (site-wide, this belongs in site.css) */
+  .err, .site-footer {
+    max-width: none; margin-inline: 0;
+    padding-left: max(var(--gutter, 16px), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--gutter, 16px), env(safe-area-inset-right, 0px));
+  }
+  /* a bigger hit area without moving the layout, as .site-nav a has */
+  a.site-name { position: relative; }
+  a.site-name::after { content: ""; position: absolute; inset: -12px -8px; }
+  @media (prefers-reduced-motion: no-preference) {
+    .err.stagger > * { animation-name: err-fade; }
+    .err.stagger > h1 { animation: err-rise var(--spring-bouncy-dur) var(--spring-bouncy) backwards, err-fade var(--dur-slow) var(--ease-out) backwards; }
+    @keyframes err-fade { from { opacity: 0; } }
+    @keyframes err-rise { from { transform: translateY(16px); } }
+  }
+  .fell { display: block; width: 176px; height: auto; margin-bottom: var(--space-6); color: var(--fg-4); overflow: visible; }
+  .fell .sleeve { transform-box: fill-box; transform-origin: 100% 100%; }
+  @media (prefers-reduced-motion: no-preference) {
+    .fell .sleeve { animation: fell-drop var(--spring-bouncy-dur) var(--spring-bouncy) 160ms backwards, err-fade var(--dur-fast) var(--ease-out) 160ms backwards; }
+    @keyframes fell-drop { from { transform: translate(-28px, -44px) rotate(18deg); } }
+  }
 </style>
 </head>
-<body style="--bg:#0b0a09;--acc:#e0a640">
-<div class="grain" aria-hidden="true"></div>
-<header class="wrap top">
-  <a href="/">← Side A</a>
-  <nav><a href="/tracks/">Tracklist</a><a href="/work/">All work</a></nav>
+<body>
+<header class="site-header">
+  <a class="site-name" href="/">Charlie Wuytack</a>
+  <nav class="site-nav" aria-label="Site">
+    <a href="/work/">Work</a>
+    <a href="https://github.com/Charliewytk">GitHub</a>
+    <a href="mailto:charlie@wuytack.net">Contact</a>
+  </nav>
 </header>
-<main>
-  <div class="wrap hero">
-    <div>
-      <p class="kick">Track 404 · not on this record</p>
-      <h1>The needle skipped.</h1>
-      <p class="sub">There's nothing on this groove.</p>
-      <p class="lede">The page may have moved when the site turned into a record. The full portfolio, every case study included, now lives at /work/.</p>
-      <div class="cta">
-        <a class="btn solid" href="/">Back to Side A</a>
-        <a class="btn" href="/tracks/">See the tracklist</a>
-        <a class="btn" href="/work/">All work</a>
-      </div>
-    </div>
-    <div class="disc skip" aria-hidden="true"><div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg><small>TRACK 404</small></div></div>
+
+<main class="err stagger">
+  <!-- one sleeve has fallen off the stack -->
+  <svg class="fell" viewBox="0 0 176 88" aria-hidden="true" focusable="false" style="--i:0">
+    <g fill="currentColor">
+      <rect x="8" y="12" width="7" height="44" rx="1"/>
+      <rect x="17" y="16" width="7" height="40" rx="1" opacity=".7"/>
+      <rect x="26" y="12" width="7" height="44" rx="1"/>
+      <rect x="35" y="14" width="7" height="42" rx="1" opacity=".55"/>
+      <rect x="44" y="12" width="7" height="44" rx="1" opacity=".85"/>
+      <rect x="80" y="12" width="7" height="44" rx="1" opacity=".7"/>
+      <rect x="89" y="16" width="7" height="40" rx="1"/>
+    </g>
+    <rect x="53" y="12" width="25" height="44" rx="2" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3" opacity=".6"/>
+    <rect x="0" y="56" width="104" height="3" rx="1.5" fill="currentColor"/>
+    <g class="sleeve">
+      <g transform="rotate(-9 150 86)">
+        <circle cx="146" cy="64" r="18" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <circle cx="146" cy="64" r="4" style="fill: var(--accent, currentColor)"/>
+        <rect x="100" y="42" width="44" height="44" rx="2" style="fill: var(--bg, Canvas)" stroke="currentColor" stroke-width="1.5"/>
+      </g>
+    </g>
+  </svg>
+  <h1 style="--i:1">Page not found.</h1>
+  <p class="lead" style="--i:2">The page may have moved.</p>
+  <div class="actions" style="--i:3">
+    <a class="btn" href="/work/">Work</a>
+    <a class="btn secondary" href="/">Home</a>
+    <a class="btn secondary" href="/tracks/">Tracks</a>
   </div>
 </main>
-<footer class="wrap foot"><span>Charlie Wuytack · <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></span><span>Research and engineering, not financial advice.</span></footer>
+
+<footer class="site-footer">
+  <p class="site-legal">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
+  <nav class="site-nav" aria-label="Contact">
+    <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a>
+    <a href="https://github.com/Charliewytk">GitHub</a>
+  </nav>
+</footer>
 </body>
 </html>

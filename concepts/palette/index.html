@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Charlie Wuytack</title>
+<meta name="description" content="Charlie Wuytack builds apps, Mac tools, games and honest quant research.">
+<meta name="theme-color" content="#08080b">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/media/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+<!--
+  Palette concept. The page is one command palette.
+  index.html holds every row as a plain link, so it works with no JS.
+  app.js upgrades it: type to filter, arrows move the highlight, Enter opens a detail sheet.
+  Project detail data lives in app.js (DATA), copied verbatim from concepts/_content/content.json.
+-->
+<main class="stage">
+  <div class="panel" id="panel">
+
+    <header class="bar">
+      <span class="lead-icon" aria-hidden="true">
+        <svg class="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
+      </span>
+      <button class="back" id="back" type="button" aria-label="Back" tabindex="-1">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <h1 class="crumb"><span class="crumb-root">Charlie Wuytack</span><span class="crumb-sep" aria-hidden="true">/</span><span class="crumb-leaf" id="crumb-leaf"></span></h1>
+      <div class="field">
+        <input id="q" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go"
+               aria-label="Search projects and links">
+        <span class="ghost" aria-hidden="true"><span class="ghost-text" id="ghost"></span><span class="caret"></span></span>
+      </div>
+    </header>
+
+    <div class="results">
+      <div class="list" id="list" aria-label="Projects and links">
+        <span class="hl" id="hl" aria-hidden="true"><span class="hl-in"></span></span>
+
+        <div class="group" aria-label="Projects">
+          <a class="row" id="r-exetix" data-slug="exetix" href="/exetix/"><span class="tile"><img src="/exetix/img/icon-green.png" alt="" width="28" height="28"></span><span class="name">ExeTix</span><span class="acc">Built and sold</span></a>
+          <a class="row" id="r-kill-log" data-slug="kill-log" href="/kill-log/"><span class="tile glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2.5"/><path d="M8.5 8.5h7M8.5 12h7M8.5 15.5h4"/><path d="M7 12h10"/></svg></span><span class="name">The Kill Log</span><span class="acc">Research</span></a>
+          <a class="row" id="r-solana" data-slug="solana" href="/tracks/solana/"><span class="tile glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 3 6 13h5.5l-1 8L18 11h-5.5z"/></svg></span><span class="name">Solana execution</span><span class="acc">Live execution test</span></a>
+          <a class="row" id="r-merger-monitor" data-slug="merger-monitor" href="/merger-monitor/"><span class="tile glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h4l4.5 6L8 18H4M12.5 12H20M17 9l3 3-3 3"/></svg></span><span class="name">Merger Monitor</span><span class="acc">£5/month · not advice</span></a>
+          <a class="row" id="r-doorly" data-slug="doorly" href="/doorly/"><span class="tile glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 20.5V5a1.5 1.5 0 0 1 1.5-1.5h8A1.5 1.5 0 0 1 17.5 5v15.5M4 20.5h16M14 12.2v.1"/></svg></span><span class="name">Doorly</span><span class="acc">Demo</span></a>
+          <a class="row" id="r-powerleash" data-slug="powerleash" href="/tracks/powerleash/"><span class="tile app"><img src="/media/powerleash.png" alt="" width="28" height="28"></span><span class="name">PowerLeash</span><span class="acc">Download</span></a>
+          <a class="row" id="r-abyss-warden" data-slug="abyss-warden" href="/abyss-warden/"><span class="tile glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8.5c1.5-1.3 3-1.3 4.5 0s3 1.3 4.5 0 3-1.3 4.5 0 3 1.3 4.5 0M3 13c1.5-1.3 3-1.3 4.5 0s3 1.3 4.5 0 3-1.3 4.5 0 3 1.3 4.5 0M3 17.5c1.5-1.3 3-1.3 4.5 0s3 1.3 4.5 0 3-1.3 4.5 0 3 1.3 4.5 0"/></svg></span><span class="name">Abyss Warden</span><span class="acc">Playable</span></a>
+          <a class="row" id="r-deskstatus" data-slug="deskstatus" href="/tracks/deskstatus/"><span class="tile glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4.5" width="18" height="12.5" rx="2.5"/><path d="M9 20.5h6M12 17v3.5M16.5 8.5v.1"/></svg></span><span class="name">DeskStatus</span><span class="acc">Shipped · v1.0.3</span></a>
+          <a class="row" id="r-numerai" data-slug="numerai" href="/tracks/numerai/"><span class="tile glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4v16h16M7.5 15l3.5-4.5 3 2.5L19 7"/></svg></span><span class="name">Numerai</span><span class="acc">Live, unstaked</span></a>
+          <a class="row" id="r-competitions" data-slug="competitions" href="/tracks/competitions/"><span class="tile glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5.5a4 4 0 0 1-8 0zM8 6.5H5.5A2.5 2.5 0 0 0 8 10M16 6.5h2.5A2.5 2.5 0 0 1 16 10M12 13.5V17M8.5 20.5h7M9.5 17h5"/></svg></span><span class="name">Competitions</span><span class="acc">Selected</span></a>
+          <a class="row" id="r-chess-exchange" data-slug="chess-exchange" href="/tracks/chess-exchange/"><span class="tile glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="6.5" r="2.5"/><path d="M9.5 10.5h5M10.5 10.5 9.5 16.5h5l-1-6M7 20.5h10l-.8-4H7.8z"/></svg></span><span class="name">Chess Exchange</span><span class="acc">Play money</span></a>
+          <a class="row" id="r-chelsea-bikes" data-slug="chelsea-bikes" href="/chelsea-bikes/"><span class="tile glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="15.5" r="3.5"/><circle cx="18" cy="15.5" r="3.5"/><path d="M6 15.5 9.5 9h6L18 15.5M9.5 9l3 6.5h2.5M8 6.5h3M14.5 6.5h2l-1 2.5"/></svg></span><span class="name">Chelsea Bikes</span><span class="acc">Prototype</span></a>
+        </div>
+
+        <p class="empty" id="empty" aria-hidden="true" hidden></p>
+        <hr class="rule">
+
+        <div class="group" aria-label="Links">
+          <a class="row" id="r-work" href="/work/" data-keys="work everything in full all projects"><span class="tile glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg></span><span class="name">Work</span></a>
+          <a class="row" id="r-github" href="https://github.com/Charliewytk" data-keys="github code source"><span class="tile glyph"><svg viewBox="0 0 24 24" aria-hidden="true" class="fill"><path d="M12 2.2a9.8 9.8 0 0 0-3.1 19.1c.5.1.7-.2.7-.5v-1.7c-2.7.6-3.3-1.2-3.3-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.3-2.2-.2-4.5-1.1-4.5-4.8 0-1.1.4-1.9 1-2.6-.1-.3-.4-1.2.1-2.6 0 0 .8-.3 2.7 1a9.3 9.3 0 0 1 4.9 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.3.1 2.6.6.7 1 1.5 1 2.6 0 3.8-2.3 4.6-4.5 4.8.4.3.7.9.7 1.8v2.7c0 .3.2.6.7.5A9.8 9.8 0 0 0 12 2.2Z"/></svg></span><span class="name">GitHub</span></a>
+          <a class="row" id="r-contact" href="mailto:charlie@wuytack.net" data-keys="contact email mail hire"><span class="tile glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5"/><path d="m4.5 7.5 7.5 5.5 7.5-5.5"/></svg></span><span class="name">Contact</span><span class="acc">charlie@wuytack.net</span></a>
+        </div>
+      </div>
+
+      <!-- Detail sheet. app.js fills it; its background grows out of the selected row. -->
+      <section class="sheet" id="sheet" aria-labelledby="s-title" hidden>
+        <span class="sheet-bg" id="sheet-bg" aria-hidden="true"></span>
+        <div class="sheet-scroll" id="sheet-scroll"></div>
+      </section>
+    </div>
+
+    <footer class="foot">
+      <p>Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
+    </footer>
+  </div>
+  <p class="sr-only" id="live" aria-live="polite"></p>
+</main>
+<script src="app.js" defer></script>
+</body>
+</html>

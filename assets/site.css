@@ -1,0 +1,314 @@
+/* site.css: the one design system for charliewytk.github.io.
+   Link it first, then keep page-only rules in a small inline <style> after it.
+   Element defaults use :where() so any page rule wins without a fight. */
+
+/* ---------- 1. Tokens ---------- */
+:root {
+  color-scheme: light dark;
+
+  /* type: one sans, one mono */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* type scale (phone to desktop); tracking tightens as size grows */
+  --text-xs: 0.75rem;                                   /* 12px: table heads, fine print */
+  --text-sm: 0.8125rem;                                 /* 13px: header, captions, notes */
+  --text-base: 1rem;                                    /* 16px: body */
+  --text-md: 1.125rem;                                  /* 18px: lead paragraphs */
+  --text-lg: 1.25rem;                                   /* 20px: h3 */
+  --text-xl: clamp(1.75rem, 2.5vw + 1rem, 2.5rem);      /* h2 */
+  --text-2xl: clamp(2.5rem, 6vw + 1rem, 4.5rem);        /* display */
+  --leading-tight: 1.1;
+  --leading-snug: 1.35;
+  --leading: 1.55;
+  --tracking-display: -0.035em;
+  --tracking-tight: -0.025em;
+  --tracking-snug: -0.015em;
+  --tracking-body: -0.005em;
+
+  /* spacing: a 4px grid */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
+  --gutter: clamp(16px, 4vw, 32px);   /* page side padding: 16px on a phone */
+  --page: 1120px;                     /* widest content column */
+  --measure: 68ch;                    /* longest line of prose */
+  --header-h: 56px;
+  --header-offset: calc(var(--header-h) + env(safe-area-inset-top, 0px));   /* use this for sticky tops and scroll padding */
+
+  /* radii */
+  --radius-1: 6px;
+  --radius-2: 10px;
+  --radius-3: 16px;
+  --radius-pill: 999px;
+
+  /* colour: light */
+  --bg: #fbfbf9;          /* page */
+  --bg-2: #f3f3ef;        /* raised surface, table head, hover */
+  --bg-3: #e9e9e3;        /* pressed, track */
+  --fg: #1a1a18;          /* 16.9:1 headings and body */
+  --fg-2: #3d3c38;        /* 10.6:1 secondary prose */
+  --fg-3: #5c5a54;        /*  6.6:1 captions, notes */
+  --fg-4: #6c6a63;        /*  5.2:1 the lightest text allowed */
+  --line: rgba(26, 26, 24, 0.12);
+  --line-2: rgba(26, 26, 24, 0.24);
+  --accent: #1f7a46;      /* links, focus, the one green; 5.4:1 on --bg */
+  --accent-fg: #ffffff;   /* text on an accent fill */
+  --good: #2f6b3f;
+  --warn: #7a5a14;
+  --bad: #a9331f;
+  --info: #4a4f7a;
+  --selection: rgba(31, 122, 70, 0.18);
+
+  /* motion (from concepts/_content/motion-brief.md; use nothing else) */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --spring-snappy: linear(0, 0.095 6%, 0.278 12%, 0.455 19%, 0.609 25%, 0.724 31%, 0.811 38%, 0.871 44%, 0.914 50%, 0.943 56%, 0.962 62%, 0.975 69%, 0.984 75%, 0.989 81%, 0.993 88%, 0.996 94%, 1);
+  --spring-snappy-dur: 400ms;
+  --spring-bouncy: linear(0, 0.101 6%, 0.305 12%, 0.529 19%, 0.712 25%, 0.852 31%, 0.940 38%, 0.993 44%, 1.018 50%, 1.026 56%, 1.025 62%, 1.021 69%, 1.015 75%, 1.009 81%, 1.005 88%, 1.002 94%, 1);
+  --spring-bouncy-dur: 400ms;
+  --dur-press: 100ms;
+  --dur-exit: 120ms;
+  --dur-fast: 125ms;
+  --dur-base: 180ms;
+  --dur-slow: 260ms;
+  --stagger: 40ms;
+}
+@supports not (transition-timing-function: linear(0, 1)) {
+  :root { --spring-snappy: var(--ease-out); --spring-bouncy: var(--ease-out); }
+}
+
+/* colour: dark (follows the system unless a page pins data-theme) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b0c0b;
+    --bg-2: #151614;
+    --bg-3: #1f201d;
+    --fg: #ecebe6;
+    --fg-2: #c9c7bf;
+    --fg-3: #a19f97;
+    --fg-4: #8f8d85;
+    --line: rgba(236, 235, 230, 0.12);
+    --line-2: rgba(236, 235, 230, 0.24);
+    --accent: #3ddc84;
+    --accent-fg: #06140c;
+    --good: #6fcf8a;
+    --warn: #d9b65c;
+    --bad: #f07a63;
+    --info: #9aa3e0;
+    --selection: rgba(61, 220, 132, 0.28);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b0c0b;
+  --bg-2: #151614;
+  --bg-3: #1f201d;
+  --fg: #ecebe6;
+  --fg-2: #c9c7bf;
+  --fg-3: #a19f97;
+  --fg-4: #8f8d85;
+  --line: rgba(236, 235, 230, 0.12);
+  --line-2: rgba(236, 235, 230, 0.24);
+  --accent: #3ddc84;
+  --accent-fg: #06140c;
+  --good: #6fcf8a;
+  --warn: #d9b65c;
+  --bad: #f07a63;
+  --info: #9aa3e0;
+  --selection: rgba(61, 220, 132, 0.28);
+}
+:root[data-theme="light"] { color-scheme: light; }
+
+/* ---------- 2. Base elements ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 400 var(--text-base) / var(--leading) var(--font-sans);
+  letter-spacing: var(--tracking-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+@media (min-width: 900px) { body { font-size: 1.0625rem; } }
+::selection { background: var(--selection); }
+
+:where(h1, h2, h3, h4) { margin: 0; font-weight: 600; color: var(--fg); text-wrap: balance; }
+:where(h1) { font-size: var(--text-2xl); line-height: 1.02; letter-spacing: var(--tracking-display); }
+:where(h2) { font-size: var(--text-xl); line-height: var(--leading-tight); letter-spacing: var(--tracking-tight); }
+:where(h3) { font-size: var(--text-lg); line-height: 1.25; letter-spacing: var(--tracking-snug); }
+:where(h4) { font-size: var(--text-base); line-height: var(--leading-snug); }
+:where(p) { margin: 0 0 1em; text-wrap: pretty; }
+:where(small) { font-size: var(--text-sm); }
+:where(code, kbd, samp, pre) { font-family: var(--font-mono); font-size: 0.9em; }
+:where(img, svg, video, canvas) { max-width: 100%; height: auto; }
+:where(img, video) { display: block; }
+:where(button, input, select, textarea) { font: inherit; color: inherit; letter-spacing: inherit; }
+:where(button) { cursor: pointer; }
+:where(hr) { border: 0; border-top: 1px solid var(--line); margin: var(--space-7) 0; }
+.num, .tabular { font-variant-numeric: tabular-nums; }
+
+/* ---------- 3. Links ---------- */
+:where(a) {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--line-2);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  transition: color var(--dur-fast) var(--ease-out), text-decoration-color var(--dur-fast) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  :where(a):hover { text-decoration-color: currentColor; }
+}
+
+/* ---------- 4. Focus ---------- */
+:focus { outline: none; }
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- 5. Layout ---------- */
+.wrap { width: 100%; max-width: calc(var(--page) + 2 * var(--gutter)); margin-inline: auto; padding-inline: var(--gutter); }
+.skip-link { position: absolute; left: var(--gutter); top: -100px; z-index: 100; padding: var(--space-2) var(--space-3); background: var(--fg); color: var(--bg); border-radius: var(--radius-1); }
+.skip-link:focus-visible { top: var(--space-3); }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+
+/* ---------- 6. Header (one pattern; .bar and .masthead are older names pinned by tests) ----------
+   <header class="site-header">
+     <a class="site-name" href="../">Charlie Wuytack</a>
+     <nav class="site-nav" aria-label="Site">
+       <a href="../work/">Work</a>
+       <a href="https://github.com/Charliewytk">GitHub</a>
+       <a href="mailto:charlie@wuytack.net">Contact</a>
+     </nav>
+   </header> */
+.site-header, .bar, .masthead {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+  min-height: var(--header-h);
+  padding: env(safe-area-inset-top, 0px) max(var(--gutter), env(safe-area-inset-right, 0px)) 0 max(var(--gutter), env(safe-area-inset-left, 0px));
+  font-size: var(--text-sm); font-weight: 500; letter-spacing: 0; line-height: 1;
+  color: var(--fg);
+  background: color-mix(in srgb, var(--bg) 84%, transparent);
+  -webkit-backdrop-filter: saturate(1.6) blur(14px);
+  backdrop-filter: saturate(1.6) blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+.site-name { font-weight: 600; letter-spacing: var(--tracking-snug); color: var(--fg); text-decoration: none; white-space: nowrap; }
+.site-nav { display: flex; align-items: center; gap: var(--space-5); }
+.site-nav a {
+  position: relative; color: var(--fg-3); text-decoration: none; white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.site-nav a[aria-current="page"] { color: var(--fg); }
+/* a bigger hit area without moving the layout */
+.site-nav a::after { content: ""; position: absolute; inset: -12px -8px; }
+@media (hover: hover) and (pointer: fine) {
+  .site-nav a:hover, a.site-name:hover { color: var(--fg); }
+}
+@media (max-width: 520px) { .site-nav { gap: var(--space-4); } }
+
+/* ---------- 7. Footer (one pattern) ----------
+   <footer class="site-footer">
+     <p class="site-legal">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
+     <nav class="site-nav" aria-label="Contact">
+       <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a>
+       <a href="https://github.com/Charliewytk">GitHub</a>
+     </nav>
+   </footer> */
+.site-footer {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-4) var(--space-6);
+  max-width: calc(var(--page) + 2 * var(--gutter)); margin: var(--space-10) auto 0;
+  padding: var(--space-6) var(--gutter) calc(var(--space-7) + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--line);
+  font-size: var(--text-sm); color: var(--fg-3);
+}
+.site-footer p { margin: 0; max-width: 60ch; }
+.site-legal { color: var(--fg-3); }
+
+/* ---------- 8. Prose ---------- */
+.prose { max-width: var(--measure); color: var(--fg-2); }
+.prose > * + * { margin-top: 1em; }
+.prose :where(p, ul, ol) { margin: 0; }
+.prose :where(h2) { margin-top: var(--space-8); }
+.prose :where(h3) { margin-top: var(--space-7); }
+.prose :where(h2, h3) + * { margin-top: var(--space-3); }
+.prose :where(strong, b) { color: var(--fg); font-weight: 600; }
+.prose :where(ul, ol) { padding-left: 1.2em; }
+.prose :where(li) + li { margin-top: 0.4em; }
+.prose :where(blockquote) { margin: 0; padding-left: var(--space-4); border-left: 2px solid var(--line-2); color: var(--fg-3); }
+.lead { font-size: var(--text-md); line-height: 1.5; color: var(--fg); letter-spacing: var(--tracking-snug); }
+.note, .caption { font-size: var(--text-sm); line-height: 1.5; color: var(--fg-3); }
+
+/* ---------- 9. Tables ---------- */
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.table {
+  width: 100%; border-collapse: collapse;
+  font-size: var(--text-sm); font-variant-numeric: tabular-nums;
+}
+.table th {
+  text-align: left; font-weight: 500; font-size: var(--text-xs); color: var(--fg-3);
+  padding: var(--space-2) var(--space-3) var(--space-2) 0; border-bottom: 1px solid var(--line-2); white-space: nowrap;
+}
+.table td { padding: var(--space-3) var(--space-3) var(--space-3) 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.table :where(th, td):last-child { padding-right: 0; }
+.table .num { text-align: right; font-family: var(--font-mono); white-space: nowrap; }
+
+/* ---------- 10. Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  min-height: 44px; padding: 0 var(--space-5);
+  font: 500 var(--text-sm) / 1 var(--font-sans); letter-spacing: 0;
+  color: var(--bg); background: var(--fg);
+  border: 1px solid transparent; border-radius: var(--radius-pill);
+  text-decoration: none; white-space: nowrap; cursor: pointer;
+  transition: transform var(--dur-press) var(--ease-out), background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+.btn:active { transform: scale(0.97); }
+.btn.secondary { color: var(--fg); background: transparent; border-color: var(--line-2); }
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover { background: color-mix(in srgb, var(--fg) 86%, var(--bg)); }
+  .btn.secondary:hover { background: var(--bg-2); border-color: var(--fg-4); }
+}
+/* evidence labels: what kind of number this is (never decoration) */
+.chip {
+  display: inline-block; padding: 1px 7px; vertical-align: 1px;
+  font: 500 0.6875rem / 1.5 var(--font-mono); letter-spacing: 0.02em;
+  border: 1px solid currentColor; border-radius: var(--radius-pill); white-space: nowrap;
+}
+
+/* ---------- 11. Motion helpers ---------- */
+.press { transition: transform var(--dur-press) var(--ease-out); }
+.press:active { transform: scale(0.97); }
+@media (prefers-reduced-motion: no-preference) {
+  /* first paint of a list only; set style="--i:3" on each child */
+  .stagger > * { animation: site-enter var(--dur-slow) var(--ease-out) backwards; animation-delay: calc(min(var(--i, 0), 7) * var(--stagger)); }
+  @keyframes site-enter { from { opacity: 0; transform: translateY(8px); } }
+}
+/* scroll-linked lift, never below 0.4 opacity, so nothing is ever hidden */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal { animation: site-reveal linear both; animation-timeline: view(); animation-range: entry 0% entry 40%; }
+    @keyframes site-reveal { from { opacity: 0.4; transform: translateY(12px); } }
+  }
+}
+
+/* ---------- 12. Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important; transition-delay: 0s !important; scroll-behavior: auto !important;
+  }
+}
