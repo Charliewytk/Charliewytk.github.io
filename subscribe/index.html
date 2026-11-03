@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Merger Monitor — daily deal spreads, £5/month</title>
-<meta name="description" content="A 3% merger spread annualises to 24.6%. On the 19 August 2026 table, after a measured break rate, costs and carry it is +1.38% a deal. A 1% spread dies. Daily table from SEC filings, £5/month on Gumroad. Not advice.">
+<meta name="description" content="A 3% merger spread annualises to 24.6%. After a measured break rate, costs and carry it is +1.38% a deal. A 1% spread dies. Daily table from SEC filings, £5/month on Gumroad. Not advice.">
 <link rel="canonical" href="https://charliewytk.github.io/subscribe/">
 <link rel="icon" href="../media/favicon.svg" type="image/svg+xml">
 <meta name="theme-color" content="#fbfbf9" media="(prefers-color-scheme: light)">
@@ -13,16 +13,16 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://charliewytk.github.io/subscribe/">
 <meta property="og:title" content="Merger Monitor — daily deal spreads, £5/month">
-<meta property="og:description" content="A 3% spread is not 24.6% a year. On the 19 August 2026 table: after costs +1.38% a deal, break-even 1.59%. £5/month on Gumroad. Filings, not advice.">
+<meta property="og:description" content="A 3% spread is not 24.6% a year. After costs it is +1.38% a deal. Break-even is 1.59%. £5/month on Gumroad. Filings, not advice.">
 <meta property="og:image" content="https://charliewytk.github.io/media/og-subscribe.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Merger Monitor, 19 August 2026 table: a 3% spread is not 24.6% a year. After costs +1.38% a deal. £5/month. Filings, not advice.">
+<meta property="og:image:alt" content="Merger Monitor: a 3% spread is not 24.6% a year. After costs +1.38% a deal. £5/month. Filings, not advice.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Merger Monitor — daily deal spreads, £5/month">
-<meta name="twitter:description" content="Most thin merger spreads die after costs. On the 19 August 2026 table, break-even is 1.59%. Daily at 22:30, £5/month. Not advice.">
+<meta name="twitter:description" content="Most thin merger spreads die after costs. Break-even is 1.59%. Daily at 22:30, £5/month. Not advice.">
 <meta name="twitter:image" content="https://charliewytk.github.io/media/og-subscribe.png">
-<meta name="twitter:image:alt" content="Merger Monitor, 19 August 2026 table: a 3% spread is not 24.6% a year. After costs +1.38% a deal. £5/month. Filings, not advice.">
+<meta name="twitter:image:alt" content="Merger Monitor: a 3% spread is not 24.6% a year. After costs +1.38% a deal. £5/month. Filings, not advice.">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -179,9 +179,16 @@
     .sample th:nth-child(2), .sample td:nth-child(2) { display: none; }
     .cta .btn { display: flex; width: 100%; }
     .paybar { width: calc(100% - 2 * var(--gutter)); }
-    .paybar .btn { flex: 1; padding: 0 var(--space-4); }
+    .paybar { box-sizing: border-box; }
+    .paybar .btn { flex: 1; min-width: 0; padding: 0 var(--space-4); white-space: normal; text-align: center; line-height: 1.2; }
     .site-footer { padding-bottom: calc(112px + env(safe-area-inset-bottom, 0px)); }
   }
+  /* what it extracts / gets / is not / costs */
+  .offer { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin: var(--space-7) 0 0; }
+  .offer div { padding: var(--space-4) var(--space-5); background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--radius-3); }
+  .offer b { display: block; margin-bottom: var(--space-1); color: var(--fg); font-weight: 600; }
+  .offer span { display: block; font-size: var(--text-sm); line-height: 1.5; color: var(--fg-2); }
+  @media (max-width: 640px) { .offer { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -211,6 +218,13 @@
     <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table &mdash; £5/month</a>
   </div>
   <p class="note" style="--i:5">On Gumroad. Cancel there. 7-day refund. Take: £0. Zero subscribers.</p>
+
+  <div class="offer">
+    <div><b>What it extracts</b><span>Contractual cash prices from SEC filings, then the spread against the live market.</span></div>
+    <div><b>What you get</b><span>That table, emailed at 22:30 the evening it is built. Same rows as the week-late public list.</span></div>
+    <div><b>What it is not</b><span>Advice, a position, an order, or a P&amp;L. Filings, not a tip sheet.</span></div>
+    <div><b>What it costs</b><span>£5/month on Gumroad. Cancel there. 7-day refund. An email — nothing to install.</span></div>
+  </div>
 
   <section class="reveal">
     <h2>In the daily mail, 22:30</h2>

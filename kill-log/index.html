@@ -95,6 +95,21 @@
     .kills td:nth-child(2) { padding-right: var(--space-3); }
     .paybar { gap: var(--space-3); padding-left: var(--space-4); }
   }
+  /* header pill: same rules as subscribe/ */
+  .site-header a.pay {
+    display: inline-flex; align-items: center; min-height: 30px; padding: 0 12px; border-radius: var(--radius-pill);
+    background: var(--fg); color: var(--bg); text-decoration: none;
+    transition: transform var(--dur-press) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
+  }
+  .site-header a.pay::after { inset: -8px -4px; }
+  .site-header a.pay:active { transform: scale(0.97); }
+  @media (hover: hover) and (pointer: fine) { .site-header a.pay:hover { background: var(--accent); color: var(--accent-fg); } }
+  @media (max-width: 640px) { .site-header .opt { display: none; } }
+  /* narrow: the restored price hint sits above the button instead of wrapping beside it */
+  @media (max-width: 640px) {
+    .paybar { flex-direction: column; align-items: stretch; gap: var(--space-2); padding: var(--space-3) var(--space-2) var(--space-2); border-radius: var(--radius-3); }
+    .paybar .hint { text-align: center; }
+  }
 </style>
 </head>
 <body>
@@ -103,8 +118,9 @@
   <a class="site-name" href="../">Charlie Wuytack</a>
   <nav class="site-nav" aria-label="Site">
     <a href="../work/">Work</a>
-    <a href="https://github.com/Charliewytk">GitHub</a>
-    <a href="mailto:charlie@wuytack.net">Contact</a>
+    <a class="opt" href="https://github.com/Charliewytk">GitHub</a>
+    <a class="opt" href="mailto:charlie@wuytack.net">Contact</a>
+    <a class="pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Tonight's table · £5/month</a>
   </nav>
 </header>
 
@@ -117,7 +133,7 @@
   <div class="cta">
     <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table &mdash; £5/month</a>
   </div>
-  <p class="note">Merger Monitor: tonight's cash-deal table from SEC filings, emailed at 22:30. Filings, not advice. No position is held in anything listed. Cancel on Gumroad. 7-day refund. Zero subscribers. Take: £0.</p>
+  <p class="note">Merger Monitor is the product that already exists: tonight's cash-deal table from SEC filings, emailed at 22:30. £5/month. Filings, not advice. No position is held in anything listed. Checkout is that listing. There is no second form. £5/month for the evening the table is built. Cancel on Gumroad. 7-day refund. Zero subscribers. Take: £0.</p>
 
   <section aria-labelledby="deaths">
     <h2 id="deaths">Seven named deaths, from the paper log</h2>
@@ -166,14 +182,14 @@
     </table>
     </div>
     <p class="caption">Numbers are copied from the paper kill log, or re-costed from stored components. Missing cost stacks were left blank in the source rather than invented. No live P&amp;L column is filled.</p>
-    <p class="caption">The full CSV stays in the research repo. Source: PaperMill/KILL_LOG.md in trading101, a private repo (merged paper book). A longer write-up is the <a href="../essays/friction-sized-edges.html">friction-sized note</a>.</p>
+    <p class="caption">The full CSV stays in the research repo. Source: <a href="https://github.com/Charliewytk/trading101/blob/main/PaperMill/KILL_LOG.md">PaperMill/KILL_LOG.md</a> in trading101 (merged paper book). A longer write-up is the <a href="../essays/friction-sized-edges.html">friction-sized note</a>.</p>
   </section>
 
   <section class="reveal" aria-labelledby="not">
     <h2 id="not">What this is not</h2>
     <p>This is a paper book. No live P&amp;L is claimed. No live book is implied.</p>
     <p>Not advice, not a recommendation, not a tip sheet, and not an order. Cost-sizing and extraction only. No live edge is claimed. The paper record is public so the deaths stay visible; it is not a second product.</p>
-    <p>The same cost-sizing is what <a href="../subscribe/">Merger Monitor</a> publishes on every cash row: a measured break rate, round-trip cost, and T-bill carry. A 3% spread is not 24.6% a year after that.</p>
+    <p>The same cost-sizing is what <a href="../subscribe/">Merger Monitor</a> publishes on every cash row: a measured break rate, round-trip cost, and T-bill carry. A 3% spread is not 24.6% a year after that. Checkout stays on Gumroad.</p>
   </section>
 </main>
 
@@ -187,7 +203,7 @@
 </footer>
 
 <aside class="paybar" aria-label="Merger Monitor" data-hidden inert>
-  <span class="hint">Not advice</span>
+  <span class="hint">Tonight's table · £5/month · not advice</span>
   <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table &mdash; £5/month</a>
 </aside>
 <script>

@@ -66,6 +66,7 @@
   .table td:first-child { color: var(--fg); font-weight: 500; min-width: 9em; }
   .table td { color: var(--fg-2); line-height: 1.5; }
   .table td .num { font-size: 0.95em; }
+  .table td.kill { color: var(--fg); font-weight: 600; white-space: nowrap; } /* not --accent: it is green in this palette and would read as a pass */
 
   /* reading progress: a hairline under the header, scroll-linked, compositor only */
   .progress { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; pointer-events: none; }
@@ -195,17 +196,17 @@
     <h2>Tested and killed</h2>
     <p class="meta">A selection · all paper unless noted</p>
     <div class="table-scroll"><table class="table">
-      <thead><tr><th>Idea</th><th>Result</th></tr></thead>
+      <thead><tr><th>Idea</th><th>Result</th><th>Verdict</th></tr></thead>
       <tbody>
-        <tr><td>Following whale buyouts (and ~40 variants)</td><td>Edge explained by Boost; 0 of 35 candidates reached GREEN</td></tr>
-        <tr><td>Completing stalled bonding curves (15–50 SOL)</td><td>Headline +13.8 SOL/cycle on 33 resolved rows. Intention-to-treat on all 43 events: <span class="num">+3.3, CI90 −3.8 to +10.8</span>. Spans zero, and the regime changed on the day the forward test was sealed</td></tr>
-        <tr><td>Custom-pair parent coins (forced quote-token demand)</td><td>Mechanism real, but locked demand is a median 0.7% of the parent's daily volume, and per-trade impact is ≤ 2% against a ≥ 3% cost bar</td></tr>
-        <tr><td>US gap fade as a UK spread bet</td><td>+1.74%/trade on assumed costs becomes <span class="num">−0.15%/trade (CI90 −1.3 to +0.9)</span> on measured opening spreads. 2026 negative in every variant</td></tr>
-        <tr><td>Betfair: lay drifting favourites</td><td>One-shot confirm on 39,788 bets: <span class="num">−0.23% per £ liability, CI95 −0.43 to −0.02</span></td></tr>
-        <tr><td>Resting bids at −20/35/50% wicks</td><td>144 of 144 cells negative even with ideal fills</td></tr>
-        <tr><td>Wallet "skill" persistence</td><td>Clean split at null; all 12 derived rules negative</td></tr>
-        <tr><td>LLM autoresearch loop</td><td>Its "best" rule was the base rule with the trade size doubled three times. The metric rewarded scale, not edge</td></tr>
-        <tr><td>~25 other markets in two days</td><td>Other launchpads and chains, liquidations, token unlocks, PUMP buyback, LP provision, NFTs, CS2 skins, Sorare, 0DTE options, fear-and-greed timing, collectibles, expired domains. None cleared costs, access or data limits</td></tr>
+        <tr><td>Following whale buyouts (and ~40 variants)</td><td>Edge explained by Boost; 0 of 35 candidates reached GREEN</td><td class="kill">killed</td></tr>
+        <tr><td>Completing stalled bonding curves (15–50 SOL)</td><td>Headline +13.8 SOL/cycle on 33 resolved rows. Intention-to-treat on all 43 events: <span class="num">+3.3, CI90 −3.8 to +10.8</span>. Spans zero, and the regime changed on the day the forward test was sealed</td><td class="kill">killed</td></tr>
+        <tr><td>Custom-pair parent coins (forced quote-token demand)</td><td>Mechanism real, but locked demand is a median 0.7% of the parent's daily volume, and per-trade impact is ≤ 2% against a ≥ 3% cost bar</td><td class="kill">killed</td></tr>
+        <tr><td>US gap fade as a UK spread bet</td><td>+1.74%/trade on assumed costs becomes <span class="num">−0.15%/trade (CI90 −1.3 to +0.9)</span> on measured opening spreads. 2026 negative in every variant</td><td class="kill">killed</td></tr>
+        <tr><td>Betfair: lay drifting favourites</td><td>One-shot confirm on 39,788 bets: <span class="num">−0.23% per £ liability, CI95 −0.43 to −0.02</span></td><td class="kill">killed</td></tr>
+        <tr><td>Resting bids at −20/35/50% wicks</td><td>144 of 144 cells negative even with ideal fills</td><td class="kill">killed</td></tr>
+        <tr><td>Wallet "skill" persistence</td><td>Clean split at null; all 12 derived rules negative</td><td class="kill">killed</td></tr>
+        <tr><td>LLM autoresearch loop</td><td>Its "best" rule was the base rule with the trade size doubled three times. The metric rewarded scale, not edge</td><td class="kill">killed</td></tr>
+        <tr><td>~25 other markets in two days</td><td>Other launchpads and chains, liquidations, token unlocks, PUMP buyback, LP provision, NFTs, CS2 skins, Sorare, 0DTE options, fear-and-greed timing, collectibles, expired domains. None cleared costs, access or data limits</td><td class="kill">killed</td></tr>
       </tbody>
     </table></div>
     <p class="note">Ideas died for five reasons: fees (1.25% a side on new pools), speed (same-slot races against co-located bots), crowding, data limits, and access.</p>

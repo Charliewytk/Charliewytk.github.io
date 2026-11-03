@@ -6,21 +6,21 @@
 <meta name="theme-color" content="#fbfbf9" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0b0c0b" media="(prefers-color-scheme: dark)">
 <title>Worked example — ACA, method not returns</title>
-<meta name="description" content="A 3% spread annualises to 24.6%. After the break rate and costs it is +1.38%. Worked on ACA, +3.44% on the 19 August 2026 week-late table. Filings, not advice. £5/month.">
+<meta name="description" content="ACA +3.44% on the week-late table, used as the site’s 3% case. Method first: 24.6% annualises; after the break rate and costs it is +1.38%, the net already on this site. Filings, not advice. £5/month.">
 <link rel="canonical" href="https://charliewytk.github.io/example/">
 <link rel="icon" href="../media/favicon.svg" type="image/svg+xml">
 <meta name="robots" content="index,follow">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://charliewytk.github.io/example/">
 <meta property="og:title" content="Worked example — ACA, method not returns">
-<meta property="og:description" content="A 3% spread annualises to 24.6%. After the break rate and costs it is +1.38%. Worked on ACA, +3.44% on the 19 August 2026 week-late table. Filings, not advice. £5/month.">
+<meta property="og:description" content="ACA +3.44% on the week-late table, used as the site’s 3% case. Method first: 24.6% annualises; after the break rate and costs it is +1.38%, the net already on this site. Filings, not advice. £5/month.">
 <meta property="og:image" content="https://charliewytk.github.io/media/og-example.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Worked example: ACA is the 3% case. 24.6% annualises; after costs it is +1.38%. Filings, not advice.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Worked example — ACA, method not returns">
-<meta name="twitter:description" content="A 3% spread annualises to 24.6%. After the break rate and costs it is +1.38%. Worked on ACA, +3.44% on the 19 August 2026 week-late table. Filings, not advice. £5/month.">
+<meta name="twitter:description" content="ACA +3.44% on the week-late table, used as the site’s 3% case. Method first: 24.6% annualises; after the break rate and costs it is +1.38%, the net already on this site. Filings, not advice. £5/month.">
 <meta name="twitter:image" content="https://charliewytk.github.io/media/og-example.png">
 <meta name="twitter:image:alt" content="Worked example: ACA is the 3% case. 24.6% annualises; after costs it is +1.38%. Filings, not advice.">
 <link rel="stylesheet" href="../assets/site.css">
@@ -97,12 +97,13 @@
 <main class="ex" id="main">
   <div class="stagger">
   <p class="labels" style="--i:0">Worked example &middot; not advice</p>
-  <h1 style="--i:1">A 3% spread annualises to 24.6%. After costs it is +1.38%.</h1>
-  <p class="lead" style="--i:2">On the 19 August 2026 week-late table, ACA (Arcosa, Inc.) has a contractual cash price of $150.00 and a market price of $145.01. That is a filing and a price, not a return and not a recommendation.</p>
+  <h1 style="--i:1">A named cash spread annualises. After the break rate and costs, it is the net already on this site.</h1>
+  <p class="lead" style="--i:2">Method first, not a return. On the 19 August 2026 week-late table, ACA &mdash; Arcosa, Inc. &mdash; is the 3% case in the wild. The extractor read a contractual $150.00 cash price. The market that day was $145.01. The spread is +3.44%. That is a filing and a price. It is not a recommendation.</p>
 
   <div class="table-scroll" style="--i:3">
   <table class="table facts">
     <tbody>
+      <tr><th scope="row">Deal</th><td>ACA &middot; Arcosa, Inc.</td></tr>
       <tr><th scope="row">Contractual cash</th><td class="num">$150.00</td></tr>
       <tr><th scope="row">Market, at build</th><td class="num">$145.01</td></tr>
       <tr><th scope="row">Spread</th><td class="num">+3.44%</td></tr>
@@ -110,22 +111,22 @@
     </tbody>
   </table>
   </div>
-  <p class="note" style="--i:4">Figures copied from the 19 August 2026 week-late table; spreads move.</p>
+  <p class="note" style="--i:4">Figures are copied from the public week-late table already on this site. Spreads move; these were computed when that page was built. No new ticker is introduced here.</p>
   </div>
 
   <section class="reveal" aria-labelledby="method">
     <h2 id="method">The method, in order</h2>
     <ol class="steps">
       <li><b>Extract.</b> Read the cash figure from the definitive proxy. The sentence is below. If the filing does not state one cash number, the row says so and stops.</li>
-      <li><b>Price.</b> Offer over market, minus one: $150.00 / $145.01 &minus; 1 = +3.44%.</li>
-      <li><b>Annualise.</b> ACA is close to the site&rsquo;s 3% case, so the published 3% figures are used. Held to the median 49-day close, 3% looks like 24.6% a year.</li>
+      <li><b>Price.</b> Divide offer by the market at build time. ACA is +3.44% on that dated table.</li>
+      <li><b>Annualise a 3% spread.</b> Held to the median 49-day close, 3% looks like 24.6% a year. That is the number this is usually sold on. ACA is that 3% case in the wild; the published arithmetic stays the 3% case already used on <a href="../subscribe/">/subscribe/</a> and the homepage. A new expected value is not invented for +3.44%.</li>
       <li><b>Charge the stated break rate and costs.</b> A 2.4% break rate, a 27% median loss when one breaks, 0.40% round-trip cost, and 0.49% of forgone T-bill carry.</li>
-      <li><b>Net.</b> After that pass the 3% spread is <b>+1.38%</b> a deal. A 1% spread is <b>&minus;0.57%</b>. Break-even is <b>1.59%</b>.</li>
+      <li><b>The net already on this site.</b> After that pass the same 3% spread is <b>+1.38%</b> a deal. A 1% spread is <b>&minus;0.57%</b>. Break-even is <b>1.59%</b>.</li>
     </ol>
 
     <div class="twoup" id="twoup">
       <div class="bad"><b><s>24.6%</s></b><span>a year: a 3% spread over 49 days, annualised. Marketing.</span></div>
-      <div class="real"><b>+1.38%</b><span>per deal, after the stated break rate, break loss, round-trip cost and carry.</span></div>
+      <div class="real"><b>+1.38%</b><span>per deal — after the stated break rate, break loss, round-trip cost and carry. The net already published.</span></div>
     </div>
     <p>CRNX on the same 19 August table is +0.29%. Price it the same way and it dies after costs. Both rows are published, because a wide spread and a thin one look identical until you do this pass.</p>
     <p>The public calculator at <a href="../sizer/">/sizer/</a> now fails closed to the measured 40bp bar &mdash; unknown stage stays the labelled 1.57% policy.</p>
@@ -135,6 +136,7 @@
     <h2 id="source">The sentence the cash figure came from</h2>
     <blockquote class="quote">&hellip;stock, par value $0.01 per share, of the Company (the “Company common stock”) will receive $150.00 in cash, without interest, less&hellip;</blockquote>
     <p class="caption cite">ACA &middot; DEFM14A, filed 2026-08-03 — <a href="https://www.sec.gov/Archives/edgar/data/1739445/000114036126030551/0001140361-26-030551-index.htm" rel="noopener">read the filing</a></p>
+    <p>That quotation is already on the <a href="../merger-monitor/">week-late public table</a>. The accession is not new.</p>
   </section>
 
   <section class="reveal" aria-labelledby="not">
@@ -149,7 +151,7 @@
 </main>
 
 <footer class="site-footer">
-  <p class="site-legal">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
+  <p class="site-legal">Source row: ACA on the 19 August 2026 week-late table. Method numbers are the 3% case already used on this site. Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
   <nav class="site-nav" aria-label="More">
     <a href="../subscribe/">The offer</a>
     <a href="../weekly/">Free weekly</a>

@@ -38,6 +38,7 @@
   }
 
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+  .grid > div { display: flex; flex-direction: column; justify-content: flex-end; } /* a label that wraps ("(optional)") keeps the inputs in a row level */
   .grid > .span-2 { grid-column: 1 / -1; }
   label { display: block; margin: 0 0 var(--space-2); font-size: var(--text-sm); font-weight: 500; color: var(--fg-2); }
   input, select {
@@ -158,11 +159,11 @@
         <input id="market" name="market" type="text" inputmode="decimal" value="100" autocomplete="off">
       </div>
       <div style="--i:2">
-        <label for="break-rate">Break rate %</label>
+        <label for="break-rate">Break rate % <span class="opt">(optional)</span></label>
         <input id="break-rate" name="break-rate" type="text" inputmode="decimal" value="2.4" autocomplete="off">
       </div>
       <div style="--i:3">
-        <label for="cost">Round-trip cost %</label>
+        <label for="cost">Round-trip cost % <span class="opt">(optional)</span></label>
         <input id="cost" name="cost" type="text" inputmode="decimal" value="0.40" autocomplete="off">
       </div>
       <div class="span-2" style="--i:4">
@@ -177,8 +178,8 @@
         </select>
       </div>
       <div class="span-2" style="--i:5">
-        <label for="claimed-bar">Claimed bar % (if any)</label>
-        <input id="claimed-bar" name="claimed-bar" type="text" inputmode="decimal" value="" autocomplete="off">
+        <label for="claimed-bar">Claimed bar % <span class="opt">(optional)</span></label>
+        <input id="claimed-bar" name="claimed-bar" type="text" inputmode="decimal" value="" autocomplete="off" placeholder="leave blank">
       </div>
     </div>
   </form>

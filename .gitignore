@@ -6,3 +6,5 @@ fragment.prev.html
 fragment.dark-backup.html
 __pycache__/
 concepts/_shots/
+.impeccable/
+TASKS.md
