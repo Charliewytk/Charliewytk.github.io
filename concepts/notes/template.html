@@ -12,7 +12,7 @@
 <script>document.documentElement.classList.add('js')</script>
 <link rel="stylesheet" href="style.css">
 <style>
-{{FOLDER_CSS}}
+{{TARGET_CSS}}
 </style>
 <script src="app.js" defer></script>
 </head>
@@ -20,7 +20,6 @@
 
 <!-- Icons, drawn once. 24px grid, 1.75 stroke, like SF Symbols at regular weight. -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h3.6l2 2h7.4A2.5 2.5 0 0 1 21 9.5v8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/></symbol>
   <symbol id="i-chev-l" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-chev-r" viewBox="0 0 12 20"><path d="m3 4 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="m15.5 15.5 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
@@ -32,25 +31,9 @@
 
 <div class="app" id="app">
 
-  <!-- Pane 1: folders (a sidebar on desktop, the first screen of the stack on phone) -->
-  <nav class="screen folders" id="folders" aria-labelledby="folders-title">
-    <header class="bar"><span class="bar-title" aria-hidden="true">Folders</span></header>
-    <p class="large" id="folders-title">Folders</p>
-    <div class="frows-wrap">
-      <div class="pill fpill" id="fpill" aria-hidden="true"></div>
-      <ul class="group frows">
-{{FOLDERS}}
-      </ul>
-    </div>
-  </nav>
-  <div class="scrim" aria-hidden="true"></div>
-
-  <!-- Pane 2: the note list -->
+  <!-- Pane 1: the note list (the first screen on phone) -->
   <section class="screen list" id="list" aria-labelledby="list-title">
-    <header class="bar">
-      <a class="back" href="#folders" data-back><svg aria-hidden="true"><use href="#i-chev-l"/></svg><span>Folders</span></a>
-      <span class="bar-title" aria-hidden="true">{{NAME}}</span>
-    </header>
+    <header class="bar"><span class="bar-title" aria-hidden="true">{{NAME}}</span></header>
     <h1 class="large" id="list-title">{{NAME}}</h1>
     <div class="search" role="search">
       <svg aria-hidden="true"><use href="#i-search"/></svg>
@@ -64,7 +47,7 @@
       </ul>
       <p class="empty" id="empty" hidden>No Results</p>
     </div>
-    <footer class="owner owner-list">
+    <footer class="owner">
       <ul class="group">
 {{OWNER_LINKS}}
       </ul>
@@ -73,7 +56,7 @@
   </section>
   <div class="scrim" aria-hidden="true"></div>
 
-  <!-- Pane 3: the open note. Every note is in the HTML; CSS shows one. -->
+  <!-- Pane 2: the open note. Every note is in the HTML; CSS shows one. -->
   <main class="screen note" id="note">
     <header class="bar">
       <a class="back" href="#" data-back><svg aria-hidden="true"><use href="#i-chev-l"/></svg><span id="back-label">{{NAME}}</span></a>
@@ -81,14 +64,6 @@
     <div class="sentinel" aria-hidden="true"></div>
 {{NOTES}}
   </main>
-
-  <!-- Desktop only: sits under the folders, but comes last so Tab reaches search and notes first. -->
-  <footer class="owner owner-side">
-    <ul>
-{{OWNER_LINKS}}
-    </ul>
-    <p>{{FOOTER}}</p>
-  </footer>
 
 </div>
 </body>

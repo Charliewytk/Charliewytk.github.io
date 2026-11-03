@@ -27,6 +27,7 @@
   --shadow-lift: 0 2px 4px rgba(24, 24, 27, 0.06), 0 16px 40px rgba(24, 24, 27, 0.12);
   --tint-green: #0f1f14;
   --tint-leaf: #e7f3ee;
+  --dim: saturate(0.2) brightness(1.08);   /* unpicked cards recede without washing out */
 
   --sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
   color-scheme: light dark;
@@ -49,6 +50,7 @@
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 16px rgba(0, 0, 0, 0.3);
     --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.4), 0 16px 40px rgba(0, 0, 0, 0.5);
     --tint-leaf: #13221d;
+    --dim: saturate(0.2) brightness(0.8);
   }
 }
 
@@ -143,6 +145,15 @@ html.cv, .cv body { height: 100%; overflow: hidden; overscroll-behavior: none; }
 }
 .cv .viewport.grabbing { cursor: grabbing; }
 .cv .dots { display: block; position: absolute; inset: 0; width: 100%; height: 100%; }
+/* The side edges fade into the canvas, so a card cut by the screen edge reads as "more this way",
+   never as a broken half-sentence. Off while a card is open: the open card owns the whole width. */
+.cv .viewport::after {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(to right, var(--canvas), transparent var(--fade), transparent calc(100% - var(--fade)), var(--canvas));
+  --fade: 56px;
+  transition: opacity var(--dur-slow) var(--ease-out);
+}
+.cv.picked .viewport::after { opacity: 0; }
 .cv .plane {
   position: absolute; left: 0; top: 0; transform-origin: 0 0;
   /* close to the JS home camera, so the frame before app.js runs is already composed */
@@ -155,7 +166,7 @@ html.cv, .cv body { height: 100%; overflow: hidden; overscroll-behavior: none; }
   font-size: 112px; line-height: 0.9; letter-spacing: -0.05em; white-space: nowrap; text-align: left;
   transition: opacity var(--dur-slow) var(--ease-out), transform var(--spring-snappy-dur) var(--spring-snappy);
 }
-.cv.picked .name { opacity: 0.25; }
+.cv.picked .name { opacity: 0; }  /* the top bar already says the name */
 .cv .world { display: block; padding: 0; }
 .cv .card {
   position: absolute; left: calc(var(--x) * 1px); top: calc(var(--y) * 1px); width: calc(var(--w, 300) * 1px);
@@ -174,10 +185,12 @@ html.cv, .cv body { height: 100%; overflow: hidden; overscroll-behavior: none; }
   color: var(--muted); transition: opacity var(--dur-slow) var(--ease-out);
 }
 .cv .label {
-  position: absolute; left: 0; bottom: 100%; margin: 0 0 4px;
+  position: absolute; left: 0; bottom: 100%; margin: 0 0 8px;
   transform-origin: 0 100%; white-space: nowrap;
 }
 .label a { display: inline-flex; align-items: flex-end; padding: 4px 0 2px; transition: color var(--dur-fast) var(--ease-out); }
+/* Focus on a label is an underline, so it never meets the selection ring just below it. */
+.label a:focus-visible { outline: none; color: var(--ink); text-decoration: underline 2px var(--accent); text-underline-offset: 3px; }
 .sel .label { color: var(--ink); font-weight: 600; }
 @media (hover: hover) and (pointer: fine) { .label a:hover { color: var(--ink); } }
 
@@ -204,15 +217,15 @@ html.cv, .cv body { height: 100%; overflow: hidden; overscroll-behavior: none; }
 .ring {
   position: absolute; inset: -5px; border-radius: 18px; pointer-events: none;
   box-shadow: 0 0 0 calc(1.5px * var(--inv, 1)) var(--accent);
-  opacity: 0; transform: scale(0.985);
+  opacity: 0; transform: scale(0.96);
   transition: opacity var(--dur-exit) var(--ease-out), transform var(--dur-exit) var(--ease-out);
 }
 .sel .ring { opacity: 1; transform: none; transition: opacity var(--dur-base) var(--ease-out), transform var(--spring-bouncy-dur) var(--spring-bouncy); }
 
 /* A picked card dims what is around it: pictures, big figures and lines step back,
    qualifiers and status lines keep full contrast. */
-.cv .card :is(.shot, .phone, .icon, .num, .line) { transition: opacity var(--dur-slow) var(--ease-out); }
-.cv.picked .card:not(.sel) :is(.shot, .phone, .icon, .num) { opacity: 0.4; }
+.cv .card :is(.shot, .phone, .icon, .num, .line) { transition: opacity var(--dur-slow) var(--ease-out), filter var(--dur-slow) var(--ease-out); }
+.cv.picked .card:not(.sel) :is(.shot, .phone, .icon, .num) { opacity: 0.7; filter: var(--dim); }
 .cv.picked .card:not(.sel) :is(.line, .label) { opacity: 0.6; }
 .cv .card.sel { z-index: 2; }
 
@@ -282,7 +295,9 @@ html.cv, .cv body { height: 100%; overflow: hidden; overscroll-behavior: none; }
 @media (max-width: 600px) {
   .cv .name { font-size: 84px; }
   .bottom { flex-direction: column; align-items: stretch; gap: 8px; }
-  .honesty { font-size: 0.75rem; border-radius: 14px; }
+  .honesty { font-size: 0.6875rem; line-height: 1.35; padding: 6px 12px; border-radius: 12px; }
+  .cv .phone { height: 170px; padding-top: 20px; }  /* phone-sized picture, so the ExeTix panel fits whole */
+  .cv .viewport::after { --fade: 28px; }
   .tools { position: absolute; right: max(16px, env(safe-area-inset-right)); bottom: 100%; }
   .mini { width: 120px; height: 76px; border-radius: 10px; bottom: 8px; }
   .top nav a { padding: 0 10px; }
@@ -293,7 +308,7 @@ html.cv, .cv body { height: 100%; overflow: hidden; overscroll-behavior: none; }
 @media (pointer: coarse) {
   .pill { height: 48px; }
   .pill a, .pill button { height: 44px; padding: 0 14px; }
-  .links a { min-height: 50px; padding: 0 18px; }  /* world px: still 45px on screen at the 0.9 phone card zoom */
+  .links a { min-height: 52px; padding: 0 18px; }  /* world px: still 44px on screen at the 0.85 phone card zoom */
   .label a { min-height: 44px; padding-top: 0; }
 }
 

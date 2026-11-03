@@ -20,6 +20,15 @@
   so a long swing (pink to green) doesn't stop on a third colour.
   On phones, where there is no preview, the field at rest drifts slowly
   through the project hues instead of sitting grey.
+
+  Content lives in index.html only. Each row carries data-tint (12 hues 30
+  degrees apart at OKLCH L 0.78, C 0.12) and optional data-img / data-video /
+  data-ratio / data-max / data-radius / data-frame. Video posters in posters/
+  are frame 0 of each clip, so poster to video is seamless. A row with no
+  media shows its key number in .stage instead (.kn, data-i = row from 0),
+  word for word from the content pack; the row's aria-describedby points at
+  it. Without JS, WebGL or motion, the page renders the same on a static
+  CSS gradient.
 */
 (() => {
   'use strict';
@@ -120,9 +129,16 @@
     return !!r && x >= r.left - 24 && x <= r.right + 24 && y >= r.top - 24 && y <= r.bottom + 24;
   };
   const cancelLeave = () => { clearTimeout(leaveTimer); leaveTimer = 0; };
+  // A pointer still travelling toward the preview keeps the project: the
+  // leave only lands once it stops or turns away.
   const scheduleLeave = () => {
     if (leaveTimer) return;
-    leaveTimer = setTimeout(() => { leaveTimer = 0; if (!overList) setActive(-1); }, 420);
+    const done = () => {
+      if (overList) { leaveTimer = 0; return; }
+      if (movingToStage()) { leaveTimer = setTimeout(done, 120); return; }
+      leaveTimer = 0; setActive(-1);
+    };
+    leaveTimer = setTimeout(done, 420);
   };
   // Intent: a pointer on its way from the active row to the preview crosses
   // other rows. While it is heading into the preview, a row it passes over
@@ -138,13 +154,33 @@
     const s = dy / dx, top = (r.top - a.y) / (r.left - a.x), bot = (r.bottom - a.y) / (r.left - a.x);
     return s >= top && s <= bot;
   }
+  // The trail only updates on pointermove, so a stopped pointer would still
+  // look like it is heading somewhere: require a move in the last 100 ms.
+  function movingToStage() {
+    const last = trail[trail.length - 1];
+    return !!last && performance.now() - last.t < 100 && headingToStage();
+  }
   rows.forEach((row, i) => {
     row.addEventListener('pointerenter', (e) => {
       if (e.pointerType !== 'mouse' && e.pointerType !== 'pen') return;
       overList = true; hoverRow = i; cancelLeave(); clearTimeout(intentTimer);
       if (active >= 0 && active !== i && headingToStage()) {
-        intentTimer = setTimeout(() => { if (hoverRow === i) setActive(i); }, 140);
+        // Switch only if the pointer is still on this row and has stopped
+        // travelling toward the preview (a slow pass across a row is not a choice).
+        const decide = () => {
+          if (hoverRow !== i || !row.matches(':hover')) return;
+          if (movingToStage()) intentTimer = setTimeout(decide, 60);
+          else setActive(i);
+        };
+        intentTimer = setTimeout(decide, 140);
       } else setActive(i);
+    });
+    // Rows are narrower than the list on wide screens, so leaving a row does
+    // not leave the list: a row the pointer only passed over must not win.
+    row.addEventListener('pointerleave', (e) => {
+      if (e.pointerType !== 'mouse' && e.pointerType !== 'pen') return;
+      clearTimeout(intentTimer);
+      if (hoverRow === i) hoverRow = -1;
     });
   });
   list.addEventListener('pointerleave', (e) => { if (e.pointerType !== 'touch') { overList = false; hoverRow = -1; scheduleLeave(); } });
@@ -236,6 +272,18 @@
     if (e.metaKey || e.ctrlKey) window.open(href, '_blank', 'noopener');
     else location.assign(href);
   });
+  // Press feedback on the preview: it gives a little under the button and
+  // springs back on release. The click itself is never delayed.
+  const press = (on) => {
+    root.classList.toggle('pressing', on);
+    if (renderer) renderer.press(on);
+  };
+  document.addEventListener('pointerdown', (e) => {
+    if (e.pointerType !== 'mouse' || e.button !== 0 || active < 0 || e.target.closest('a, button')) return;
+    if (inRect(previewRect(), e.clientX, e.clientY)) press(true);
+  });
+  window.addEventListener('pointerup', () => press(false));
+  window.addEventListener('pointercancel', () => press(false));
 
   // ---------- WebGL ----------
   const VERT = `
@@ -253,7 +301,8 @@
     uniform vec2 u_mouse;    // 0..1, y up
     uniform float u_hover;   // 0..1 cursor presence
     uniform vec3 u_tint;     // active colour (springs between projects)
-    uniform float u_warp;    // extra warp; pulses when the project changes
+    uniform vec3 u_vivid;    // the same hue at higher chroma, for the smoke
+    uniform float u_warp;   // extra warp; pulses when the project changes
     uniform float u_intro;   // 0..1 fade in on load
     uniform float u_left;    // 1 on wide screens: keep the text column calmer
     uniform vec3 u_focus;    // xy: preview centre (0..1), z: strength of the vortex
@@ -308,9 +357,11 @@
       float smoke = smoothstep(0.28, 0.95, v);
       float folds = smoothstep(0.2, 0.9, length(r));
       vec3 col = ground;
-      col += u_tint * v * v * 0.10;                       // broad ambient body
-      col += u_tint * (smoke * smoke) * 0.42;
-      col += u_tint * folds * smoke * 0.30;
+      // Phones (u_left = 0) have no preview, so the smoke itself carries more light.
+      float gain = mix(1.45, 1.0, u_left);
+      col += u_tint * v * v * 0.10 * gain;                // broad ambient body
+      col += u_vivid * (smoke * smoke) * 0.42 * gain;     // smoke in a purer copy of the tint,
+      col += u_vivid * folds * smoke * 0.30;              // so warm hues never read as brown
       col += mix(u_tint, vec3(1.0), 0.45) * pow(smoke, 5.0) * 0.30;
       col += u_tint * lens * 0.08;
       col += u_tint * smoke * fz * 0.30;                  // the chosen project glows
@@ -486,11 +537,13 @@
     }
 
     // Where a project's media sits: contained in the stage, centred, in CSS px, y up.
-    function rectFor(p) {
+    // With `drawn`, the box also shrinks a little while the preview is pressed.
+    function rectFor(p, drawn) {
       if (!stageBox) return null;
       let w = stageBox.width, h = w / p.ratio;
       if (h > stageBox.height) { h = stageBox.height; w = h * p.ratio; }
       if (p.max) { const s = Math.min(1, p.max / Math.max(w, h)); w *= s; h *= s; }
+      if (drawn) { const s = 1 - 0.03 * S.press.x; w *= s; h *= s; }
       const x = stageBox.left + (stageBox.width - w) / 2;
       const top = stageBox.top + (stageBox.height - h) / 2;
       return [x, cssH - (top + h), w, h];
@@ -565,6 +618,7 @@
       focus: new Spring(0, 60, 14),         // vortex strength around the preview
       grain: new Spring(1.35, 40, 12),      // noise frequency
       pace: new Spring(1, 30, 11),          // flow speed (time is integrated, so no jumps)
+      press: new Spring(0, 700, 30),        // preview press: quick in, a small bounce out
     };
     S.intro.target = 1;
     const springs = Object.values(S);
@@ -663,11 +717,11 @@
     // settled, no video plays and the pointer has been still for a second,
     // the field keeps flowing at 30 fps, which looks the same at this speed;
     // after 10 s of that, 20 fps; in a window without focus, 12 fps.
-    let raf = 0, lastRaf = 0, lastDraw = 0, drewLast = false, time = Math.random() * 100, slow = 0, dead = false;
+    let raf = 0, lastRaf = 0, lastDraw = 0, drewLast = false, time = Math.random() * 100, slow = 0, probe = 0, dire = 0, dead = false;
     let settledSince = 0;
     // Phones at rest: the tint drifts through the project hues, one turn a
     // minute, a little lighter than the projects so the smoke reads as colour.
-    const DRIFT = { L: 0.74, C: 0.085, degPerSec: 6 };
+    const DRIFT = { L: 0.76, C: 0.11, degPerSec: 6 };
     const drifting = () => !stageBox && active < 0;
     function wake() { lastInput = Math.max(lastInput, performance.now() - 800); }
     function settled(now) {
@@ -686,9 +740,17 @@
         const gap = now - lastRaf;
         // Thresholds widen per step, so a browser that caps rAF at 30 fps
         // (battery saver: gaps of ~33 ms) only loses the finer field, not sharp media.
-        slow = gap > [22, 40, 50][Math.min(quality, 2)] ? slow + 1 : Math.max(0, slow - 1);
-        if (slow > 45) {
-          slow = 0; quality++;
+        slow = gap > [22, 40, 45][Math.min(quality, 2)] ? slow + 1 : Math.max(0, slow - 1);
+        // Each quality level is on probation for its first 60 drawn frames
+        // (the first 5 skipped: compile and uploads spike), so a weak GPU
+        // steps down within about a second instead of opening with jank.
+        // Frames over 40 ms in probation skip the middle step.
+        probe++;
+        dire = gap > 40 ? dire + 1 : Math.max(0, dire - 1);
+        if (probe <= 5) slow = dire = 0;
+        if (slow > (probe <= 60 ? 15 : 45)) {
+          quality = probe <= 60 && dire > 15 ? Math.max(quality + 1, 2) : quality + 1;
+          slow = dire = probe = 0;
           if (quality >= 3) { dropToCSS(); return; }
           resize();
         }
@@ -717,7 +779,7 @@
       let anyReady = false;
       const slotState = slots.map((s) => {
         const p = s.p;
-        const rect = p && rectFor(p);
+        const rect = p && rectFor(p, true);
         // Video: swap in the newest decoded frame. The poster is frame 0, so this is seamless.
         if (p && p.vid && p.vid.readyState >= 2 && (p.vidFresh || !('requestVideoFrameCallback' in p.vid))) {
           upload(p, p.vid); p.vidFresh = false; p.vidFrames = true;
@@ -737,7 +799,12 @@
       // Chroma eases off while the hue is far from its target, so the middle
       // of a long swing is a soft blend, not a third, muddy colour.
       const hueLeft = Math.abs(S.H.x - S.H.target);
-      const tint = lchToRgb(S.L.x, Math.max(0, S.C.x) * (1 - 0.4 * Math.min(1, Math.max(0, (hueLeft - 25) / 95))), S.H.x);
+      const chroma = Math.max(0, S.C.x) * (1 - 0.4 * Math.min(1, Math.max(0, (hueLeft - 25) / 95)));
+      const tint = lchToRgb(S.L.x, chroma, S.H.x);
+      // Dim reds, pinks and oranges read as brown or mauve, so warm hues get
+      // extra light as well as chroma in the smoke (1 at hue 30, 0 past +-90).
+      const warm = Math.max(0, Math.cos((S.H.x - 30) * Math.PI / 180)) * Math.min(1, chroma / 0.08);
+      const vivid = lchToRgb(S.L.x + 0.1 * warm, chroma * (1.5 + 0.4 * warm), S.H.x);
 
       // Pass 1: field into the small texture.
       gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
@@ -748,6 +815,7 @@
       gl.uniform2f(field.u.u_mouse, S.mx.x, S.my.x);
       gl.uniform1f(field.u.u_hover, S.hover.x);
       gl.uniform3fv(field.u.u_tint, tint);
+      gl.uniform3fv(field.u.u_vivid, vivid);
       gl.uniform1f(field.u.u_warp, S.warp.x);
       gl.uniform1f(field.u.u_intro, Math.min(1, Math.max(0, S.intro.x)));
       gl.uniform1f(field.u.u_left, stageBox ? 1 : 0);
@@ -804,7 +872,9 @@
 
     resize();
     start();
-    return { show, destroy, mediaRect };
+    function pressPreview(on) { S.press.target = on ? 1 : 0; wake(); }
+
+    return { show, destroy, mediaRect, press: pressPreview };
   }
 
   // ---------- boot ----------

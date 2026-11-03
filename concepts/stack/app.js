@@ -21,14 +21,14 @@
   const stage = document.querySelector('.stage');
   const deck = document.querySelector('.deck');
   const dots = [...document.querySelectorAll('.dots button')];
-  const wideMQ = matchMedia('(min-width: 1360px) and (min-height: 640px)');
+  const wideMQ = matchMedia('(min-width: 1280px) and (min-height: 640px)');
   const reduceMQ = matchMedia('(prefers-reduced-motion: reduce)');
   const fine = matchMedia('(hover: hover) and (pointer: fine)');
 
   // ---------- springs ----------
   // [stiffness, damping], mass 1. k400 c30 is the site's "bouncy" spring (motion-brief §1).
   const TUNE = {
-    x: [400, 30], y: [400, 30], r: [400, 30], s: [500, 38],
+    x: [400, 30], y: [400, 30], r: [400, 30], s: [500, 30],   // s settles with a small overshoot
     f: [260, 25],            // the flip: a touch softer so the turn reads
     lift: [400, 40], tx: [300, 30], ty: [300, 30],
   };
@@ -40,10 +40,14 @@
     const front = el.querySelector('.front');
     const title = front.querySelector('h2 a');
     if (title) title.tabIndex = -1;   // the front is one control: the turn button
+    const back = el.querySelector('.back');
+    const glow = document.createElement('span');   // the open card's highlight, moved by transform
+    glow.className = 'glow';
+    glow.setAttribute('aria-hidden', 'true');
+    back.prepend(glow);
     return {
-      el, i, sp, front,
+      el, i, sp, front, back, glow,
       inner: el.querySelector('.inner'),
-      back: el.querySelector('.back'),
       turn: front.querySelector('.turn'),
       rest: el.querySelector('.shadow-rest'),
       lift: el.querySelector('.shadow-lift'),
@@ -66,6 +70,7 @@
   let geo = null;     // fan geometry, cached per layout size
   let cardW = 0, cardH = 0;
   let suppressClick = false;
+  let dotTop = -1;
   let touched = false;
 
   let raf = 0, last = 0;
@@ -98,12 +103,19 @@
     if (!raf) last = 0;
   }
 
+  // The turn eases through edge-on, the way a real card hangs for a moment at 90deg.
+  // Same end points as the spring (0 and 180), so only the pacing changes.
+  const turn = (f) => f + 9 * Math.sin((f * Math.PI) / 90);
+
   function render(c) {
     const { x, y, r, s, f, lift, tx, ty } = c.sp;
+    const a = turn(f.x);
     c.el.style.transform = `translate3d(${x.x.toFixed(2)}px,${y.x.toFixed(2)}px,0) rotate(${r.x.toFixed(3)}deg) scale(${s.x.toFixed(4)})`;
-    c.inner.style.transform = `rotateX(${tx.x.toFixed(2)}deg) rotateY(${(f.x + ty.x).toFixed(2)}deg)`;
+    // 3D only while the card turns or tilts: a flat card has no 3D context to composite.
+    const flat = Math.abs(a) < 0.01 && Math.abs(tx.x) < 0.01 && Math.abs(ty.x) < 0.01;
+    c.inner.style.transform = flat ? '' : `perspective(2200px) rotateX(${tx.x.toFixed(2)}deg) rotateY(${(a + ty.x).toFixed(2)}deg)`;
     // a card seen edge-on casts almost no shadow
-    const edge = Math.abs(Math.cos((f.x * Math.PI) / 180));
+    const edge = Math.abs(Math.cos((a * Math.PI) / 180));
     c.rest.style.opacity = (0.35 + 0.65 * edge).toFixed(3);
     c.lift.style.opacity = (Math.max(0, Math.min(1, lift.x)) * edge).toFixed(3);
   }
@@ -138,9 +150,12 @@
     // while the top card is dragged, the cards behind move up by the drag progress
     const p = drag && drag.moving && mode === 'stack' ? drag.p : 0;
     const dd = d === 0 ? 0 : Math.max(0, Math.min(d, 3) - p);
+    // the card in the hand rises a little and its shadow grows the further it is carried
+    const held = d === 0 && drag && drag.moving && drag.c === c;
     return {
       x: 0, y: dd * 26, r: d === 0 ? 0 : c.seed * Math.min(1, dd),
-      s: 1 - dd * 0.05, f: c.flipped ? 180 : 0, lift: 0, z: N - d,
+      s: held ? 1.03 : 1 - dd * 0.05, f: c.flipped ? 180 : 0,
+      lift: held ? 0.3 + 0.7 * p : 0, z: N - d,
     };
   }
 
@@ -157,8 +172,7 @@
     // Type is sized for the screen at the 1440px scale (0.527) and grows with the card above it.
     const grow = Math.max(1, s / 0.527);
     const half = rad(10);                      // the hand spans -10deg .. +10deg
-    const spread = rad(0.5);                   // cards beside the picked-up one part by this much
-    const a = half + spread;
+    const a = half + rad(1.2);                 // room for the cards that part around a picked-up one
     const reach = (cw * s / 2) * Math.cos(a) + (ch * s / 2) * Math.sin(a);
     const U = 2 * (W / 2 - 16 - reach) * (half / Math.sin(a)); // arc length, first centre to last
     const step = U / (N - 1);                  // px along the arc at the card centres
@@ -173,7 +187,12 @@
     const titleW = strip(cardTop + 72 * grow) - pad - 3;    // the name sits higher, where the strip is wider
     const titlePx = Math.min(15.5 * grow, (15.5 * titleW) / longestWord());
     const panelGap = strip(ch * s * 0.12) + 10 - pad - col; // the panel starts under the next card
-    geo = { W, H, cw, ch, s, half, spread, step, R, drop };
+    // Open: the card keeps its full size where it can; the hand below shows 48 to 92px of its end cards
+    // (the names; the middle of the arc shows `drop` more).
+    const full = Math.min(1, (H - 40) / ch, (W - 40) / cw);
+    const show = Math.min(92, Math.max(48, H - 18 - ch * full - 14 - drop));
+    const openS = Math.min(full, (H - show - drop - 14 - 18) / ch);
+    geo = { W, H, cw, ch, s, half, step, R, drop, pad, col, titleW, show, openS, parts: [], bands: null };
     // CSS gets lengths in card pixels, since the card is scaled by s
     const set = (k, v) => root.style.setProperty(k, v);
     set('--fan-k', (grow / s).toFixed(4));
@@ -181,6 +200,11 @@
     set('--fan-title-w', `${(titleW / s).toFixed(1)}px`);
     set('--fan-title', `${(titlePx / s).toFixed(2)}px`);
     set('--fan-gap', `${(panelGap / s).toFixed(1)}px`);
+    // where each card's index runs, top to bottom, as a fraction of the card from its centre (read once the type is set)
+    geo.bands = cards.map(({ front: f }) => {
+      const t = f.querySelector('h2'), m = f.querySelector('.meta'), h = f.offsetHeight;
+      return [t.offsetTop / h - 0.5, (m.offsetTop + m.offsetHeight) / h - 0.5];
+    });
     return geo;
   }
 
@@ -202,22 +226,68 @@
 
   const fanAngle = (i, g) => (i - (N - 1) / 2) * (g.step / g.R);
 
+  // A card resting in the hand, turned by `t` extra radians about the pivot.
+  function handSlot(i, g, t = 0) {
+    const a = fanAngle(i, g) + t;
+    return { x: g.R * Math.sin(a), y: g.R * (1 - Math.cos(a)) - g.drop / 2, r: deg(a), s: g.s };
+  }
+  // Picked up: out of the hand, a little larger, more upright (by `lean`), on top.
+  function liftSlot(i, g, lean) {
+    const a = fanAngle(i, g), L = 46, h = handSlot(i, g);
+    return { x: h.x + Math.sin(a) * L, y: h.y - Math.cos(a) * L, r: h.r * lean, s: g.s * 1.1 };
+  }
+
+  // How far the cards either side part when card h is picked up, so the hand stays clean:
+  // the card on its right tucks fully under it, the next one clears its edge, and the card
+  // on its left keeps its whole index. Solved on the real corners, once per card per layout size.
+  // Returns [left turn, right turn, lean]; the lean straightens less where that is what keeps the hand clean.
+  function parts(h, g) {
+    if (g.parts[h]) return g.parts[h];
+    const chs = g.ch * g.s, left = -(g.cw * g.s) / 2;
+    const ys = (i) => { const [a, b] = g.bands[i]; return [a, (a + b) / 2, b].map((f) => f * chs); };
+    const at = (S, lx, ly) => {                          // world point of a card's local point
+      const t = rad(S.r);
+      return [S.x + lx * Math.cos(t) - ly * Math.sin(t), S.y + lx * Math.sin(t) + ly * Math.cos(t)];
+    };
+    let out;
+    for (const lean of [0.8, 0.9, 1]) {
+      const L = liftSlot(h, g, lean), hw = (g.cw * L.s) / 2;
+      const edge = (lx, Y) => { const [x0, y0] = at(L, lx, 0); return x0 - (Y - y0) * Math.tan(rad(L.r)); };
+      // smallest gap over the index band between card i's local column lx and L's edge on `side` (positive: clear)
+      const gap = (i, t, lx, side) => Math.min(...ys(i).map((ly) => {
+        const [X, Y] = at(handSlot(i, g, t), lx, ly);
+        return side * (X - edge(side * hw, Y));
+      }));
+      const solve = (i, lx, side) => {
+        let t = rad(0.5);
+        if (i < 0 || i >= N) return t;
+        for (let k = 0; k < 3; k++) t += Math.max(0, 3 - gap(i, side * t, lx, side)) / g.R;
+        return t;
+      };
+      const tr = solve(h + 2, left + g.pad, 1);              // the card after next clears L's right edge
+      const tl = solve(h - 1, left + g.pad + g.col, -1);     // the card before keeps its index clear of L's left edge
+      out = [tl, tr, lean];
+      // the card just right of L stays fully under it, name included
+      if (h + 1 >= N || gap(h + 1, tr, left + g.pad + Math.max(g.col, g.titleW), 1) <= -1) break;
+    }
+    return (g.parts[h] = out);
+  }
+
   function fanSlot(c, g) {
     if (open === c) {
-      return { x: 0, y: 0, r: 0, s: Math.min(1, (g.H - 40) / g.ch, (g.W - 40) / g.cw), f: 180, lift: 1, z: 100 };
+      // the open card sits above the dropped hand, so every card's name stays in sight
+      return { x: 0, y: 18 + (g.ch * g.openS) / 2 - g.H / 2, r: 0, s: g.openS, f: 180, lift: 1, z: 100 };
     }
-    let a = fanAngle(c.i, g);
     const lifted = !open && c.i === hovered;
-    if (!open && hovered >= 0 && !lifted) a += Math.sign(c.i - hovered) * g.spread;
-    let x = g.R * Math.sin(a);
-    let y = g.R * (1 - Math.cos(a)) - g.drop / 2;
-    let s = g.s, r = deg(a);
-    if (lifted) {               // picked up: out of the hand, a little larger, nearly upright, on top
-      const L = 46;
-      x += Math.sin(a) * L; y -= Math.cos(a) * L; s *= 1.08; r *= 0.45;
+    let T;
+    if (lifted) T = liftSlot(c.i, g, parts(c.i, g)[2]);
+    else {
+      let t = 0;
+      if (!open && hovered >= 0) { const [tl, tr] = parts(hovered, g); t = c.i > hovered ? tr : -tl; }
+      T = handSlot(c.i, g, t);
     }
-    if (open) y += g.H / 2 + (g.ch * g.s) / 2 - 92; // the rest of the hand drops to the bottom edge
-    return { x, y, r, s, f: 0, lift: lifted ? 1 : 0, z: lifted ? 50 : c.i + 1 };
+    if (open) T.y += g.H / 2 + (g.ch * g.s) / 2 - g.show - g.drop / 2; // the rest of the hand drops to the bottom edge
+    return { ...T, f: 0, lift: lifted ? 1 : 0, z: lifted ? 50 : c.i + 1 };
   }
 
   // Which card's strip is under the pointer, from the resting geometry (so moving cards never steal it).
@@ -250,10 +320,10 @@
         to(c, p, T[p], jump);
       }
     }
-    dots.forEach((d, i) => {
-      d.setAttribute('aria-current', String(mode === 'stack' && i === top));
-      d.tabIndex = i === top ? 0 : -1;   // the dots are one tab stop too; arrows move along them
-    });
+    if (dotTop !== top) {               // the dots are one tab stop too; arrows move along them
+      dotTop = top;
+      dots.forEach((d, i) => { d.setAttribute('aria-current', String(i === top)); d.tabIndex = i === top ? 0 : -1; });
+    }
     rove();
     kick();
   }
@@ -294,6 +364,19 @@
     for (const art of arts) art.hidden = false;
     const tall = arts.map((art) => art.offsetHeight >= 110);
     arts.forEach((art, i) => { art.hidden = !tall[i]; });
+    fitNums();
+  }
+
+  // Deck only: a card without a picture sets its lead number as large as the card is wide (64px measure, up to 112px).
+  const nums = cards.map((c) => c.front.querySelector('.art--num b')).filter(Boolean);
+  function fitNums() {
+    if (mode !== 'stack') { for (const b of nums) b.style.removeProperty('--num'); return; }
+    for (const b of nums) b.style.setProperty('--num', '64px');
+    const room = nums.map((b) => [b.parentElement.clientWidth, b.offsetWidth]);
+    nums.forEach((b, i) => {
+      const [w, sw] = room[i];
+      b.style.setProperty('--num', `${Math.max(40, Math.min(112, Math.floor((64 * w) / sw))) }px`);
+    });
   }
 
   // Wallet reveal: the open card's still crossfades to its looping demo. Loaded on open only; never under
@@ -521,16 +604,15 @@
     layout();
   });
 
-  // fan: the open card tilts toward the pointer
+  // fan: the open card tilts toward the pointer, and its highlight follows it (not under reduced motion)
   for (const c of cards) {
     c.el.addEventListener('pointermove', (e) => {
-      if (open !== c || drag || !fine.matches) return;
+      if (open !== c || drag || !fine.matches || reduceMQ.matches) return;
       const b = c.el.getBoundingClientRect();
       const px = (e.clientX - b.left) / b.width, py = (e.clientY - b.top) / b.height;
       to(c, 'ty', -(px - 0.5) * 7);  // rotateY sits on top of the 180deg flip, so the sign flips
       to(c, 'tx', -(py - 0.5) * 7);
-      c.back.style.setProperty('--mx', `${((1 - px) * 100).toFixed(1)}%`);
-      c.back.style.setProperty('--my', `${(py * 100).toFixed(1)}%`);
+      c.glow.style.transform = `translate3d(${((1 - px) * cardW).toFixed(1)}px,${(py * cardH).toFixed(1)}px,0)`;
       kick();
     });
     c.el.addEventListener('pointerleave', () => {

@@ -21,6 +21,7 @@
   --line: rgba(23, 24, 22, 0.1);
   --bar: rgba(242, 239, 232, 0.72);
   --bar-line: rgba(23, 24, 22, 0.08);
+  --bar-solid: #efebe4;   /* --bar as it looks over --wall, for when the blur is off */
   --light-off: rgba(23, 24, 22, 0.16);
   --accent: #1d8a4f;
   --select: #2f6fe4;
@@ -46,6 +47,7 @@
     --line: rgba(236, 232, 223, 0.1);
     --bar: rgba(22, 23, 21, 0.66);
     --bar-line: rgba(236, 232, 223, 0.08);
+    --bar-solid: #131412;
     --light-off: rgba(236, 232, 223, 0.18);
     --accent: #3ddc84;
     --select: #3b7cf0;
@@ -156,6 +158,8 @@ ul { list-style: none; margin: 0; padding: 0; }
   box-shadow: inset 0 0 0 0.5px var(--bar-line), 0 8px 30px rgba(0, 0, 0, 0.12);
   transition: transform var(--spring-bouncy-dur) var(--spring-bouncy);
 }
+/* Behind a phone sheet the dock is scaled and dimmed every frame: drop the live blur for a flat tint. */
+.dock.is-sunk .dock__list::before { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--bar-solid); }
 .dock__list.is-flipping::before { transform: scaleX(var(--from, 1)); transition: none; }
 .dock__list > li { position: relative; transform-origin: 50% 100%; transition: transform var(--spring-bouncy-dur) var(--spring-bouncy), opacity var(--dur-base) var(--ease-out); }
 .dock__sep { width: 1px; height: 44px; align-self: center; margin: 0 2px; background: var(--line); display: none; }
@@ -195,7 +199,8 @@ ul { list-style: none; margin: 0; padding: 0; }
   display: flex; flex-direction: column; outline: none; contain: layout;
 }
 /* Keyboard-opened windows show where focus went (a click-opened one doesn't need telling). */
-.win.is-kbd:focus-visible .frame { outline: 2px solid var(--select); outline-offset: 2px; }
+/* A thin ring on the window's own outline, drawn by the shadow layer so the content never covers it. */
+.win.is-kbd:focus-visible::before { box-shadow: 0 0 0 1.5px var(--select), var(--shadow-front); }
 .win[hidden] { display: none; }
 /* The shadow is its own layer at the window's resting rect: it fades out for a flight and back in on landing,
    so the morphing frame never repaints a 64 px blur. */
@@ -206,13 +211,18 @@ ul { list-style: none; margin: 0; padding: 0; }
 .win.is-front::before { box-shadow: var(--shadow-front); }
 .win.is-flying::before { opacity: 0; transition: none; }
 .frame {
-  position: relative; display: flex; flex-direction: column; flex: 1; min-height: 0;
+  position: relative; isolation: isolate; display: flex; flex-direction: column; flex: 1; min-height: 0;
   background: var(--win); border-radius: 12px; overflow: hidden;
   transform-origin: 0 0;
 }
 /* The frame is the backing that morphs; .chrome is counter-scaled so text never stretches. */
 .chrome { display: flex; flex-direction: column; flex: 1; min-height: 0; transform-origin: 0 0; }
-.win.is-moving .frame, .win.is-moving .chrome { will-change: transform, opacity; }
+.win.is-moving .frame, .win.is-moving .chrome, .win.is-moving .genie { will-change: transform, opacity; }
+/* The icon copy that the flight starts and ends as (see app.js): stretched over the frame, hidden at rest. */
+.genie { position: absolute; inset: 0; width: auto; height: auto; border-radius: 0; box-shadow: none; opacity: 0; pointer-events: none; }
+.genie::after { display: none; }
+.genie.icon--own { background: linear-gradient(#27b083, #0f636d); }   /* PowerLeash's PNG has a transparent margin: fill it with the PNG's own teal */
+.win:not(.is-flying) .genie { visibility: hidden; }
 .scrim { position: fixed; inset: 0; background: var(--scrim); opacity: 0; pointer-events: none; display: none; }
 
 .titlebar {
@@ -236,7 +246,14 @@ ul { list-style: none; margin: 0; padding: 0; }
 .grabber { display: none; }
 
 .body { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; container-type: inline-size; }
-.resize { position: absolute; right: 0; bottom: 0; width: 18px; height: 18px; cursor: nwse-resize; touch-action: none; }
+.resize { position: absolute; right: 0; bottom: 0; z-index: 1; width: 24px; height: 24px; cursor: nwse-resize; touch-action: none; }
+/* A faint diagonal grip, shown only while the pointer is over the window. */
+.resize::after {
+  content: ""; position: absolute; right: 4px; bottom: 4px; width: 9px; height: 9px; opacity: 0;
+  background: linear-gradient(135deg, transparent 0 calc(50% - 0.5px), var(--muted) 0 calc(50% + 0.5px), transparent 0 calc(75% - 0.5px), var(--muted) 0 calc(75% + 0.5px), transparent 0);
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) { .win:not(.is-flying):hover .resize::after { opacity: 0.5; } }
 
 /* Window content */
 .media { margin: 0; background: var(--panel); }
@@ -286,14 +303,9 @@ ul { list-style: none; margin: 0; padding: 0; }
 .term__row span { color: #8b887f; }
 .term__row i { display: block; height: 6px; border-radius: 3px; background: #3ddc84; width: calc(var(--v) * 100%); }
 
-.viz--sheet { padding: 18px var(--gut); }
-.viz--sheet table { width: 100%; border-collapse: collapse; font-size: 12px; font-variant-numeric: tabular-nums; background: var(--win); box-shadow: 0 0 0 0.5px var(--line), 0 1px 2px rgba(0,0,0,0.05); border-radius: 6px; overflow: hidden; }
-.viz--sheet th, .viz--sheet td { padding: 6px 10px; text-align: left; border-right: 0.5px solid var(--line); white-space: nowrap; }
-.viz--sheet th:last-child, .viz--sheet td:last-child { border-right: 0; }
-.viz--sheet thead th { font-weight: 500; color: var(--muted); background: color-mix(in srgb, #3b6fe0 7%, var(--panel)); border-bottom: 0.5px solid var(--line); white-space: normal; }
-.viz--sheet tbody th, .viz--sheet thead th:first-child { width: 2.2em; text-align: center; color: var(--muted); font-weight: 500; background: color-mix(in srgb, #3b6fe0 7%, var(--panel)); }
-.viz--sheet td { font-size: 15px; font-weight: 600; color: var(--ink); padding: 9px 10px; }
-.viz--sheet td.is-muted { color: var(--muted); font-weight: 500; }
+/* Merger Monitor: the 3% spread as a bar, with the break-even spread marked on it. */
+.spread { position: relative; display: block; max-width: 420px; height: 10px; border-radius: 5px; background: linear-gradient(90deg, color-mix(in srgb, #3b6fe0 22%, var(--line)) calc(var(--v) * 100%), #3b6fe0 0); }
+.spread i { position: absolute; top: -6px; bottom: -6px; left: calc(var(--v) * 100%); width: 2px; margin-left: -1px; border-radius: 1px; background: var(--ink); }
 
 .viz--menu { position: relative; padding: 36px var(--gut) 22px; background: linear-gradient(160deg, color-mix(in srgb, #1f9b85 18%, var(--panel)), var(--panel)); }
 .menu__bar { position: absolute; inset: 0 0 auto 0; display: flex; justify-content: flex-end; align-items: center; height: 26px; padding: 0 calc(var(--gut) + 6px); background: color-mix(in srgb, var(--win) 60%, transparent); box-shadow: 0 0.5px 0 var(--line); }
@@ -348,7 +360,7 @@ ul { list-style: none; margin: 0; padding: 0; }
   .app .icon { --size: 60px; }
   .app .label { font-size: 11.5px; padding: 0 2px; max-width: 84px; }
 
-  .honesty { position: static; max-width: none; padding: 0 6px; font-size: 0.75rem; }
+  .honesty { position: static; max-width: none; margin-top: auto; padding: 0 6px; font-size: 0.75rem; text-align: center; }   /* pinned above the dock, like page dots */
 
   .dock { left: 16px; right: 16px; bottom: calc(12px + env(safe-area-inset-bottom)); width: auto; max-width: 420px; }
   .dock__list { justify-content: space-evenly; padding: 12px 8px 8px; }
@@ -364,7 +376,7 @@ ul { list-style: none; margin: 0; padding: 0; }
   .scrim { display: block; }
   .frame { border-radius: 0; }
   .win::before { display: none; }
-  .win.is-kbd:focus-visible .frame { outline-offset: -2px; }
+  .win.is-kbd:focus-visible .frame { outline: 2px solid var(--select); outline-offset: -2px; }
   .titlebar {
     position: relative; height: calc(56px + env(safe-area-inset-top)); padding: env(safe-area-inset-top) 12px 0 16px;
     grid-template-columns: 44px 1fr 44px;

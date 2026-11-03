@@ -3,22 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Free weekly — method first, then this week's table</title>
-<meta name="description" content="Free weekly edition. Method first, then the 19 August week-late table. A 3% spread annualises to 24.6%; after costs it is +1.38%. Filings, not advice. Zero subscribers. £0.">
+<title>Free weekly — the method, then the 19 August 2026 table</title>
+<meta name="description" content="Free weekly edition. Method first, then the 19 August 2026 table. A 3% spread annualises to 24.6%; after costs it is +1.38%. Filings, not advice. Zero subscribers. £0.">
 <link rel="canonical" href="https://charliewytk.github.io/weekly/">
 <link rel="icon" href="../media/favicon.svg" type="image/svg+xml">
 <meta name="robots" content="index,follow">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://charliewytk.github.io/weekly/">
-<meta property="og:title" content="Free weekly — method first, then this week's table">
-<meta property="og:description" content="Free weekly edition. Method first, then the 19 August week-late table. A 3% spread annualises to 24.6%; after costs it is +1.38%. Filings, not advice. Zero subscribers. £0.">
+<meta property="og:title" content="Free weekly — the method, then the 19 August 2026 table">
+<meta property="og:description" content="Free weekly edition. Method first, then the 19 August 2026 table. A 3% spread annualises to 24.6%; after costs it is +1.38%. Filings, not advice. Zero subscribers. £0.">
 <meta property="og:image" content="https://charliewytk.github.io/media/og-weekly.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Free weekly: method first. 24.6% annualises; after costs +1.38%. Filings, not advice.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Free weekly — method first, then this week's table">
-<meta name="twitter:description" content="Free weekly edition. Method first, then the 19 August week-late table. A 3% spread annualises to 24.6%; after costs it is +1.38%. Filings, not advice. Zero subscribers. £0.">
+<meta name="twitter:title" content="Free weekly — the method, then the 19 August 2026 table">
+<meta name="twitter:description" content="Free weekly edition. Method first, then the 19 August 2026 table. A 3% spread annualises to 24.6%; after costs it is +1.38%. Filings, not advice. Zero subscribers. £0.">
 <meta name="twitter:image" content="https://charliewytk.github.io/media/og-weekly.png">
 <meta name="twitter:image:alt" content="Free weekly: method first. 24.6% annualises; after costs +1.38%. Filings, not advice.">
 <link rel="stylesheet" href="../assets/site.css">
@@ -28,8 +28,7 @@
   .eyebrow { margin: 0 0 var(--space-4); font-size: var(--text-sm); color: var(--fg-3); }
   .shell h1 { font-size: var(--text-xl); line-height: var(--leading-tight); letter-spacing: var(--tracking-tight); margin-bottom: var(--space-5); }
   .shell h2 { font-size: var(--text-lg); line-height: 1.25; letter-spacing: var(--tracking-snug); margin-bottom: var(--space-3); }
-  .shell p { color: var(--fg-2); }
-  .shell .lead { color: var(--fg); }
+  :where(.shell) p { color: var(--fg-2); }
   section { margin-top: var(--space-8); }
 
   /* the two numbers: what gets marketed, and what is left after costs */
@@ -41,22 +40,31 @@
     letter-spacing: var(--tracking-display); font-variant-numeric: tabular-nums;
   }
   .twoup .bad b { color: var(--fg-4); }
-  .twoup .real b { color: var(--fg); }
   .twoup span { display: block; font-size: var(--text-sm); line-height: 1.45; color: var(--fg-3); }
+  /* one moment: the net figure lands under the annualised one on a spring.
+     A transition from @starting-style, so it stays interruptible; transform and opacity only. */
+  @media (prefers-reduced-motion: no-preference) {
+    .twoup .real b {
+      transform-origin: 0 100%;
+      transition: transform var(--spring-bouncy-dur) var(--spring-bouncy) 340ms, opacity var(--dur-slow) var(--ease-out) 340ms;
+    }
+    @starting-style { .twoup .real b { opacity: 0; transform: translateY(-14px) scale(1.12); } }
+  }
 
   /* table: rows below the published 1.59% break-even are dimmed, not hidden */
   .sample { margin: var(--space-5) 0 var(--space-3); }
-  .sample .tk { font-family: var(--font-mono); font-weight: 600; color: var(--fg); }
+  .sample .tk { font-family: var(--font-mono); font-weight: 600; }
   .sample .co { color: var(--fg-3); }
-  .sample .num { color: var(--fg); }
   .sample th.num { font-family: var(--font-sans); }
   .sample .below td { color: var(--fg-4); }
-  .sample tr:not(.below) + tr.below td { border-top: 1px solid var(--fg-4); }
+  /* collapsed borders: the upper cell wins, so the break-even line goes on the last row above it */
+  .sample tr:not(.below):has(+ tr.below) td { border-bottom-color: var(--fg-4); }
   .sample tbody tr { transition: background-color var(--dur-fast) var(--ease-out); }
   @media (hover: hover) and (pointer: fine) { .sample tbody tr:hover { background: var(--bg-2); } }
 
   .cta { margin: var(--space-8) 0 var(--space-3); }
-  .site-footer { max-width: calc(44rem + 2 * var(--gutter)); margin-top: var(--space-9); }
+  /* footer rule spans the text column exactly, like .shell */
+  .site-footer { width: min(44rem, 100% - 2 * var(--gutter)); max-width: none; margin-top: var(--space-9); padding-inline: 0; }
   .site-footer .site-nav { flex-wrap: wrap; gap: var(--space-3) var(--space-5); }
 
   @media (max-width: 640px) {
@@ -74,28 +82,28 @@
   <a class="site-name" href="../">Charlie Wuytack</a>
   <nav class="site-nav" aria-label="Site">
     <a href="../work/">Work</a>
-    <a href="../merger-monitor/">Merger Monitor</a>
+    <a href="https://github.com/Charliewytk">GitHub</a>
     <a href="mailto:charlie@wuytack.net">Contact</a>
   </nav>
 </header>
 
 <main class="shell" id="main">
   <div class="stagger">
-    <p class="eyebrow" style="--i:0">Free weekly edition &middot; extraction + cost-sizing &middot; not advice</p>
-    <h1 style="--i:1">The method first. Then this week's table. Nothing to pay to read it.</h1>
-    <p class="lead" style="--i:2">Same extractor as the evening table, published seven days late. The arithmetic is walked through at <a href="../example/">/example/</a> &mdash; ACA on this table is the 3% case in the wild.</p>
+    <p class="eyebrow" style="--i:0">Free weekly edition &middot; not advice</p>
+    <h1 style="--i:1">The method first. Then the 19 August 2026 table.</h1>
+    <p class="lead" style="--i:2">Same extractor as the evening table. The arithmetic is walked through at <a href="../example/">/example/</a> &mdash; ACA on this table is the 3% case in the wild.</p>
 
     <div class="twoup" style="--i:3">
-      <div class="bad"><b>24.6%</b><span>a year — a 3% spread over 49 days, annualised. Marketing.</span></div>
-      <div class="real"><b>+1.38%</b><span>per deal — after the stated break rate, break loss, round-trip cost and carry. The net already published.</span></div>
+      <div class="bad"><b>24.6%</b><span>a year: 3% over 49 days, annualised</span></div>
+      <div class="real"><b>+1.38%</b><span>per deal, after break risk, costs and carry</span></div>
     </div>
     <p style="--i:4">Break-even is 1.59%. That is a filing and a price. It is not a recommendation. CRNX on the same table is +0.29%. Price it the same way and it dies after costs. Both rows are published.</p>
     <p style="--i:5">The public calculator at <a href="../sizer/">/sizer/</a> now fails closed to the measured 40bp bar &mdash; unknown stage stays the labelled 1.57% policy.</p>
   </div>
 
   <section>
-    <h2>This week's table &mdash; 19 August 2026, a week late on purpose</h2>
-    <p>Figures are copied from the public week-late table already on this site. Spreads move; these were computed when that page was built. No new ticker is introduced here. Filing sentences stay on the <a href="../merger-monitor/">full 19 August table</a>.</p>
+    <h2>The 19 August 2026 table</h2>
+    <p>Seventeen cash-priced rows from the <a href="../merger-monitor/">full 19 August table</a>. Spreads move; these were computed when that page was built.</p>
     <div class="table-scroll">
     <table class="sample table">
       <thead>
@@ -207,12 +215,12 @@
       </tbody>
     </table>
     </div>
-    <p class="note">Seventeen cash-priced rows. Nine clear the published 1.59% break-even. The rest are published anyway. Unpriced cash deals stay on the <a href="../merger-monitor/">week-late public table</a>, with the sentence each figure was read from.</p>
+    <p class="note">Nine clear the published 1.59% break-even. Unpriced cash deals, and the filing sentence behind each figure, stay on the full table.</p>
   </section>
 
   <section>
     <h2>What this is not</h2>
-    <p>Not advice, not a recommendation, not a tip sheet, and not an order. Extraction and cost-sizing only. No position is held in anything listed. Nothing here is a P&amp;L. The page exists so a stranger can read this week's table without paying, and take the free Sunday mail if they want it emailed.</p>
+    <p>Not advice, not a recommendation, not a tip sheet, and not an order. Extraction and cost-sizing only. No position is held in anything listed. Nothing here is a P&amp;L.</p>
   </section>
 
   <div class="cta">
@@ -222,10 +230,9 @@
 </main>
 
 <footer class="site-footer">
-  <p class="site-legal">Source: the 19 August 2026 week-late table. Method numbers are the 3% case already used on this site. Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
+  <p class="site-legal">Source: the 19 August 2026 table. Method numbers are the 3% case already used on this site. Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
   <nav class="site-nav" aria-label="More">
     <a href="../example/">Worked example</a>
-    <a href="../merger-monitor/">Week-late table</a>
     <a href="../kill-log/">Paper kill log</a>
     <a href="../subscribe/">Tonight's table</a>
   </nav>

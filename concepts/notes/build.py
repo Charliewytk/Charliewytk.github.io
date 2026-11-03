@@ -19,7 +19,6 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 DATA = json.loads((HERE.parent / "_content" / "content.json").read_text())
 OWNER, PROJECTS = DATA["owner"], DATA["projects"]
-SITE_HOST = "charliewytk.github.io"
 FOOTER_LINE = DATA["honesty_lines"][0]["text"]  # site-wide footer (home, every track page)
 
 e = lambda s: html.escape(s or "", quote=True)
@@ -60,25 +59,6 @@ SIZE = {  # intrinsic sizes, so nothing jumps while images load
 PAGE_TITLES = {p["href"]: p["title"] for p in DATA["other_pages"] if p.get("title")}
 
 
-def page_title(href):
-    """A link's label, verbatim: content.json's title if it has one, else the page's own
-    <title> (minus the owner suffix every track page carries, and an SEO tail after ' | ')."""
-    if href in PAGE_TITLES:
-        return PAGE_TITLES[href]
-    if not href.startswith("/"):
-        return None
-    f = ROOT / href.lstrip("/")
-    if f.is_dir() or href.endswith("/"):
-        f = f / "index.html"
-    if not f.is_file():
-        return None
-    m = re.search(r"<title>(.*?)</title>", f.read_text(errors="ignore"), re.S)
-    if not m:
-        return None
-    t = html.unescape(re.sub(r"\s+", " ", m.group(1))).strip()
-    t = re.sub(r" · " + re.escape(OWNER["name"]) + r"$", "", t)
-    return t.split(" | ")[0].strip() or None
-
 # External links that were dead when checked on 3 Nov 2026. They are left out, not relabelled.
 DEAD = {
     "https://www.exeterticketexchange.com",  # HTTP 402, Vercel DEPLOYMENT_DISABLED
@@ -97,17 +77,6 @@ HERO = {"kill-log": 1, "solana": 0, "merger-monitor": 1, "deskstatus": 1, "numer
 # Status words that are honesty labels. The note keeps them as its top line even though
 # the row already shows them; any other status that only repeats the row is dropped.
 KEEP_STATUS = {"Demo", "Live, unstaked", "Play money"}
-
-
-def folder_id(tag):
-    return re.sub(r"[^a-z0-9]+", "-", tag.lower()).strip("-") or "x"
-
-
-FOLDERS = []  # shelf_tag values, verbatim, in homepage order. Only tags that hold two or
-for p in PROJECTS:  # more notes become folders; a folder of one is just that note again.
-    if p["shelf_tag"] not in FOLDERS:
-        FOLDERS.append(p["shelf_tag"])
-FOLDERS = [f for f in FOLDERS if sum(p["shelf_tag"] == f for p in PROJECTS) >= 2]
 
 
 ROOT = HERE.parent.parent  # the site root that /media/... paths resolve against
@@ -169,6 +138,9 @@ PLACE = {
 }
 
 
+LINK_LABEL = {"/subscribe/": "Subscribe"}  # its page title repeats the price its qualifier states
+
+
 def placed(slug):
     pl = PLACE.get(slug, {})
     return [*pl.get("hero", []), *pl.get("link", {}).values(), *pl.get("row", {}).values(),
@@ -191,7 +163,11 @@ def numbers_table(rows, caption=None):
         out.append(f"  <caption>{e(caption)}</caption>")
     out.append("  <tbody>")
     for value, label, qual in rows:
-        out.append(f'    <tr><th scope="row">{e(value)}</th><td>{e(label)}{smalls(qual)}</td></tr>')
+        if value in label:  # the label says the number itself: say it once, marked where it stands
+            a, b = label.split(value, 1)
+            out.append(f'    <tr><td colspan="2" class="said">{e(a)}<strong>{e(value)}</strong>{e(b)}{smalls(qual)}</td></tr>')
+        else:
+            out.append(f'    <tr><th scope="row">{e(value)}</th><td>{e(label)}{smalls(qual)}</td></tr>')
     out += ["  </tbody>", "</table>"]
     return "\n".join(out)
 
@@ -231,9 +207,9 @@ def link_item(href, label, note=None, main=False, ext=False):
 
 
 def links_block(p):
-    """One inset list. Every row is labelled with where it goes, in that page's own words:
-    the project's page first, then its track page (where most of the quoted numbers come
-    from), then titled related pages and live external links."""
+    """One inset list: the project itself, its write-up when that is a separate page (the
+    track page, where the quoted numbers come from), the pages a qualifier belongs to
+    (Merger Monitor's subscribe page), and live external links."""
     primary = p["primary_href"]
     notes = PLACE.get(p["slug"], {}).get("link", {})
     out = []
@@ -244,14 +220,12 @@ def links_block(p):
                 f'  <img src="{e(icon)}" alt="" width="40" height="40" loading="lazy" decoding="async">',
                 f'  <span>{e(name)}</span>',
                 '</a>']
-    items = [link_item(primary, page_title(primary) or p["name"], notes.get(primary), main=True)]
-    seen = {primary}
-    track = p["track_href"]
-    for href in [track, *p["related_hrefs"]]:
-        label = page_title(href) if href == track else PAGE_TITLES.get(href)
-        if href and href not in seen and label:
-            seen.add(href)
-            items.append(link_item(href, label, notes.get(href)))
+    items = [link_item(primary, p["name"], notes.get(primary), main=True)]
+    if p["track_href"] != primary:
+        items.append(link_item(p["track_href"], "Write-up", notes.get(p["track_href"])))
+    for href in p["related_hrefs"]:
+        if href in notes and href not in (primary, p["track_href"]):
+            items.append(link_item(href, LINK_LABEL.get(href, PAGE_TITLES.get(href)), notes[href]))
     for x in p["external_href"]:
         if x["href"] in DEAD:
             continue
@@ -271,7 +245,7 @@ def kill_log_extra():
              numbers_table([(x["value"], x["label"], note_for(x["label"])) for x in led["verdicts"]],
                            caption=led["caption"]["text"]),
              f'<p class="aside">{e(led["as_of"]["text"])}</p>',
-             '<table class="grid edges">\n  <thead><tr><th scope="col">Edge</th><th scope="col">Eaten by</th></tr></thead>\n  <tbody>\n' + "\n".join(
+             '<table class="grid edges">\n  <thead><tr><th scope="col">The edge</th><th scope="col">What eats it</th></tr></thead>\n  <tbody>\n' + "\n".join(
                  f'    <tr><td>{e(x["edge"])}</td><td>{e(x["eaten_by"])}</td></tr>'
                  for x in r["what_ate_the_edges"]) + "\n  </tbody>\n</table>",
              '<ul class="plain">\n' + "\n".join(
@@ -350,27 +324,22 @@ def row(p, first):
     t = thumb(p)
     img = f'<img src="{e(t)}" alt="" width="44" height="44" decoding="async">' if t else ""  # ~16 KB in all, on screen at first paint
     cur = ' aria-current="true"' if first else ""
-    return (f'        <li data-folder="{folder_id(p["shelf_tag"])}"><a class="row" href="#{p["slug"]}"{cur}>'
+    line = p["one_line"]["text"]
+    st = "" if line.lower().startswith(p["status"].lower()) else f'<span class="st">{e(p["status"])}</span> '
+    return (f'        <li><a class="row" href="#{p["slug"]}"{cur}>'
             f'<span class="row-text"><strong>{e(p["name"])}</strong>'
-            f'<span class="preview"><span class="st">{e(p["status"])}</span> <span class="pv">{e(p["one_line"]["text"])}</span></span></span>'
+            f'<span class="preview">{st}<span class="pv">{e(line)}</span></span></span>'
             f'{img}</a></li>')
 
 
-def folder_row(fid, label, count, current=False):
-    cur = ' aria-current="true"' if current else ""
-    return (f'        <li><a class="frow" id="folder-{fid}" href="#folder-{fid}" data-folder="{fid}"{cur}>'
-            f'<svg aria-hidden="true"><use href="#i-folder"/></svg><span>{e(label)}</span>'
-            f'<span class="count">{count}</span><svg class="chev" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>')
-
-
-def folder_css():
-    """Without JS a folder link still filters the list: the link is its own :target."""
-    out = ["html:not(.js) body:has(.frow:target) .frow[aria-current] { background: none; }",
-           "html:not(.js) .frow:target { background: var(--sel-folder); }"]
-    for f in FOLDERS:
-        fid = folder_id(f)
-        out.append(f'html:not(.js) body:has(#folder-{fid}:target) .rows > li:not([data-folder="{fid}"]) {{ display: none; }}')
-    return "\n".join(out)
+def target_css():
+    """Without JS a #note link opens that note (its :target); these rules move the list's
+    selection to it as well, so the highlighted row and the open note always agree."""
+    out = ["@media (min-width: 960px) {",
+           "  html:not(.js) body:has(.note article:target) .row[aria-current] { background: none; }"]
+    for p in PROJECTS:
+        out.append(f'  html:not(.js) body:has(#{p["slug"]}:target) .row[href="#{p["slug"]}"] {{ background: var(--sel); }}')
+    return "\n".join(out + ["}"])
 
 
 def owner_links():
@@ -383,14 +352,10 @@ def owner_links():
 
 
 def build():
-    counts = {f: sum(p["shelf_tag"] == f for p in PROJECTS) for f in FOLDERS}
-    folders = [folder_row("all", "All", len(PROJECTS), True)] + [
-        folder_row(folder_id(f), f, counts[f]) for f in FOLDERS]
     rows = [row(p, i == 0) for i, p in enumerate(PROJECTS)]
     notes = [article(p, i == 0) for i, p in enumerate(PROJECTS)]
     tpl = (HERE / "template.html").read_text()
-    out = (tpl.replace("{{FOLDERS}}", "\n".join(folders))
-              .replace("{{FOLDER_CSS}}", folder_css())
+    out = (tpl.replace("{{TARGET_CSS}}", target_css())
               .replace("{{ROWS}}", "\n".join(rows))
               .replace("{{NOTES}}", "\n".join(notes))
               .replace("{{OWNER_LINKS}}", owner_links())
@@ -404,7 +369,7 @@ def build():
 def check(out):
     text = html.unescape(re.sub(r"<[^>]+>", " ", out))
     text = re.sub(r"\s+", " ", text)
-    need = [FOOTER_LINE, OWNER["name"]]
+    need = [FOOTER_LINE, OWNER["name"], "The edge", "What eats it"]  # /work/ .ledger-head, word for word
     for p in PROJECTS:
         need += [p["name"], p["one_line"]["text"], p["status"]]
         if p["status_detail"]:

@@ -1,0 +1,47 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-11-03T09:38:35.308Z",
+        "reason": "Agent: Linear-clone concept brief asked for Inter Display; reel uses system stack with Inter"
+      },
+      {
+        "rule": "bounce-easing",
+        "value": "var(--spring-bouncy)",
+        "createdAt": "2026-11-03T09:38:35.332Z",
+        "reason": "Agent: gentle spring, 2.6% overshoot, per motion brief; not a bounce"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "concepts/palette/style.css"
+        ],
+        "createdAt": "2026-11-03T09:38:35.355Z",
+        "reason": "Agent: line 279 is a CSS-border play triangle icon, not a card accent"
+      },
+      {
+        "rule": "border-accent-on-rounded",
+        "value": "*",
+        "files": [
+          "concepts/palette/style.css"
+        ],
+        "createdAt": "2026-11-03T09:38:35.399Z",
+        "reason": "Agent: same CSS-border play triangle icon"
+      },
+      {
+        "rule": "clipped-overflow-container",
+        "value": "*",
+        "files": [
+          "concepts/linear/index.html"
+        ],
+        "createdAt": "2026-11-03T09:38:35.426Z",
+        "reason": "Agent: html/body overflow-x clip stops phone side-scroll; no popovers escape it"
+      }
+    ]
+  }
+}

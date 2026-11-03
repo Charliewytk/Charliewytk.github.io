@@ -16,6 +16,7 @@
 <script src="app.js" defer></script>
 </head>
 <body>
+<a class="skip" href="#exetix">Skip to ExeTix</a>
 
 <!--
   REEL. One chapter per project, each exactly one screen tall.
@@ -27,7 +28,9 @@
   marks the current chapter, and turns rail clicks into an interruptible cut.
   Copy and numbers come verbatim from concepts/_content/content.json.
   Films in ./media are the site's own recordings, re-cut: Abyss without its 0.5 s title flash,
-  Doorly from its results (4.9 s) played forward then back so it loops without a jump.
+  Doorly from its results (4.9 s) and Chess from its first 3 s (its own top bar cropped),
+  each played forward then back so it loops without a jump. Chelsea is the original, copied.
+  Films start below the header, so our header never sits on a recording's own UI.
 -->
 
 <header class="top">
@@ -66,7 +69,19 @@
       <h1 class="intro__name" id="intro-t"><span>Charlie</span> <span>Wuytack</span></h1>
       <p class="intro__line">I'd rather build than consume.</p>
     </div>
-    <div class="media" aria-hidden="true"></div>
+    <div class="media" aria-hidden="true">
+      <!-- the reel's own first frames, dimmed and drifting: a preview of what follows -->
+      <div class="intro__wall">
+        <img src="media/abyss-play.webp" width="960" height="540" alt="" decoding="async">
+        <img src="media/chess-live.webp" width="1120" height="654" alt="" decoding="async">
+        <img src="media/chelsea-demo.webp" width="1120" height="700" alt="" decoding="async">
+        <img src="media/doorly-results.webp" width="1120" height="700" alt="" decoding="async">
+        <img src="media/chess-live.webp" width="1120" height="654" alt="" decoding="async">
+        <img src="media/chelsea-demo.webp" width="1120" height="700" alt="" decoding="async">
+        <img src="media/doorly-results.webp" width="1120" height="700" alt="" decoding="async">
+        <img src="media/abyss-play.webp" width="960" height="540" alt="" decoding="async">
+      </div>
+    </div>
   </section>
 
   <!-- ExeTix: real App Store screens -->
@@ -123,7 +138,7 @@
   </section>
 
   <!-- Doorly: demo recording (the results, looped forward and back) -->
-  <section class="ch film" id="doorly" aria-labelledby="doorly-t" style="--tint:#8e9bff; --ar:1.6; --f0:0.24; --f1:0.76">
+  <section class="ch film film--screen" id="doorly" aria-labelledby="doorly-t" style="--tint:#8e9bff; --bg:#0d0b26; --fx:62%">
     <div class="cap">
       <h2 class="cap__title" id="doorly-t"><a href="/doorly/">Doorly<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a></h2>
       <p class="cap__meta">Demo</p>
@@ -159,7 +174,7 @@
   </section>
 
   <!-- DeskStatus: nothing to picture, by design -->
-  <section class="ch plate" id="deskstatus" data-shot="side" aria-labelledby="deskstatus-t" style="--em:4.25; --tint:#3ddc84; --bg:#0b100d">
+  <section class="ch plate" id="deskstatus" data-shot="right" aria-labelledby="deskstatus-t" style="--em:4.25; --desc:1; --tint:#3ddc84; --bg:#0b100d">
     <div class="cap">
       <h2 class="cap__title" id="deskstatus-t"><a href="/tracks/deskstatus/">DeskStatus<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a></h2>
       <p class="cap__meta">Shipped · v1.0.3</p>
@@ -171,7 +186,7 @@
   </section>
 
   <!-- Numerai -->
-  <section class="ch plate" id="numerai" data-shot="right" aria-labelledby="numerai-t" style="--em:1.6; --tint:#a6b6ff; --bg:#0a0d1f">
+  <section class="ch plate" id="numerai" data-shot="side" aria-labelledby="numerai-t" style="--em:1.6; --tint:#a6b6ff; --bg:#0a0d1f">
     <div class="cap">
       <h2 class="cap__title" id="numerai-t"><a href="/tracks/numerai/">Numerai<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a></h2>
       <p class="cap__meta">Live, unstaked</p>
@@ -194,13 +209,14 @@
   </section>
 
   <!-- Chess Exchange: demo recording -->
-  <section class="ch film" id="chess" aria-labelledby="chess-t" style="--tint:#9fd36a; --ar:1.6; --f0:0.02; --f1:0.9">
+  <section class="ch film" id="chess" aria-labelledby="chess-t" style="--tint:#9fd36a; --ar:1.7125; --f0:0.02; --f1:0.9">
     <div class="cap">
       <h2 class="cap__title" id="chess-t"><a href="/tracks/chess-exchange/">Chess Exchange<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a></h2>
+      <p class="cap__meta">Play money</p>
       <p class="fig"><b>W / D / B</b> <span>from any position you paste in</span> <small>Play money. Not a book, not advice.</small></p>
     </div>
     <div class="media">
-      <div class="frame"><video src="/media/chess-demo.mp4" poster="media/chess-demo.webp" width="1120" height="700" muted loop playsinline preload="none" aria-label="Screen recording of Chess Exchange: live boards with play-money markets, a leaderboard and a trade tape"></video></div>
+      <div class="frame"><video src="media/chess-live.mp4" poster="media/chess-live.webp" width="1120" height="654" muted loop playsinline preload="none" aria-label="Screen recording of Chess Exchange: live boards with play-money markets, a leaderboard and a trade tape"></video></div>
     </div>
   </section>
 
@@ -213,7 +229,7 @@
       <p class="fig"><b>11</b> <span>pages, works offline</span></p>
     </div>
     <div class="media">
-      <div class="frame"><video src="/media/chelsea-demo.mp4" poster="media/chelsea-demo.webp" width="1120" height="700" muted loop playsinline preload="none" aria-label="Screen recording of the Chelsea Bikes prototype: a bike shop homepage with shop, repairs and hire"></video></div>
+      <div class="frame"><video src="media/chelsea-demo.mp4" poster="media/chelsea-demo.webp" width="1120" height="700" muted loop playsinline preload="none" aria-label="Screen recording of the Chelsea Bikes prototype: a bike shop homepage with shop, repairs and hire"></video></div>
     </div>
   </section>
 

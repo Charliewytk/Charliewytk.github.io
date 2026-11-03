@@ -27,7 +27,8 @@
   <canvas class="dots" aria-hidden="true"></canvas>
 
   <!-- The plane is the world. Each card sits at world coordinates --x/--y (px at 100% zoom), width --w.
-       Research on the left, products on the right, ExeTix under the name.
+       Research on the left, products on the right, ExeTix under the name. The inner ring sits close
+       around the name so it peeks in on a phone; the outer columns stay off screen at home.
        DOM order = Tab order = project number. data-home marks the cards the opening view frames. -->
   <div class="plane" id="plane">
     <h1 class="name"><span>Charlie</span> <span>Wuytack</span></h1>
@@ -35,7 +36,7 @@
     <ul class="world">
 
       <!-- 01 -->
-      <li class="card" id="exetix" data-home="phone" style="--x:-180; --y:177; --w:360">
+      <li class="card" id="exetix" data-home="phone" style="--x:-190; --y:170; --w:380">
         <article aria-labelledby="exetix-t">
           <h2 class="label"><a id="exetix-t" href="/exetix/">ExeTix</a></h2>
           <div class="face">
@@ -66,7 +67,7 @@
       </li>
 
       <!-- 02 -->
-      <li class="card" id="kill-log" data-home style="--x:-600; --y:-80; --w:300">
+      <li class="card" id="kill-log" data-home style="--x:-578; --y:-150; --w:340">
         <article aria-labelledby="kill-log-t">
           <h2 class="label"><a id="kill-log-t" href="/kill-log/">The Kill Log</a></h2>
           <div class="face">
@@ -99,7 +100,7 @@
       </li>
 
       <!-- 03 -->
-      <li class="card" id="solana" style="--x:-920; --y:-474; --w:280">
+      <li class="card" id="solana" style="--x:-1024; --y:-470; --w:280">
         <article aria-labelledby="solana-t">
           <h2 class="label"><a id="solana-t" href="/tracks/solana/">Solana execution</a></h2>
           <div class="face">
@@ -126,7 +127,7 @@
       </li>
 
       <!-- 04 -->
-      <li class="card" id="merger-monitor" style="--x:-920; --y:-146; --w:280">
+      <li class="card" id="merger-monitor" style="--x:-1024; --y:-130; --w:280">
         <article aria-labelledby="merger-monitor-t">
           <h2 class="label"><a id="merger-monitor-t" href="/merger-monitor/">Merger Monitor</a></h2>
           <div class="face">
@@ -156,7 +157,7 @@
       </li>
 
       <!-- 05 -->
-      <li class="card" id="doorly" style="--x:670; --y:189; --w:300">
+      <li class="card" id="doorly" style="--x:744; --y:70; --w:300">
         <article aria-labelledby="doorly-t">
           <h2 class="label"><a id="doorly-t" href="/doorly/">Doorly</a></h2>
           <div class="face">
@@ -179,7 +180,7 @@
       </li>
 
       <!-- 06 -->
-      <li class="card" id="powerleash" data-home style="--x:300; --y:259; --w:260">
+      <li class="card" id="powerleash" data-home style="--x:238; --y:240; --w:260">
         <article aria-labelledby="powerleash-t">
           <h2 class="label"><a id="powerleash-t" href="/tracks/powerleash/">PowerLeash</a></h2>
           <div class="face">
@@ -208,7 +209,7 @@
       </li>
 
       <!-- 07 -->
-      <li class="card" id="abyss-warden" data-home style="--x:300; --y:-101; --w:330">
+      <li class="card" id="abyss-warden" data-home style="--x:238; --y:-130; --w:330">
         <article aria-labelledby="abyss-warden-t">
           <h2 class="label"><a id="abyss-warden-t" href="/abyss-warden/">Abyss Warden</a></h2>
           <div class="face">
@@ -232,7 +233,7 @@
       </li>
 
       <!-- 08 -->
-      <li class="card" id="deskstatus" style="--x:670; --y:-100; --w:260">
+      <li class="card" id="deskstatus" style="--x:744; --y:-250; --w:260">
         <article aria-labelledby="deskstatus-t">
           <h2 class="label"><a id="deskstatus-t" href="/tracks/deskstatus/">DeskStatus</a></h2>
           <div class="face">
@@ -259,7 +260,7 @@
       </li>
 
       <!-- 09 -->
-      <li class="card" id="numerai" data-home style="--x:-600; --y:267; --w:300">
+      <li class="card" id="numerai" data-home style="--x:-538; --y:200; --w:300">
         <article aria-labelledby="numerai-t">
           <h2 class="label"><a id="numerai-t" href="/tracks/numerai/">Numerai</a></h2>
           <div class="face">
@@ -286,7 +287,7 @@
       </li>
 
       <!-- 10 -->
-      <li class="card" id="competitions" style="--x:-920; --y:267; --w:280">
+      <li class="card" id="competitions" style="--x:-1024; --y:300; --w:280">
         <article aria-labelledby="competitions-t">
           <h2 class="label"><a id="competitions-t" href="/tracks/competitions/">Competitions</a></h2>
           <div class="face">
@@ -315,7 +316,7 @@
       </li>
 
       <!-- 11 -->
-      <li class="card" id="chess-exchange" style="--x:1010; --y:224; --w:300">
+      <li class="card" id="chess-exchange" style="--x:1116; --y:250; --w:300">
         <article aria-labelledby="chess-exchange-t">
           <h2 class="label"><a id="chess-exchange-t" href="/tracks/chess-exchange/">Chess Exchange</a></h2>
           <div class="face">
@@ -339,7 +340,7 @@
       </li>
 
       <!-- 12 -->
-      <li class="card" id="chelsea-bikes" style="--x:1010; --y:-140; --w:300">
+      <li class="card" id="chelsea-bikes" style="--x:1116; --y:-120; --w:300">
         <article aria-labelledby="chelsea-bikes-t">
           <h2 class="label"><a id="chelsea-bikes-t" href="/chelsea-bikes/">Chelsea Bikes</a></h2>
           <div class="face">
@@ -371,7 +372,7 @@
     <canvas class="mini" aria-hidden="true"></canvas>
     <div class="pill zoom">
       <button type="button" data-zoom="out" aria-label="Zoom out">−</button>
-      <button type="button" data-zoom="fit" class="pct" aria-label="Zoom to home view">100%</button>
+      <button type="button" data-zoom="fit" class="pct" aria-label="100%, zoom to home view">100%</button>
       <button type="button" data-zoom="in" aria-label="Zoom in">+</button>
     </div>
   </div>

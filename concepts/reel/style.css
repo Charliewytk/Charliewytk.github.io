@@ -67,6 +67,15 @@ ol, ul { list-style: none; }
 ::selection { background: color-mix(in oklab, var(--tint) 40%, transparent); }
 :focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 4px; }
 
+/* Skip link: the first Tab stop, past the header and the twelve rail ticks */
+.skip {
+  position: fixed; z-index: 20; left: var(--gut); top: calc(8px + env(safe-area-inset-top));
+  padding: 10px 14px; border-radius: 8px;
+  background: var(--ink); color: var(--ground); font-size: 0.875rem; font-weight: 600;
+  transform: translateY(calc(-100% - 16px));
+}
+.skip:focus { transform: none; outline-offset: 2px; }
+
 /* 3. Header + rail --------------------------------------------------------- */
 .top {
   position: fixed; inset: 0 0 auto 0; z-index: 10;
@@ -77,6 +86,13 @@ ol, ul { list-style: none; }
   font-size: 0.875rem; font-weight: 500;
   pointer-events: none;            /* only the links take clicks */
   transition: opacity var(--dur-base) var(--ease-out), visibility 0s;
+}
+/* A soft fixed backdrop: whatever scrolls under the header (a caption in free
+   scroll, a recording's own UI) never meets the header's text. Near-black reads
+   on every chapter ground, which a fixed layer can't know. */
+.top::before {
+  content: ""; position: absolute; inset: 0 0 -24px 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(7,8,7,0.78) 0, rgba(7,8,7,0.5) 55%, rgba(7,8,7,0) 100%);
 }
 .top a { pointer-events: auto; padding: 12px 0; }
 .top__name { transition: opacity var(--dur-base) var(--ease-out), visibility 0s; }
@@ -103,12 +119,20 @@ html[data-at="credits"] .top {
   content: ""; position: absolute; left: 1px; top: 0; bottom: 0; width: 1px;
   background: var(--faint);
 }
+/* Its own backing, so ticks and fill read over any recording (white or busy).
+   A flat tint, not a live blur: nothing per frame over a playing film. */
+.rail::after {
+  content: ""; position: absolute; z-index: -1; inset: -10px -3px; border-radius: 999px;
+  background: rgba(0, 0, 0, 0.55);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
 .rail__fill { background: var(--ink); transform-origin: 50% 0; transform: scaleY(0); }
 .rail ol { display: none; }       /* phone: the fill alone is the rail */
 
 @media (min-width: 760px) {
   .rail { right: calc(var(--gut) - 4px); width: 24px; }
   .rail::before, .rail__fill { left: auto; right: 4px; }
+  .rail::after { inset: -16px 0 -16px 2px; border-radius: 12px; }
   .rail ol { display: block; position: absolute; inset: 0; }
   .rail li { position: absolute; right: 0; top: calc(var(--i) / 13 * 100%);   /* 14 screens: intro, 12 chapters, credits */ }
   /* The tick is a 24x24 target; its visible mark is an 8px line that grows when current */
@@ -224,8 +248,26 @@ html[data-at="credits"] .top {
   .intro .cap > * { grid-area: auto; }
 }
 
-/* Title card */
-.intro .media { background: radial-gradient(90% 70% at 85% 0%, #101410 0%, var(--ground) 60%); }
+/* Title card: the reel's first frames, tiled, dimmed and drifting behind the name */
+.intro .media { background: var(--ground); }
+.intro__wall {
+  position: absolute; left: -20%; top: -12%; width: 150%;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.4vw;
+  transform: rotate(-8deg);
+  opacity: 0.3;
+}
+.intro__wall img { width: 100%; height: auto; aspect-ratio: 1.6; object-fit: cover; border-radius: 1.2vw; }
+.intro__wall img:nth-child(n+5) { translate: -38% 0; }   /* second row offset, like film strip */
+.intro .media::after {          /* the name is the subject: the wall falls away behind it */
+  content: ""; position: absolute; inset: 0;
+  background:
+    linear-gradient(to top, var(--ground) 8%, rgba(7,8,7,0.82) 42%, rgba(7,8,7,0.35) 100%),
+    linear-gradient(to right, rgba(7,8,7,0.7), transparent 70%);
+}
+@media (max-width: 759px) {
+  .intro__wall { width: 300%; left: -70%; top: -4%; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .intro__wall img { border-radius: 10px; }
+}
 .intro__name {
   font-size: min(15vw, 13rem, 24svh);
   font-weight: 650; letter-spacing: -0.05em; line-height: 0.88;
@@ -236,32 +278,55 @@ html[data-at="credits"] .top {
 
 /* 5. Media kinds ----------------------------------------------------------- */
 
-/* Film: a demo recording, full-bleed at every size. On a landscape screen it is
-   cover-fitted; on a portrait one it fills the height and pans slowly across. */
+/* Film: a demo recording, full-bleed below the header at every size. The header
+   sits on black, never on the recording's own UI. On a landscape screen the film
+   is cover-fitted from its top; on a portrait one it fills the height and pans. */
+.film { --fh: calc(var(--ch-h) - var(--top-h)); }    /* the film's height */
 .film .media { background: #000; }
-.film .frame { position: absolute; inset: 0; }
+.film .frame { position: absolute; inset: var(--top-h) 0 0 0; overflow: hidden; }
 .film video { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
-.film .media::after {                       /* scrims: a light one under the header, a deep one under the caption */
+.film:not(.film--screen) .media::after {    /* a deep scrim under the caption */
   content: ""; position: absolute; inset: 0; pointer-events: none;
-  background:
-    linear-gradient(to bottom, rgba(0,0,0,0.72) 0, rgba(0,0,0,0.42) var(--top-h), transparent calc(var(--top-h) + 110px)),
-    linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.88) 22%, rgba(0,0,0,0.6) 36%, rgba(0,0,0,0.22) 47%, transparent 58%);
+  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.88) 22%, rgba(0,0,0,0.6) 36%, rgba(0,0,0,0.22) 47%, transparent 58%);
 }
 @media (max-aspect-ratio: 1/1) {
-  /* Height-filled, so UI text reads at ~1.2x its recorded size. --f0 / --f1 are the
+  /* Height-filled, so UI text reads at ~1.1x its recorded size. --f0 / --f1 are the
      pan's ends as a fraction of the overflow (0 = left edge, 1 = right edge). */
-  .film video {
+  .film:not(.film--screen) video {
     position: absolute; top: 0; left: 0;
     width: auto; max-width: none; height: 100%;
     aspect-ratio: var(--ar);
     object-fit: fill;
-    transform: translateX(calc((100vw - (var(--ch-h) * var(--ar))) * (var(--f0) + var(--f1)) / 2));
+    transform: translateX(calc((100vw - (var(--fh) * var(--ar))) * (var(--f0) + var(--f1)) / 2));
   }
-  .film .media::after {
-    background:
-      linear-gradient(to bottom, rgba(0,0,0,0.9) 0, rgba(0,0,0,0.66) var(--top-h), transparent calc(var(--top-h) + 88px)),
-      linear-gradient(to top, rgba(0,0,0,0.96) 0%, rgba(0,0,0,0.9) 28%, rgba(0,0,0,0.55) 44%, transparent 62%);
+  .film:not(.film--screen) .media::after {
+    background: linear-gradient(to top, rgba(0,0,0,0.96) 0%, rgba(0,0,0,0.9) 28%, rgba(0,0,0,0.55) 44%, transparent 62%);
   }
+}
+
+/* Screen: a bright recording (Doorly) is framed as an inset screen on its own dark
+   ground, like the ExeTix phones, so a white page never floods a dark reel.
+   On a phone the crop rests on the price column (--fx), the point of the demo. */
+.film--screen .media {
+  background: radial-gradient(70% 90% at 70% 30%, color-mix(in oklab, var(--tint) 18%, var(--bg)) 0%, var(--bg) 70%);
+}
+.film--screen .frame {
+  inset: auto;
+  left: var(--gut); right: calc(var(--gut) + 6px); top: calc(var(--top-h) + 12px);
+  height: 50svh;
+  border-radius: 16px;
+  box-shadow: 0 30px 80px -30px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.1);
+}
+.film--screen video { object-position: var(--fx, 50%) 0; }
+@media (min-width: 760px) {
+  .film--screen .frame {
+    --cap-room: calc(min(12.5vw, 10rem, 19svh) * 0.92 + 150px);
+    left: auto; right: calc(var(--gut) + var(--rail-room) + 2vw); top: calc(var(--top-h) + 4svh);
+    height: auto; aspect-ratio: 1.6;
+    width: min(56vw, (100svh - var(--top-h) - 4svh - var(--cap-room)) * 1.6);
+    border-radius: 20px;
+  }
+  .film--screen video { object-position: 50% 0; }
 }
 
 /* Play / pause toggle (added by app.js into the caption; films only move while JS runs).
@@ -350,7 +415,7 @@ html[data-at="credits"] .top {
 .plate .media .fig small { max-width: 44ch; font-size: 0.875rem; text-wrap: pretty; }
 
 .plate[data-shot="right"] .media { --glow-x: 88%; justify-content: flex-start; align-items: flex-end; text-align: right; }
-.plate[data-shot="right"] .media .fig b { margin-left: 0; }
+.plate[data-shot="right"] .media .fig b { margin-left: 0; margin-bottom: calc(var(--desc, 0) * 0.16em); }   /* --desc: 1 when the figure has a descender */
 .plate[data-shot="right"] .media .fig span { max-width: 40ch; text-wrap: balance; }
 .plate[data-shot="right"] .media .fig span,
 .plate[data-shot="right"] .media .fig small { margin-left: auto; }
@@ -376,7 +441,7 @@ html[data-at="credits"] .top {
     display: grid; grid-template-columns: auto minmax(0, 30ch); grid-template-rows: 1fr auto;
     column-gap: clamp(24px, 3vw, 48px); align-items: end;
   }
-  .plate[data-shot="side"] .media .fig b { grid-row: 1 / 3; font-size: min(calc((var(--avail) - 30ch - 48px) / var(--em)), 26rem, 52svh); }
+  .plate[data-shot="side"] .media .fig b { grid-row: 1 / 3; font-size: min(calc((var(--avail) - 30ch - 48px) / var(--em)), 40rem, 52svh); }
   .plate[data-shot="side"] .media .fig span { margin-top: 0; padding-bottom: 0.4em; }
   .plate[data-shot="side"] .media .fig small { grid-column: 2; padding-bottom: 0.9em; margin-top: -0.2em; }
   .plate[data-shot="right"] .media .fig b { font-size: min(calc(var(--avail) / var(--em)), 22rem, 40svh); }
@@ -424,10 +489,10 @@ html[data-at="credits"] .top {
 
 /* 7. Reel motion ----------------------------------------------------------- */
 /* Each chapter's media is tied to its own view timeline:
-     entry  a rounded card rises and opens to full-bleed (clip-path wipe)
+     entry  a rounded card rises and opens to full-bleed (translate + scale)
      exit   the frame pins in place, steps back and dims while the next card covers it
    Snapped (at rest) every chapter is complete, so headless shots, no-JS and
-   unsupported browsers see the full page. Only transform, opacity, clip-path move. */
+   unsupported browsers see the full page. Only transform, opacity, filter move. */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .rail__fill { animation: rail-fill linear both; animation-timeline: scroll(root block); }
@@ -453,28 +518,44 @@ html[data-at="credits"] .top {
       animation-timeline: --ch;
       animation-range: exit 0% exit 100%;
     }
-    /* The entry rides on the children, so it never overrides the pin above.
-       Figures and honesty notes are excluded: they are never revealed late. */
-    .ch:not(.end):not(.intro) .cap > :not(.fig):not(.cap__note):not(:has(.cap__aside)) {
-      animation: cap-in linear both;
+    /* The cut: the title is the only thing that enters, sharpening into place
+       while the media is already open. It rides on the title, so it never
+       overrides the caption's pin. Meta, figures and honesty notes hold still. */
+    .ch:not(.end):not(.intro) .cap__title {
+      animation: title-in linear both;
       animation-timeline: --ch;
-      animation-range: entry 55% entry 100%;
+      animation-range: entry 40% entry 100%;
     }
     /* the first frame is already on screen at load: no entry for it */
     .intro .media { animation-name: none, frame-pin; }
 
     /* Phone films pan slowly across the recording while it plays */
     @media (max-aspect-ratio: 1/1) {
-      .film video { animation: pan 18s var(--ease-in-out) infinite alternate; }
+      .film:not(.film--screen) video { animation: pan 18s var(--ease-in-out) infinite alternate; }
       .film:not([data-playing="true"]) video { animation-play-state: paused; }
     }
   }
 }
+@media (prefers-reduced-motion: no-preference) {
+  /* Title card: the wall drifts while it is the current screen; the name's
+     second line lands on the bouncy spring. */
+  .intro__wall { animation: drift 48s linear infinite alternate; }
+  html[data-at]:not([data-at="top"]) .intro__wall { animation-play-state: paused; }
+  .intro__name span { animation: name-in 900ms var(--spring-bouncy) both; }
+  .intro__name span:first-child { animation-duration: 600ms; animation-timing-function: var(--ease-out); }
+  .intro__name span:last-child { animation-delay: 160ms; }
+  .intro__line { animation: line-in 600ms var(--ease-out) 420ms both; }
+}
+@keyframes drift { to { transform: rotate(-8deg) translateX(-12%); } }
+@keyframes name-in { from { opacity: 0; transform: translateY(0.32em); filter: blur(6px); } }
+@keyframes line-in { from { opacity: 0; transform: translateY(8px); } }
 @keyframes rail-fill { to { transform: scaleY(1); } }
 @keyframes card-open {
-  /* top inset stays above the plate figures, so a number is never clipped once visible */
-  from { clip-path: inset(5% 5% 0 5% round 28px); }
-  to   { clip-path: inset(0 0 0 0 round 0); }
+  /* translate and scale are their own properties, so they compose with the
+     exit pin's transform instead of replacing it. Only the corner radius
+     repaints, and only during the entry. */
+  from { translate: 0 6%; scale: 0.94; border-radius: 28px; }
+  to   { translate: 0 0; scale: 1; border-radius: 0; }
 }
 @keyframes frame-pin {
   /* translateY(100%) cancels the scroll, so the frame holds still underneath */
@@ -483,12 +564,12 @@ html[data-at="credits"] .top {
 @keyframes cap-pin {
   to { transform: translateY(var(--ch-h)) scale(0.92); opacity: 0; }
 }
-@keyframes cap-in {
-  from { opacity: 0.4; transform: translateY(12px); }
+@keyframes title-in {
+  from { opacity: 0.2; transform: translateY(8px); filter: blur(4px); }
 }
 @keyframes pan {
-  from { transform: translateX(calc((100vw - (var(--ch-h) * var(--ar))) * var(--f0))); }
-  to   { transform: translateX(calc((100vw - (var(--ch-h) * var(--ar))) * var(--f1))); }
+  from { transform: translateX(calc((100vw - (var(--fh) * var(--ar))) * var(--f0))); }
+  to   { transform: translateX(calc((100vw - (var(--fh) * var(--ar))) * var(--f1))); }
 }
 
 /* No scroll timelines: the fill tracks the current tick instead (set by app.js) */

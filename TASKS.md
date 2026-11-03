@@ -9,3 +9,4 @@ Local preview: http://localhost:8765/
 - [ ] Track A: assets/site.css, simplify shelf homepage, unify inner pages
 - [ ] Hygiene: README, sw.js version bump, dead files (build.py, research.src.prev.html)
 - [ ] Full test suite, critic, PR (no merge without Charles)
+- [ ] After workflow ends: triage impeccable hook findings (11 issues in concepts/shader, linear, palette, reel, canvas: flat type, overflow clip, Inter font, bounce easing, low contrast). Do not edit while fix2 agents run.

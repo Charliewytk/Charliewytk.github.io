@@ -1,6 +1,6 @@
 /* Notes: a portfolio laid out like Apple Notes.
-   Phone first: three full-screen views in a stack (folders, list, note).
-   From 960px: the same three views side by side as panes. */
+   Phone first: two full-screen views in a stack (list, note).
+   From 960px: the same two views side by side as panes. */
 
 /* ---------- tokens (motion values from _content/motion-brief.md) ---------- */
 :root {
@@ -22,7 +22,6 @@
   --sel: #ffe066;         /* selected note in the list */
   --sel-ink-2: #5c5028;   /* preview text on --sel: 6.1:1 */
   --sel-bar: transparent; /* leading bar on the selection (dark mode only) */
-  --sel-folder: rgba(118, 118, 128, 0.16);
   --scrim: rgba(0, 0, 0, 0.1);
   --bar: rgba(249, 249, 249, 0.8);
   --clear-x: #fff;
@@ -37,7 +36,7 @@
     --bg: #1e1e1e; --grouped: #000000; --card: #1c1c1e; --side: #262626; --list: #222222;
     --ink: #f5f5f7; --ink-2: #a1a1a6; --line: rgba(84, 84, 88, 0.6);
     --fill: rgba(118, 118, 128, 0.24); --press: rgba(118, 118, 128, 0.36);
-    --accent: #ffd60a; --accent-ink: #ffd60a; --sel: #3a3a3c; --sel-ink-2: #c7c7cc; --sel-bar: #ffd60a; --sel-folder: rgba(118, 118, 128, 0.3);
+    --accent: #ffd60a; --accent-ink: #ffd60a; --sel: #3a3a3c; --sel-ink-2: #c7c7cc; --sel-bar: #ffd60a;
     --scrim: rgba(0, 0, 0, 0.4); --bar: rgba(22, 22, 22, 0.78); --clear-x: #1c1c1e; --mark: rgba(255, 214, 10, 0.4);
   }
 }
@@ -46,7 +45,7 @@
   --bg: #1e1e1e; --grouped: #000000; --card: #1c1c1e; --side: #262626; --list: #222222;
   --ink: #f5f5f7; --ink-2: #a1a1a6; --line: rgba(84, 84, 88, 0.6);
   --fill: rgba(118, 118, 128, 0.24); --press: rgba(118, 118, 128, 0.36);
-  --accent: #ffd60a; --accent-ink: #ffd60a; --sel: #3a3a3c; --sel-ink-2: #c7c7cc; --sel-bar: #ffd60a; --sel-folder: rgba(118, 118, 128, 0.3);
+  --accent: #ffd60a; --accent-ink: #ffd60a; --sel: #3a3a3c; --sel-ink-2: #c7c7cc; --sel-bar: #ffd60a;
   --scrim: rgba(0, 0, 0, 0.4); --bar: rgba(22, 22, 22, 0.78); --clear-x: #1c1c1e; --mark: rgba(255, 214, 10, 0.4);
 }
 
@@ -66,6 +65,9 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 svg { display: block; flex: none; }
 img, video { display: block; max-width: 100%; }
 :focus-visible { outline: 2px solid var(--accent-ink); outline-offset: 2px; border-radius: 8px; }
+/* The search field shows focus the way Notes does: no ring, a deeper fill and a yellow caret. */
+#q:focus, #q:focus-visible { outline: none; background: var(--press); }
+#q { caret-color: var(--accent); }
 ::selection { background: var(--mark); }
 ::highlight(q) { background-color: var(--mark); color: inherit; }
 [hidden] { display: none !important; }
@@ -79,18 +81,13 @@ img, video { display: block; max-width: 100%; }
   touch-action: pan-y;            /* vertical scroll stays native; horizontal drags are ours */
   padding-bottom: calc(32px + env(safe-area-inset-bottom));
 }
-.list { z-index: 2; }
 .note { z-index: 3; background: var(--bg); scroll-padding-top: calc(44px + env(safe-area-inset-top)); } /* a #note link lands at the top, not under the bar */
 .list, .note { box-shadow: -1px 0 0 var(--line), -12px 0 32px rgba(0, 0, 0, 0.06); }
-.scrim { position: absolute; inset: 0; z-index: 1; background: var(--scrim); opacity: 0; visibility: hidden; pointer-events: none; }
-.scrim + .screen + .scrim { z-index: 2; }
+.scrim { position: absolute; inset: 0; z-index: 2; background: var(--scrim); opacity: 0; visibility: hidden; pointer-events: none; }
 
-/* Before JS (and without it): the list is home, others wait off screen. */
-.folders { transform: translateX(-30%); visibility: hidden; }
+/* Before JS (and without it): the list is home, the note waits off screen. */
 .note { transform: translateX(100%); visibility: hidden; }
-html:not(.js) .folders:target,
 html:not(.js) .note:has(article:target) { transform: none; visibility: visible; }
-html:not(.js) .folders:target { z-index: 4; }
 .note article { display: none; }
 html.js .note article.is-active,
 html:not(.js) .note article:target { display: block; }
@@ -137,16 +134,12 @@ html:not(.js) .note article:target { display: block; }
 /* iOS inset groups */
 .group { margin: 0 16px; background: var(--card); border-radius: 12px; overflow: hidden; }
 .group > li { position: relative; }
-.group > li + li::before { content: ""; position: absolute; top: 0; left: 16px; right: 0; height: 0.5px; background: var(--line); z-index: 1; }
+/* Hairlines between rows. In the note list only visible rows count, so search never leaves
+   a rule above the first result. */
+.group:not(.rows) > li + li::before,
+.rows > li:not([hidden]) ~ li:not([hidden])::before { content: ""; position: absolute; top: 0; left: 16px; right: 0; height: 0.5px; background: var(--line); z-index: 1; }
 .group a { transition: background-color var(--dur-press) var(--ease-out); }
 .group a:active { background: var(--press); }
-
-/* Folder rows */
-.frow { display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 0 16px; text-decoration: none; }
-.frow > svg:first-child { width: 24px; height: 24px; color: var(--accent); }
-.frow span:first-of-type { flex: 1; }
-.count { color: var(--ink-2); font-variant-numeric: tabular-nums; }
-.chev { width: 8px; height: 14px; color: var(--ink-2); opacity: 0.6; }
 
 /* Note rows */
 .row { display: flex; align-items: center; gap: 12px; min-height: 72px; padding: 10px 16px; text-decoration: none; }
@@ -160,7 +153,6 @@ html:not(.js) .note article:target { display: block; }
 .empty { margin: 48px 16px; text-align: center; color: var(--ink-2); font-size: 20px; font-weight: 600; }
 
 /* Owner links and the honesty footer */
-.owner-side { display: none; }
 .owner { margin-top: 32px; }
 .owner a { display: block; padding: 12px 16px; text-decoration: none; color: var(--accent-ink); }
 .owner p { margin: 16px 32px 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); text-align: center; text-wrap: balance; letter-spacing: 0; }
@@ -185,14 +177,19 @@ html:not(.js) .note article:target { display: block; }
     touch-action: pan-x pan-y; scrollbar-width: none;
   }
   .shots::-webkit-scrollbar { display: none; }
-  .shots img { flex: 0 0 72vw; width: 72vw; scroll-snap-align: start; }
+  /* 72vw wide, but never taller than 60% of the screen, so the first number shows too */
+  .shots img { flex: 0 0 auto; width: auto; height: min(60svh, calc(72vw * 1173 / 540)); scroll-snap-align: start; }
 }
 
 /* Until the poster arrives, the row's square thumbnail fills the middle: the same crop, so
    the picture sharpens in place instead of popping in. */
 .video { position: relative; margin: 24px 0; border-radius: 12px; overflow: hidden; background: #111 center / auto 100% no-repeat; box-shadow: 0 0 0 0.5px var(--line); }
 html:not(.js) .video { background-image: var(--poster) !important; background-size: cover; }
-.video video { width: 100%; height: 100%; object-fit: cover; }
+.video video { width: 100%; height: 100%; object-fit: cover; background: inherit; } /* carries the stand-in, so a morph scales it with the picture */
+/* Phone push: the row thumbnail flying into the note (app.js). Only transform changes. */
+.fly { position: fixed; z-index: 10; overflow: hidden; pointer-events: none; background: #111 center / cover no-repeat; transform-origin: 50% 50%; will-change: transform; }
+.fly img { width: 100%; height: 100%; object-fit: cover; will-change: transform; }
+.flying { visibility: hidden; }
 .vid-toggle {
   position: absolute; right: 8px; bottom: 8px; display: grid; place-items: center;
   width: 44px; height: 44px; border-radius: 50%; color: #fff;
@@ -208,6 +205,7 @@ html:not(.js) .video { background-image: var(--poster) !important; background-si
 .grid th, .grid td { border: 1px solid var(--line); padding: 9px 10px; text-align: left; vertical-align: top; }
 .grid th { width: 1%; min-width: 5.5em; white-space: nowrap; font-weight: 600; font-variant-numeric: tabular-nums; }
 .grid th:first-child, .grid td:first-child { padding-left: 0; }
+.grid .said strong { font-weight: 600; font-variant-numeric: tabular-nums; } /* a label that already says its number */
 .grid small { display: block; margin-top: 3px; font-size: 13px; color: var(--ink-2); letter-spacing: 0; }
 .edges td:first-child { width: 50%; }
 .plain { margin: 20px 0; display: grid; gap: 10px; font-size: 15px; line-height: 1.45; }
@@ -254,39 +252,21 @@ html:not(.js) .video { background-image: var(--poster) !important; background-si
 /* ---------- desktop: three panes ---------- */
 @media (min-width: 960px) {
   body { font-size: 16px; background: var(--bg); }
-  .app { display: grid; grid-template-columns: 220px minmax(280px, 320px) 1fr; grid-template-rows: minmax(0, 1fr) auto; background: var(--side); }
-  .list, .note { grid-row: 1 / -1; }
-  .folders { grid-column: 1; grid-row: 1; }
-  .owner-side { grid-column: 1; grid-row: 2; }
-  .site-line { display: none; } /* the sidebar carries it on desktop */
-  .fine:not(:has(p:not(.site-line))) { display: none; }
+  .app { display: grid; grid-template-columns: minmax(300px, 340px) 1fr; background: var(--side); }
   .screen {
     position: relative; inset: auto; min-height: 0; padding-bottom: 0;
     transform: none !important; visibility: visible !important; box-shadow: none;
     touch-action: auto;
   }
-  .scrim, .bar, .owner-list { display: none; }
-
-  /* Sidebar */
-  .folders { display: flex; flex-direction: column; background: var(--side); border-right: 0.5px solid var(--line); padding: 20px 10px 18px; }
-  .folders .large { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  .frows-wrap { position: relative; }
-  .frows { margin: 0; background: none; border-radius: 0; overflow: visible; display: grid; gap: 1px; }
-  .frow { position: relative; z-index: 1; }
-  .frows > li + li::before { display: none; }
-  .frow { min-height: 30px; padding: 0 10px; gap: 8px; border-radius: 7px; font-size: 13px; }
-  .frow > svg:first-child { width: 17px; height: 17px; }
-  html:not(.js) .frow[aria-current="true"] { background: var(--sel-folder); }
-  .pill.fpill { height: 30px; border-radius: 7px; background: var(--sel-folder); }
-  .pill.fpill::before { display: none; }
-  .chev { display: none; }
-  .owner-side { display: block; margin: 0; padding: 16px 20px 18px; background: var(--side); border-right: 0.5px solid var(--line); }
-  .owner-side ul { display: grid; gap: 2px; }
-  .owner-side a { padding: 4px 0; font-size: 13px; color: var(--ink); }
-  .owner-side p { margin: 14px 0 0; font-size: 11px; text-align: left; }
+  .scrim, .bar { display: none; }
 
   /* List */
   .list { background: var(--list); border-right: 0.5px solid var(--line); padding: 0 10px 24px; }
+  .owner { margin: 28px 10px 0; }
+  .owner .group { margin: 0; background: none; border-radius: 0; display: flex; flex-wrap: wrap; gap: 4px 16px; }
+  .owner .group > li + li::before { display: none; }
+  .owner a { padding: 4px 0; font-size: 13px; }
+  .owner p { margin: 10px 0 0; font-size: 11px; text-align: left; }
   .list .large { margin: 22px 10px 12px; font-size: 20px; line-height: 26px; font-weight: 700; letter-spacing: -0.01em; }
   .search { margin: 0 2px 10px; }
   .search > svg { width: 14px; height: 14px; }
@@ -294,9 +274,7 @@ html:not(.js) .video { background-image: var(--poster) !important; background-si
   .clear { right: 0; width: 30px; height: 30px; margin-top: -15px; }
   .clear svg { width: 14px; height: 14px; }
   .rows { margin: 0; background: none; border-radius: 0; overflow: visible; }
-  .rows > li + li::before { left: 10px; right: 10px; }
-  /* A row leaving on a folder switch fades where it stood while the others close up. */
-  .rows > li.leaving[hidden] { display: block !important; position: absolute; left: 0; right: 0; pointer-events: none; }
+  .rows > li:not([hidden]) ~ li:not([hidden])::before { left: 10px; right: 10px; }
   .row { position: relative; z-index: 1; min-height: 62px; padding: 8px 10px; gap: 10px; border-radius: 8px; }
   .row strong { font-size: 13.5px; }
   .preview { font-size: 12.5px; letter-spacing: 0; }
@@ -329,10 +307,9 @@ html:not(.js) .video { background-image: var(--poster) !important; background-si
   html:not(.js) .note:not(:has(article:target)) article:first-of-type { display: block; }
 }
 @media (min-width: 960px) and (hover: hover) and (pointer: fine) {
-  .row:not([aria-current]):hover { background: var(--fill); }
-  .frow:not([aria-current]):hover { background: var(--fill); }
+  /* No hover fill while arrow keys move the pill, or a resting pointer flashes grey under it */
+  html:not([data-keys]) .row:not([aria-current]):hover { background: var(--fill); }
   .links a:hover { background: var(--press); }
-  .owner-side a:hover { color: var(--accent-ink); }
 }
 
 /* Phone stack: the back label and large titles are moved by app.js, frame by frame. */

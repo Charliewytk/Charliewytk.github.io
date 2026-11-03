@@ -3,24 +3,59 @@
 
 /* ---------- 1. Header: the one paid link ---------- */
 .site-nav a.pay {
-  display: inline-flex; align-items: center; min-height: 30px; padding: 0 12px;
+  display: inline-flex; align-items: center; min-height: 30px; padding: 0 12px; white-space: nowrap;
   border-radius: var(--radius-pill); background: var(--fg); color: var(--bg);
   transition: transform var(--dur-press) var(--ease-out), background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
 }
 .site-nav a.pay:active { transform: scale(0.97); }
 @media (hover: hover) and (pointer: fine) { .site-nav a.pay:hover { background: var(--accent); color: var(--accent-fg); } }
 @media (max-width: 520px) { .site-nav .opt { display: none; } }
+@media (max-width: 380px) { .site-header .site-nav a[href^="mailto:"] { display: none; } }   /* the footer still has the address */
 
 /* ---------- 2. Hero: number, name, what it is ---------- */
 .hero { padding-block: var(--space-9) var(--space-8); }
 .kick { margin: 0 0 var(--space-4); font-size: var(--text-sm); font-weight: 500; color: var(--fg-3); font-variant-numeric: tabular-nums; }
 .kick a { position: relative; color: inherit; text-decoration: none; }
 .kick a::after { content: ""; position: absolute; inset: -12px -8px; }   /* a thumb-sized target */
-@media (hover: hover) and (pointer: fine) { .kick a:hover { color: var(--fg); } }
-.hero h1 { max-width: 14ch; }
+@media (hover: hover) and (pointer: fine) { .kick a:hover { color: var(--fg); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; } }
+.hero h1, .tracklist b { view-transition-class: title; }
+.hero h1 { max-width: 14ch; width: fit-content; }
 .sub { margin: var(--space-3) 0 0; max-width: 22ch; font-size: var(--text-xl); font-weight: 600; line-height: var(--leading-tight); letter-spacing: var(--tracking-tight); color: var(--fg-3); text-wrap: balance; }
 .lede { margin: var(--space-6) 0 0; max-width: 58ch; font-size: var(--text-md); line-height: 1.5; color: var(--fg-2); text-wrap: pretty; }
+.sub.wide { max-width: 30ch; }
 .cta { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-5); }
+
+/* the record itself: the shelf object's colour on the label (--hue on <main>), drawn in CSS, decoration only */
+.disc { display: none; }
+@media (min-width: 821px) {
+  .wrap.hero { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-8); align-items: center; }
+  .disc {
+    display: block; position: relative; width: clamp(220px, 22vw, 320px); aspect-ratio: 1; border-radius: 50%;
+    background: #111110; box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.45), 0 0 0 1px var(--line);
+    view-transition-name: disc;
+  }
+  .disc::before {   /* grooves and label: this layer turns */
+    content: ""; position: absolute; inset: 0; border-radius: inherit;
+    background:
+      radial-gradient(circle, #111110 0 2.4%, transparent 2.6%),
+      radial-gradient(ellipse 11% 1.4% at 50% 39%, rgba(0, 0, 0, 0.26) 0 96%, transparent 100%),
+      radial-gradient(ellipse 7% 1.2% at 50% 43.5%, rgba(0, 0, 0, 0.2) 0 96%, transparent 100%),
+      radial-gradient(circle, transparent 0 28%, rgba(0, 0, 0, 0.16) 28.2% 28.8%, transparent 29%),
+      radial-gradient(circle, var(--hue, var(--accent)) 0 33%, transparent 33.3%),
+      repeating-radial-gradient(circle, #111110 0 2px, #1d1d1b 2px 3px);
+    transition: transform var(--spring-bouncy-dur) var(--spring-bouncy);
+  }
+  .disc::after {    /* the light on it stays put while the record turns */
+    content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    background: conic-gradient(from 20deg, transparent 0 8%, rgba(255, 255, 255, 0.10) 14%, transparent 22% 58%, rgba(255, 255, 255, 0.07) 64%, transparent 72%);
+  }
+  @media (hover: hover) and (pointer: fine) { .disc:hover::before { transform: rotate(120deg); } }
+}
+.kick a::before {   /* on a phone the record shrinks to a dot by the track number */
+  content: ""; display: inline-block; width: 0.75em; height: 0.75em; margin-right: 0.5em; vertical-align: -0.05em; border-radius: 50%;
+  background: radial-gradient(circle, var(--hue, var(--accent)) 0 42%, #111110 46%);
+}
+@media (min-width: 821px) { .kick a::before { display: none; } }
 
 /* ---------- 3. Key numbers ---------- */
 .facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-block: 1px solid var(--line); }
@@ -28,6 +63,12 @@
 .facts > div + div { padding-left: var(--space-5); border-left: 1px solid var(--line); }
 .facts b { display: block; font-size: clamp(1.75rem, 1.6vw + 1.1rem, 2.5rem); font-weight: 600; line-height: 1.05; letter-spacing: var(--tracking-display); font-variant-numeric: tabular-nums; text-wrap: balance; }
 .facts s { color: var(--fg-4); text-decoration-thickness: 2px; }
+@media (prefers-reduced-motion: no-preference) {
+  .facts > div { animation: fact-in var(--spring-bouncy-dur) var(--spring-bouncy) backwards; animation-delay: 80ms; }
+  .facts > div:nth-child(2) { animation-delay: calc(80ms + var(--stagger)); }
+  .facts > div:nth-child(3) { animation-delay: calc(80ms + 2 * var(--stagger)); }
+  @keyframes fact-in { from { opacity: 0; transform: translateY(16px) scale(0.98); } }
+}
 .facts div > span { display: block; margin-top: var(--space-3); font-size: var(--text-sm); line-height: 1.45; color: var(--fg-3); }
 
 /* ---------- 4. Story and liner notes ---------- */
@@ -108,20 +149,29 @@
   padding-block: var(--space-5); border-bottom: 1px solid var(--line); text-decoration: none;
 }
 .tracklist small { font: 500 var(--text-sm) var(--font-mono); color: var(--fg-4); }
-.tracklist b { font-size: clamp(1.5rem, 1.6vw + 1rem, 2.25rem); font-weight: 600; line-height: 1.05; letter-spacing: var(--tracking-tight); transition: transform var(--spring-bouncy-dur) var(--spring-bouncy); }
+.tracklist small::after {   /* hover shows the record's colour */
+  content: ""; display: inline-block; width: 10px; height: 10px; margin-left: 8px; vertical-align: 0; border-radius: 50%;
+  background: radial-gradient(circle, var(--hue) 0 42%, #111110 46%);
+  opacity: 0; transform: scale(0.4); transition: opacity var(--dur-fast) var(--ease-out), transform var(--spring-bouncy-dur) var(--spring-bouncy);
+}
+.tracklist b { justify-self: start; font-size: clamp(1.5rem, 1.6vw + 1rem, 2.25rem); font-weight: 600; line-height: 1.05; letter-spacing: var(--tracking-tight); transition: transform var(--spring-bouncy-dur) var(--spring-bouncy); }
 .tracklist span { font-size: var(--text-sm); color: var(--fg-3); text-align: right; transition: color var(--dur-fast) var(--ease-out); }
 .tracklist a:active b { transform: scale(0.98); transition-duration: var(--dur-press); }
 @media (hover: hover) and (pointer: fine) {
   .tracklist a:hover b { transform: translateX(6px); }
   .tracklist a:hover span { color: var(--fg); }
+  .tracklist a:hover small::after { opacity: 1; transform: none; }
 }
 
 /* ---------- 9. Phone ---------- */
 @media (max-width: 820px) {
   .hero { padding-block: var(--space-7) var(--space-7); }
-  .facts { grid-template-columns: 1fr; }
+  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }   /* two side by side, the third full width */
   .facts > div, .facts > div + div { padding: var(--space-5) 0; border-left: 0; }
-  .facts > div + div { border-top: 1px solid var(--line); }
+  .facts > div:nth-child(2) { padding-left: var(--space-4); border-left: 1px solid var(--line); }
+  .facts > div:first-child { padding-right: var(--space-4); }
+  .facts > div:nth-child(n+3) { grid-column: 1 / -1; border-top: 1px solid var(--line); }
+  .facts b { font-size: 1.5rem; }
   .body { grid-template-columns: 1fr; gap: var(--space-7); padding-block: var(--space-7); }
   .liner { position: static; }
   .steps { grid-template-columns: 1fr; }
@@ -133,19 +183,29 @@
   .next::before { margin-bottom: var(--space-7); }
   .tracklist a { grid-template-columns: 32px minmax(0, 1fr); gap: var(--space-1) var(--space-3); padding-block: var(--space-4); }
   .tracklist span { grid-column: 2; text-align: left; }
+  .tracklist small::after { display: none; }
 }
 
-/* ---------- 10. Flipping tracks: the header stays, the page slides the way you went ---------- */
+/* ---------- 10. Flipping tracks: the header stays, the title morphs, the record turns, the page slides the way you went ---------- */
 @view-transition { navigation: auto; }
 .site-header { view-transition-name: site-header; }
+html:active-view-transition-type(forward) { --dx-out: -8px; --dx-in: 8px; --turn: -90deg; }
+html:active-view-transition-type(back) { --dx-out: 8px; --dx-in: -8px; --turn: 90deg; }
 @media (prefers-reduced-motion: no-preference) {
   ::view-transition-old(root) { animation: track-out var(--dur-exit) var(--ease-in-out) both; }
   ::view-transition-new(root) { animation: track-in var(--dur-slow) var(--ease-in-out) both; }
-  html:active-view-transition-type(forward)::view-transition-old(root) { --dx: -8px; }
-  html:active-view-transition-type(forward)::view-transition-new(root) { --dx: 8px; }
-  html:active-view-transition-type(back)::view-transition-old(root) { --dx: 8px; }
-  html:active-view-transition-type(back)::view-transition-new(root) { --dx: -8px; }
+  /* a title with no partner on the other page slides with the page */
+  ::view-transition-old(*.title):only-child { animation: track-out var(--dur-exit) var(--ease-in-out) both; }
+  ::view-transition-new(*.title):only-child { animation: track-in var(--dur-slow) var(--ease-in-out) both; }
+  /* tracklist row <-> page heading: one title, resized in place */
+  ::view-transition-group(*.title) { animation-duration: var(--spring-snappy-dur); animation-timing-function: var(--spring-snappy); }
+  ::view-transition-old(*.title), ::view-transition-new(*.title) { width: auto; height: 100%; }
+  ::view-transition-old(disc), ::view-transition-new(disc) { mix-blend-mode: normal; }
+  ::view-transition-old(disc) { animation: disc-out var(--dur-slow) var(--ease-out) both; }
+  ::view-transition-new(disc) { animation: disc-in var(--spring-bouncy-dur) var(--spring-bouncy) both; }
 }
 @media (prefers-reduced-motion: reduce) { @view-transition { navigation: none; } }
-@keyframes track-out { to { opacity: 0; transform: translateX(var(--dx, 0)); filter: blur(2px); } }
-@keyframes track-in { from { opacity: 0; transform: translateX(var(--dx, 0)); } }
+@keyframes track-out { to { opacity: 0; transform: translateX(var(--dx-out, 0)); filter: blur(2px); } }
+@keyframes track-in { from { opacity: 0; transform: translateX(var(--dx-in, 0)); } }
+@keyframes disc-out { to { opacity: 0; } }
+@keyframes disc-in { from { opacity: 0; transform: rotate(var(--turn, -45deg)) scale(0.96); } }

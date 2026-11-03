@@ -4,7 +4,7 @@
   --ground: #070807;
   --ink: #ece8df;
   --muted: #a19c90;                /* 7.4:1 on the ground */
-  --faint: #8d887c;                /* 5.7:1 on the ground */
+  --faint: #a6a194;                /* 7.6:1 on the ground, 5.6:1 on panels */
   --tint: #8d887c;                 /* set by app.js to the active project's colour */
   --sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
   --gutter: clamp(16px, 4.4vw, 64px);
@@ -137,16 +137,24 @@ main {
     opacity: 0; transition: opacity var(--dur-base) var(--ease-out);
   }
   .stage img.on { opacity: 1; }
+  /* Pressing the preview: it gives a little, then springs back. */
+  .stage img { transition: opacity var(--dur-base) var(--ease-out), transform var(--spring-bouncy-dur) var(--spring-bouncy); }
+  .pressing .stage img.on { transform: scale(0.97); transition-duration: var(--dur-base), var(--dur-press); transition-timing-function: var(--ease-out); }
+  .pressing .kn.on { transform: scale(0.97); transition-duration: var(--dur-press); transition-timing-function: var(--ease-out); }
   .gl .stage img { display: none; }
   /* Clicking the preview opens the project; app.js sets this over the media. */
   .over-preview, .over-preview * { cursor: pointer; }
 
   /* A project with no media: its key number condenses out of the field. */
+  /* Centred on the stage, which is also the vortex centre: number and smoke share one focal point. */
   .kn {
     grid-area: 1 / 1;
-    width: min(100%, 30rem);
+    width: fit-content; max-width: min(100%, 30rem);
+    text-align: center;
     text-shadow: 0 0 28px rgba(7, 8, 7, 0.7);
+    transition: transform var(--spring-bouncy-dur) var(--spring-bouncy);
   }
+  .kn .nb { white-space: nowrap; }
   .kn > * {
     opacity: 0; filter: blur(12px); transform: translateY(10px) scale(0.985);
     transition: opacity 160ms var(--ease-out), filter 200ms var(--ease-out), transform 200ms var(--ease-out);
@@ -161,9 +169,9 @@ main {
     font-size: clamp(3.5rem, 5vw, 5.5rem); font-weight: 600; letter-spacing: -0.045em; line-height: 1;
     font-variant-numeric: tabular-nums;
   }
-  .kn .l { margin-top: 14px; max-width: 30ch; text-wrap: balance; font-size: 1.0625rem; line-height: 1.4; color: var(--ink); }
+  .kn .l { margin: 14px auto 0; max-width: 30ch; text-wrap: balance; font-size: 1.0625rem; line-height: 1.4; color: var(--ink); }
   /* Brighter than --muted: it sits on lit smoke and carries the qualifier (about 6:1 there). */
-  .kn .k { margin-top: 10px; max-width: 40ch; font-size: 0.8125rem; font-weight: 500; line-height: 1.4; color: #c9c4b8; }
+  .kn .k { margin: 10px auto 0; max-width: 40ch; font-size: 0.8125rem; font-weight: 500; line-height: 1.4; color: #c9c4b8; }
 }
 @media (min-width: 900px) and (max-width: 1180px) {
   .list { width: min(100%, 440px); }
@@ -186,4 +194,5 @@ main {
   .row .t, .stage img, .kn > * { transition: opacity var(--dur-fast) var(--ease-out) !important; }
   .row.is-active > * { transform: none; }
   .kn > * { filter: none; transform: none; }
+  .pressing .stage img.on, .pressing .kn.on { transform: none; }
 }

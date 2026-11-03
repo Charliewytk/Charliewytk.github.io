@@ -1,8 +1,8 @@
 /* Palette concept: behaviour.
    - Type to filter rows (index.html holds the rows; this file never creates them).
    - Arrow keys / pointer move one highlight, driven by an interruptible spring.
-   - Enter or click opens a detail sheet that grows out of the row: tile, title and status
-     travel across (FLIP), and on wide screens the panel's height springs to fit.
+   - Enter or click opens a detail sheet that grows out of the row: tile and title travel
+     across (FLIP), and on wide screens the panel's height springs to fit.
    - Idle: the empty field types out project names and the highlight follows them.
    Copy and numbers below are verbatim from concepts/_content/content.json. */
 (() => {
@@ -12,16 +12,16 @@
   // One entry per project, keyed by the row's data-slug. v = value, l = label, q = qualifier
   // (a qualifier always renders next to its number). exeterticketexchange.com is left out:
   // it answered HTTP 402 on 3 Nov 2026. KILL_LOG.md is left out too: its GitHub repo is private
-  // (404 for visitors). "~£0" renders as a number with its label (pack: research_summary.revenue).
+  // (404 for visitors). The "~£0" line renders as written, in the fine print (pack honesty_lines).
   const DATA = {
     "exetix": {"n": "01", "name": "ExeTix", "href": "/exetix/", "kind": "iPhone app", "status": "Built and sold", "lead": "Pinged the second Exeter tickets drop.", "also": ["Get pinged the second Exeter tickets drop.", "Sold out? Buy a verified student's spare."], "detail": "On the App Store · released 29 Sep 2026 · sold Oct 2026", "numbers": [{"v": "~1–2 s", "l": "from a known release time to the alert"}, {"v": "£0", "l": "seller fees. Sellers keep 100% of their price"}, {"v": "≈⅓", "l": "of a typical student-resale booking fee: card processing, nothing on top"}], "links": [{"label": "On the App Store", "href": "https://apps.apple.com/gb/app/exetix/id6814591245"}], "fine": ["ExeTix is independent. It is not affiliated with the University of Exeter, any venue, or any ticketing platform, and it never buys tickets on other platforms for you."],
       "media": {"shots": [
         {"src": "/exetix/img/screen-alerts.webp", "alt": "ExeTix onboarding screen ‘Be first, every time’ with sample alerts: dropping in 10 min, tickets just dropped, restock, resale listed"},
         {"src": "/exetix/img/screen-explore.webp", "alt": "ExeTix Explore tab: ‘5 club nights tonight’ with a flyer for Indie Thursday at Timepiece and a Dropping soon rail"},
         {"src": "/exetix/img/screen-drops.webp", "alt": "ExeTix Drops tab: the next drop counting down and sold-out nights watched for restocks"}]}},
-    "kill-log": {"n": "02", "name": "The Kill Log", "href": "/kill-log/", "kind": "Quant research", "status": "Research", "lead": "Research that says no.", "also": ["Most trading ideas die. This is where they die on the record."], "detail": "Two strategies in small-size live execution tests. Nothing here claims a profit yet", "numbers": [{"v": "~170", "l": "pre-registered hypotheses across two programmes"}, {"v": "50 / 65", "l": "trading lanes on the second ledger killed, on the record", "q": "From the lane ledger as of 30 September 2026."}, {"v": "p ≈ 1.0", "l": "deflated Sharpe of the best of 3,038 model trials. The honest answer"}, {"v": "110", "l": "paper hypotheses. They died to costs.", "q": "This is a paper book. No live P&L is claimed. No live book is implied."}, {"v": "~£0", "l": "Live tests run at tiny size to measure real fills against paper; paper and backtest numbers are labelled as such throughout."}], "links": [{"label": "Research", "href": "/tracks/research/"}], "fine": ["Scaling up needs a separate, pre-registered live test.", "Separately, the meme-desk auditor has closed about 70 entry and exit variants as failed or inconclusive, with no pass standing.", "No position is held in anything listed."]},
-    "solana": {"n": "03", "name": "Solana execution", "href": "/tracks/solana/", "kind": "On-chain infrastructure", "status": "Live execution test", "lead": "Fast enough. Then I measured whether fast mattered.", "also": ["A third of a millisecond, and why it didn't matter.", "Trigger to exit in a third of a millisecond."], "detail": "0.25 SOL clips since 30 Sep 2026", "numbers": [{"v": "0.33 ms", "l": "p50, trigger to ready-to-sign sell bytes (p90 1.2 ms)"}, {"v": "0.4 points", "l": "Replayed on the same positions, it improved the average stop fill by 0.4 points", "q": "Fills are simulated at the estimated landing slot, not landed."}, {"v": "0.0 bps", "l": "median error of my integer AMM quote against the on-chain fill"}, {"v": "~£0", "l": "Live tests run at tiny size to measure real fills against paper; paper and backtest numbers are labelled as such throughout."}], "fine": ["Two strategies in small-size live execution tests. Nothing here claims a profit yet", "Scaling up needs a separate, pre-registered live test."]},
-    "merger-monitor": {"n": "04", "name": "Merger Monitor", "href": "/merger-monitor/", "kind": "Data product · SEC filings", "status": "Live · £5/month", "lead": "A table of filings, not a tip sheet.", "also": ["A 3% spread is not 24.6% a year."], "numbers": [{"v": "24.6%", "l": "what a 3% spread looks like annualised. That number is marketing"}, {"v": "+1.38%", "l": "per deal after break risk, costs and forgone carry", "q": "A floor, not a ceiling: deals that die before a definitive proxy never enter the sample. Filings, not advice."}, {"v": "1.59%", "l": "break-even spread. Thinner deals lose money on average"}, {"v": "£5/month", "l": "the same table, emailed the evening it is built", "q": "Zero subscribers so far. Take: £0."}], "links": [{"label": "Pay on Gumroad", "href": "https://wuytackcharlie.gumroad.com/l/mergermonitor", "note": "£5/month on Gumroad. Cancel there. 7-day refund."}], "fine": ["Nothing here is investment advice. No position is held in anything listed."]},
+    "kill-log": {"n": "02", "name": "The Kill Log", "href": "/kill-log/", "kind": "Quant research", "status": "Research", "lead": "Research that says no.", "also": ["Most trading ideas die. This is where they die on the record."], "detail": "Two strategies in small-size live execution tests. Nothing here claims a profit yet", "numbers": [{"v": "~170", "l": "pre-registered hypotheses across two programmes"}, {"v": "50 / 65", "l": "trading lanes on the second ledger killed, on the record", "q": "From the lane ledger as of 30 September 2026."}, {"v": "p ≈ 1.0", "l": "deflated Sharpe of the best of 3,038 model trials. The honest answer"}, {"v": "110", "l": "paper hypotheses. They died to costs.", "q": "This is a paper book. No live P&L is claimed. No live book is implied."}], "links": [{"label": "Research", "href": "/tracks/research/"}], "fine": ["~£0. Live tests run at tiny size to measure real fills against paper; paper and backtest numbers are labelled as such throughout.", "Scaling up needs a separate, pre-registered live test.", "Separately, the meme-desk auditor has closed about 70 entry and exit variants as failed or inconclusive, with no pass standing.", "No position is held in anything listed."]},
+    "solana": {"n": "03", "name": "Solana execution", "href": "/tracks/solana/", "kind": "On-chain infrastructure", "status": "Live execution test", "lead": "Fast enough. Then I measured whether fast mattered.", "also": ["A third of a millisecond, and why it didn't matter.", "Trigger to exit in a third of a millisecond."], "detail": "0.25 SOL clips since 30 Sep 2026", "numbers": [{"v": "0.33 ms", "l": "p50, trigger to ready-to-sign sell bytes (p90 1.2 ms)"}, {"v": "0.4 points", "l": "Replayed on the same positions, it improved the average stop fill by 0.4 points", "q": "Fills are simulated at the estimated landing slot, not landed."}, {"v": "0.0 bps", "l": "median error of my integer AMM quote against the on-chain fill"}], "fine": ["Two strategies in small-size live execution tests. Nothing here claims a profit yet", "~£0. Live tests run at tiny size to measure real fills against paper; paper and backtest numbers are labelled as such throughout.", "Scaling up needs a separate, pre-registered live test."]},
+    "merger-monitor": {"n": "04", "name": "Merger Monitor", "href": "/merger-monitor/", "kind": "Data product · SEC filings", "status": "Live · £5/month", "lead": "A table of filings, not a tip sheet.", "also": ["A 3% spread is not 24.6% a year."], "numbers": [{"v": "24.6%", "l": "what a 3% spread looks like annualised. That number is marketing"}, {"v": "+1.38%", "l": "per deal after break risk, costs and forgone carry", "q": "A floor, not a ceiling: deals that die before a definitive proxy never enter the sample. Filings, not advice."}, {"v": "1.59%", "l": "break-even spread. Thinner deals lose money on average"}, {"v": "£5/month", "l": "the same table, emailed the evening it is built", "q": "Zero subscribers so far. Take: £0."}], "links": [{"label": "Pay on Gumroad", "href": "https://wuytackcharlie.gumroad.com/l/mergermonitor", "note": "£5/month on Gumroad. Cancel there. 7-day refund."}], "fine": ["Zero subscribers. Take: £0. Filings, not advice.", "Nothing here is investment advice. No position is held in anything listed."]},
     "doorly": {"n": "05", "name": "Doorly", "href": "/doorly/", "kind": "Web + iOS", "status": "Demo", "lead": "The cheapest flight isn't the cheapest trip.", "also": ["Flight search that ranks the whole door-to-door trip, not just the fare."], "numbers": [{"v": "£120 < £130", "l": "until you add the journey to the airport", "q": "Demo fares, labelled as such."}],
       "media": {"video": "/media/doorly-demo.mp4", "poster": "/media/doorly.jpg", "w": 1400, "h": 972}},
     "powerleash": {"n": "06", "name": "PowerLeash", "href": "/tracks/powerleash/", "kind": "macOS utility", "status": "Download", "lead": "A Mac menu-bar tool with one job.", "also": ["A low power mode that leaves the app in front alone.", "Holds the charger's cap at 42.8 W."], "numbers": [{"v": "42.8 W", "l": "held under a sustained 8-thread burn"}, {"v": "59.0 → 42.7 W", "l": "system load, before and after Match Charger"}, {"v": "−15.6 → −3.5 W", "l": "battery flow while plugged in: from draining hard to nearly break-even", "q": "Battery savings are not quantified yet."}], "download": {"href": "/downloads/PowerLeash.zip", "note": "Apple Silicon, unsigned. Unzip → drag PowerLeash.app to /Applications → right-click Open. Double-click is blocked by Gatekeeper; that is expected. Battery savings are not quantified yet."}},
@@ -60,12 +60,14 @@
     const nameEl = el.querySelector('.name');
     const extra = d
       ? [d.lead, ...d.also, d.kind, d.status, d.detail || '', ...d.numbers.flatMap((x) => [x.v, x.l, x.q || ''])]
-      : [el.dataset.keys || '', el.querySelector('.acc').textContent];
+      : [el.dataset.keys || '', el.textContent];
     return { el, d, nameEl, name: nameEl.textContent, keys: extra.join(' ').toLowerCase() };
   });
   let shown = items.slice();   // rows currently visible, in DOM order
   let active = 0;              // index into shown
   let quietHl = false;         // true while the highlight shows an idle suggestion (no aria state)
+  let hlOff = false;           // true when a search matches no project: nothing is selected, Enter does nothing
+  let kbd = false;             // a key moved the highlight (touch screens hide it otherwise)
 
   // Upgrade the plain links to a combobox + listbox (WAI-ARIA 1.2 pattern).
   input.setAttribute('role', 'combobox');
@@ -132,13 +134,21 @@
     const y = el.offsetTop - list.clientTop;
     hlH = el.offsetHeight || hlH;
     moveHl(y, animate && !reduced.matches);
+    if (!quiet) hlOff = false;
     if (openSlug && morph.target === 0) { hlFree = true; hl.style.visibility = ''; }
+    syncHl();
     // Keep the row in view; instant, never smooth (motion brief §2).
     const top = el.offsetTop - 8, bottom = el.offsetTop + el.offsetHeight + 8;
     if (top < list.scrollTop) list.scrollTop = top;
     else if (bottom > list.scrollTop + list.clientHeight) list.scrollTop = bottom - list.clientHeight;
   }
   const indexOf = (el) => shown.findIndex((it) => it.el === el);
+  // On touch the list is flat at rest: the pill shows only under a press, for an idle suggestion,
+  // while a query decides what "go" opens, or once a keyboard is in use.
+  function syncHl() {
+    const show = !hlOff && (fine.matches || kbd || idleOn || input.value.trim() !== '' || hl.classList.contains('press'));
+    hl.classList.toggle('off', !show);
+  }
 
   // ---------------------------------------------------------------- panel size
   // Wide screens: the panel's top stays put and its height follows the content, like Raycast.
@@ -146,7 +156,7 @@
   // to the sheet's own height. Phones keep the full-height panel from style.css.
   const MIN_SHEET = 420;
   let sized = false, chrome = 0, maxH = 0, sheetH = 0;
-  const sizeSpring = spring({ k: 520, c: 44, eps: 0.3, onFrame: () => { if (flip) renderMorph(morph.value); else applyHeight(0); } });
+  const sizeSpring = spring({ k: 520, c: 44, eps: 0.3, onFrame: () => { if (!sized) return; if (flip) renderMorph(morph.value); else applyHeight(0); } });
 
   // Height the list needs right now: its last child (the Links group) never hides.
   const listContentH = () => { const g = list.lastElementChild; return g.offsetTop + g.offsetHeight + PAD; };
@@ -186,10 +196,21 @@
     const at = n.indexOf(q);
     if (at === 0) return { score: 100, marks: range(0, q.length) };
     if (at > 0) return { score: n[at - 1] === ' ' ? 80 : 60, marks: range(at, at + q.length) };
-    const marks = [];
-    let j = 0;
-    for (let i = 0; i < n.length && j < q.length; i++) if (n[i] === q[j]) { marks.push(i); j++; }
-    if (j === q.length && q.length > 1) return { score: 40 - (marks[marks.length - 1] - marks[0]), marks };
+    // In-order letters, Raycast style: each letter either follows the previous one or starts a
+    // word ("pl" finds PowerLeash, "tkl" The Kill Log), so "chess" never lights up scattered
+    // letters across "Chelsea Bikes".
+    if (q.length > 1) {
+      const N = it.name;
+      const edge = (i) => i === 0 || N[i - 1] === ' ' || (N[i] !== N[i].toLowerCase() && N[i - 1] === N[i - 1].toLowerCase());
+      const marks = [];
+      for (let j = 0, prev = -1; j < q.length; j++) {
+        let i = prev + 1;
+        if (n[i] !== q[j] || prev < 0) { while (i < n.length && !(n[i] === q[j] && edge(i))) i++; }
+        if (i >= n.length) { marks.length = 0; break; }
+        marks.push(i); prev = i;
+      }
+      if (marks.length === q.length) return { score: 40 - (marks[marks.length - 1] - marks[0]) / n.length, marks };
+    }
     if (it.keys.includes(q)) return { score: 20, marks: [] };
     return { score: 0, marks: [] };
   }
@@ -220,16 +241,18 @@
     field.classList.toggle('has-value', raw.length > 0);
     // #empty is aria-hidden (a listbox may only hold options), so the live region says it instead.
     live.textContent = !q ? '' : projects ? `${projects} ${projects === 1 ? 'project' : 'projects'}` : empty.textContent;
-    setActive(best < 0 ? 0 : best, false);
+    setActive(best < 0 ? 0 : best, false, !projects && !!q);
+    hlOff = !projects && !!q;   // no project matched: leave the links unselected until an arrow key
+    syncHl();
     fitList(true);
   }
 
   // ---------------------------------------------------------------- detail sheet
   // One spring value p drives the whole morph: 0 = row, 1 = sheet. Reversing mid-flight keeps velocity.
-  // Tile, title and status travel from the row (shared elements); the rest fades in under them.
+  // Tile and title travel from the row (shared elements); the rest fades in under them.
   let openSlug = null, flip = null, video = null, popSkip = false;
   const isOpen = () => !!openSlug && morph.target === 1;   // open, or opening; a closing sheet acts as the list
-  const morph = spring({ k: 300, c: 26, eps: 0.002, onFrame: renderMorph, onRest: (p) => { if (p === 0) closed(); else settledOpen(); } });
+  const morph = spring({ k: 400, c: 40, eps: 0.002, onFrame: renderMorph, onRest: (p) => { if (p === 0) closed(); else settledOpen(); } });
 
   function sheetHTML(slug) {
     const d = DATA[slug];
@@ -247,7 +270,7 @@
     return `<div class="s-inner">
       <div class="s-head">
         <span class="s-tile"><span class="bloom" aria-hidden="true"></span><span class="s-tile-slot"></span></span>
-        <div><h2 class="s-title" id="s-title">${esc(d.name)}</h2><p class="s-meta"><span class="s-kind s-rest">${esc(d.kind)}<span class="s-dot" aria-hidden="true"> · </span></span><span class="s-status">${esc(d.status)}</span></p></div>
+        <div><h2 class="s-title" id="s-title">${esc(d.name)}</h2><p class="s-meta"><span class="s-kind">${esc(d.kind)}<span class="s-dot" aria-hidden="true"> · </span></span><span class="s-status">${esc(d.status)}</span></p></div>
       </div>
       <div class="s-rest">
         <p class="s-lead">${esc(d.lead)}</p>
@@ -274,7 +297,7 @@
     const sh = {
       tile: scroller.querySelector('.s-tile'),
       title: scroller.querySelector('.s-title'),
-      status: scroller.querySelector('.s-status'),
+      meta: scroller.querySelector('.s-meta'),
     };
     Object.values(sh).forEach((el) => { el.style.transform = ''; });
     const listT = list.style.transform; list.style.transform = '';
@@ -282,15 +305,14 @@
     const box = results.getBoundingClientRect(), r = row.el.getBoundingClientRect();
     const rt = row.el.querySelector('.tile').getBoundingClientRect(), st = sh.tile.getBoundingClientRect();
     const rn = row.nameEl.getBoundingClientRect(), sn = sh.title.getBoundingClientRect();
-    const ra = row.el.querySelector('.acc').getBoundingClientRect(), ss = sh.status.getBoundingClientRect();
     const fs = parseFloat(getComputedStyle(row.nameEl).fontSize) / parseFloat(getComputedStyle(sh.title).fontSize);
     list.style.transform = listT;
     return {
       top: r.top - box.top, bottom: r.bottom - box.top, left: r.left - box.left, right: box.right - r.right,
       resH: box.height,
       tile: { el: sh.tile, dx: rt.left - st.left, dy: rt.top - st.top - s, s: rt.width / st.width },
-      title: { el: sh.title, dx: rn.left - sn.left, dy: rn.top - sn.top - s, s: fs },
-      status: { el: sh.status, dx: ra.right - ss.right, dy: ra.top - ss.top - s, s: parseFloat(getComputedStyle(row.el.querySelector('.acc')).fontSize) / parseFloat(getComputedStyle(sh.status).fontSize) },
+      title: { el: sh.title, dx: rn.left - sn.left, dy: rn.top - sn.top - s, s: fs, h: sn.height },
+      meta: sh.meta,
       rest: [...scroller.querySelectorAll('.s-rest')],
       bloom: scroller.querySelector('.bloom'),
     };
@@ -310,20 +332,22 @@
     sheetBg.style.opacity = still ? cp * 0.45 : lerp(1, 0.45, cp);
     // A soft light blooms behind the icon as it lands, then settles to a faint glow.
     flip.bloom.style.opacity = still ? cp * 0.3 : Math.sin(Math.PI * cp) * 0.85 + cp * 0.3;
-    // Shared elements travel from the row to the header. Tile and title keep the spring's
-    // overshoot; the status lands without it, so it never slides over the text beside it.
-    for (const f of [flip.tile, flip.title, flip.status]) {
-      const q = f === flip.status ? 1 - cp : inv;
-      f.el.style.transform = still ? '' : `translate3d(${f.dx * q}px, ${(f.dy + s) * q}px, 0) scale(${lerp(f.s, 1, p)})`;
+    // Shared elements travel from the row to the header: the tile and the title, from one value.
+    const t = flip.title, sc = lerp(t.s, 1, p);
+    for (const f of [flip.tile, t]) {
+      f.el.style.transform = still ? '' : `translate3d(${f.dx * inv}px, ${(f.dy + s) * inv}px, 0) scale(${lerp(f.s, 1, p)})`;
       if (still) f.el.style.opacity = cp;
     }
+    // The meta line ("Kind · Status") hangs off the title's bottom-left corner as one unit, so it
+    // can never cross the title, and appears only as the title lands. The row's own label fades
+    // out with the list, so nothing flies across the panel on its own.
+    flip.meta.style.opacity = still ? cp : clamp01((p - 0.75) / 0.25);
+    flip.meta.style.transform = still ? '' : `translate3d(${t.dx * inv}px, ${(t.dy + s) * inv - t.h * (1 - sc)}px, 0)`;
     // Everything else rides along under the title and fades in as the shape opens up.
-    // The kind stays out of the way until the status has landed, so only the status travels.
-    const o = clamp01((p - 0.2) / 0.5), ko = clamp01((p - 0.8) / 0.2);
+    const o = clamp01((p - 0.2) / 0.5);
     flip.rest.forEach((el) => {
-      if (el.classList.contains('s-kind')) { el.style.opacity = still ? cp : ko; return; }
       el.style.opacity = still ? cp : o;
-      el.style.transform = still ? '' : `translate3d(0, ${(flip.title.dy + s) * inv}px, 0)`;
+      el.style.transform = still ? '' : `translate3d(0, ${(t.dy + s) * inv}px, 0)`;
     });
     // The list steps back underneath, gone before the content arrives (the sheet is translucent).
     list.style.opacity = 1 - clamp01(p * 2.5);
@@ -344,6 +368,7 @@
       fitMeta();
       flip = measure(row);
       if (sized) fitSheet();
+      renderMorph(0);   // put the sheet in its start pose now, so no frame can show it at rest
     }
     openSlug = slug;
     hlFree = false;
@@ -358,7 +383,7 @@
     back.tabIndex = 0;
     input.setAttribute('aria-expanded', 'false');
     if (push) history.pushState({ sheet: slug }, '', `#/${slug}`);
-    if (instant) morph.jump(1); else if (reduced.matches) fade(1); else morph.set(1, { k: 300, c: 26 });
+    if (instant) morph.jump(1); else if (reduced.matches) fade(1); else morph.set(1, { k: 400, c: 40 });   // critically damped: sheets never overshoot
     $('#s-open').focus({ preventScroll: true });
   }
 
@@ -468,11 +493,11 @@
       field.classList.remove('typing');
       await wait(420); if (!idleOn) return;
     }
-    idleOn = false; idleDone = true; ghost.textContent = '';
+    idleOn = false; idleDone = true; ghost.textContent = ''; syncHl();
   }
   function stopIdle() {
     clearTimeout(idleTimer); idleOn = false; idleDone = true;
-    ghost.textContent = ''; field.classList.remove('typing');
+    ghost.textContent = ''; field.classList.remove('typing'); syncHl();
   }
   function scheduleIdle(ms) {
     if (idleDone) return;
@@ -486,7 +511,7 @@
 
   function activate(e) {
     const it = shown[active];
-    if (!it) return;
+    if (!it || hlOff) return;
     if (it.d && !(e.metaKey || e.ctrlKey)) open(it.el.dataset.slug);
     else location.href = it.el.href;   // links, or ⌘↵ to go straight to a project's page
   }
@@ -507,6 +532,7 @@
     if (k === 'ArrowDown' || k === 'ArrowUp') {
       e.preventDefault();
       const fromIdle = quietHl;
+      kbd = true;
       stopIdle();
       if (fromIdle) setActive(k === 'ArrowDown' ? 0 : -1, true);   // the suggestion was never a selection
       else setActive(active + (k === 'ArrowDown' ? 1 : -1), !e.repeat);
@@ -522,8 +548,8 @@
   // doesn't). Touch and pen: the highlight moves only once a press has held still for 80 ms,
   // so a scroll gesture never drags it around; a quick tap moves it in open().
   let pressTimer = 0, press = null;
-  const unpress = () => { clearTimeout(pressTimer); press = null; hl.classList.remove('press'); };
-  const pressRow = (row) => { const i = indexOf(row); if (i !== active) setActive(i, true); hl.classList.add('press'); };
+  const unpress = () => { clearTimeout(pressTimer); press = null; hl.classList.remove('press'); syncHl(); };
+  const pressRow = (row) => { const i = indexOf(row); hl.classList.add('press'); if (i !== active) setActive(i, true); else syncHl(); };
   list.addEventListener('pointermove', (e) => {
     if (e.pointerType !== 'mouse') {
       if (press && Math.hypot(e.clientX - press.x, e.clientY - press.y) > 6) unpress();
@@ -537,6 +563,7 @@
     const row = e.target.closest('.row'); if (!row || e.button !== 0) return;
     stopIdle();
     if (e.pointerType === 'mouse') { pressRow(row); return; }
+    kbd = false;
     unpress();
     press = { x: e.clientX, y: e.clientY };
     pressTimer = setTimeout(() => pressRow(row), 80);

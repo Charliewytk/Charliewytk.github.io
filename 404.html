@@ -16,6 +16,28 @@
   .err .lead { max-width: 44ch; margin: var(--space-4) 0 0; color: var(--fg-2); }
   .err .actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-6); }
   .site-footer { width: 100%; margin-top: 0; }
+  /* one left edge: header, content and footer all sit on the header's gutter
+     (site-wide, this belongs in site.css) */
+  .err, .site-footer {
+    max-width: none; margin-inline: 0;
+    padding-left: max(var(--gutter, 16px), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--gutter, 16px), env(safe-area-inset-right, 0px));
+  }
+  /* a bigger hit area without moving the layout, as .site-nav a has */
+  a.site-name { position: relative; }
+  a.site-name::after { content: ""; position: absolute; inset: -12px -8px; }
+  @media (prefers-reduced-motion: no-preference) {
+    .err.stagger > * { animation-name: err-fade; }
+    .err.stagger > h1 { animation: err-rise var(--spring-bouncy-dur) var(--spring-bouncy) backwards, err-fade var(--dur-slow) var(--ease-out) backwards; }
+    @keyframes err-fade { from { opacity: 0; } }
+    @keyframes err-rise { from { transform: translateY(16px); } }
+  }
+  .fell { display: block; width: 176px; height: auto; margin-bottom: var(--space-6); color: var(--fg-4); overflow: visible; }
+  .fell .sleeve { transform-box: fill-box; transform-origin: 100% 100%; }
+  @media (prefers-reduced-motion: no-preference) {
+    .fell .sleeve { animation: fell-drop var(--spring-bouncy-dur) var(--spring-bouncy) 160ms backwards, err-fade var(--dur-fast) var(--ease-out) 160ms backwards; }
+    @keyframes fell-drop { from { transform: translate(-28px, -44px) rotate(18deg); } }
+  }
 </style>
 </head>
 <body>
@@ -28,12 +50,34 @@
   </nav>
 </header>
 
-<main class="wrap err stagger">
-  <h1 style="--i:0">Page not found.</h1>
-  <p class="lead" style="--i:1">The page may have moved. Every case study now lives on the work page.</p>
-  <div class="actions" style="--i:2">
-    <a class="btn" href="/work/">All work</a>
+<main class="err stagger">
+  <!-- one sleeve has fallen off the shelf: the homepage is a record shelf -->
+  <svg class="fell" viewBox="0 0 176 88" aria-hidden="true" focusable="false" style="--i:0">
+    <g fill="currentColor">
+      <rect x="8" y="12" width="7" height="44" rx="1"/>
+      <rect x="17" y="16" width="7" height="40" rx="1" opacity=".7"/>
+      <rect x="26" y="12" width="7" height="44" rx="1"/>
+      <rect x="35" y="14" width="7" height="42" rx="1" opacity=".55"/>
+      <rect x="44" y="12" width="7" height="44" rx="1" opacity=".85"/>
+      <rect x="80" y="12" width="7" height="44" rx="1" opacity=".7"/>
+      <rect x="89" y="16" width="7" height="40" rx="1"/>
+    </g>
+    <rect x="53" y="12" width="25" height="44" rx="2" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3" opacity=".6"/>
+    <rect x="0" y="56" width="104" height="3" rx="1.5" fill="currentColor"/>
+    <g class="sleeve">
+      <g transform="rotate(-9 150 86)">
+        <circle cx="146" cy="64" r="18" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <circle cx="146" cy="64" r="4" style="fill: var(--accent, currentColor)"/>
+        <rect x="100" y="42" width="44" height="44" rx="2" style="fill: var(--bg, Canvas)" stroke="currentColor" stroke-width="1.5"/>
+      </g>
+    </g>
+  </svg>
+  <h1 style="--i:1">Page not found.</h1>
+  <p class="lead" style="--i:2">The page may have moved.</p>
+  <div class="actions" style="--i:3">
+    <a class="btn" href="/work/">Work</a>
     <a class="btn secondary" href="/">Home</a>
+    <a class="btn secondary" href="/tracks/">Tracks</a>
   </div>
 </main>
 

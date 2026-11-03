@@ -66,7 +66,30 @@
     document.querySelectorAll('.cell').forEach((c) => sweep.observe(c));
   }
 
-  /* ---------- 3. Card springs ----------
+  /* ---------- 3. Kill Log fill ----------
+     The 50 killed lanes fill in once, the first time the grid is well in view: a diagonal
+     wave, row + column, spread over 300 ms at most. CSS does the spring (transform/opacity).
+     Its own observer, because the sweep stops watching non-video cards after the first batch. */
+  const lanes = document.querySelector('.lanes');
+  if (lanes) {
+    lanes.querySelectorAll('i').forEach((el, i) => {
+      el.style.setProperty('--d', `${Math.round(((i % 13) + Math.floor(i / 13)) / 16 * 300)}ms`);
+    });
+    if (still.matches || !('IntersectionObserver' in window)) lanes.classList.add('in');
+    else {
+      let heard = false;
+      const fill = new IntersectionObserver(([e]) => {
+        heard = true;
+        if (e.isIntersecting) { lanes.classList.add('in'); fill.disconnect(); }
+      }, { threshold: 0.6 });
+      fill.observe(lanes);
+      // An observer always reports once on start. If it never does (some headless
+      // renderers), show the fills rather than leave the record blank.
+      setTimeout(() => { if (!heard) lanes.classList.add('in'); }, 1000);
+    }
+  }
+
+  /* ---------- 4. Card springs ----------
      Lift and press are damped springs stepped every frame. A new target keeps the current
      velocity, so every motion can be interrupted mid-flight without a jump. Only transform
      is written. */
@@ -90,9 +113,13 @@
   let raf = 0, last = 0;
   const wake = (c) => { live.add(c); if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); } };
 
+  // While a card moves it gets its own layer (will-change), so its media and shadows are not
+  // repainted each frame; at rest the layer is dropped. scale() is only written while pressed.
   function render(c, idle) {
-    const s = 1 - 0.025 * c.press.x, rest = idle && !c.lift.x && !c.press.x;
-    c.el.style.transform = rest ? '' : `translateY(${c.lift.x.toFixed(2)}px) scale(${s.toFixed(4)})`;
+    const rest = idle && !c.lift.x && !c.press.x;
+    const y = `translateY(${c.lift.x.toFixed(2)}px)`;
+    c.el.style.transform = rest ? '' : c.press.x ? `${y} scale(${(1 - 0.025 * c.press.x).toFixed(4)})` : y;
+    c.el.style.willChange = rest ? '' : 'transform';
     if (c.btn) c.btn.style.translate = rest ? '' : `0 ${c.lift.x.toFixed(2)}px`;
   }
 
@@ -157,15 +184,21 @@
     ['pointerup', 'pointercancel', 'dragstart'].forEach((t) => c.el.addEventListener(t, up));
     c.el.addEventListener('pointerleave', up);
 
-    // Keyboard focus lifts the card the same way hover does.
-    c.el.addEventListener('focus', () => { if (on() && c.el.matches(':focus-visible')) enter(c); });
-    c.el.addEventListener('blur', () => { if (on() && hot !== c) leave(c); });
+    // Keyboard focus lifts the card the same way hover does. Focus moving between the card
+    // and its own play button stays inside the .cell, so the card stays up.
+    const focusIn = (e) => { if (on() && e.target.matches(':focus-visible')) enter(c); };
+    const focusOut = (e) => { if (on() && hot !== c && !c.cell.contains(e.relatedTarget)) leave(c); };
+    [c.el, c.cell.querySelector('.play')].forEach((el) => {
+      el?.addEventListener('focus', focusIn);
+      el?.addEventListener('blur', focusOut);
+    });
   });
 
   // Reduced motion switched on mid-visit: drop to the static layout at once.
   still.addEventListener('change', () => {
     videos.forEach((v) => (still.matches ? v.pause() : auto(v)));
     root.classList.toggle('spring', !still.matches);
+    lanes?.classList.add('in');
     cards.forEach((c) => { springsOf(c).forEach((s) => { s.to = 0; s.snap(); }); live.delete(c); render(c, true); });
   });
 })();

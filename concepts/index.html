@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Homepage Concepts</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/media/favicon.svg" type="image/svg+xml">
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #fbfbf9;
+    --bg-2: #f1f1ec;
+    --fg: #1a1a18;
+    --fg-3: #5c5a54;
+    --line: rgba(26, 26, 24, .1);
+    --accent: #1f7a46;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .06), 0 8px 24px -12px rgba(0, 0, 0, .18);
+    --shadow-up: 0 2px 4px rgba(0, 0, 0, .06), 0 24px 48px -20px rgba(0, 0, 0, .3);
+    --spring: linear(0, .009, .035 2.1%, .141 4.4%, .723 12.9%, .938 16.7%, 1.017 19.9%, 1.048 22.6%, 1.054 25.5%, 1.035 30.6%, 1.003 39.5%, .993 46%, 1.001 60.4%, 1);
+    --out: cubic-bezier(.2, .8, .2, 1);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0b0c0b;
+      --bg-2: #151614;
+      --fg: #ecebe6;
+      --fg-3: #a19f97;
+      --line: rgba(236, 235, 230, .1);
+      --accent: #3ddc84;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -12px rgba(0, 0, 0, .6);
+      --shadow-up: 0 2px 4px rgba(0, 0, 0, .4), 0 24px 48px -20px rgba(0, 0, 0, .8);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0b0c0b;
+    --bg-2: #151614;
+    --fg: #ecebe6;
+    --fg-3: #a19f97;
+    --line: rgba(236, 235, 230, .1);
+    --accent: #3ddc84;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -12px rgba(0, 0, 0, .6);
+    --shadow-up: 0 2px 4px rgba(0, 0, 0, .4), 0 24px 48px -20px rgba(0, 0, 0, .8);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 15px/1.4 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 14px; }
+
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 16px 64px; }
+  @media (min-width: 768px) { .wrap { padding: 0 40px 96px; } }
+
+  header {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 28px 0 24px;
+  }
+  @media (min-width: 768px) { header { padding: 48px 0 36px; } }
+  h1 { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -.02em; }
+  .back {
+    display: inline-flex; align-items: center; gap: 6px;
+    min-height: 44px; padding: 0 4px;
+    color: var(--fg-3); font-size: 15px;
+    transition: color .2s var(--out);
+  }
+  .back:hover { color: var(--fg); }
+  .back svg { transition: transform .5s var(--spring); }
+  .back:hover svg { transform: translateX(-3px); }
+
+  ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 28px 24px; }
+  @media (min-width: 768px) { ol { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 44px 32px; } }
+  @media (min-width: 1200px) { ol { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+  .card { display: block; }
+  .shot {
+    position: relative; display: block; overflow: hidden;
+    aspect-ratio: 16 / 10;
+    border-radius: 12px;
+    background: var(--bg-2);
+    box-shadow: var(--shadow), 0 0 0 1px var(--line);
+    transform: translateZ(0);
+    transition: transform .55s var(--spring), box-shadow .4s var(--out);
+  }
+  .shot img {
+    display: block; width: 100%; height: 100%; object-fit: cover; object-position: top;
+    transition: transform .9s var(--out);
+  }
+  .meta { display: flex; align-items: baseline; gap: 10px; padding: 12px 2px 0; }
+  .n { color: var(--fg-3); font-size: 13px; font-variant-numeric: tabular-nums; }
+  .name { font-size: 16px; font-weight: 550; letter-spacing: -.01em; }
+  .go {
+    margin-left: auto; color: var(--fg-3); opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity .25s var(--out), transform .5s var(--spring);
+  }
+
+  @media (hover: hover) {
+    .card:hover .shot { transform: translateY(-4px) scale(1.012); box-shadow: var(--shadow-up), 0 0 0 1px var(--line); }
+    .card:hover .shot img { transform: scale(1.03); }
+    .card:hover .go { opacity: 1; transform: none; }
+  }
+  .card:focus-visible .go { opacity: 1; transform: none; }
+  .card:active .shot { transform: scale(.985); transition-duration: .12s; }
+
+  .current { margin-top: 56px; padding-top: 28px; border-top: 1px solid var(--line); }
+  .current .card { display: flex; align-items: center; gap: 16px; max-width: 360px; }
+  .current .shot { width: 128px; flex: none; border-radius: 8px; }
+  .current .meta { padding: 0; flex: 1; }
+
+  /* entrance: one quick rise per card, staggered by index */
+  @media (prefers-reduced-motion: no-preference) {
+    li, .current { animation: rise .7s var(--spring) both; animation-delay: calc(var(--i, 0) * 40ms); }
+    @keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Concepts</h1>
+    <a class="back" href="/">
+      <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M8.5 3 4.5 7l4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Current site
+    </a>
+  </header>
+
+  <main>
+    <ol>
+      <li style="--i:0"><a class="card" href="notes/"><span class="shot"><img src="_thumbs/notes.jpg" width="1200" height="750" alt="Notes concept homepage"></span><span class="meta"><span class="n">01</span><span class="name">Notes</span><span class="go" aria-hidden="true">&rarr;</span></span></a></li>
+      <li style="--i:1"><a class="card" href="desktop/"><span class="shot"><img src="_thumbs/desktop.jpg" width="1200" height="750" alt="Desktop concept homepage"></span><span class="meta"><span class="n">02</span><span class="name">Desktop</span><span class="go" aria-hidden="true">&rarr;</span></span></a></li>
+      <li style="--i:2"><a class="card" href="palette/"><span class="shot"><img src="_thumbs/palette.jpg" width="1200" height="750" alt="Palette concept homepage"></span><span class="meta"><span class="n">03</span><span class="name">Palette</span><span class="go" aria-hidden="true">&rarr;</span></span></a></li>
+      <li style="--i:3"><a class="card" href="shader/"><span class="shot"><img src="_thumbs/shader.jpg" width="1200" height="750" alt="Shader concept homepage"></span><span class="meta"><span class="n">04</span><span class="name">Shader</span><span class="go" aria-hidden="true">&rarr;</span></span></a></li>
+      <li style="--i:4"><a class="card" href="stack/"><span class="shot"><img src="_thumbs/stack.jpg" width="1200" height="750" alt="Stack concept homepage" loading="lazy"></span><span class="meta"><span class="n">05</span><span class="name">Stack</span><span class="go" aria-hidden="true">&rarr;</span></span></a></li>
+      <li style="--i:5"><a class="card" href="reel/"><span class="shot"><img src="_thumbs/reel.jpg" width="1200" height="750" alt="Reel concept homepage" loading="lazy"></span><span class="meta"><span class="n">06</span><span class="name">Reel</span><span class="go" aria-hidden="true">&rarr;</span></span></a></li>
+      <li style="--i:6"><a class="card" href="editorial/"><span class="shot"><img src="_thumbs/editorial.jpg" width="1200" height="750" alt="Editorial concept homepage" loading="lazy"></span><span class="meta"><span class="n">07</span><span class="name">Editorial</span><span class="go" aria-hidden="true">&rarr;</span></span></a></li>
+      <li style="--i:7"><a class="card" href="linear/"><span class="shot"><img src="_thumbs/linear.jpg" width="1200" height="750" alt="Linear concept homepage" loading="lazy"></span><span class="meta"><span class="n">08</span><span class="name">Linear</span><span class="go" aria-hidden="true">&rarr;</span></span></a></li>
+      <li style="--i:8"><a class="card" href="ledger/"><span class="shot"><img src="_thumbs/ledger.jpg" width="1200" height="750" alt="Ledger concept homepage" loading="lazy"></span><span class="meta"><span class="n">09</span><span class="name">Ledger</span><span class="go" aria-hidden="true">&rarr;</span></span></a></li>
+      <li style="--i:9"><a class="card" href="canvas/"><span class="shot"><img src="_thumbs/canvas.jpg" width="1200" height="750" alt="Canvas concept homepage" loading="lazy"></span><span class="meta"><span class="n">10</span><span class="name">Canvas</span><span class="go" aria-hidden="true">&rarr;</span></span></a></li>
+    </ol>
+
+    <section class="current" style="--i:10" aria-label="Current site">
+      <a class="card" href="/"><span class="shot"><img src="_thumbs/current.jpg" width="1200" height="750" alt="Current homepage" loading="lazy"></span><span class="meta"><span class="name">Current site</span><span class="go" aria-hidden="true">&rarr;</span></span></a>
+    </section>
+  </main>
+</div>
+</body>
+</html>

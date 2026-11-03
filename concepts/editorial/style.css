@@ -2,6 +2,31 @@
    Motion: names rise out of their line masks as they arrive, pictures drift inside fixed frames,
    the index tracks where you are. Everything is visible without JS and without scroll-driven support. */
 
+/* Metric-matched fallbacks for Instrument Serif. The display lines are sized in container units
+   for a condensed serif and set nowrap inside clipping masks, so while the web font is swapping in,
+   offline or behind a font blocker, a local serif scaled to Instrument Serif's width stands in.
+   One face per local family, because each needs its own size-adjust. */
+@font-face {
+  font-family: "Instrument Serif Fallback";
+  src: local("Times New Roman"), local("TimesNewRomanPSMT"), local("Liberation Serif"), local("Tinos");
+  size-adjust: 80%; ascent-override: 124%; descent-override: 39%; line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Instrument Serif Fallback"; font-style: italic;
+  src: local("Times New Roman Italic"), local("TimesNewRomanPS-ItalicMT"), local("Liberation Serif Italic"), local("Tinos Italic");
+  size-adjust: 80%; ascent-override: 124%; descent-override: 39%; line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Instrument Serif Georgia";
+  src: local("Georgia");
+  size-adjust: 73%; ascent-override: 136%; descent-override: 42%; line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Instrument Serif Georgia"; font-style: italic;
+  src: local("Georgia Italic"), local("Georgia-Italic");
+  size-adjust: 73%; ascent-override: 136%; descent-override: 42%; line-gap-override: 0%;
+}
+
 :root {
   --paper: #f1eee6;
   --plate: #e3dfd4;
@@ -10,7 +35,7 @@
   --rule: rgba(20, 20, 20, 0.16);
   --accent: #c93a16;         /* one colour: numbers, arrows, the index marker and progress (4.9:1 on paper) */
 
-  --serif: "Instrument Serif", "Times New Roman", Times, serif;
+  --serif: "Instrument Serif", "Instrument Serif Fallback", "Instrument Serif Georgia", serif;
   --sans: "Inter Tight", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
 
   --margin: 16px;
@@ -34,6 +59,9 @@
 }
 @media (min-width: 960px) {
   :root { --margin: 40px; --gap: 24px; }
+}
+@media (pointer: coarse) {
+  :root { --row: 44px; }     /* touch screens wide enough for the rail (iPad landscape) */
 }
 
 /* ---------- base ---------- */
@@ -117,21 +145,18 @@ p, h1, h2, dl, dd { margin: 0; }
   font-size: 0.9375rem; transition: color var(--dur-fast) var(--ease-out);
 }
 .n { color: var(--accent); font-variant-numeric: tabular-nums; }
-.index li a { grid-template-columns: 2.25rem 1fr auto; }
 .index .t { position: relative; justify-self: start; }
-.index .k { color: var(--ink-2); font-size: 0.8125rem; text-align: right; white-space: nowrap; }
 .marker, .pv { display: none; }
 
 @media (min-width: 960px) {
   .index { position: sticky; top: 0; align-self: start; padding-top: 14px; }
   .index ol { border-top: 0; }
   .index li a {
-    align-items: baseline; padding-top: 7px;
+    align-items: baseline; padding-top: calc(var(--row) / 2 - 10px);
     min-height: 0; height: var(--row); padding-bottom: 0; border: 0;
     font: 400 1.25rem/1 var(--serif); letter-spacing: -0.01em; color: var(--ink-2);
   }
   .index .n { font: 500 0.75rem/1 var(--sans); letter-spacing: 0.01em; }
-  .index .k { display: none; }
   .index a[aria-current] { color: var(--ink); }
   /* the current name steps right on the spring; the marker springs to its row */
   .index .t { transition: transform var(--spring-bouncy-dur) var(--spring-bouncy); }
@@ -172,9 +197,9 @@ p, h1, h2, dl, dd { margin: 0; }
   .pv-strip {
     display: grid; grid-auto-rows: 100%; height: 100%;
     transform: translateY(calc(var(--p, 0) * -100%));
-    transition: transform var(--spring-bouncy-dur) var(--spring-bouncy);
+    transition: transform var(--spring-snappy-dur) var(--spring-snappy);   /* no overshoot past the last frame */
   }
-  .pv.still .pv-strip, .pv.still .pv-cap .roll { transition: none; }
+  .pv.still .pv-strip { transition: none; }
   .pv-f { position: relative; overflow: clip; }
   .pv-f.dark { background: #191a1c; }
   .pv-f > img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
@@ -185,9 +210,6 @@ p, h1, h2, dl, dd { margin: 0; }
   }
   .pv-type .n { font: 400 clamp(4rem, 2rem + 4vw, 7rem)/0.8 var(--serif); letter-spacing: -0.04em; }
   .pv-type p { font: italic 400 clamp(1.25rem, 0.4rem + 1.3vw, 1.75rem)/1.05 var(--serif); letter-spacing: -0.01em; text-wrap: balance; }
-  .pv-cap { --h: 1.35em; height: var(--h); margin-top: 10px; overflow: clip; color: var(--ink-2); }
-  .pv-cap .roll { transform: translateY(calc(var(--p, 0) * var(--h) * -1)); }
-  .pv-cap .roll > span { height: var(--h); }
 }
 
 /* ---------- a spread ---------- */
@@ -196,11 +218,10 @@ main { padding-bottom: 1px; }
   container-type: inline-size;
   display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: var(--gap);
   align-items: start;
-  margin-top: clamp(104px, 13vw, 192px);
-  scroll-margin-top: calc(var(--head) + 16px);
+  margin-top: clamp(88px, 10vw, 144px);
+  scroll-margin-top: calc(var(--head) + 40px);
 }
 .spread > * { grid-column: 1 / -1; }
-.spread:not(:has(.nums > :nth-child(3))) { margin-top: clamp(80px, 9vw, 136px); }
 .spread:first-child { margin-top: 0; }
 
 .meta {
@@ -213,6 +234,7 @@ main { padding-bottom: 1px; }
 .name .line {
   font-family: var(--serif); font-size: 20cqi; line-height: 0.86; letter-spacing: -0.03em;
   hyphens: none; white-space: nowrap;
+  padding-right: 0.1em;            /* room for the arrow's hover nudge inside the mask */
 }
 .arrow {
   display: inline-block; margin-left: 0.12em; font-size: 0.34em; vertical-align: 0.9em;
@@ -249,6 +271,12 @@ main { padding-bottom: 1px; }
 
 /* figures: one scale on every spread. Values verbatim, qualifier beside its number, never animated */
 .nums > div { border-top: 1px solid var(--rule); padding-block: 16px 24px; }
+.nums > div:last-child { padding-bottom: 0; }
+.spread > .note:last-child { padding-bottom: 0; }
+
+/* Kill Log set piece: one figure at cover scale, its as-of line set beneath it like a caption */
+.nums > .lead { padding-block: 20px 40px; }
+.nums > .lead dt { font-size: 32cqi; line-height: 0.8; padding-bottom: 0.08em; letter-spacing: -0.06em; margin-left: -0.04em; }
 .nums dt {
   font: 500 clamp(2.75rem, 12cqi, 6rem)/0.95 var(--sans); letter-spacing: -0.045em;   /* grotesk figures: unambiguous 1 vs l */
   font-variant-numeric: lining-nums tabular-nums;
@@ -288,18 +316,36 @@ main { padding-bottom: 1px; }
   .wide .nums > div { display: block; }
   .wide .nums dt { font-size: clamp(3rem, 6cqi, 5rem); }
   .wide .note { grid-row: 5; }
+  .wide .nums:has(> .lead) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .wide .nums > .lead {
+    grid-column: 1 / -1; display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); column-gap: var(--gap);
+    padding-block: 24px 56px;
+  }
+  .wide .nums > .lead dt { grid-column: 1 / -1; font-size: 32cqi; }
+  .wide .nums > .lead dd { grid-column: 1 / 4; margin-top: 20px; }
+  .wide .nums > .lead dd.q { grid-column: 4 / 7; grid-row: 2; }
+
+  /* type-only spreads: the lede stays beside the figures as they pass; notes follow the last figure */
+  .type:not(.wide) .lede { grid-row: 3 / 7; position: sticky; top: 56px; align-self: start; }
+  .type:not(.wide) .note { grid-column: 4 / -1; grid-row: 6; padding-top: 24px; }
+
+  /* every other picture spread sets its figure on the left */
+  .pic.flip .fig, .pic.flip .nums { grid-column: 1 / 7; }
+  .pic.flip .lede { grid-column: 7 / -1; }
 
   /* the ExeTix and Chelsea notes sit at the foot of the figure, not beside the numbers */
   .pic .note { grid-column: 4 / -1; grid-row: 5; }
+  .pic.flip .note { grid-column: 1 / 7; }
 }
 @media (min-width: 1200px) {
   .pic .note { grid-column: 1 / 4; grid-row: 3; align-self: end; }
+  .pic.flip .note { grid-column: 7 / -1; }
 }
 
 /* ---------- colophon ---------- */
 .colophon {
   container-type: inline-size;
-  margin-top: clamp(140px, 20vw, 300px);
+  margin-top: clamp(120px, 14vw, 200px);
   border-top: 1px solid var(--ink);
   padding: 24px 0 max(40px, env(safe-area-inset-bottom));
   display: grid; gap: 28px;
@@ -333,7 +379,7 @@ main { padding-bottom: 1px; }
 .roll {
   display: flex; flex-direction: column;
   transform: translateY(calc(var(--i, 0) * var(--head) * -1));
-  transition: transform var(--spring-bouncy-dur) var(--spring-bouncy);
+  transition: transform var(--spring-snappy-dur) var(--spring-snappy);   /* long jumps: no overshoot past the last name */
 }
 .roll > span { height: var(--head); white-space: nowrap; }
 .rh-bar {
@@ -348,9 +394,9 @@ main { padding-bottom: 1px; }
      so a frame taken before the animation starts shows the name; line 2 holds briefly inside
      its own keyframes instead of waiting on a delay. */
   .cover .line > span { animation: rise 900ms var(--ease-out); }
-  .cover .line:nth-child(2) > span { animation-name: rise-2; animation-duration: 990ms; }
+  .cover .line:nth-child(2) > span { animation-name: rise-2; animation-duration: 935ms; }
   @keyframes rise   { from { transform: translateY(104%) rotate(2.5deg); } }
-  @keyframes rise-2 { 0%, 9% { transform: translateY(104%) rotate(2.5deg); } }
+  @keyframes rise-2 { 0%, 3.75% { transform: translateY(104%) rotate(2.5deg); } }   /* 35 ms behind line 1 */
 
   /* Display lines: app.js arms a name only when it is about to scroll in from below, then
      drops the arm when it is on screen, so the line transitions up out of its mask.

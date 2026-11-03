@@ -12,11 +12,21 @@
 <script>document.documentElement.classList.add('js')</script>
 <link rel="stylesheet" href="style.css">
 <style>
-html:not(.js) body:has(.frow:target) .frow[aria-current] { background: none; }
-html:not(.js) .frow:target { background: var(--sel-folder); }
-html:not(.js) body:has(#folder-research:target) .rows > li:not([data-folder="research"]) { display: none; }
-html:not(.js) body:has(#folder-web-app:target) .rows > li:not([data-folder="web-app"]) { display: none; }
-html:not(.js) body:has(#folder-mac-tool:target) .rows > li:not([data-folder="mac-tool"]) { display: none; }
+@media (min-width: 960px) {
+  html:not(.js) body:has(.note article:target) .row[aria-current] { background: none; }
+  html:not(.js) body:has(#exetix:target) .row[href="#exetix"] { background: var(--sel); }
+  html:not(.js) body:has(#kill-log:target) .row[href="#kill-log"] { background: var(--sel); }
+  html:not(.js) body:has(#solana:target) .row[href="#solana"] { background: var(--sel); }
+  html:not(.js) body:has(#merger-monitor:target) .row[href="#merger-monitor"] { background: var(--sel); }
+  html:not(.js) body:has(#doorly:target) .row[href="#doorly"] { background: var(--sel); }
+  html:not(.js) body:has(#powerleash:target) .row[href="#powerleash"] { background: var(--sel); }
+  html:not(.js) body:has(#abyss-warden:target) .row[href="#abyss-warden"] { background: var(--sel); }
+  html:not(.js) body:has(#deskstatus:target) .row[href="#deskstatus"] { background: var(--sel); }
+  html:not(.js) body:has(#numerai:target) .row[href="#numerai"] { background: var(--sel); }
+  html:not(.js) body:has(#competitions:target) .row[href="#competitions"] { background: var(--sel); }
+  html:not(.js) body:has(#chess-exchange:target) .row[href="#chess-exchange"] { background: var(--sel); }
+  html:not(.js) body:has(#chelsea-bikes:target) .row[href="#chelsea-bikes"] { background: var(--sel); }
+}
 </style>
 <script src="app.js" defer></script>
 </head>
@@ -24,7 +34,6 @@ html:not(.js) body:has(#folder-mac-tool:target) .rows > li:not([data-folder="mac
 
 <!-- Icons, drawn once. 24px grid, 1.75 stroke, like SF Symbols at regular weight. -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h3.6l2 2h7.4A2.5 2.5 0 0 1 21 9.5v8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/></symbol>
   <symbol id="i-chev-l" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-chev-r" viewBox="0 0 12 20"><path d="m3 4 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="m15.5 15.5 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
@@ -36,28 +45,9 @@ html:not(.js) body:has(#folder-mac-tool:target) .rows > li:not([data-folder="mac
 
 <div class="app" id="app">
 
-  <!-- Pane 1: folders (a sidebar on desktop, the first screen of the stack on phone) -->
-  <nav class="screen folders" id="folders" aria-labelledby="folders-title">
-    <header class="bar"><span class="bar-title" aria-hidden="true">Folders</span></header>
-    <p class="large" id="folders-title">Folders</p>
-    <div class="frows-wrap">
-      <div class="pill fpill" id="fpill" aria-hidden="true"></div>
-      <ul class="group frows">
-        <li><a class="frow" id="folder-all" href="#folder-all" data-folder="all" aria-current="true"><svg aria-hidden="true"><use href="#i-folder"/></svg><span>All</span><span class="count">12</span><svg class="chev" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
-        <li><a class="frow" id="folder-research" href="#folder-research" data-folder="research"><svg aria-hidden="true"><use href="#i-folder"/></svg><span>Research</span><span class="count">3</span><svg class="chev" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
-        <li><a class="frow" id="folder-web-app" href="#folder-web-app" data-folder="web-app"><svg aria-hidden="true"><use href="#i-folder"/></svg><span>Web app</span><span class="count">2</span><svg class="chev" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
-        <li><a class="frow" id="folder-mac-tool" href="#folder-mac-tool" data-folder="mac-tool"><svg aria-hidden="true"><use href="#i-folder"/></svg><span>Mac tool</span><span class="count">2</span><svg class="chev" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
-      </ul>
-    </div>
-  </nav>
-  <div class="scrim" aria-hidden="true"></div>
-
-  <!-- Pane 2: the note list -->
+  <!-- Pane 1: the note list (the first screen on phone) -->
   <section class="screen list" id="list" aria-labelledby="list-title">
-    <header class="bar">
-      <a class="back" href="#folders" data-back><svg aria-hidden="true"><use href="#i-chev-l"/></svg><span>Folders</span></a>
-      <span class="bar-title" aria-hidden="true">Charlie Wuytack</span>
-    </header>
+    <header class="bar"><span class="bar-title" aria-hidden="true">Charlie Wuytack</span></header>
     <h1 class="large" id="list-title">Charlie Wuytack</h1>
     <div class="search" role="search">
       <svg aria-hidden="true"><use href="#i-search"/></svg>
@@ -67,22 +57,22 @@ html:not(.js) body:has(#folder-mac-tool:target) .rows > li:not([data-folder="mac
     <div class="rows-wrap">
       <div class="pill" id="pill" aria-hidden="true"></div>
       <ul class="group rows" id="rows">
-        <li data-folder="built-and-sold"><a class="row" href="#exetix" aria-current="true"><span class="row-text"><strong>ExeTix</strong><span class="preview"><span class="st">Built and sold</span> <span class="pv">Pinged the second Exeter tickets drop.</span></span></span><img src="/exetix/img/icon-green.png" alt="" width="44" height="44" decoding="async"></a></li>
-        <li data-folder="research"><a class="row" href="#kill-log"><span class="row-text"><strong>The Kill Log</strong><span class="preview"><span class="st">Research</span> <span class="pv">Research that says no.</span></span></span></a></li>
-        <li data-folder="systems"><a class="row" href="#solana"><span class="row-text"><strong>Solana execution</strong><span class="preview"><span class="st">Live execution test</span> <span class="pv">Fast enough. Then I measured whether fast mattered.</span></span></span></a></li>
-        <li data-folder="5-mo"><a class="row" href="#merger-monitor"><span class="row-text"><strong>Merger Monitor</strong><span class="preview"><span class="st">Live · £5/month</span> <span class="pv">A table of filings, not a tip sheet.</span></span></span></a></li>
-        <li data-folder="web-app"><a class="row" href="#doorly"><span class="row-text"><strong>Doorly</strong><span class="preview"><span class="st">Demo</span> <span class="pv">The cheapest flight isn&#x27;t the cheapest trip.</span></span></span><img src="thumbs/doorly.webp" alt="" width="44" height="44" decoding="async"></a></li>
-        <li data-folder="mac-tool"><a class="row" href="#powerleash"><span class="row-text"><strong>PowerLeash</strong><span class="preview"><span class="st">Download</span> <span class="pv">A Mac menu-bar tool with one job.</span></span></span><img src="thumbs/powerleash.webp" alt="" width="44" height="44" decoding="async"></a></li>
-        <li data-folder="game"><a class="row" href="#abyss-warden"><span class="row-text"><strong>Abyss Warden</strong><span class="preview"><span class="st">Playable</span> <span class="pv">Deep-sea tower defence.</span></span></span><img src="thumbs/abyss-poster.webp" alt="" width="44" height="44" decoding="async"></a></li>
-        <li data-folder="mac-tool"><a class="row" href="#deskstatus"><span class="row-text"><strong>DeskStatus</strong><span class="preview"><span class="st">Shipped · v1.0.3</span> <span class="pv">The whole trading desk in one window.</span></span></span></a></li>
-        <li data-folder="research"><a class="row" href="#numerai"><span class="row-text"><strong>Numerai</strong><span class="preview"><span class="st">Live, unstaked</span> <span class="pv">The audit, and a deadline that moves.</span></span></span></a></li>
-        <li data-folder="research"><a class="row" href="#competitions"><span class="row-text"><strong>Competitions</strong><span class="preview"><span class="st">Selected</span> <span class="pv">Read deltas, not levels.</span></span></span></a></li>
-        <li data-folder="web-app"><a class="row" href="#chess-exchange"><span class="row-text"><strong>Chess Exchange</strong><span class="preview"><span class="st">Play money</span> <span class="pv">Markets on live games. Play money.</span></span></span><img src="thumbs/chess.webp" alt="" width="44" height="44" decoding="async"></a></li>
-        <li data-folder="website"><a class="row" href="#chelsea-bikes"><span class="row-text"><strong>Chelsea Bikes</strong><span class="preview"><span class="st">Prototype</span> <span class="pv">My local bike shop, rebuilt unasked.</span></span></span><img src="thumbs/chelsea.webp" alt="" width="44" height="44" decoding="async"></a></li>
+        <li><a class="row" href="#exetix" aria-current="true"><span class="row-text"><strong>ExeTix</strong><span class="preview"><span class="st">Built and sold</span> <span class="pv">Pinged the second Exeter tickets drop.</span></span></span><img src="/exetix/img/icon-green.png" alt="" width="44" height="44" decoding="async"></a></li>
+        <li><a class="row" href="#kill-log"><span class="row-text"><strong>The Kill Log</strong><span class="preview"><span class="pv">Research that says no.</span></span></span></a></li>
+        <li><a class="row" href="#solana"><span class="row-text"><strong>Solana execution</strong><span class="preview"><span class="st">Live execution test</span> <span class="pv">Fast enough. Then I measured whether fast mattered.</span></span></span></a></li>
+        <li><a class="row" href="#merger-monitor"><span class="row-text"><strong>Merger Monitor</strong><span class="preview"><span class="st">Live · £5/month</span> <span class="pv">A table of filings, not a tip sheet.</span></span></span></a></li>
+        <li><a class="row" href="#doorly"><span class="row-text"><strong>Doorly</strong><span class="preview"><span class="st">Demo</span> <span class="pv">The cheapest flight isn&#x27;t the cheapest trip.</span></span></span><img src="thumbs/doorly.webp" alt="" width="44" height="44" decoding="async"></a></li>
+        <li><a class="row" href="#powerleash"><span class="row-text"><strong>PowerLeash</strong><span class="preview"><span class="st">Download</span> <span class="pv">A Mac menu-bar tool with one job.</span></span></span><img src="thumbs/powerleash.webp" alt="" width="44" height="44" decoding="async"></a></li>
+        <li><a class="row" href="#abyss-warden"><span class="row-text"><strong>Abyss Warden</strong><span class="preview"><span class="st">Playable</span> <span class="pv">Deep-sea tower defence.</span></span></span><img src="thumbs/abyss-poster.webp" alt="" width="44" height="44" decoding="async"></a></li>
+        <li><a class="row" href="#deskstatus"><span class="row-text"><strong>DeskStatus</strong><span class="preview"><span class="st">Shipped · v1.0.3</span> <span class="pv">The whole trading desk in one window.</span></span></span></a></li>
+        <li><a class="row" href="#numerai"><span class="row-text"><strong>Numerai</strong><span class="preview"><span class="st">Live, unstaked</span> <span class="pv">The audit, and a deadline that moves.</span></span></span></a></li>
+        <li><a class="row" href="#competitions"><span class="row-text"><strong>Competitions</strong><span class="preview"><span class="st">Selected</span> <span class="pv">Read deltas, not levels.</span></span></span></a></li>
+        <li><a class="row" href="#chess-exchange"><span class="row-text"><strong>Chess Exchange</strong><span class="preview"><span class="st">Play money</span> <span class="pv">Markets on live games. Play money.</span></span></span><img src="thumbs/chess.webp" alt="" width="44" height="44" decoding="async"></a></li>
+        <li><a class="row" href="#chelsea-bikes"><span class="row-text"><strong>Chelsea Bikes</strong><span class="preview"><span class="st">Prototype</span> <span class="pv">My local bike shop, rebuilt unasked.</span></span></span><img src="thumbs/chelsea.webp" alt="" width="44" height="44" decoding="async"></a></li>
       </ul>
       <p class="empty" id="empty" hidden>No Results</p>
     </div>
-    <footer class="owner owner-list">
+    <footer class="owner">
       <ul class="group">
         <li><a href="/work/">Work</a></li>
         <li><a href="https://github.com/Charliewytk" rel="me noopener">GitHub</a></li>
@@ -93,7 +83,7 @@ html:not(.js) body:has(#folder-mac-tool:target) .rows > li:not([data-folder="mac
   </section>
   <div class="scrim" aria-hidden="true"></div>
 
-  <!-- Pane 3: the open note. Every note is in the HTML; CSS shows one. -->
+  <!-- Pane 2: the open note. Every note is in the HTML; CSS shows one. -->
   <main class="screen note" id="note">
     <header class="bar">
       <a class="back" href="#" data-back><svg aria-hidden="true"><use href="#i-chev-l"/></svg><span id="back-label">Charlie Wuytack</span></a>
@@ -116,8 +106,8 @@ html:not(.js) body:has(#folder-mac-tool:target) .rows > li:not([data-folder="mac
         </tbody>
       </table>
       <ul class="links">
-        <li><a class="link-main" href="/exetix/"><span class="link-icon" aria-hidden="true"><svg><use href="#i-doc"/></svg></span><span>ExeTix — Exeter ticket drops and student resale</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
-        <li><a href="/tracks/exetix/"><span>ExeTix · Track 01</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
+        <li><a class="link-main" href="/exetix/"><span class="link-icon" aria-hidden="true"><svg><use href="#i-doc"/></svg></span><span>ExeTix</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
+        <li><a href="/tracks/exetix/"><span>Write-up</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
         <li><a href="https://apps.apple.com/gb/app/exetix/id6814591245" rel="noopener"><span>On the App Store</span><span class="ext" aria-hidden="true">↗</span></a></li>
       </ul>
       <div class="fine">
@@ -159,7 +149,7 @@ html:not(.js) body:has(#folder-mac-tool:target) .rows > li:not([data-folder="mac
       </table>
       <p class="aside">From the lane ledger as of 30 September 2026.</p>
       <table class="grid edges">
-        <thead><tr><th scope="col">Edge</th><th scope="col">Eaten by</th></tr></thead>
+        <thead><tr><th scope="col">The edge</th><th scope="col">What eats it</th></tr></thead>
         <tbody>
           <tr><td>Polymarket longshot bias, real: ~2¢</td><td>the spread is 1.5–3¢</td></tr>
           <tr><td>Dip-buying, 503 stocks + 90 ETFs: +20bp in 2016–21</td><td>+2bp in 2021–26, below costs</td></tr>
@@ -177,11 +167,8 @@ html:not(.js) body:has(#folder-mac-tool:target) .rows > li:not([data-folder="mac
       </ul>
       <p class="aside">Separately, the meme-desk auditor has closed about 70 entry and exit variants as failed or inconclusive, with no pass standing.</p>
       <ul class="links">
-        <li><a class="link-main" href="/kill-log/"><span class="link-icon" aria-hidden="true"><svg><use href="#i-doc"/></svg></span><span>Paper kill log — 110 hypotheses died to costs</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
-        <li><a href="/tracks/research/"><span>The kill log · Track 02</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
-        <li><a href="/apex/"><span>Apex — on-chain trading research, written up honestly</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
-        <li><a href="/research.html"><span>Research notes</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
-        <li><a href="/essays/friction-sized-edges.html"><span>I pre-registered 110 market hypotheses. Nine were real. Zero were tradeable.</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
+        <li><a class="link-main" href="/kill-log/"><span class="link-icon" aria-hidden="true"><svg><use href="#i-doc"/></svg></span><span>The Kill Log</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
+        <li><a href="/tracks/research/"><span>Write-up</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
       </ul>
       <div class="fine">
       <p>Research, not advice.</p>
@@ -199,12 +186,12 @@ html:not(.js) body:has(#folder-mac-tool:target) .rows > li:not([data-folder="mac
       </div>
       <table class="grid">
         <tbody>
-          <tr><th scope="row">0.4 points</th><td>Replayed on the same positions, it improved the average stop fill by 0.4 points<small>Fills are simulated at the estimated landing slot, not landed.</small></td></tr>
+          <tr><td colspan="2" class="said">Replayed on the same positions, it improved the average stop fill by <strong>0.4 points</strong><small>Fills are simulated at the estimated landing slot, not landed.</small></td></tr>
           <tr><th scope="row">0.0 bps</th><td>median error of my integer AMM quote against the on-chain fill</td></tr>
         </tbody>
       </table>
       <ul class="links">
-        <li><a class="link-main" href="/tracks/solana/"><span class="link-icon" aria-hidden="true"><svg><use href="#i-doc"/></svg></span><span>Solana execution · Track 03</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
+        <li><a class="link-main" href="/tracks/solana/"><span class="link-icon" aria-hidden="true"><svg><use href="#i-doc"/></svg></span><span>Solana execution</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
       </ul>
       <div class="fine">
       <p class="site-line">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
@@ -225,10 +212,9 @@ html:not(.js) body:has(#folder-mac-tool:target) .rows > li:not([data-folder="mac
         </tbody>
       </table>
       <ul class="links">
-        <li><a class="link-main" href="/merger-monitor/"><span class="link-icon" aria-hidden="true"><svg><use href="#i-doc"/></svg></span><span>Merger arbitrage spreads — 2026-08-19, with the SEC filing sentence for every price</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
-        <li><a href="/tracks/merger-monitor/"><span>Merger Monitor · Track 04</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
-        <li><a href="/subscribe/"><span>Get tonight&#x27;s table — £5/month<small>£5/month · not advice</small></span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
-        <li><a href="/weekly/"><span>Free weekly edition</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
+        <li><a class="link-main" href="/merger-monitor/"><span class="link-icon" aria-hidden="true"><svg><use href="#i-doc"/></svg></span><span>Merger Monitor</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
+        <li><a href="/tracks/merger-monitor/"><span>Write-up</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
+        <li><a href="/subscribe/"><span>Subscribe<small>£5/month · not advice</small></span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
         <li><a href="https://wuytackcharlie.gumroad.com/l/mergermonitor" rel="noopener"><span>Pay on Gumroad<small>£5/month on Gumroad. Cancel there. 7-day refund.</small></span><span class="ext" aria-hidden="true">↗</span></a></li>
       </ul>
       <div class="fine">
@@ -251,8 +237,8 @@ html:not(.js) body:has(#folder-mac-tool:target) .rows > li:not([data-folder="mac
         </tbody>
       </table>
       <ul class="links">
-        <li><a class="link-main" href="/doorly/"><span class="link-icon" aria-hidden="true"><svg><use href="#i-doc"/></svg></span><span>Doorly — true door-to-door flight prices</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
-        <li><a href="/tracks/doorly/"><span>Doorly · Track 05</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
+        <li><a class="link-main" href="/doorly/"><span class="link-icon" aria-hidden="true"><svg><use href="#i-doc"/></svg></span><span>Doorly</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
+        <li><a href="/tracks/doorly/"><span>Write-up</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
       </ul>
     </article>
     <article id="powerleash" aria-labelledby="t-powerleash">
@@ -270,7 +256,7 @@ html:not(.js) body:has(#folder-mac-tool:target) .rows > li:not([data-folder="mac
         <span>PowerLeash.zip</span>
       </a>
       <ul class="links">
-        <li><a class="link-main" href="/tracks/powerleash/"><span class="link-icon" aria-hidden="true"><svg><use href="#i-doc"/></svg></span><span>PowerLeash · Track 06</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
+        <li><a class="link-main" href="/tracks/powerleash/"><span class="link-icon" aria-hidden="true"><svg><use href="#i-doc"/></svg></span><span>PowerLeash</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
       </ul>
       <div class="fine">
       <p>Apple Silicon, unsigned. Unzip → drag PowerLeash.app to /Applications → right-click Open. Double-click is blocked by Gatekeeper; that is expected. Battery savings are not quantified yet.</p>
@@ -291,7 +277,7 @@ html:not(.js) body:has(#folder-mac-tool:target) .rows > li:not([data-folder="mac
       </table>
       <ul class="links">
         <li><a class="link-main" href="/abyss-warden/"><span class="link-icon" aria-hidden="true"><svg><use href="#i-doc"/></svg></span><span>Abyss Warden</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
-        <li><a href="/tracks/abyss-warden/"><span>Abyss Warden · Track 07</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
+        <li><a href="/tracks/abyss-warden/"><span>Write-up</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
       </ul>
     </article>
     <article id="deskstatus" aria-labelledby="t-deskstatus">
@@ -308,7 +294,7 @@ html:not(.js) body:has(#folder-mac-tool:target) .rows > li:not([data-folder="mac
       </table>
       <p class="aside caption">The real window shows live account data, so it isn&#x27;t pictured.</p>
       <ul class="links">
-        <li><a class="link-main" href="/tracks/deskstatus/"><span class="link-icon" aria-hidden="true"><svg><use href="#i-doc"/></svg></span><span>DeskStatus · Track 08</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
+        <li><a class="link-main" href="/tracks/deskstatus/"><span class="link-icon" aria-hidden="true"><svg><use href="#i-doc"/></svg></span><span>DeskStatus</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
       </ul>
       <div class="fine">
       <p class="site-line">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
@@ -329,7 +315,7 @@ html:not(.js) body:has(#folder-mac-tool:target) .rows > li:not([data-folder="mac
         </tbody>
       </table>
       <ul class="links">
-        <li><a class="link-main" href="/tracks/numerai/"><span class="link-icon" aria-hidden="true"><svg><use href="#i-doc"/></svg></span><span>Numerai · Track 09</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
+        <li><a class="link-main" href="/tracks/numerai/"><span class="link-icon" aria-hidden="true"><svg><use href="#i-doc"/></svg></span><span>Numerai</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
       </ul>
       <div class="fine">
       <p class="site-line">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
@@ -350,7 +336,7 @@ html:not(.js) body:has(#folder-mac-tool:target) .rows > li:not([data-folder="mac
         </tbody>
       </table>
       <ul class="links">
-        <li><a class="link-main" href="/tracks/competitions/"><span class="link-icon" aria-hidden="true"><svg><use href="#i-doc"/></svg></span><span>Competitions · Track 10</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
+        <li><a class="link-main" href="/tracks/competitions/"><span class="link-icon" aria-hidden="true"><svg><use href="#i-doc"/></svg></span><span>Competitions</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
       </ul>
       <div class="fine">
       <p class="site-line">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
@@ -371,7 +357,7 @@ html:not(.js) body:has(#folder-mac-tool:target) .rows > li:not([data-folder="mac
         </tbody>
       </table>
       <ul class="links">
-        <li><a class="link-main" href="/tracks/chess-exchange/"><span class="link-icon" aria-hidden="true"><svg><use href="#i-doc"/></svg></span><span>Chess Exchange · Track 11</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
+        <li><a class="link-main" href="/tracks/chess-exchange/"><span class="link-icon" aria-hidden="true"><svg><use href="#i-doc"/></svg></span><span>Chess Exchange</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
         <li><a href="https://charliewytk.github.io/chess-exchange/" rel="noopener"><span>Try the FEN → WDL demo</span><span class="ext" aria-hidden="true">↗</span></a></li>
       </ul>
     </article>
@@ -389,21 +375,11 @@ html:not(.js) body:has(#folder-mac-tool:target) .rows > li:not([data-folder="mac
         </tbody>
       </table>
       <ul class="links">
-        <li><a class="link-main" href="/chelsea-bikes/"><span class="link-icon" aria-hidden="true"><svg><use href="#i-doc"/></svg></span><span>Chelsea Bikes — Independent Bike Shop, Kings Road London</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
-        <li><a href="/tracks/chelsea-bikes/"><span>Chelsea Bikes · Track 12</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
+        <li><a class="link-main" href="/chelsea-bikes/"><span class="link-icon" aria-hidden="true"><svg><use href="#i-doc"/></svg></span><span>Chelsea Bikes</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
+        <li><a href="/tracks/chelsea-bikes/"><span>Write-up</span><svg class="go" aria-hidden="true"><use href="#i-chev-r"/></svg></a></li>
       </ul>
     </article>
   </main>
-
-  <!-- Desktop only: sits under the folders, but comes last so Tab reaches search and notes first. -->
-  <footer class="owner owner-side">
-    <ul>
-        <li><a href="/work/">Work</a></li>
-        <li><a href="https://github.com/Charliewytk" rel="me noopener">GitHub</a></li>
-        <li><a href="mailto:charlie@wuytack.net">Contact</a></li>
-    </ul>
-    <p>Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
-  </footer>
 
 </div>
 </body>

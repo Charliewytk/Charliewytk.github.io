@@ -36,8 +36,7 @@
 
   .kl section { margin-top: var(--space-9); }
   .kl h2 { margin: 0 0 var(--space-5); font-size: clamp(1.375rem, 1.2vw + 1rem, 1.75rem); letter-spacing: var(--tracking-snug); }
-  .kl section p { max-width: var(--measure); color: var(--fg-2); }
-  @media (hover: hover) and (pointer: fine) { .kl a:not(.btn):hover { color: var(--fg); } }
+  .kl section p:not(.caption) { max-width: var(--measure); color: var(--fg-2); }
 
   /* the seven named deaths */
   .kills { font-size: var(--text-base); margin: 0 0 var(--space-4); }
@@ -45,6 +44,10 @@
   .kills td:nth-child(2) { padding-right: var(--space-5); }
   .kills td:last-child { color: var(--fg-2); }
   .kills .num { font-size: 0.9em; }
+  .kills td.num { color: var(--fg-3); }
+  .kills .net { color: var(--fg); font-weight: 500; }
+  .kills .nw { white-space: nowrap; }
+  .kills tbody tr:hover td.num { color: var(--fg-2); }
   .kills th:nth-child(2) { text-align: right; }
   .kills .unit { font-family: var(--font-sans); color: var(--fg-3); }
   .kills tbody tr { transition: background-color var(--dur-fast) var(--ease-out); }
@@ -75,7 +78,14 @@
   }
   .paybar[data-hidden] { opacity: 0; transform: translateY(calc(100% + var(--space-5))); pointer-events: none; }
   .paybar .hint { font-size: var(--text-sm); font-weight: 500; color: var(--fg-2); }
-  .site-footer { max-width: calc(760px + 2 * var(--gutter)); margin-top: var(--space-9); padding-bottom: calc(var(--space-9) + env(safe-area-inset-bottom, 0px)); }
+  .site-footer { position: relative; border-top: 0; max-width: calc(760px + 2 * var(--gutter)); margin-top: var(--space-9); padding-bottom: calc(var(--space-9) + env(safe-area-inset-bottom, 0px)); }
+  .site-footer::before { content: ""; position: absolute; top: 0; left: var(--gutter); right: var(--gutter); border-top: 1px solid var(--line); }
+
+  /* one gesture: the 110 rolls in like an odometer (transform only, skipped under reduced motion) */
+  .odo { display: inline-flex; vertical-align: top; }
+  .odo .cell { display: block; height: 1lh; clip-path: inset(0 -0.2em); }
+  .odo .col { display: flex; flex-direction: column; align-items: center; will-change: transform; }
+  .odo .col > span { height: 1lh; }
 
   @media (max-width: 640px) {
     .kl { padding-top: var(--space-7); }
@@ -100,15 +110,14 @@
 
 <main class="kl" id="main">
   <p class="eyebrow">First programme &middot; paper book &middot; not advice &middot; no live P&amp;L</p>
-  <h1><span class="line">110 paper hypotheses.</span> <span class="line">They died to costs.</span></h1>
-  <p class="lead">Around 110 market hypotheses were written down before they were tested. Nine produced a measurable anomaly. Those nine died to costs &mdash; the residual was the size of the spread, the fee, or the borrow. This is a paper book. No live P&amp;L is claimed. No live book is implied.</p>
+  <h1><span class="line"><span class="count">110</span> paper hypotheses.</span> <span class="line">They died to costs.</span></h1>
+  <p class="lead">Around 110 market hypotheses were written down before they were tested. Nine produced a measurable anomaly. Those nine died to costs &mdash; the residual was the size of the spread, the fee, or the borrow.</p>
   <p class="note">This is the first programme's ledger. The second, stricter one killed <a href="../work/#programme">50 of 65 trading lanes</a>, as of 30 September 2026. About 170 hypotheses across both programmes.</p>
-  <p class="note">Merger Monitor is the product that already exists: tonight's cash-deal table from SEC filings, emailed at 22:30. £5/month. Filings, not advice. No position is held in anything listed.</p>
 
   <div class="cta">
     <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table &mdash; £5/month</a>
   </div>
-  <p class="note">£5/month for the evening the table is built. Cancel on Gumroad. 7-day refund. Zero subscribers. Take: £0.</p>
+  <p class="note">Merger Monitor: tonight's cash-deal table from SEC filings, emailed at 22:30. Filings, not advice. No position is held in anything listed. Cancel on Gumroad. 7-day refund. Zero subscribers. Take: £0.</p>
 
   <section aria-labelledby="deaths">
     <h2 id="deaths">Seven named deaths, from the paper log</h2>
@@ -117,38 +126,38 @@
       <thead>
         <tr><th scope="col">Hypothesis</th><th scope="col">Paper gross</th><th scope="col">Why it died</th></tr>
       </thead>
-      <tbody class="stagger">
-        <tr style="--i:0">
-          <td>IWM turn-of-month</td>
+      <tbody>
+        <tr>
+          <td>IWM <span class="nw">turn-of-month</span></td>
           <td class="num">+0.17%<span class="unit"> / trade</span></td>
-          <td>Retail costs 0.36% &rarr; net &minus;0.19%</td>
+          <td>Retail costs 0.36% &rarr; net <span class="num net">&minus;0.19%</span></td>
         </tr>
-        <tr style="--i:1">
-          <td>SPY pre-holiday drift</td>
+        <tr>
+          <td>SPY <span class="nw">pre-holiday</span> drift</td>
           <td class="num">+0.07%</td>
-          <td>Costs 0.35% &rarr; net &minus;0.28%</td>
+          <td>Costs 0.35% &rarr; net <span class="num net">&minus;0.28%</span></td>
         </tr>
-        <tr style="--i:2">
-          <td>Mega dual-class pair reversion</td>
+        <tr>
+          <td>Mega <span class="nw">dual-class</span> pair reversion</td>
           <td class="num">+0.01%</td>
-          <td>Costs 0.15% &rarr; net &minus;0.14%</td>
+          <td>Costs 0.15% &rarr; net <span class="num net">&minus;0.14%</span></td>
         </tr>
-        <tr style="--i:3">
-          <td>Small dual-class pairs</td>
+        <tr>
+          <td>Small <span class="nw">dual-class</span> pairs</td>
           <td class="num">+1.39%</td>
           <td>Borrow of 25.3% destroyed a positive gross</td>
         </tr>
-        <tr style="--i:4">
-          <td>Low-vol ETF day-trade</td>
+        <tr>
+          <td><span class="nw">Low-vol</span> ETF <span class="nw">day-trade</span></td>
           <td class="num">+0.152%<span class="unit"> EV</span></td>
           <td>Cost 0.273% at a £1,000 clip &rarr; negative at retail size</td>
         </tr>
-        <tr style="--i:5">
-          <td>FCA short-register entries</td>
+        <tr>
+          <td>FCA <span class="nw">short-register</span> entries</td>
           <td class="num">+1.22%<span class="unit"> / 13w</span></td>
-          <td>&minus;0.78% at 200bp, before borrow</td>
+          <td><span class="num net">&minus;0.78%</span> at 200bp, before borrow</td>
         </tr>
-        <tr style="--i:6">
+        <tr>
           <td>Polymarket longshot bias</td>
           <td class="num">~2¢<span class="unit">, real</span></td>
           <td>Documented spread 1.5–3¢</td>
@@ -160,8 +169,9 @@
     <p class="caption">The full CSV stays in the research repo. Source: PaperMill/KILL_LOG.md in trading101, a private repo (merged paper book). A longer write-up is the <a href="../essays/friction-sized-edges.html">friction-sized note</a>.</p>
   </section>
 
-  <section aria-labelledby="not">
+  <section class="reveal" aria-labelledby="not">
     <h2 id="not">What this is not</h2>
+    <p>This is a paper book. No live P&amp;L is claimed. No live book is implied.</p>
     <p>Not advice, not a recommendation, not a tip sheet, and not an order. Cost-sizing and extraction only. No live edge is claimed. The paper record is public so the deaths stay visible; it is not a second product.</p>
     <p>The same cost-sizing is what <a href="../subscribe/">Merger Monitor</a> publishes on every cash row: a measured break rate, round-trip cost, and T-bill carry. A 3% spread is not 24.6% a year after that.</p>
   </section>
@@ -197,6 +207,38 @@
   });
   io.observe(hero);
   io.observe(foot);
+})();
+(() => {
+  const el = document.querySelector('.count');
+  if (!el || matchMedia('(prefers-reduced-motion: reduce)').matches || !CSS.supports('height', '1lh')) return;
+  const text = el.textContent;
+  const r = document.createRange();
+  const widths = [...text].map((_, i) => { r.setStart(el.firstChild, i); r.setEnd(el.firstChild, i + 1); return r.getBoundingClientRect().width; });
+  const odo = document.createElement('span');
+  odo.className = 'odo';
+  odo.setAttribute('aria-hidden', 'true');
+  const cols = [...text].map((ch, i) => {
+    const cell = document.createElement('span');
+    cell.className = 'cell';
+    cell.style.width = widths[i] + 'px';
+    const col = document.createElement('span');
+    col.className = 'col';
+    for (let k = 0; k < 20; k++) { const d = document.createElement('span'); d.textContent = k % 10; col.append(d); }
+    cell.append(col);
+    odo.append(cell);
+    return [col, +ch + 10];
+  });
+  el.replaceChildren(odo, Object.assign(document.createElement('span'), { className: 'visually-hidden', textContent: text }));
+  let total = 0;
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    cols.forEach(([col, n], i) => {
+      const dur = 900 + i * 180, delay = 120 + i * 60;
+      total = Math.max(total, dur + delay);
+      col.style.transition = `transform ${dur}ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`;
+      col.style.transform = `translateY(${-n * 5}%)`;
+    });
+    setTimeout(() => { el.textContent = text; }, total + 50);
+  }));
 })();
 </script>
 </body>

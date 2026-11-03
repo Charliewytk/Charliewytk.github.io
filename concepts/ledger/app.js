@@ -18,13 +18,16 @@
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
   const wide = matchMedia('(min-width: 641px)');
 
-  // Status sorts by meaning, not alphabet: live, done, demo, research, killed.
-  const toneRank = { live: 0, done: 1, demo: 2, paper: 3, killed: 4 };
+  // Status sorts by meaning, not alphabet: live, done, demo, contest result, research, killed.
+  const toneRank = { live: 0, done: 1, demo: 2, result: 3, paper: 4, killed: 5 };
 
-  // Cache what we filter and sort on.
+  const templateOf = (row) => $('th.name template', row);
+
+  // Cache what we filter and sort on. The preview's <template> counts too, so its
+  // qualifiers ("paper", "simulated", "Sharpe") are findable.
   rows.forEach((row, i) => {
     row._i = i;
-    row._text = row.textContent.toLowerCase().replace(/\s+/g, ' ');
+    row._text = `${row.textContent} ${templateOf(row)?.content.textContent || ''}`.toLowerCase().replace(/\s+/g, ' ');
     const name = $('th.name', row).textContent.trim();
     row._key = {
       n: row.dataset.n ? Number(row.dataset.n) : 1e3 + i, // killed edges after the numbered work
@@ -33,9 +36,6 @@
       status: [toneRank[row.dataset.tone] ?? 9, name],
     };
   });
-
-  // The load-in board plays once; afterwards rows that reappear from a filter must not replay it.
-  setTimeout(() => ledger.classList.add('settled'), 900);
 
   // ── Spring (motion-brief §4): retargetable, keeps velocity ───────────
   function spring(k, c, onFrame) {
@@ -71,7 +71,7 @@
   }
   input.addEventListener('input', applyFilter);
 
-  // ── Sort (header buttons). Rows glide on per-row springs, so a second sort mid-flight keeps momentum.
+  // ── Sort (header buttons) ────────────────────────────────────────────
   const sort = { key: 'n', dir: 1 };
   const heads = [...document.querySelectorAll('thead button[data-sort]')];
   const cmp = (x, y) => typeof x === 'number' ? x - y : String(x).localeCompare(String(y), 'en', { numeric: true, sensitivity: 'base' });
@@ -84,47 +84,37 @@
       for (let i = 0; !d && i < x.length; i++) d = cmp(x[i], y[i]);
       return (d || a._i - b._i) * dir;
     });
-    const before = animate ? new Map(rows.filter((r) => !r.hidden).map((r) => [r, r.getBoundingClientRect().top])) : null;
+    const was = animate ? new Map([...tbody.rows].filter((r) => !r.hidden).map((r, i) => [r, i])) : null;
     tbody.append(...sorted);
     heads.forEach((b) => {
       const th = b.parentElement;
       if (b.dataset.sort === key) th.setAttribute('aria-sort', dir > 0 ? 'ascending' : 'descending');
       else th.removeAttribute('aria-sort');
     });
-    if (before) flip(before);
-    else rows.forEach((r) => r._sy && r._sy.jump(0));
+    if (was) settle(was);
     syncUrl();
   }
 
-  function rowSpring(row) {
-    return row._sy || (row._sy = spring(380, 34, (y) => {
-      row.style.transform = Math.abs(y) < 0.05 ? '' : `translateY(${y}px)`;
-      row.classList.toggle('moving', Math.abs(y) >= 0.05);
-      if (Math.abs(y) < 0.05) row.classList.remove('far');
-    }));
-  }
-
-  // FLIP on springs: keep each row where it is on screen (mid-flight included), then let it settle.
-  // Long trips would cross half the table, so those rows fade in from a small offset instead.
-  const FAR = 240;
-  function flip(before) {
-    let i = 0;
+  // The new order is in place at once. The table dips to 0.4 and comes back, and each row
+  // that changed place rises the last 8 px into its slot, top to bottom, 12 ms apart.
+  // No row ever crosses another, and a second sort mid-flight just starts a fresh one.
+  const easeOut = 'cubic-bezier(0.22, 1, 0.36, 1)';
+  let settleTimer = 0;
+  function settle(was) {
+    tbody.getAnimations({ subtree: true }).forEach((a) => a.cancel());
+    tbody.classList.add('sorting'); // opaque rows for the whole flight
+    let i = 0, last = 0;
     for (const row of tbody.rows) {
-      if (!before.has(row)) continue;
-      const s = rowSpring(row);
-      const layoutTop = row.getBoundingClientRect().top - s.value;
-      const dy = before.get(row) - layoutTop;
-      if (Math.abs(dy) < 0.5 && Math.abs(s.value) < 0.5) continue;
-      if (Math.abs(dy) > FAR) {
-        s.jump(Math.sign(dy) * 16);
-        row.classList.add('far'); // fades in at once, under the rows that glide
-        row.animate({ opacity: [0, 1] }, { duration: 200, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' });
-        s.set(0);
-      } else {
-        s.offset(dy - s.value);
-        setTimeout(() => s.set(0), i++ * 12); // gliders leave one after another
+      if (row.hidden) continue;
+      if (was.get(row) !== i) {
+        last = i * 12;
+        row.animate({ transform: ['translateY(8px)', 'none'] }, { duration: 260, delay: last, easing: easeOut, fill: 'backwards' });
       }
+      i++;
     }
+    tbody.animate({ opacity: [0.4, 1] }, { duration: 180, easing: easeOut });
+    clearTimeout(settleTimer);
+    settleTimer = setTimeout(() => tbody.classList.remove('sorting'), last + 280);
   }
 
   heads.forEach((b) => b.addEventListener('click', () => {
@@ -220,13 +210,20 @@
   const py = spring(260, 30, drawPreview);
   // Hard limits on what is drawn, so momentum can't carry the card past the right edge or into the row.
   let cardW = 0, edgeY = 0, up = false;
+  const head = $('#table thead th.status');
+  // The card's opaque backing is one layer of this base size, scaled to each item (transform only).
+  const BW = 320, BH = 240;
+  let snapRaf = 0;
+  function snap() { // one frame with no transitions: a cut, not a glide
+    card.classList.add('snap');
+    cancelAnimationFrame(snapRaf);
+    snapRaf = requestAnimationFrame(() => { snapRaf = requestAnimationFrame(() => card.classList.remove('snap')); });
+  }
   function drawPreview() {
     const x = Math.max(16, Math.min(px.value, innerWidth - 16 - cardW));
     const y = up ? Math.min(py.value, edgeY) : Math.max(py.value, edgeY);
     preview.style.transform = `translate3d(${x}px, ${y}px, 0)`;
   }
-
-  const templateOf = (row) => $('th.name template', row);
 
   function itemFor(row) {
     if (items.has(row)) return items.get(row);
@@ -279,7 +276,9 @@
     x = Math.max(pad, Math.min(x, vw - pad - w));
 
     // y: the trailing side of the row; the other side if it doesn't fit; shrink only if neither does.
-    const roomAbove = r.top - gap - pad, roomBelow = vh - pad - r.bottom - gap;
+    // Never over the sticky filter bar and column heads.
+    const ceil = Math.max(pad, head.getBoundingClientRect().bottom + gap);
+    const roomAbove = r.top - gap - ceil, roomBelow = vh - pad - r.bottom - gap;
     let want = dirY > 0 ? 'above' : 'below';
     const fits = (s) => (s === 'above' ? roomAbove : roomBelow) >= h;
     if (!fits(want)) want = fits(want === 'above' ? 'below' : 'above') ? (want === 'above' ? 'below' : 'above') : (roomAbove > roomBelow ? 'above' : 'below');
@@ -296,7 +295,12 @@
     const sweep = above ? [Math.min(py.value, y) - hh, Math.max(py.value, y)] : [Math.min(py.value, y), Math.max(py.value, y) + hh];
     const glide = shown && above === up && !(sweep[0] < r.bottom && sweep[1] > r.top);
     up = above; edgeY = y; cardW = w;
-    preview.classList.toggle('up', up);
+    // Only the incoming item takes the new anchor; an outgoing one keeps its own until it has faded.
+    el.classList.toggle('up', above);
+    card.classList.toggle('up', above);
+    card.style.setProperty('--sx', (w * fit / BW).toFixed(4));
+    card.style.setProperty('--sy', (hh / BH).toFixed(4));
+    if (!glide) snap();
     if (glide) { px.set(x); py.set(y); }
     else if (shown) { px.set(x); py.jump(y); }
     else {
@@ -365,6 +369,30 @@
     });
     'requestIdleCallback' in window ? requestIdleCallback(warm, { timeout: 2000 }) : setTimeout(warm, 800);
   }
+
+  // ── Phone: a still of each row's media at the row's right edge ───────
+  // (The floating preview needs a pointer or a keyboard; phones get the posters inline.)
+  let thumbs = false;
+  function buildThumbs() {
+    if (thumbs || wide.matches) return;
+    thumbs = true;
+    for (const row of rows) {
+      const m = templateOf(row)?.content.querySelector('img, video[poster]');
+      if (!m) continue;
+      const w = Number(m.getAttribute('width')), h = Number(m.getAttribute('height'));
+      const img = document.createElement('img');
+      img.loading = 'lazy'; img.decoding = 'async'; img.alt = '';
+      img.src = m.getAttribute(m.tagName === 'IMG' ? 'src' : 'poster');
+      const td = document.createElement('td');
+      td.className = `thumb${h > w ? ' portrait' : h === w ? ' square' : ''}`;
+      td.setAttribute('aria-hidden', 'true');
+      td.append(img);
+      row.append(td);
+      row.classList.add('has-thumb');
+    }
+  }
+  buildThumbs();
+  wide.addEventListener('change', buildThumbs);
 
   // Restore a linked view (?q=…&sort=…). Last, so everything above is wired first.
   {

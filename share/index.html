@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Share drafts — you still click Post</title>
+<title>Share drafts</title>
 <meta name="description" content="Drafts only. Method first: a 3% spread annualises to 24.6%; after a 2.4% break rate and costs it is +1.38% a deal. You still click Post. Agents never submit.">
 <meta name="robots" content="noindex,nofollow">
 <link rel="canonical" href="https://charliewytk.github.io/share/">
@@ -14,12 +14,11 @@
   .shell { max-width: calc(680px + 2 * var(--gutter)); margin: 0 auto; padding: var(--space-7) var(--gutter) 0; }
   .intro h1 { font-size: var(--text-xl); }
   .intro p { margin: var(--space-3) 0 0; color: var(--fg-2); }
+  .intro .lede { color: var(--fg); }
   .intro .note { margin-top: var(--space-4); }
   .drafts { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6); margin-top: var(--space-7); }
 
-  .draft-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); margin: 0 0 var(--space-3); }
-  .draft h2 { font-size: var(--text-md); line-height: var(--leading-snug); letter-spacing: var(--tracking-snug); }
-  .draft .chip { color: var(--fg-3); }
+  .draft h2 { margin: 0 0 var(--space-3); font-size: var(--text-md); line-height: var(--leading-snug); letter-spacing: var(--tracking-snug); }
   .draft .note { margin: 0 0 var(--space-3); }
 
   /* one draft reads like one note: title, hairline, body */
@@ -35,11 +34,10 @@
     font-size: 16px; line-height: var(--leading);   /* 16px stops iOS zoom on focus */
     color: var(--fg); background: transparent;
     border: 0; border-radius: 0; resize: none;
-    field-sizing: content;
+    field-sizing: content;   /* where unsupported, the script below sizes each box to its text */
     -webkit-user-select: text; user-select: text;
   }
-  .sheet textarea.title { font-weight: 600; letter-spacing: var(--tracking-snug); line-height: var(--leading-snug); }
-  .sheet textarea.title { border-bottom: 1px solid var(--line); }
+  .sheet textarea.title { font-weight: 600; letter-spacing: var(--tracking-snug); line-height: var(--leading-snug); border-bottom: 1px solid var(--line); }
   .sheet textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 0; }
 
   .row { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
@@ -51,55 +49,59 @@
   .btn.copy { touch-action: manipulation; }
   .btn.copy.ok { background: var(--good); border-color: var(--good); color: var(--accent-fg); }
   @media (prefers-reduced-motion: no-preference) {
-    .btn.copy.ok { animation: copied var(--spring-bouncy-dur) var(--spring-bouncy); }
+    .btn.copy.ok, .btn.copy.no { animation: copied var(--spring-bouncy-dur) var(--spring-bouncy); }
     @keyframes copied { from { transform: scale(0.94); } }
   }
-  .draft .meta { margin: var(--space-3) 0 0; }
 
-  /* tomorrow's one copy: a floating bar, clear of the home indicator */
+  /* tomorrow's one copy: sticky at the bottom while you scroll, docks under the footer at the end */
   .morning {
-    position: fixed; z-index: 40;
-    left: 0; right: 0; bottom: 0;
-    display: grid; grid-template-columns: 1fr; gap: var(--space-2) var(--space-4); align-items: center;
-    padding: var(--space-3) max(var(--gutter), env(safe-area-inset-right, 0px)) calc(var(--space-3) + env(safe-area-inset-bottom, 0px)) max(var(--gutter), env(safe-area-inset-left, 0px));
+    position: sticky; z-index: 40; bottom: 0;
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "when btn" "more more";
+    column-gap: var(--space-3); align-items: center;
+    padding: var(--space-2) max(var(--gutter), env(safe-area-inset-right, 0px)) calc(var(--space-2) + env(safe-area-inset-bottom, 0px)) max(var(--gutter), env(safe-area-inset-left, 0px));
     background: color-mix(in srgb, var(--bg) 86%, transparent);
     -webkit-backdrop-filter: saturate(1.6) blur(14px);
     backdrop-filter: saturate(1.6) blur(14px);
     border-top: 1px solid var(--line);
     font-size: var(--text-sm);
   }
-  .morning p { margin: 0; color: var(--fg-3); }
-  .morning p b { color: var(--fg); font-weight: 600; }
-  .morning .btn { width: 100%; }
-  .morning .sku { display: flex; flex-wrap: wrap; column-gap: var(--space-4); }
+  .morning p { grid-area: when; margin: 0; color: var(--fg-3); }
+  .morning p b { color: var(--fg); font-weight: 600; margin-right: var(--space-1); }
+  .morning .btn { grid-area: btn; }
+  /* second line: the two existing listings, shown only once the footer is in view */
+  .morning .more { grid-area: more; display: grid; grid-template-rows: 1fr; }
+  .morning .sku { min-height: 0; overflow: hidden; display: flex; flex-wrap: wrap; column-gap: var(--space-4); }
   .morning .sku a { display: inline-flex; align-items: center; min-height: 32px; color: var(--fg-3); }
   .morning .sku a.pay { color: var(--fg); font-weight: 500; }
   .morning .sku .only { display: inline-flex; align-items: center; min-height: 32px; color: var(--fg-4); }
+  .morning.tucked .more { grid-template-rows: 0fr; visibility: hidden; }
+  .morning.tucked .sku { opacity: 0; transform: translateY(6px); }
   @media (min-width: 720px) {
     .morning {
-      left: 50%; right: auto; bottom: var(--space-4);
+      bottom: var(--space-4);
       width: min(680px, calc(100% - 2 * var(--gutter)));
-      transform: translateX(-50%);
-      grid-template-columns: 1fr auto;
-      grid-template-areas: "when btn" "sku btn";
+      margin: 0 auto var(--space-4);
+      column-gap: var(--space-4);
       padding: var(--space-3) var(--space-3) var(--space-3) var(--space-5);
       border: 1px solid var(--line);
       border-radius: var(--radius-3);
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 12px 32px -12px rgba(0, 0, 0, 0.18);
     }
-    .morning p { grid-area: when; }
-    .morning .btn { grid-area: btn; width: auto; min-width: 13em; }
-    .morning .sku { grid-area: sku; }
+    .morning .btn { min-width: 13em; }
   }
   @media (prefers-reduced-motion: no-preference) {
     .morning { animation: bar-in var(--spring-snappy-dur) var(--spring-snappy) 200ms backwards; }
     @keyframes bar-in { from { opacity: 0; translate: 0 24px; } }
+    .morning .more { transition: grid-template-rows var(--spring-snappy-dur) var(--spring-snappy), visibility 0s linear 0s; }
+    .morning.tucked .more { transition: grid-template-rows var(--spring-snappy-dur) var(--spring-snappy), visibility 0s linear var(--spring-snappy-dur); }
+    .morning .sku { transition: opacity var(--spring-snappy-dur) var(--spring-snappy), transform var(--spring-snappy-dur) var(--spring-snappy); }
   }
 
-  /* the footer clears the floating bar */
-  .site-footer { width: min(680px, 100% - 2 * var(--gutter)); max-width: none; padding-inline: 0; margin-top: var(--space-9); padding-bottom: calc(224px + env(safe-area-inset-bottom, 0px)); }
-  .site-footer .site-nav { flex-wrap: wrap; gap: var(--space-2) var(--space-4); }
-  @media (min-width: 720px) { .site-footer { padding-bottom: 184px; } }
+  /* the bar sits in the page flow after the footer, so nothing needs padding to clear it */
+  .site-footer { width: min(680px, 100% - 2 * var(--gutter)); max-width: none; padding-inline: 0; margin-top: var(--space-9); padding-bottom: var(--space-5); }
+  .site-footer .site-nav { flex-wrap: wrap; gap: 0 var(--space-5); }
+  .site-footer .site-nav a { display: inline-flex; align-items: center; min-height: 44px; }
+  .site-footer .site-nav a::after { content: none; }
 </style>
 </head>
 <body>
@@ -114,15 +116,15 @@
 
 <main class="shell">
   <div class="intro">
-    <h1>Drafts. You still click Post.</h1>
-    <p>Conservative drafts for 09:00. Agents never submit Reddit, X, or HN. Open the app yourself, paste, and you still click Post / Submit.</p>
-    <p>Frozen site figures, checked against /example/ and /weekly/: a 3% spread annualises to 24.6%; after a 2.4% break rate and costs it is +1.38% a deal.</p>
-    <p class="note">Reddit account: <b>u/charliequantack</b>. Extraction and cost-sizing only. Not advice. Long-press a box if Copy fails.</p>
+    <h1>Share drafts</h1>
+    <p class="lede">Agents never submit. Paste, then you still click Post.</p>
+    <p>Frozen site figures, checked against <a href="../example/">/example/</a> and <a href="../weekly/">/weekly/</a>: a 3% spread annualises to 24.6%; after a 2.4% break rate and costs it is +1.38% a deal.</p>
+    <p class="note">Reddit account: <b>u/charliequantack</b>. Extraction and cost-sizing only. Not advice.</p>
   </div>
 
   <div class="drafts stagger">
   <section class="draft" data-draft="reddit-sa" aria-labelledby="h-sa" style="--i:0">
-    <div class="draft-head"><h2 id="h-sa">Reddit &mdash; r/SecurityAnalysis</h2><span class="chip">09:00</span></div>
+    <h2 id="h-sa">Reddit &mdash; r/SecurityAnalysis</h2>
     <div class="sheet">
       <label class="visually-hidden" for="sa-title">Title</label>
       <textarea id="sa-title" class="title" data-field="title" rows="2" readonly>A 3% cash-merger spread annualises to 24.6%. After a 2.4% break rate and costs it is +1.38% a deal</textarea>
@@ -148,7 +150,7 @@ Filings, not advice. Not a tip sheet.</textarea>
   </section>
 
   <section class="draft" data-draft="reddit-investing" aria-labelledby="h-inv" style="--i:1">
-    <div class="draft-head"><h2 id="h-inv">Reddit &mdash; r/investing (shorter)</h2></div>
+    <h2 id="h-inv">Reddit &mdash; r/investing</h2>
     <div class="sheet">
       <label class="visually-hidden" for="inv-title">Title</label>
       <textarea id="inv-title" class="title" data-field="title" rows="2" readonly>3% merger spread annualises to 24.6%; after a 2.4% break rate and costs it is +1.38% a deal</textarea>
@@ -172,7 +174,7 @@ Filings and cost-sizing only. Not advice.</textarea>
   </section>
 
   <section class="draft" data-draft="hn" aria-labelledby="h-hn" style="--i:2">
-    <div class="draft-head"><h2 id="h-hn">Hacker News &mdash; Show HN</h2></div>
+    <h2 id="h-hn">Hacker News &mdash; Show HN</h2>
     <p class="note">Submit URL <a href="https://charliewytk.github.io/sizer/">https://charliewytk.github.io/sizer/</a>, then the title and comment.</p>
     <div class="sheet">
       <label class="visually-hidden" for="hn-title">Title</label>
@@ -199,7 +201,7 @@ Extraction and cost-sizing. Not advice.</textarea>
   </section>
 
   <section class="draft" data-draft="x" aria-labelledby="h-x" style="--i:3">
-    <div class="draft-head"><h2 id="h-x">X &mdash; one post</h2></div>
+    <h2 id="h-x">X</h2>
     <div class="sheet">
       <label class="visually-hidden" for="x-body">Post</label>
       <textarea id="x-body" class="short" data-field="body" rows="8" readonly>3% merger spread annualises to 24.6%; after 2.4% break + costs +1.38% a deal. /sizer/ fails closed to measured 40bp; unknown stage labelled 1.57%.
@@ -214,28 +216,103 @@ Filings, not advice. £5/month.</textarea>
     <div class="row">
       <button type="button" class="btn copy post" data-copy-post="x">Copy post</button>
     </div>
-    <p class="note meta">Weighted length stays under 280 (each URL counts as 23).</p>
   </section>
   </div>
 </main>
 
 <footer class="site-footer">
-  <p class="site-legal">Clipboard only. Not a listing, not a tip sheet, and not a submitted post. Existing listings only &mdash; not a new product. Figures match the published 3% case on this site.</p>
+  <p class="site-legal">Clipboard only. Not a listing, not a tip sheet, and not a submitted post. Figures match the published 3% case on this site.</p>
   <nav class="site-nav" aria-label="Links">
-    <a href="../sizer/">/sizer/</a>
-    <a href="../example/">/example/</a>
-    <a href="../weekly/">/weekly/</a>
-    <a href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">£5/month on Gumroad</a>
-    <a href="https://wuytackcharlie.gumroad.com/l/mergerweekly" target="_blank" rel="noopener">free Sunday mail</a>
+    <a href="../sizer/">Calculator</a>
+    <a href="../example/">Worked example</a>
+    <a href="../weekly/">Weekly table</a>
   </nav>
 </footer>
 
 <aside class="morning" data-morning aria-label="Tomorrow's post">
-  <p><b class="num">09:00</b> — one copy. r/SecurityAnalysis. First line is the title. You still click Post.</p>
+  <p><b class="num">09:00</b> r/SecurityAnalysis</p>
   <button type="button" class="btn copy post" data-copy-post="reddit-sa">Copy tomorrow's post</button>
-  <span class="sku"><a class="pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table — £5/month</a><a class="quiet" href="https://wuytackcharlie.gumroad.com/l/mergerweekly" target="_blank" rel="noopener">Get the free Sunday mail</a><span class="only">Existing listings only — not a new product.</span></span>
+  <span class="more"><span class="sku"><a class="pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table — £5/month</a><a class="quiet" href="https://wuytackcharlie.gumroad.com/l/mergerweekly" target="_blank" rel="noopener">Get the free Sunday mail</a><span class="only">Existing listings only — not a new product.</span></span></span>
 </aside>
+<p class="visually-hidden" role="status" aria-live="polite" data-copy-status></p>
 <script src="../assets/js/share-copy.js"></script>
-<script>ShareCopy.bindSharePage(document);</script>
+<script>
+(function () {
+  var S = window.ShareCopy;
+  if (!S) return;
+  var status = document.querySelector("[data-copy-status]");
+  var FAIL = "Long-press the box";
+
+  function bodyOf(section) {
+    return section && (section.querySelector('textarea[data-field="body"]') || section.querySelector("textarea"));
+  }
+  function selectAll(el) {
+    if (!el) return;
+    el.focus();
+    el.setSelectionRange(0, el.value.length);
+  }
+
+  // One timer per button, the real label saved once: rapid taps restart the state, never overwrite the label.
+  function flash(btn, ok) {
+    clearTimeout(btn._flash);
+    btn.classList.remove("ok", "no");
+    void btn.offsetWidth; // restart the spring
+    btn.classList.add(ok ? "ok" : "no");
+    btn.textContent = ok ? "Copied" : FAIL;
+    if (status) status.textContent = ok ? "Copied." : "Copy failed. Long-press the box to copy.";
+    btn._flash = setTimeout(function () {
+      btn.classList.remove("ok", "no");
+      btn.textContent = btn.getAttribute("data-label");
+    }, 1600);
+  }
+
+  document.querySelectorAll("button.copy").forEach(function (btn) {
+    btn.setAttribute("data-label", btn.textContent);
+    btn.addEventListener("click", function () {
+      var key = btn.getAttribute("data-copy-post");
+      var section = key && document.querySelector('section[data-draft="' + key + '"]');
+      var field = key ? bodyOf(section) : document.getElementById(btn.getAttribute("data-copy"));
+      var text = key ? S.assemblePost(S.fieldsFromSection(section)) : field && field.value;
+      if (text == null) return;
+      S.copyText(text).then(function (ok) {
+        if (!ok) selectAll(field);
+        flash(btn, ok);
+      });
+    });
+  });
+
+  var areas = document.querySelectorAll(".sheet textarea");
+  areas.forEach(function (ta) {
+    ta.addEventListener("focus", function () { ta.select(); });
+  });
+
+  // Firefox and older iOS Safari lack field-sizing: size each box to its text instead of a small scroll box.
+  if (!(window.CSS && CSS.supports && CSS.supports("field-sizing", "content"))) {
+    var lastW = 0;
+    var fit = function () {
+      if (window.innerWidth === lastW) return;
+      lastW = window.innerWidth;
+      areas.forEach(function (ta) {
+        ta.style.height = "auto";
+        ta.style.height = ta.scrollHeight + (ta.offsetHeight - ta.clientHeight) + "px";
+      });
+    };
+    fit();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { lastW = 0; fit(); });
+    var raf = 0;
+    window.addEventListener("resize", function () { cancelAnimationFrame(raf); raf = requestAnimationFrame(fit); });
+  }
+
+  // The listings line opens only when the footer is in view; without the observer it simply stays open.
+  var bar = document.querySelector("[data-morning]");
+  var footer = document.querySelector(".site-footer");
+  if (bar && footer && "IntersectionObserver" in window) {
+    bar.classList.add("tucked");
+    new IntersectionObserver(function (entries) {
+      bar.classList.toggle("tucked", !entries[0].isIntersecting);
+    }, { rootMargin: "0px 0px 160px 0px" }).observe(footer);
+  }
+})();
+</script>
 </body>
 </html>

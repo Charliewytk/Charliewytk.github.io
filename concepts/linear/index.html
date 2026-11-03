@@ -49,9 +49,9 @@
           <span class="sw" aria-hidden="true"></span>
           <div class="pv pv-exetix">
             <div class="stat" id="d01">
+              <img class="app-icon" src="/exetix/img/icon-green.png" width="240" height="240" alt="ExeTix app icon: a black ticket on bright green">
               <p class="num">~1–2&nbsp;s</p>
               <p class="lab">from a known release time to the alert</p>
-              <img class="app-icon" src="/exetix/img/icon-green.png" width="240" height="240" alt="ExeTix app icon: a black ticket on bright green">
             </div>
             <div class="fan">
               <img src="/exetix/img/screen-alerts.webp" width="540" height="1173" alt="ExeTix onboarding screen ‘Be first, every time’ with sample alerts: dropping in 10 min, tickets just dropped, restock, resale listed">
@@ -103,13 +103,19 @@
         </a>
       </li>
 
-      <!-- 04 Merger Monitor -->
+      <!-- 04 Merger Monitor: +1.38% per deal as a sliver of the 24.6% a year a 3% spread
+           annualises to. The 1.59% break-even is a spread threshold, not a return, so it is
+           not drawn on this axis. -->
       <li class="cell w3">
         <a class="card" href="/merger-monitor/" aria-labelledby="t04" aria-describedby="d04 s04">
           <span class="sw" aria-hidden="true"></span>
           <div class="pv pv-stat" id="d04">
             <p class="num">+1.38%</p>
             <p class="lab">per deal after break risk, costs and forgone carry</p>
+            <div class="ruler plain" aria-hidden="true">
+              <span class="band" style="--w:5.61%"></span>
+              <span class="end">0</span><span class="end">24.6% a year</span>
+            </div>
             <p class="q">Filings, not advice. Zero subscribers so far. Take: £0.</p>
           </div>
           <div class="meta">
@@ -137,14 +143,20 @@
         <button class="play" type="button" hidden><span class="vh">Play Doorly demo</span></button>
       </li>
 
-      <!-- 06 PowerLeash -->
+      <!-- 06 PowerLeash: system load 59.0 → 42.7 W on a 0–80 W ruler, the Solana ruler's twin -->
       <li class="cell w2">
         <a class="card" href="/tracks/powerleash/" aria-labelledby="t06" aria-describedby="d06 s06">
           <span class="sw" aria-hidden="true"></span>
           <div class="pv pv-stat" id="d06">
+            <img class="app-icon" src="/media/powerleash.png" width="512" height="512" alt="PowerLeash app icon: a white leaf on green" loading="lazy">
             <p class="num">42.8&nbsp;W</p>
             <p class="lab">held under a sustained 8-thread burn</p>
-            <img class="app-icon" src="/media/powerleash.png" width="512" height="512" alt="PowerLeash app icon: a white leaf on green" loading="lazy">
+            <div class="ruler" style="--seg:calc(100% / 8)" aria-hidden="true">
+              <span class="tick" style="--at:53.375%">42.7</span>
+              <span class="tick was" style="--at:73.75%">59.0</span>
+              <span class="end">0</span><span class="end">80&nbsp;W</span>
+            </div>
+            <p class="q">System load, before and after Match Charger.</p>
           </div>
           <div class="meta">
             <h2 id="t06"><span class="nm">PowerLeash</span> <span class="ln">A Mac menu-bar tool with one job.</span></h2>
@@ -153,15 +165,16 @@
         </a>
       </li>
 
-      <!-- 07 Abyss Warden: the one full-width card. 16:9 clip, trimmed to start after the title
-           card and wave banner (/media/abyss.mp4 from 3.5 s); the poster is its frame 0. -->
+      <!-- 07 Abyss Warden: the one full-width card. The 1920 press clip from 3.5 s (after the
+           title card and wave banner), cropped to 1920×824 so the game's HUD bars sit outside
+           the frame; the poster is its frame 0. -->
       <li class="cell w6">
         <a class="card" href="/abyss-warden/" aria-labelledby="t07" aria-describedby="s07">
           <span class="sw" aria-hidden="true"></span>
           <div class="pv pv-media pv-wide">
-            <video muted loop playsinline preload="none" poster="media/abyss.webp" width="960" height="540" aria-label="Abyss Warden gameplay: towers defending a trench">
-              <source src="media/abyss-720.mp4" type="video/mp4" media="(max-width: 640px)">
-              <source src="media/abyss.mp4" type="video/mp4">
+            <video muted loop playsinline preload="none" poster="media/abyss-wide.webp" width="1920" height="824" aria-label="Abyss Warden gameplay: towers defending a trench">
+              <source src="media/abyss-960.mp4" type="video/mp4" media="(max-width: 640px)">
+              <source src="media/abyss-1920.mp4" type="video/mp4">
             </video>
           </div>
           <div class="meta">
@@ -179,6 +192,13 @@
           <div class="pv pv-stat" id="d08">
             <p class="num num-word">Read-only</p>
             <p class="lab">it can't sign anything</p>
+            <!-- Same schematic as /work/: frame, status light, seven tabs, two blank panels. No data. -->
+            <div class="ds" aria-hidden="true">
+              <div class="ds-bar"><i></i><i></i><i></i><b></b></div>
+              <div class="ds-tabs"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="ds-body"><div><i></i><i></i><i></i></div><div><i></i><i></i></div></div>
+            </div>
+            <p class="q">A schematic of the layout, not a screenshot.</p>
           </div>
           <div class="meta">
             <h2 id="t08"><span class="nm">DeskStatus</span> <span class="ln">The whole trading desk in one window.</span></h2>
@@ -221,13 +241,14 @@
         </a>
       </li>
 
-      <!-- 11 Chess Exchange -->
+      <!-- 11 Chess Exchange. On phone the same full-size clip is framed on the first live
+           board and its price row (CSS only, so poster and video stay frame-matched). -->
       <li class="cell w3">
         <a class="card" href="/tracks/chess-exchange/" aria-labelledby="t11" aria-describedby="s11">
           <span class="sw" aria-hidden="true"></span>
-          <div class="pv pv-media">
+          <div class="pv pv-media pv-board">
             <video muted loop playsinline preload="none" poster="media/chess.webp" width="1120" height="700" aria-label="Chess Exchange demo: markets on live games">
-              <source src="media/chess-720.mp4" type="video/mp4" media="(max-width: 640px)">
+              <source src="media/chess-1120.mp4" type="video/mp4" media="(max-width: 640px)">
               <source src="/media/chess-demo.mp4" type="video/mp4">
             </video>
           </div>
@@ -243,7 +264,7 @@
       <li class="cell w3">
         <a class="card" href="/chelsea-bikes/" aria-labelledby="t12" aria-describedby="s12">
           <span class="sw" aria-hidden="true"></span>
-          <div class="pv pv-media">
+          <div class="pv pv-media pv-busy">
             <video muted loop playsinline preload="none" poster="media/chelsea.webp" width="1120" height="700" aria-label="Chelsea Bikes website prototype">
               <source src="media/chelsea-720.mp4" type="video/mp4" media="(max-width: 640px)">
               <source src="/media/chelsea-demo.mp4" type="video/mp4">
@@ -264,11 +285,7 @@
   <p class="honest">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
   <div class="foot-row">
     <span>Charlie Wuytack · Exeter</span>
-    <nav aria-label="Elsewhere">
-      <a href="/work/">Work</a>
-      <a href="https://github.com/Charliewytk">GitHub</a>
-      <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a>
-    </nav>
+    <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a>
   </div>
 </footer>
 

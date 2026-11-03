@@ -1,11 +1,11 @@
 // Offline: keeps the homepage, the tracklist and every track page so the site opens without a signal.
 // Pages are fetched fresh first and fall back to the copy kept here; files are served from here and refreshed behind.
-var VERSION = 'side-a-v2';
+var VERSION = 'side-a-v3';
 var SCOPE = self.registration.scope;
 var TRACKS = ['exetix', 'research', 'solana', 'merger-monitor', 'doorly', 'powerleash', 'abyss-warden',
   'deskstatus', 'numerai', 'competitions', 'chess-exchange', 'chelsea-bikes'];
 var THREE = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-var KEEP = ['', 'tracks/', 'tracks/track.css', 'offline.html', 'media/favicon.svg', 'manifest.webmanifest']
+var KEEP = ['', 'tracks/', 'tracks/track.css', 'offline.html', 'media/favicon.svg', 'manifest.webmanifest', 'assets/site.css']
   .concat(TRACKS.map(function (t) { return 'tracks/' + t + '/'; }))
   .map(function (p) { return new URL(p, SCOPE).href; })
   .concat([THREE]);
@@ -49,7 +49,7 @@ self.addEventListener('fetch', function (e) {
     return;
   }
   // everything else of the site's own is left to the browser, except the record's files
-  if (own && !/^(tracks|media|manifest\.webmanifest)/.test(url.href.slice(SCOPE.length))) return;
+  if (own && !/^(tracks|media|assets|manifest\.webmanifest)/.test(url.href.slice(SCOPE.length))) return;
 
   e.respondWith(caches.match(req).then(function (hit) {
     var fresh = fetch(req).then(function (res) { return keep(req, res); });

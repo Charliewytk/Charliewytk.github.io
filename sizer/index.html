@@ -340,14 +340,14 @@
   });
   render(false);
 
-  // Phone: show the strip only while the net figure is still below the viewport (clear of the strip itself).
-  // The root reaches far upward, so a figure scrolled past counts as seen and any jump crosses a threshold.
+  // Phone: show the strip only while the net figure is wholly below the viewport, so the two never overlap.
+  // The root reaches far upward, so a figure scrolled past counts as seen.
   if ("IntersectionObserver" in window) {
     new IntersectionObserver(function (entries) {
       var e = entries[entries.length - 1];
-      var below = e.intersectionRatio < 1;
+      var below = !e.isIntersecting;
       if (below) peek.setAttribute("data-show", ""); else peek.removeAttribute("data-show");
-    }, { rootMargin: "100000px 0px -88px 0px", threshold: [0, 1] }).observe(netEl);
+    }, { rootMargin: "100000px 0px 0px 0px", threshold: 0 }).observe(netEl);
   }
   // Keep the strip above an on-screen keyboard (iOS keeps fixed elements on the layout viewport).
   var vv = window.visualViewport, dock = document.querySelector(".peek-dock");

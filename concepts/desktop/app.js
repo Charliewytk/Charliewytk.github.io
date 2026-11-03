@@ -6,8 +6,9 @@
 //   .win    outer layer: position (desktop drag/throw) or the swipe-down drag (phone)
 //   .frame  inner layer: the "genie", a rect morph from an origin (icon, dock tile, old rect)
 //           to the window, driven by two springs (x and y progress) so it stretches a little.
-//   .chrome the content, counter-scaled against .frame so text is never squashed; it fades in
-//           once the morph is mostly there, so only the plain backing flies.
+//   .chrome the content, counter-scaled against .frame so text is never squashed.
+//   .genie  a copy of the app icon stretched over the frame: the flight starts as the icon and
+//           cross-fades into the window (and back into the icon on the way out).
 // Every motion is a spring that can be retargeted mid-flight and keeps its velocity.
 
 (() => {
@@ -115,6 +116,7 @@
         }
       }
       this.p = next;
+      dock.classList.toggle('is-sunk', next > 0);           // no live blur behind a sheet: it would re-blur every frame
       if (!next) { for (const n of background) n.style.transform = n.style.transformOrigin = n.style.willChange = ''; scrim.style.opacity = ''; return; }
       const sc = 1 - 0.06 * next;
       for (const n of background) n.style.transform = `scale(${sc})`;
@@ -166,6 +168,13 @@
       this.chrome = $('.chrome', el);
       this.body = $('.body', el);
       this.titlebar = $('.titlebar', el);
+      // The icon, stretched to the window rect: the frame's scale shrinks it back to the icon at the origin.
+      const genie = $('.icon', this.app).cloneNode(true);
+      genie.classList.add('genie');
+      genie.setAttribute('aria-hidden', 'true');
+      $('svg', genie)?.setAttribute('preserveAspectRatio', 'none');
+      this.chrome.after(genie);
+      this.genie = genie;
       winLayer.append(el);
 
       $('.light--close', el).addEventListener('click', () => this.close());
@@ -226,6 +235,7 @@
     open(origin = this.app, { focus = true, instant = false, kbd = false } = {}) {
       this.el.classList.toggle('is-kbd', kbd);
       if (this.state === 'open') { this.raise(); if (focus) this.el.focus({ preventScroll: true }); return; }
+      const cold = !this.body.childElementCount;            // a tap fires pointerdown and click together, so warm() may not have had a frame
       this.mount();
       const offscreen = this.el.hidden;                      // false while a close is still flying
       this.el.hidden = false;
@@ -236,9 +246,15 @@
       this.to = null;
       this.fade = true;
       this.drag.jump(0);
-      if (this.px.x === 0 && this.py.x === 0) { this.put(this.frame, 'opacity', '0'); this.put(this.chrome, 'opacity', '0'); }
+      this.dockFlight(origin !== this.app);                   // restoring from a dock tile: rise out of the dock, not from under it
       this.modal();
-      if (instant) { this.px.jump(1); this.py.jump(1); this.render(); } else this.animate(1, OPEN_X, OPEN_Y);
+      if (instant) { this.px.jump(1); this.py.jump(1); this.render(); }
+      else if (cold && !reduced() && this.px.x === 0 && this.py.x === 0) {
+        // First open: pay for the clone, layout and image decode in this frame (drawn invisible at the icon),
+        // then start the spring on the next one, so its first step never lands on a long frame.
+        this.render();
+        requestAnimationFrame(() => { if (this.state === 'open') this.animate(1, OPEN_X, OPEN_Y); });
+      } else this.animate(1, OPEN_X, OPEN_Y);
       this.raise();
       this.app.classList.add('is-open');
       dockTiles.add(this, instant);
@@ -258,6 +274,7 @@
       this.app.classList.remove('is-open');
       dockTiles.remove(this);
       if (isPhone()) background.forEach((n) => (n.inert = false));
+      this.dockFlight(false);
       if (!wasMin) { this.from = rectOf($('.icon', this.app)); this.fade = true; this.animate(0, SHUT_X, SHUT_Y); }
       this.video?.pause();
       if (hadFocus) this.app.focus({ preventScroll: true });
@@ -270,6 +287,7 @@
       this.fade = true;
       const tile = dockTiles.tileOf(this);
       this.from = rectOf(tile ? $('.icon', tile) : $('.icon', this.app));
+      this.dockFlight(!!tile);                               // pass in front of the dock glass, into the tile
       this.animate(0, SHUT_X, SHUT_Y);
       tile?.classList.add('tile--min');
       this.video?.pause();
@@ -283,10 +301,10 @@
       if (!this.zoomed) {
         this.saved = { x: this.x.to, y: this.y.to, w: this.w, h: this.h, fit: this.fit };
         this.fit = false;
-        // Like Notes: as tall as the screen allows, but capped at a readable width and centred.
-        const a = workArea();
-        this.w = Math.min(a.w - GAP * 2, 960); this.h = a.h - GAP;
-        this.x.jump(Math.round((a.w - this.w) / 2)); this.y.jump(a.y + GAP);
+        // Like Notes: as tall as the screen allows, capped at a readable width, and still clear of the icons.
+        const a = workArea(), right = launcherLeft();
+        this.w = clamp(Math.min(right - GAP, 960), MIN_W, a.w - GAP * 2); this.h = a.h - GAP;
+        this.x.jump(Math.round(clamp(right - this.w, GAP, a.w - this.w - GAP))); this.y.jump(a.y + GAP);
       } else {
         const s = this.saved; this.x.jump(s.x); this.y.jump(s.y); this.w = s.w; this.h = s.h; this.fit = s.fit;
       }
@@ -305,6 +323,12 @@
       this.el.classList.add('is-front');
       appName.textContent = this.name;
       syncVideos();
+    }
+
+    // While a window flies to or from a dock tile, the window layer sits above the dock (z 800).
+    dockFlight(on) {
+      this.docking = on;
+      winLayer.classList.toggle('windows--fly', [...wins.values()].some((w) => w.docking));
     }
 
     // The rect the frame shows right now, in viewport pixels.
@@ -347,9 +371,13 @@
       } else {
         el.style.transform = `translate3d(${this.x.x}px, ${this.y.x}px, 0)`;
       }
-      if (px === 1 && py === 1 && !this.to) {               // at rest: no morph, nothing inline
+      const flying = !(px === 1 && py === 1 && !this.to);
+      // The resting shadow and hairline (.win::before) hide while the frame morphs, and fade back in on landing.
+      if (flying !== this.flying) { this.flying = flying; el.classList.toggle('is-flying', flying); }
+      if (!flying) {                                         // at rest: no morph, nothing inline
         this.put(frame, 'transform', ''); this.put(frame, 'opacity', '');
         this.put(chrome, 'transform', ''); this.put(chrome, 'opacity', '');
+        this.put(this.genie, 'opacity', '');
         // A sheet being dragged gets rounded top corners, like a card lifted off the screen.
         this.put(frame, 'borderRadius', phone && this.drag.x > 0 ? `${Math.min(this.drag.x / 2, 12).toFixed(1)}px` : '');
         return;
@@ -368,16 +396,24 @@
       const rEnd = phone ? 12 * clamp((1 - m) * 4, 0, 1) : RADIUS;
       const r0 = this.fade ? F.w * 0.225 : rEnd, r1 = this.to ? 12 : rEnd;
       this.put(frame, 'borderRadius', `${(lerp(r0, r1, px) / sx).toFixed(1)}px / ${(lerp(r0, r1, py) / sy).toFixed(1)}px`);
-      // Only the plain backing flies from the icon; the content fades in once the shape is mostly there.
-      this.put(frame, 'opacity', this.fade ? clamp(m * 4, 0, 1).toFixed(3) : '');
-      this.put(chrome, 'opacity', this.fade ? clamp((m - 0.45) / 0.35, 0, 1).toFixed(3) : '');
+      // From an icon: the flight starts as the icon (the genie copy covers the frame) and cross-fades to the window
+      // while the content fades in. Closing runs the same curve backwards, so it lands as the icon, never as a blank card.
+      // The frame itself only fades over the last tenth, where it already looks like the icon it lands on.
+      this.put(frame, 'opacity', this.fade ? clamp(Math.max(px, py) * 10, 0, 1).toFixed(3) : '');   // both axes home first
+      // Exits keep the content up for longer (until about halfway home), so a closing window reads as a shrinking window.
+      const [c0, c1, g0, g1] = this.state === 'open' ? [0.3, 0.7, 0.6, 0.3] : [0.12, 0.45, 0.42, 0.12];
+      this.put(chrome, 'opacity', this.fade ? clamp((m - c0) / (c1 - c0), 0, 1).toFixed(3) : '');
+      this.put(this.genie, 'opacity', this.fade ? clamp((g0 - m) / (g0 - g1), 0, 1).toFixed(3) : '');
     }
 
     settled() {
+      if (this.docking) this.dockFlight(false);
       if (this.state !== 'open') {                           // fully shut: take it off the screen
         this.el.hidden = true;
-        this.frame.style.cssText = ''; this.chrome.style.cssText = '';
-        for (const n of [this.frame, this.chrome]) for (const k of Object.keys(n)) if (k[0] === '_') delete n[k];
+        for (const n of [this.frame, this.chrome, this.genie]) {
+          n.style.cssText = '';
+          for (const k of Object.keys(n)) if (k[0] === '_') delete n[k];
+        }
         this.el.style.transform = '';
         depth.set(this, 0);
         this.to = null;

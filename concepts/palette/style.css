@@ -115,16 +115,10 @@ button { font: inherit; color: inherit; }
   font-size: 13px; font-weight: 500; letter-spacing: 0; line-height: 1;
   white-space: nowrap;
 }
-.crumb-root {
-  padding: 6px 9px; border-radius: 7px;
-  background: rgba(255, 255, 255, 0.07);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
-  transition: background-color var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out), padding var(--dur-base) var(--ease-out);
-}
-/* Open: the chip turns into a plain breadcrumb label; the back arrow is the control. */
-.is-open .crumb-root { background: transparent; box-shadow: none; color: var(--ink-2); padding-inline: 2px; }
-.crumb-sep, .crumb-leaf { display: none; }
-.is-open .crumb-sep { display: inline; color: var(--ink-3); }
+.crumb-root { color: var(--ink-2); padding-inline: 2px; }
+/* The slash stays at rest, so the field reads as the path's next step: "Charlie Wuytack / Doorly". */
+.crumb-sep { color: var(--ink-3); }
+.crumb-leaf { display: none; }
 .is-open .crumb-leaf { display: inline; overflow: hidden; text-overflow: ellipsis; animation: leaf-in var(--dur-base) var(--ease-out); }
 @keyframes leaf-in { from { opacity: 0; transform: translateX(-4px); } }
 
@@ -187,7 +181,8 @@ button { font: inherit; color: inherit; }
   font-size: 13px; color: var(--ink-3); white-space: nowrap; font-variant-numeric: tabular-nums;
   overflow: hidden; text-overflow: ellipsis; max-width: 40vw;
 }
-.row.lifted .tile, .row.lifted .name, .row.lifted .acc { opacity: 0; }
+/* The tile and name fly to the sheet; the label stays and fades with the list. */
+.row.lifted .tile, .row.lifted .name { opacity: 0; }
 
 /* App tile: the real icon for the two shipped apps, a line glyph for everything else. */
 .tile {
@@ -214,7 +209,8 @@ button { font: inherit; color: inherit; }
   height: var(--row-h); pointer-events: none; opacity: 0;
   transform-origin: 50% 0; will-change: transform;
 }
-.js .hl { opacity: 1; }
+.js .hl { opacity: 1; transition: opacity var(--dur-fast) var(--ease-out); }
+.js .hl.off { opacity: 0; }
 .hl-in {
   position: absolute; inset: 0; border-radius: 10px; background: var(--hl);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
@@ -265,7 +261,7 @@ html:not(.js) .row:hover, html:not(.js) .row:focus-visible { background: var(--h
 .s-meta.wrapped .s-dot { display: none; }
 .s-meta.wrapped .s-status { display: block; width: max-content; }
 
-.s-lead { margin: 22px 0 0; font-size: 20px; line-height: 1.35; letter-spacing: -0.018em; text-wrap: balance; max-width: 30ch; }
+.s-lead { margin: 22px 0 0; font-size: 20px; line-height: 1.35; letter-spacing: -0.018em; text-wrap: balance; max-width: 44ch; }
 .s-detail { margin: 8px 0 0; font-size: 13.5px; color: var(--ink-2); text-wrap: pretty; }
 
 .s-media { margin: 22px 0 0; }

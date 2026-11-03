@@ -74,7 +74,7 @@ img, video { display: block; max-width: 100%; }
 .nav-in { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .mark { font-weight: 600; font-size: 15px; letter-spacing: -0.015em; min-height: var(--tap); display: inline-flex; align-items: center; }
 .nav nav { display: flex; gap: 8px; margin-right: -8px; }
-.nav nav a, .foot nav a {
+.nav nav a, .foot-row a {
   font-size: 14px; color: var(--muted); padding: 0 8px; border-radius: 8px;
   min-height: var(--tap); display: inline-flex; align-items: center;
   transition: color var(--dur-fast) var(--ease-out);
@@ -165,8 +165,8 @@ img, video { display: block; max-width: 100%; }
 
 /* ---------- stat previews: number on top, its picture at the bottom (numbers never animate) ---------- */
 .pv-stat { display: flex; flex-direction: column; gap: 8px; padding: 24px; }
-.pv-stat > :is(.lanes, .ruler, .dots, .app-icon), .pv-exetix .app-icon { margin-top: auto; }
-.pv-stat > :is(.lanes, .ruler, .dots) + .q { margin-top: 8px; }
+.pv-stat > :is(.lanes, .ruler, .dots, .ds) { margin-top: auto; }
+.pv-stat > :is(.lanes, .ruler, .dots, .ds) + .q { margin-top: 8px; }
 .pv-stat > .lab + .q { margin-top: auto; } /* a card without a picture keeps its honesty line at the foot */
 .num {
   font-size: clamp(2.5rem, 2vw + 1.75rem, 3.5rem); font-weight: 600; line-height: 1;
@@ -174,24 +174,50 @@ img, video { display: block; max-width: 100%; }
 }
 .lab { font-size: 14px; line-height: 1.45; color: var(--muted); max-width: 40ch; text-wrap: pretty; }
 .num-word { font-variant-numeric: normal; }
-.app-icon { width: 56px; height: 56px; border-radius: 13px; box-shadow: 0 0 0 1px var(--line); }
+/* product icons sit above their number, so the picture alone fills the lower half */
+.app-icon { width: 48px; height: 48px; border-radius: 11px; box-shadow: 0 0 0 1px var(--line); margin-bottom: 16px; }
 
 /* Kill Log: 65 lanes, 13 × 5, filling the card's width so 50/65 is the picture.
-   Filled = killed (50); outlined = everything else (15). */
+   Filled = killed (50); outlined = everything else (15). The fill is its own layer: the
+   first time the grid is in view (app.js adds .in) the 50 fills spring in on a diagonal,
+   staggered over 300 ms at most (--d). Opacity and transform only; the numbers never move. */
 .lanes { display: grid; grid-template-columns: repeat(13, minmax(0, 1fr)); gap: 4px; }
-.lanes i { aspect-ratio: 1; border-radius: 4px; box-shadow: inset 0 0 0 1px var(--line-hi); }
-.lanes .k { background: rgba(255, 255, 255, 0.6); box-shadow: none; }
+.lanes i { position: relative; aspect-ratio: 1; border-radius: 4px; box-shadow: inset 0 0 0 1px var(--line-hi); }
+.lanes .k::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; background: rgba(255, 255, 255, 0.6);
+  transition: opacity var(--dur-fast) var(--ease-out) var(--d, 0ms), transform var(--spring-bouncy-dur) var(--spring-bouncy) var(--d, 0ms);
+}
+.spring .lanes:not(.in) .k::after { opacity: 0; transform: scale(0.4); }
 
-/* Solana: p50 / p90 on a 0–1.5 ms ruler, minor ticks every 0.25 ms */
+/* Rulers. Solana: p50 / p90 on 0–1.5 ms, minor ticks every 0.25 ms. PowerLeash: 59.0 → 42.7 W
+   on 0–80 W (--seg = 10 W). Merger Monitor (.plain): one ink band, +1.38% of a 24.6% track. */
 .ruler {
   position: relative; height: 32px; margin-bottom: 16px;
-  background: repeating-linear-gradient(90deg, var(--line-hi) 0 1px, transparent 1px calc(100% / 6)) bottom / 100% 8px no-repeat;
+  background: repeating-linear-gradient(90deg, var(--line-hi) 0 1px, transparent 1px var(--seg, calc(100% / 6))) bottom / 100% 8px no-repeat;
   border-bottom: 1px solid var(--line-hi);
 }
+.ruler.plain { height: 8px; background: none; }
+.band { position: absolute; left: 0; bottom: -2px; width: var(--w); height: 3px; border-radius: 2px; background: var(--ink); }
 .tick { position: absolute; left: var(--at); bottom: 0; transform: translateX(-50%); padding-bottom: 16px; font: 500 12px/1 var(--mono); color: var(--muted); }
 .tick::after { content: ""; position: absolute; left: 50%; bottom: -1px; width: 2px; height: 16px; margin-left: -1px; background: var(--ink); border-radius: 1px; }
+.tick.was { color: var(--faint); }
+.tick.was::after { background: var(--faint); }
 .end { position: absolute; top: calc(100% + 4px); left: 0; font: 500 12px/1 var(--mono); color: var(--faint); }
 .end + .end { left: auto; right: 0; }
+
+/* DeskStatus: the /work/ schematic, reduced to shapes. Frame, status light, seven tabs,
+   two blank panels; no text and no data. */
+.ds { border: 1px solid var(--line-hi); border-radius: 8px; overflow: hidden; background: var(--bg); }
+.ds-bar { display: flex; align-items: center; gap: 4px; height: 16px; padding: 0 8px; border-bottom: 1px solid var(--line); }
+.ds-bar i { width: 6px; height: 6px; border-radius: 50%; background: var(--line-hi); }
+.ds-bar b { width: 6px; height: 6px; margin-left: auto; border-radius: 50%; background: var(--ink); }
+.ds-tabs { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; padding: 4px 8px; border-bottom: 1px solid var(--line); }
+.ds-tabs i { height: 8px; border-radius: 2px; background: var(--line); }
+.ds-tabs i:first-child { background: rgba(255, 255, 255, 0.32); }
+.ds-body { display: grid; grid-template-columns: 1.2fr 1fr; gap: 1px; background: var(--line); }
+.ds-body > div { display: flex; flex-direction: column; gap: 8px; min-height: 56px; padding: 8px; background: var(--bg); }
+.ds-body i { height: 4px; border-radius: 2px; background: var(--line-hi); }
+.ds-body i:nth-child(2) { width: 72%; } .ds-body i:nth-child(3) { width: 86%; }
 
 /* Numerai / Competitions dots */
 .dots { display: flex; flex-wrap: wrap; gap: 4px; }
@@ -219,8 +245,8 @@ img, video { display: block; max-width: 100%; }
 .card:focus-visible .fan img:nth-child(3) { transform: translate(60%, 2%) rotate(8deg); }
 
 /* media previews: poster and video fill the box identically (object-fit applies to both).
-   On wider screens Doorly drops its bright lower tray (16:7, top-anchored) and Abyss Warden
-   is cropped to 21:9, which also takes the game's own HUD out of frame. */
+   On wider screens Doorly drops its bright lower tray (16:7, top-anchored). The Abyss Warden
+   clip itself is 21:9 with the HUD cropped out; on phone the 16:9 box trims its sides. */
 .pv-media { min-height: 0; aspect-ratio: 16 / 10; background: var(--surface-2); }
 .pv-wide { aspect-ratio: 16 / 9; }
 .pv-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -256,6 +282,10 @@ img, video { display: block; max-width: 100%; }
   .pv-media { anchor-name: --pv; }
   .play { position-anchor: --pv; top: auto; right: anchor(right); bottom: anchor(bottom); margin: 0 16px 16px 0; }
 }
+/* Chelsea Bikes' clip has its own WhatsApp pill in that corner, so its button sits 48px
+   higher and the two never stack. */
+.cell:has(.pv-busy) .play { margin-top: calc(var(--pvr) - 108px); }
+@supports (anchor-scope: all) { .cell:has(.pv-busy) .play { margin: 0 16px 64px 0; } }
 .cell:hover .play, .cell:focus-within .play { opacity: 1; }
 .play:active { transform: scale(0.94); }
 @media (hover: none), (prefers-reduced-motion: reduce) { .play { opacity: 1; } }
@@ -267,11 +297,11 @@ img, video { display: block; max-width: 100%; }
 .foot { padding-top: 96px; padding-bottom: 48px; }
 .honest { font-size: 13px; color: var(--muted); padding: 24px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .foot-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding-top: 24px; font-size: 14px; color: var(--faint); }
-.foot nav { display: flex; flex-wrap: wrap; gap: 8px; margin-inline: -8px; }
+.foot-row a { margin-right: -8px; }
 
 /* ---------- hover: fine pointers only, so touch never sticks ---------- */
 @media (hover: hover) and (pointer: fine) {
-  .nav nav a:hover, .foot nav a:hover { color: var(--ink); }
+  .nav nav a:hover, .foot-row a:hover { color: var(--ink); }
   .card:hover { border-color: var(--line-hi); }
   .card:hover::before, .card:hover .sw::before { opacity: 1; }
   .card:hover .fan img:nth-child(1) { transform: translate(-60%, 2%) rotate(-8deg); }
@@ -348,9 +378,14 @@ img, video { display: block; max-width: 100%; }
   .bento { grid-template-columns: minmax(0, 1fr); }
   .cell:first-child, .cell:last-child { grid-column: auto; }
   .pv-stat, .pv-exetix .stat { min-height: 0; padding: 24px 16px 16px; }
-  .pv-stat > :is(.lanes, .ruler, .dots, .app-icon), .pv-exetix .app-icon { margin-top: 16px; }
+  .pv-stat > :is(.lanes, .ruler, .dots, .ds) { margin-top: 16px; }
   .pv-exetix { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 240px; }
   .tall .pv { min-height: 0; }
-  .fan img { bottom: -88px; width: clamp(120px, 37%, 148px); border-radius: 20px; } /* ≤ 321px tall, so it never reaches the icon */
+  /* Chess Exchange: a square framed on the first live board and its price row. The video box
+     is the full 1120×700 frame scaled up (x 0–360, y 80–440 is in view), so no transform. */
+  .pv-board { aspect-ratio: 1; }
+  .pv-board video { inset: auto; left: 0; top: -22.222%; width: 311.111%; height: 194.444%; max-width: none; object-fit: fill; transform-origin: 16% 37%; }
+  .cell:has(.pv-board) { --pvr: 100%; }
+  .fan img { bottom: -88px; width: clamp(120px, 37%, 148px); border-radius: 20px; } /* ≤ 321px tall, so it never reaches the label */
   .meta { padding: 16px; }
 }

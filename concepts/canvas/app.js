@@ -39,7 +39,7 @@
     rects = cards.map((el) => ({
       el, x: el.offsetLeft, y: el.offsetTop, w: el.offsetWidth, h: el.querySelector('.face').offsetHeight,
       more: el.querySelector('.more').offsetHeight, label: el.querySelector('.label'), lw: el.querySelector('.label').offsetWidth,
-      ring: el.querySelector('.ring'), dy: 0, lh: el.querySelector('.label').offsetHeight + 6,  // room above the card for its label
+      ring: el.querySelector('.ring'), dy: 0, lh: el.querySelector('.label').offsetHeight + 10,  // room above the card for its label
     }));
     const w = nameEl.offsetWidth, h = nameEl.offsetHeight;
     nameRect = { x: nameEl.offsetLeft - w / 2, y: nameEl.offsetTop - h / 2, w, h, dy: 0 };
@@ -77,14 +77,24 @@
     return { cx: box.x + box.w / 2 - ((u.left + u.right) / 2 - vw / 2) / s, cy, s };
   }
 
+  // An open card and its panel always fit whole, links included. On a phone the floor is 0.8,
+  // which the tallest panel (ExeTix) does not need once its picture is phone-sized.
   function cardCam(card) {
-    return fit(pad(cardBox(rectOf(card), true), 16), phone() ? 1.1 : 1.05, phone() ? 0.9 : READ_S);
+    return fit(pad(cardBox(rectOf(card), true), 16), phone() ? 1.1 : 1.05, phone() ? 0.8 : READ_S);
   }
   // One home everywhere (load, brand pill, Escape, 0, the zoom readout): the name and its nearest cards,
-  // at a zoom where every qualifier is readable. On a phone: the name and ExeTix.
+  // at a zoom where every qualifier is readable. On a phone: the name and ExeTix, zoomed out just
+  // enough that the cards beside them peek in 32px at each edge, so there is clearly more.
   function homeCam() {
-    const list = [nameRect, ...rects.filter((r) => phone() ? r.el.dataset.home === 'phone' : r.el.hasAttribute("data-home")).map((r) => cardBox(r))];
-    return fit(pad(union(list), phone() ? 12 : 16), 1, phone() ? 0.9 : READ_S);
+    if (phone()) {
+      const box = pad(union([nameRect, ...rects.filter((r) => r.el.dataset.home === 'phone').map((r) => cardBox(r))]), 12);
+      const mid = box.x + box.w / 2;
+      const gap = Math.min(...rects.filter((r) => r.el.dataset.home === '').map((r) => r.x > mid ? r.x - mid : mid - r.x - r.w));
+      const s = clampS(Math.min(fit(box, 1, MIN_S).s, (vw / 2 - 32) / Math.max(gap, 1)));
+      return fit(box, s, s);
+    }
+    const list = [nameRect, ...rects.filter((r) => r.el.hasAttribute('data-home')).map((r) => cardBox(r))];
+    return fit(pad(union(list), 16), 1, READ_S);
   }
 
   /* ---------- push: an open panel moves the objects below it out of the way ---------- */
@@ -126,7 +136,7 @@
       for (const r of rects) r.label.style.transform = `scale(${Math.min(1 / s, r.w / Math.max(1, r.lw))})`;
       if (sel) rectOf(sel).ring.style.setProperty('--inv', 1 / s);
       const t = Math.round(s * 100) + '%';
-      if (t !== pctText) pct.textContent = pctText = t;
+      if (t !== pctText) { pct.textContent = pctText = t; pct.setAttribute('aria-label', t + ', zoom to home view'); }
     }
     // will-change only while moving, so text re-rasterises crisp at rest
     if (!moving) { moving = true; plane.classList.add('moving'); }
@@ -134,11 +144,12 @@
     restTimer = setTimeout(() => { moving = false; plane.classList.remove('moving'); }, 160);
     drawDots(tx, ty, s);
     drawMini();
-    // the small name in the top bar appears once the big one has mostly left the screen
+    // the small name in the top bar appears once the big one has mostly left the screen,
+    // and always while a card is open (the big one fades out then), so the name is in exactly one place
     const n = nameRect, nx0 = (n.x - cam.cx) * s + vw / 2, ny0 = (n.y + n.dy - cam.cy) * s + vh / 2;
     const ix = Math.max(0, Math.min(vw, nx0 + n.w * s) - Math.max(0, nx0));
     const iy = Math.max(0, Math.min(vh, ny0 + n.h * s) - Math.max(64, ny0));
-    const hide = (ix * iy) / (n.w * n.h * s * s) > 0.3;
+    const hide = !sel && (ix * iy) / (n.w * n.h * s * s) > 0.3;
     if (hide !== brandHidden) { brandHidden = hide; brand.toggleAttribute('data-hidden', hide); }
   }
 
@@ -329,12 +340,16 @@
       if (prev) { prev.classList.remove('sel'); video(prev, false); }
       sel = card;
       html.classList.toggle('picked', !!card);
-      if (card) {
-        card.classList.add('sel'); video(card, true);
-        const r = rectOf(card); r.lw = r.label.offsetWidth;  // the selected label is bolder
-      }
-      push(card);
-      lastS = 0;
+      if (card) card.classList.add('sel');
+      // The flight starts this frame; the layout read, the push-down and the video wait one frame,
+      // so the first frame of the flight stays cheap.
+      requestAnimationFrame(() => {
+        if (sel !== card) return;
+        if (card) { const r = rectOf(card); r.lw = r.label.offsetWidth; video(card, true); }  // the selected label is bolder
+        push(card);
+        lastS = 0;
+        invalidate();
+      });
       if (hist) {
         const path = location.pathname + location.search;
         if (!prev && card) { before = { ...cam }; history.pushState({ cv: 1 }, '', '#' + card.id); }

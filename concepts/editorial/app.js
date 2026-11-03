@@ -23,6 +23,8 @@
     index.style.setProperty('--i', n);
     runhead.style.setProperty('--i', n);
     runhead.dataset.i = n;                       // picks the progress timeline for the head's hairline
+    const a = links[Math.max(i, 0)];             // accessible name starts with the visible text
+    runhead.setAttribute('aria-label', `${a.querySelector('.n').textContent} ${a.querySelector('.t').textContent}, back to the index`);
     index.classList.toggle('has-current', i >= 0);
   }
   const band = new IntersectionObserver((entries) => {
@@ -33,6 +35,12 @@
     }
   }, { rootMargin: '-40% 0px -59% 0px' });
   spreads.forEach((s) => band.observe(s));
+  // A long jump (End key, a deep link) can skip the band entirely; settle on geometry instead.
+  addEventListener('scrollend', () => {
+    let i = -1;
+    spreads.forEach((s, j) => { if (s.getBoundingClientRect().top <= innerHeight * 0.4) i = j; });
+    setCurrent(i);
+  });
 
   // 2. Running head (phones only; hidden by CSS on desktop, where the index is sticky instead).
   new IntersectionObserver(([en]) => {
@@ -52,11 +60,33 @@
     const show = new IntersectionObserver((entries) => {
       for (const en of entries) if (en.isIntersecting) release(en.target);
     }, { rootMargin: '0px 0px -10% 0px' });
+    // A jump (rail link, back button) can carry a name past the viewport between two frames, so
+    // "show" never fires and it would later rise from below while the reader scrolls up.
+    // While a jump is in flight, nothing before its target is armed; anything already armed and
+    // before it is released. When any scroll settles, names at or above the viewport are released.
+    let target = null, settle = 0;
+    const before = (h) => target && (h.compareDocumentPosition(target) & Node.DOCUMENT_POSITION_FOLLOWING);
+    const jump = (id) => {
+      target = id && document.getElementById(id);
+      if (!target) return;
+      heads.forEach((h) => { if (h.classList.contains('armed') && before(h)) release(h); });
+      clearTimeout(settle);
+      settle = setTimeout(() => { target = null; }, 1500);   // fallback where scrollend is missing
+    };
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest && e.target.closest('a[href^="#"]');
+      if (a) jump(a.getAttribute('href').slice(1));
+    });
+    addEventListener('hashchange', () => jump(decodeURIComponent(location.hash.slice(1))));
+    addEventListener('scrollend', () => {
+      target = null;
+      heads.forEach((h) => { if (h.classList.contains('armed') && h.getBoundingClientRect().top < innerHeight) release(h); });
+    });
     const near = new IntersectionObserver((entries) => {
       for (const en of entries) {
         if (!en.isIntersecting) continue;
         near.unobserve(en.target);
-        if (en.boundingClientRect.top > innerHeight) {
+        if (en.boundingClientRect.top > innerHeight && !before(en.target)) {
           en.target.classList.add('armed');
           show.observe(en.target);
         }
@@ -99,10 +129,6 @@
     frame.className = 'pv-frame';
     const strip = document.createElement('div');
     strip.className = 'pv-strip';
-    const cap = document.createElement('div');
-    cap.className = 'pv-cap';
-    const roll = document.createElement('span');
-    roll.className = 'roll';
     spreads.forEach((s, j) => {
       const f = document.createElement('div');
       f.className = 'pv-f';
@@ -136,25 +162,34 @@
         f.append(t);
       }
       strip.append(f);
-      const k = links[j] && links[j].querySelector('.k');
-      const label = document.createElement('span');
-      label.textContent = k ? k.textContent : (s.querySelector('.meta > :nth-child(2)') || {}).textContent || '';
-      roll.append(label);
     });
     frame.append(strip);
-    cap.append(roll);
-    plate.append(frame, cap);
+    plate.append(frame);
     index.append(plate);
 
-    const setP = (j) => index.style.setProperty('--p', String(j));
+    // Neighbours slide on the snappy spring. A long move (more than two frames) would read as a
+    // slot-machine blur, so it cuts in place instead: the new frame fades up from 8% off its slot.
+    let p = 0, dip = null;
+    const setP = (j) => {
+      if (dip) { dip.cancel(); dip = null; }
+      p = j; index.style.setProperty('--p', String(j));
+    };
+    const cut = (j, from) => {
+      plate.classList.add('still');
+      setP(j);
+      void plate.offsetWidth;
+      plate.classList.remove('still');
+      if (from === null || still.matches) return;
+      const off = j > from ? 8 : -8;
+      dip = strip.animate(
+        [{ opacity: 0, transform: `translateY(calc(${-j * 100}% + ${off}%))` }, { opacity: 1, transform: `translateY(${-j * 100}%)` }],
+        { duration: 220, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' });
+    };
     const peek = (j) => {
-      if (!index.classList.contains('peek') && current >= 0) {
-        // the plate is hidden: jump straight to the item, then fade in, so it never sweeps the strip unseen
-        plate.classList.add('still');
-        setP(j);
-        void plate.offsetWidth;
-        plate.classList.remove('still');
-      } else setP(j);
+      if (j < 0 || (j === p && index.classList.contains('peek'))) return;
+      if (!index.classList.contains('peek') && current >= 0) cut(j, null);   // hidden: never sweep the strip unseen
+      else if (Math.abs(j - p) > 2) cut(j, p);
+      else setP(j);
       index.classList.add('peek');
     };
     const unpeek = () => index.classList.remove('peek');

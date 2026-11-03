@@ -24,6 +24,8 @@
 
   --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --gutter: 32px;
+  --tools-h: 46px;            /* sticky filter bar; the column heads stick under it */
+  --head-h: 34px;
   color-scheme: light dark;
 }
 @supports not (transition-timing-function: linear(0, 1)) { :root { --spring-bouncy: var(--ease-out); } }
@@ -72,13 +74,22 @@ a { color: inherit; text-decoration: none; }
 .top nav a { color: var(--muted); transition: color var(--dur-fast) var(--ease-out); }
 @media (hover: hover) and (pointer: fine) { .top nav a:hover { color: var(--ink); } }
 
-/* ── Filter bar: sits on the table's top rule ───────────────────────── */
+/* ── Filter bar: sits on the table's top rule, and stays on screen ──── */
 .ledger { position: relative; }
 .tools {
+  position: sticky; top: 0; z-index: 4;
   display: flex; align-items: center; gap: 16px;
-  border-top: 2px solid var(--rule-strong);
+  height: var(--tools-h); padding-top: 2px;
+  background: var(--bg);
   border-bottom: 1px solid var(--rule);
 }
+/* The top rule draws once, left to right, on load. */
+.tools::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px;
+  background: var(--rule-strong); transform-origin: 0 50%;
+}
+@keyframes draw { from { transform: scaleX(0); } }
+html.js .tools::before { animation: draw 720ms var(--ease-out) 80ms backwards; }
 .filter { flex: 1; display: flex; align-items: center; position: relative; }
 .filter input {
   flex: 1; min-width: 0;
@@ -89,7 +100,7 @@ a { color: inherit; text-decoration: none; }
 }
 .filter input::placeholder { color: var(--muted); opacity: 1; }
 .filter input::-webkit-search-cancel-button { display: none; }
-.filter:has(input:focus-visible) { box-shadow: inset 0 -2px 0 var(--accent); }
+.tools:has(input:focus-visible) { box-shadow: inset 0 -2px 0 var(--accent); }
 .filter kbd {
   font: inherit; font-size: 11px; color: var(--muted);
   border: 1px solid var(--rule); border-radius: 3px; padding: 0 5px; line-height: 16px;
@@ -104,14 +115,18 @@ a { color: inherit; text-decoration: none; }
 table { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; position: relative; }
 .c-n { width: 4ch; }
 .c-name { width: 16%; }
-.c-kind { width: 14%; }
-.c-status { width: 25%; }
-.c-val { width: 13ch; }
+.c-kind { width: 15%; }
+.c-status { width: 29%; }
+.c-val { width: 15ch; }
 th, td { text-align: left; vertical-align: top; padding: 11px 16px 11px 0; font-weight: 400; }
-td.val { text-align: right; font-weight: 600; padding-right: 2ch; white-space: nowrap; }
+/* Figure: one right edge, shared by the head and the values (px, not ch: the head is a smaller size). */
+td.val { text-align: right; font-weight: 600; padding-right: 16px; white-space: nowrap; }
 
-thead th { padding: 0; color: var(--muted); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; border-bottom: 1px solid var(--rule); }
-thead th.val { padding: 9px 2ch 9px 0; text-align: right; }
+thead th {
+  position: sticky; top: var(--tools-h); z-index: 3; background: var(--bg);
+  height: var(--head-h); padding: 0; color: var(--muted); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; border-bottom: 1px solid var(--rule);
+}
+thead th.val { padding: 9px 16px 9px 0; text-align: right; }
 thead button {
   all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 0.75ch;
   padding: 9px 0; color: inherit;
@@ -124,12 +139,11 @@ thead th[aria-sort] button::after { opacity: 1; }
 thead th[aria-sort="descending"] button::after { transform: rotate(180deg); }
 @media (hover: hover) and (pointer: fine) { thead button:hover { color: var(--ink); } }
 
-tbody tr { position: relative; }
+tbody tr { position: relative; scroll-margin-top: calc(var(--tools-h) + var(--head-h) + 8px); }
 tbody th, tbody td { border-bottom: 1px solid var(--rule); }
-tbody tr.moving { background: var(--bg); z-index: 2; }
-tbody tr.moving.far { z-index: 1; }
+tbody.sorting tr { background-color: var(--bg); } /* opaque while rows settle after a sort */
 tbody tr[hidden] { display: none !important; }
-.ledger.empty thead { visibility: hidden; }
+tbody td.thumb { display: none; }
 tbody td.n { color: var(--muted); }
 tbody th.name { font-weight: 500; }
 /* The whole row opens its link: app.js forwards clicks on the other cells
@@ -151,17 +165,11 @@ tbody .status span::before {
 }
 tbody tr[data-tone="live"]  .status span::before { background: var(--live); }
 tbody tr[data-tone="paper"] .status span::before { background: var(--flag); }
+tbody tr[data-tone="result"] .status span::before { background: var(--muted); }
 tbody tr[data-tone="demo"]  .status span::before { background: none; box-shadow: inset 0 0 0 1px var(--ink); }
 tbody tr[data-tone="killed"] .status span { color: var(--killed); }
 tbody tr[data-tone="killed"] .status span::before { background: var(--killed); }
 tbody tr[data-tone="killed"] th.name { font-weight: 400; }
-
-/* Load: rows set in top to bottom, once (app.js adds .settled after). */
-@keyframes set-in { from { opacity: 0; translate: 0 4px; } }
-html.js .ledger:not(.settled) tbody tr {
-  animation: set-in 220ms var(--ease-out) backwards;
-  animation-delay: calc(var(--i, 0) * 10ms);
-}
 
 /* Touch: press feedback only (no hover anywhere on touch). */
 tbody tr { transition: background-color var(--dur-press) var(--ease-out); }
@@ -187,7 +195,7 @@ html:not(.js) .filter, html:not(.js) #count { visibility: hidden; }
 /* ── Floating preview ───────────────────────────────────────────────── */
 .preview { position: fixed; left: 0; top: 0; z-index: 10; pointer-events: none; }
 .preview .card {
-  position: relative;
+  position: relative; --sx: 1; --sy: 1;
   opacity: 0; transform: scale(0.96); transform-origin: var(--ox, 0) 0;
   transition: opacity var(--dur-exit) var(--ease-out), transform var(--dur-exit) var(--ease-out);
 }
@@ -195,14 +203,25 @@ html:not(.js) .filter, html:not(.js) #count { visibility: hidden; }
   opacity: 1; transform: none;
   transition: opacity var(--dur-fast) var(--ease-out), transform var(--spring-bouncy-dur) var(--spring-bouncy);
 }
-/* Each row's media is cloned once and kept; switching rows crossfades them. */
+/* One opaque surface under the items. It morphs to each item's size with transform
+   only, so a crossfade never shows the table through two half-faded cards. */
+.preview .bg {
+  position: absolute; left: 0; top: 0; width: 320px; height: 240px;
+  border-radius: 4px; background: var(--card);
+  transform: scale(var(--sx), var(--sy)); transform-origin: 0 0;
+  transition: transform 260ms var(--ease-out);
+}
+.preview .card.up .bg { top: auto; bottom: 0; transform-origin: 0 100%; }
+/* Each row's media is cloned once and kept; switching rows crossfades them.
+   Each item keeps its own anchor (.up) until its exit ends, so an outgoing item never jumps. */
 .preview .item {
   position: absolute; left: 0; top: 0;
   transform: scale(var(--fit, 1)); transform-origin: 0 0;
   opacity: 0; filter: blur(2px);
-  transition: opacity var(--dur-exit) var(--ease-out), filter var(--dur-exit) var(--ease-out);
+  transition: opacity 90ms var(--ease-out), filter 90ms var(--ease-out);
 }
-.preview.up .item { top: auto; bottom: 0; transform-origin: 0 100%; }
+.preview .item.up { top: auto; bottom: 0; transform-origin: 0 100%; }
+.preview .card.snap .bg, .preview .card.snap .item { transition: none !important; }
 .preview .item.on { opacity: 1; filter: none; transition-duration: var(--dur-fast); z-index: 1; }
 .preview img, .preview video {
   display: block; width: 320px; height: auto; max-width: none;
@@ -229,36 +248,56 @@ html:not(.js) .filter, html:not(.js) #count { visibility: hidden; }
 @media (max-width: 1080px) {
   .c-kind, th.kind, td.kind { display: none; }
   .c-name { width: 21%; }
-  .c-status { width: 27%; }
+  .c-status { width: 30%; }
 }
 
 /* ── Phone: each row becomes a small grid card, still one list ──────── */
 @media (max-width: 640px) {
-  :root { --gutter: 16px; }
+  :root { --gutter: 16px; --head-h: 45px; }
   .top { padding: 8px 0 4px; align-items: center; }
   .top nav { gap: 0; margin-right: -10px; }
   /* 44 px tap targets (WCAG 2.5.8 asks for 24) */
   .top nav a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; }
   table, thead, tbody, tr, th, td, caption { display: block; }
   colgroup { display: none; }
+  thead { position: sticky; top: var(--tools-h); z-index: 3; background: var(--bg); }
   thead tr { display: flex; gap: 20px; border-bottom: 1px solid var(--rule); }
-  thead th { border: 0; }
+  thead th { position: static; height: auto; border: 0; }
   thead button { min-height: 44px; padding: 0; }
   /* "#" reaches into the gutter, so Name still lines up with the names below */
   thead th.n { margin-right: -20px; }
   thead th.n button { box-sizing: border-box; min-width: 44px; margin-left: -13px; padding-left: 13px; }
   thead th.val, thead th.label { display: none; }
   thead th.kind { display: block; }
+  /* One tab stop: the figure sits above its label, both on the name's left edge. */
   tbody tr {
     display: grid; column-gap: 1ch;
-    grid-template-columns: 3ch auto 1fr auto;
+    grid-template-columns: 3ch minmax(0, 1fr) auto;
     grid-template-areas:
-      "n    name  name  status"
-      ".    kind  kind  kind"
-      ".    val   label label"
-      ".    det   det   det";
+      "n name  status"
+      ". kind  kind"
+      ". val   val"
+      ". label label"
+      ". det   det";
     padding: 12px 0; border-bottom: 1px solid var(--rule);
   }
+  /* Rows with media carry a still at the right edge, under the status. */
+  tbody tr.has-thumb {
+    grid-template-columns: 3ch minmax(0, 1fr) auto 72px;
+    grid-template-areas:
+      "n name  status status"
+      ". kind  kind   thumb"
+      ". val   val    thumb"
+      ". label label  thumb"
+      ". det   det    thumb";
+  }
+  tbody td.thumb { display: block; grid-area: thumb; justify-self: end; align-self: start; padding: 0; margin: 6px 0 0 4px; }
+  .thumb img {
+    display: block; width: 72px; height: 45px; object-fit: cover;
+    border-radius: 3px; background: var(--card); box-shadow: 0 0 0 1px var(--rule);
+  }
+  .thumb.portrait img { width: 40px; height: 87px; }
+  .thumb.square img { width: 45px; height: 45px; }
   tbody th.name a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
   tbody th, tbody td { padding: 0; border: 0; }
   tbody td.n { grid-area: n; }
@@ -267,10 +306,10 @@ html:not(.js) .filter, html:not(.js) #count { visibility: hidden; }
   tbody td.status { display: contents; }
   tbody .status span { grid-area: status; text-align: right; white-space: nowrap; padding-left: 1ch; }
   tbody .status small { grid-area: det; margin-top: 4px; }
-  tbody td.val { grid-area: val; text-align: left; padding: 6px 1ch 0 0; }
+  tbody td.val { grid-area: val; text-align: left; padding: 6px 0 0; }
   tbody td.val:empty { display: none; }
-  tbody td.label { grid-area: label; padding-top: 6px; }
-  tbody tr[data-tone="killed"] td.label { grid-column: val / -1; }
+  tbody td.label { grid-area: label; padding-top: 1px; }
+  tbody td.val:empty + td.label { padding-top: 6px; }
 }
 
 /* ── Reduced motion (brief §11): nothing moves; fades stay ───────────── */
@@ -278,5 +317,5 @@ html:not(.js) .filter, html:not(.js) #count { visibility: hidden; }
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; transition-delay: 0s !important; }
   .preview .card, .preview .item, .slab { transition: opacity var(--dur-fast) var(--ease-out) !important; }
   .preview .card { transform: none; }
-  html.js .ledger:not(.settled) tbody tr { animation: none; }
+  html.js .tools::before { animation: none; }
 }

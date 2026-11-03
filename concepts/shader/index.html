@@ -8,26 +8,16 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Charlie Wuytack">
 <meta property="og:description" content="Charlie Wuytack builds apps, Mac tools, games and honest quant research. Built and sold ExeTix, an iPhone app for Exeter's ticket drops.">
-<meta property="og:image" content="https://charliewytk.github.io/media/og/shelf.png">
+<meta property="og:image" content="https://charliewytk.github.io/concepts/shader/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#070807">
 <link rel="icon" href="/media/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css">
-<!-- The first preview, so the first hover on a cold cache is not empty. Wide screens only. -->
 <link rel="preload" as="image" href="/exetix/img/screen-drops.webp" media="(min-width: 900px) and (prefers-reduced-motion: no-preference)" fetchpriority="high">
 </head>
 <body>
-<!--
-  Shader concept. One idea: the page is a slow noise field, and each project
-  condenses out of it. All copy and links live here in the HTML; app.js only
-  reads the data-* attributes on each row (tint, media, aspect ratio).
-  Tints are 12 hues 30 degrees apart at OKLCH L 0.78, C 0.12.
-  Video posters in posters/ are frame 0 of each clip, so poster -> video is seamless.
-  Without JS, WebGL or motion, the list and footer render exactly the same
-  on a static gradient.
--->
 <canvas class="field" aria-hidden="true"></canvas>
 
 <header class="top">
@@ -56,15 +46,9 @@
     <li><a class="row" href="/chelsea-bikes/" data-tint="#3ecce2" data-img="/concepts/shader/posters/chelsea.jpg" data-video="/media/chelsea-demo.mp4" data-ratio="1.6"><span class="t">Chelsea Bikes</span> <span class="s">Prototype</span></a></li>
   </ol>
 
-  <!-- Preview area, wide screens only. With WebGL the shader draws the media
-       into this box; without it, app.js puts a plain <img> here. Projects with
-       no media show one key number instead, word for word from the content
-       pack, with its qualifier underneath. data-i is the row number from 0.
-       Each row's aria-describedby points at its number, so screen readers
-       get it even though this box is hidden from them. -->
   <div class="stage" aria-hidden="true">
-    <div class="kn" id="kn-1" data-i="1"><p class="v">50 / 65</p><p class="l">trading lanes on the second ledger killed, on the record</p><p class="k">From the lane ledger as of 30 September 2026.</p></div>
-    <div class="kn" id="kn-2" data-i="2"><p class="v">0.33 ms</p><p class="l">p50, trigger to ready-to-sign sell bytes (p90 1.2 ms)</p></div>
+    <div class="kn" id="kn-1" data-i="1"><p class="v">110</p><p class="l">paper hypotheses. They died to costs.</p><p class="k">This is a paper book. No live P&amp;L is claimed. No live book is implied.</p></div>
+    <div class="kn" id="kn-2" data-i="2"><p class="v">0.33 ms</p><p class="l">p50, trigger to <span class="nb">ready-to-sign</span> sell bytes (p90 1.2 ms)</p></div>
     <div class="kn" id="kn-3" data-i="3"><p class="v">+1.38%</p><p class="l">per deal after break risk, costs and forgone carry</p><p class="k">Filings, not advice.</p></div>
     <div class="kn" id="kn-7" data-i="7"><p class="v">Read-only</p><p class="l">it can't sign anything</p><p class="k">The real window shows live account data, so it isn't pictured.</p></div>
     <div class="kn" id="kn-8" data-i="8"><p class="v">2</p><p class="l">live rounds resolved so far. Too few to stake on; the policy asks for ten</p></div>
