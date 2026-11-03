@@ -6,34 +6,62 @@
 <title>No signal · Charlie Wuytack</title>
 <meta name="robots" content="noindex">
 <link rel="icon" href="/media/favicon.svg" type="image/svg+xml">
-<meta name="theme-color" content="#0b0a09">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&amp;family=Fraunces:ital,opsz,wght@1,9..144,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
-<!-- shown by sw.js when a page was never kept for offline use -->
-<link rel="stylesheet" href="/tracks/track.css">
+<meta name="theme-color" content="#fbfbf9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0c0b" media="(prefers-color-scheme: dark)">
+<!-- shown by sw.js in place of any page that was never kept, so every link here is from the site root -->
+<link rel="stylesheet" href="/assets/site.css">
+<style>
+  /* fallback for when site.css was not kept either. Unlayered site.css beats this layer,
+     and it sets every property below, so none of this shows when site.css loads. */
+  @layer fallback {
+    :root { color-scheme: light dark; }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; background: #fbfbf9; color: #1a1a18; font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    @media (prefers-color-scheme: dark) { body { background: #0b0c0b; color: #ecebe6; } }
+    a { color: inherit; }
+    .wrap { padding-inline: 16px; }
+    .site-header, .site-footer { display: flex; justify-content: space-between; gap: 16px; padding: 16px; font-size: 13px; }
+    .site-footer { flex-wrap: wrap; }
+    .site-nav { display: flex; gap: 16px; }
+    .btn { display: inline-flex; align-items: center; min-height: 44px; padding: 0 24px; border: 1px solid; border-radius: 999px; text-decoration: none; }
+  }
+  body { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
+  .err { flex: 1; padding-block: clamp(var(--space-8, 64px), 16vh, var(--space-10, 128px)) var(--space-8, 64px); }
+  .err .lead { max-width: 44ch; margin: var(--space-4, 16px) 0 0; color: var(--fg-2); }
+  .err .actions { display: flex; flex-wrap: wrap; gap: var(--space-3, 12px); margin-top: var(--space-6, 32px); }
+  .site-footer { width: 100%; margin-top: 0; }
+</style>
 </head>
-<body style="--bg:#0b0a09;--acc:#e0a640">
-<div class="grain" aria-hidden="true"></div>
-<header class="wrap top">
-  <a href="/">← Side A</a>
-  <nav><a href="/tracks/">Tracklist</a><a href="/work/">All work</a></nav>
+<body>
+<header class="site-header">
+  <a class="site-name" href="/">Charlie Wuytack</a>
+  <nav class="site-nav" aria-label="Site">
+    <a href="/work/">Work</a>
+    <a href="https://github.com/Charliewytk">GitHub</a>
+    <a href="mailto:charlie@wuytack.net">Contact</a>
+  </nav>
 </header>
-<main>
-  <div class="wrap hero">
-    <div>
-      <p class="kick">Offline · the needle lifted</p>
-      <h1>No signal.</h1>
-      <p class="sub">This page wasn't kept for offline listening.</p>
-      <p class="lede">Side A and all twelve tracks are kept on this device once you have visited, so they still play without a connection. Everything else comes back when you are online again.</p>
-      <div class="cta">
-        <a class="btn solid" href="/">Back to Side A</a>
-        <a class="btn" href="/tracks/">See the tracklist</a>
-      </div>
-    </div>
-    <div class="disc" aria-hidden="true"><div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg><small>OFFLINE</small></div></div>
+
+<main class="wrap err stagger">
+  <h1 style="--i:0">No signal.</h1>
+  <p class="lead" style="--i:1">This page wasn't kept for offline use. The homepage and all twelve tracks stay on this device once you have visited. Everything else comes back when you are online again.</p>
+  <div class="actions" style="--i:2">
+    <a class="btn" href="">Try again</a>
+    <a class="btn secondary" href="/">Home</a>
+    <a class="btn secondary" href="/tracks/">Tracks</a>
   </div>
 </main>
-<footer class="wrap foot"><span>Charlie Wuytack · <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></span><span>Research and engineering, not financial advice.</span></footer>
+
+<footer class="site-footer">
+  <p class="site-legal">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
+  <nav class="site-nav" aria-label="Contact">
+    <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a>
+    <a href="https://github.com/Charliewytk">GitHub</a>
+  </nav>
+</footer>
+<script>
+  // the connection is back: open the page that was asked for
+  addEventListener('online', function () { location.reload(); });
+</script>
 </body>
 </html>

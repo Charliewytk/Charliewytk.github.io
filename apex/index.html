@@ -11,97 +11,123 @@
 <meta property="og:url" content="https://charliewytk.github.io/apex/">
 <meta property="og:title" content="Apex — on-chain trading research, written up honestly">
 <meta property="og:description" content="Pre-registration, e-processes, a chain-exact live ledger, ~3,750 counted trials and the kills that came out of them.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
 <style>
-  :root {
-    --ink:   #22201d;
-    --ink2:  #3b3833;
-    --muted: #5f5b52;
-    --faint: #6f6a60;
-    --rule:  rgba(34,32,29,0.16);
-    --accent: #a9331f;
-    --good:  #3f6b3a;
+  /* /apex/: page rules only. Tokens, base, header, footer, links, focus, .table and .note come from assets/site.css. */
+  .doc { max-width: calc(var(--measure) + 2 * var(--gutter)); padding-top: var(--space-9); }
+  .doc h1 { font-size: clamp(2.25rem, 4vw + 1rem, 3.5rem); line-height: 1.05; margin: var(--space-3) 0 var(--space-5); }
+  .doc h2 { font-size: clamp(1.5rem, 1.5vw + 1rem, 2rem); }
+  .doc h3 { font-size: var(--text-base); margin: var(--space-6) 0 var(--space-2); }
+  .doc :where(p, ul, ol) { color: var(--fg-2); }
+  .doc :where(b, strong) { color: var(--fg); font-weight: 600; }
+  .doc :where(ul, ol) { margin: 0 0 1em; padding-left: 1.2em; }
+  .doc li + li { margin-top: 0.5em; }
+  .meta { margin: 0; font: 500 var(--text-xs) / 1.4 var(--font-mono); letter-spacing: 0.02em; color: var(--fg-4); }
+  .doc .lead { color: var(--fg); margin-bottom: var(--space-4); }
+
+  section { margin-top: var(--space-8); padding-top: var(--space-5); border-top: 1px solid var(--line); }
+  /* (0,1,2) so it beats the list margin above; h2 + list had a 0px gap */
+  .doc section > h2 + *, .doc section > .meta + * { margin-top: var(--space-4); }
+  .doc section > h2 + .meta { margin-top: var(--space-2); }
+  .doc section > :last-child { margin-bottom: 0; }
+
+  /* numbers that carry the page */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1px; margin: var(--space-6) 0; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius-2); overflow: hidden; }
+  .stats div { padding: var(--space-4); background: var(--bg); }
+  .stats b { display: block; font-size: 1.75rem; font-weight: 600; line-height: 1.1; letter-spacing: var(--tracking-tight); font-variant-numeric: tabular-nums; color: var(--fg); }
+  .stats span { display: block; margin-top: var(--space-2); font-size: var(--text-sm); line-height: 1.4; color: var(--fg-3); }
+
+  /* figures */
+  .figure { margin: var(--space-6) 0; padding: var(--space-5); border: 1px solid var(--line); border-radius: var(--radius-2); background: var(--bg-2); }
+  .cap { margin: 0 0 var(--space-4); font-size: var(--text-sm); font-weight: 600; color: var(--fg); }
+  .fig-note { margin: var(--space-4) 0 0; font-size: var(--text-sm); line-height: 1.5; color: var(--fg-3); }
+  .flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: var(--space-2); font-size: var(--text-sm); line-height: 1.45; color: var(--fg-2); }
+  .flow div { padding: var(--space-3); border: 1px solid var(--line); border-radius: var(--radius-1); background: var(--bg); }
+  .flow b { display: block; margin-bottom: var(--space-1); color: var(--fg); }
+  .gate { display: flex; flex-direction: column; gap: var(--space-2); }
+  .gate-row { display: grid; grid-template-columns: 76px 1fr 48px; align-items: center; gap: var(--space-3); font-size: var(--text-sm); color: var(--fg-2); }
+  /* clip, not hidden: hidden makes .track a scroll container and view() would bind to it */
+  .gate-row .track { height: 12px; background: var(--bg-3); border-radius: 3px; overflow: clip; }
+  .gate-row .fill { height: 100%; background: var(--fg); border-radius: 3px; transform-origin: left; }
+  .gate-row .fill.null { background: var(--bad); }
+  .gate-row .v { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; }
+  .ci-row { margin-bottom: var(--space-3); font-size: var(--text-sm); color: var(--fg-2); }
+  .ci { position: relative; height: 40px; margin: var(--space-2) 0 0; }
+  .ci .axis { position: absolute; top: 20px; left: 0; right: 0; height: 1px; background: var(--line-2); }
+  .ci .zero { position: absolute; top: 4px; bottom: 4px; width: 2px; margin-left: -1px; background: var(--bad); }
+  .ci .rng { position: absolute; top: 16px; height: 9px; background: color-mix(in srgb, var(--fg) 55%, transparent); border-radius: 2px; }
+  .ci .rng.pale { background: color-mix(in srgb, var(--fg) 18%, transparent); }
+  .ci .pt { position: absolute; top: 13px; width: 3px; height: 15px; margin-left: -1px; background: var(--fg); border-radius: 1px; }
+  .ci .lbl { position: absolute; margin-left: var(--space-2); font: 500 var(--text-xs) / 1 var(--font-mono); font-variant-numeric: tabular-nums; color: var(--fg); white-space: nowrap; }
+  .ci .lbl.pale { color: var(--fg-3); }
+
+  /* the kill table */
+  .table-scroll { margin: var(--space-5) 0; }
+  .table td:first-child { color: var(--fg); font-weight: 500; min-width: 9em; }
+  .table td { color: var(--fg-2); line-height: 1.5; }
+  .table td .num { font-family: var(--font-mono); font-size: 0.95em; }
+
+  /* reading progress: a hairline under the header, scroll-linked, compositor only */
+  .progress { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; pointer-events: none; }
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .progress { animation: apex-progress linear both; animation-timeline: scroll(root); }
+      @keyframes apex-progress { to { transform: scaleX(1); } }
+      .gate-row .fill { animation: apex-fill linear both; animation-timeline: view(); animation-range: entry 20% cover 45%; }
+      @keyframes apex-fill { from { transform: scaleX(0); } }
+    }
   }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; background: #f7f7ef; color: var(--ink);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    line-height: 1.6; font-size: 16.5px; -webkit-font-smoothing: antialiased;
+  @supports not (animation-timeline: scroll()) { .progress { display: none; } }
+
+  /* print, PDF and no-scroll captures: no dimmed sections (candidate for site.css) */
+  @media print { .reveal, .stagger > *, .gate-row .fill, .progress { animation: none !important; opacity: 1; transform: none; } .progress { display: none; } }
+
+  @media (max-width: 520px) {
+    .doc { padding-top: var(--space-7); }
+    section { margin-top: var(--space-7); }
+    .figure { padding: var(--space-4); margin-inline: calc(-1 * var(--space-1)); }
+    .gate-row { grid-template-columns: 68px 1fr 44px; gap: var(--space-2); }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .stats div:last-child:nth-child(odd) { grid-column: 1 / -1; }
+    .table td:first-child { min-width: 0; width: 34%; }
+    .table td .num { white-space: normal; }
   }
-  ::selection { background: #e4e2d4; color: var(--ink); }
-  .page { max-width: 620px; margin: 0 auto; padding: 56px 18px 100px; }
-  a { color: var(--ink); text-decoration: none; border-bottom: 1px solid #c9c6b4; }
-  a:hover { color: var(--accent); border-color: var(--accent); }
-  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
-  h1 { font-family: "Lora", Georgia, serif; font-weight: 600; font-size: 2.1rem; line-height: 1.2; margin: 14px 0; }
-  h2 { font-family: "Lora", Georgia, serif; font-weight: 600; font-size: 1.6rem; margin: 0 0 6px; }
-  h3 { font-size: 1rem; margin: 30px 0 8px; }
-  .meta { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.72rem; letter-spacing: 0.06em; color: var(--faint); margin: 0 0 16px; }
-  p { margin: 0 0 15px; text-wrap: pretty; }
-  .lede { font-family: "Lora", Georgia, serif; font-style: italic; font-size: 1.2rem; color: var(--ink2); text-wrap: balance; }
-  ul, ol { margin: 0 0 15px; padding-left: 22px; }
-  li { margin-bottom: 9px; text-wrap: pretty; }
-  .back { font-size: 0.88rem; }
-  section { margin-top: 64px; padding-top: 30px; border-top: 1px solid var(--rule); }
-  .tw { overflow-x: auto; margin: 18px 0; border: 1px solid #e2dfd0; border-radius: 8px; }
-  table { border-collapse: collapse; width: 100%; font-size: 0.87rem; }
-  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid #e2dfd0; vertical-align: top; }
-  tr:last-child td { border-bottom: none; }
-  th { background: #efeee4; font-weight: 600; color: var(--ink2); }
-  td.num { font-variant-numeric: tabular-nums; white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 0.82rem; }
-  td.kill { color: var(--accent); font-weight: 600; white-space: nowrap; }
-  td.alive { color: var(--good); font-weight: 600; white-space: nowrap; }
-  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin: 22px 0; }
-  .stats div { border: 1px solid #e2dfd0; border-radius: 8px; padding: 12px; background: #fbfbf5; }
-  .stats b { display: block; font-family: "Lora", Georgia, serif; font-size: 1.45rem; font-weight: 600; }
-  .stats span { font-size: 0.8rem; color: var(--muted); line-height: 1.35; display: block; }
-  .figure { margin: 22px 0; padding: 16px; border: 1px solid #e2dfd0; border-radius: 8px; background: #fbfbf5; }
-  .cap { font-size: 0.85rem; font-weight: 600; color: var(--ink2); margin: 0 0 12px; }
-  .fig-note { font-size: 0.8rem; color: var(--muted); margin: 12px 0 0; }
-  .bars { display: flex; flex-direction: column; gap: 6px; }
-  .bar { display: grid; grid-template-columns: 82px 1fr 52px; align-items: center; gap: 8px; font-size: 0.8rem; }
-  .bar .track { height: 14px; background: #ecebe0; border-radius: 3px; overflow: hidden; }
-  .bar .fill { height: 100%; background: var(--ink); }
-  .bar .fill.null { background: var(--accent); }
-  .bar .v { font-family: ui-monospace, Menlo, monospace; font-variant-numeric: tabular-nums; text-align: right; }
-  .flow { display: flex; flex-wrap: wrap; gap: 6px; align-items: stretch; font-size: 0.8rem; }
-  .flow div { flex: 1 1 120px; border: 1px solid #d6d3c2; border-radius: 6px; padding: 8px; background: #fff; }
-  .flow b { display: block; font-size: 0.82rem; }
-  .ci { position: relative; height: 40px; margin: 6px 0 2px; }
-  .ci .axis { position: absolute; top: 20px; left: 0; right: 0; height: 1px; background: #c9c6b4; }
-  .ci .zero { position: absolute; top: 6px; bottom: 6px; width: 1px; background: var(--accent); }
-  .ci .rng { position: absolute; top: 16px; height: 9px; background: rgba(34,32,29,0.35); border-radius: 2px; }
-  .ci .pt { position: absolute; top: 13px; width: 3px; height: 15px; background: var(--ink); }
-  .ci-row { font-size: 0.8rem; margin-bottom: 10px; }
-  .note { font-size: 0.9rem; color: var(--muted); }
-  footer { margin-top: 80px; padding-top: 26px; border-top: 1px solid #e2dfd0; color: var(--muted); font-size: 0.88rem; }
-  @media (max-width: 480px) { h1 { font-size: 1.75rem; } .bar { grid-template-columns: 70px 1fr 46px; } }
 </style>
 </head>
 <body>
-<div class="page">
-  <p class="back"><a href="../">← charliewytk.github.io</a></p>
-  <p class="meta">research write-up · sep–oct 2026 · programme closed</p>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="site-name" href="../">Charlie Wuytack</a>
+  <nav class="site-nav" aria-label="Site">
+    <a href="../work/">Work</a>
+    <a href="https://github.com/Charliewytk">GitHub</a>
+    <a href="mailto:charlie@wuytack.net">Contact</a>
+  </nav>
+  <span class="progress" aria-hidden="true"></span>
+</header>
+
+<main id="main" class="wrap doc">
+  <article>
+  <p class="meta">Sep–Oct 2026 · programme closed</p>
   <h1>Apex: on-chain trading research</h1>
-  <p class="lede">I set out to find an automated trading edge on Solana's newest tokens. The most useful result was an explanation. The edge I thought I had was a protocol subsidy, and the subsidy was already crowded.</p>
+  <p class="lead">I set out to find an automated trading edge on Solana's newest tokens. The most useful result was an explanation. The edge I thought I had was a protocol subsidy, and the subsidy was already crowded.</p>
   <p>This page covers what was built, how I tried not to fool myself, what was tested and killed (with numbers), and the one small effect that survived. Numbers are paper or backtest unless they're marked live.</p>
 
-  <div class="stats">
-    <div><b>~3,750</b><span>counted trials in the register, plus 2.8M grid cells</span></div>
-    <div><b>0</b><span>survivors after Benjamini–Yekutieli correction</span></div>
-    <div><b>267</b><span>live trades, ledger reconciled to the lamport</span></div>
-    <div><b>1</b><span>small surviving effect, off-chain, paper only</span></div>
+  <div class="stats stagger">
+    <div style="--i:0"><b>~3,750</b><span>counted trials in the register, plus 2.8M grid cells</span></div>
+    <div style="--i:1"><b>0</b><span>survivors after Benjamini–Yekutieli correction</span></div>
+    <div style="--i:2"><b>267</b><span>live trades, ledger reconciled to the lamport</span></div>
+    <div style="--i:3"><b>1</b><span>small surviving effect, off-chain, paper only</span></div>
   </div>
 
+  <!-- no .reveal: this section sits above the fold -->
   <section>
     <h2>What it was</h2>
-    <p class="meta">solo · Sep–Oct 2026</p>
     <p>A one-person research programme. I set the questions and the rules, and made every decision that touched real money. Everything automated ran under rails: research was paper-only, no automated process held keys or signed transactions, and any live change was my click.</p>
     <p>The target market was pump.fun, where new tokens start on a bonding curve, and PumpSwap, the exchange pool they "graduate" into. Roughly 1,000 tokens graduate a day. In about a third of them, one wallet buys most of the new pool within two seconds. The starting idea was simple: follow those buyers.</p>
   </section>
 
-  <section>
+  <section class="reveal">
     <h2>The live execution study</h2>
     <p class="meta">267 live trades · real money at small size</p>
     <p>The whale-follow strategy ran live at small size for six days. Rather than its returns, the useful outputs are the measurements of execution and accounting, which paper trading can't give you:</p>
@@ -113,12 +139,11 @@
     </ul>
   </section>
 
-  <section>
+  <section class="reveal">
     <h2>The Boost discovery</h2>
-    <p class="meta">why the whale edge was a subsidy</p>
     <p>Since July 2026, every graduating token gets a protocol-funded buyback called Boost. A crank buys the token every 12 seconds for about the first 5½ minutes, pays no pool fee and burns what it buys. In 99.6% of standard graduations it spends exactly 17.58 SOL, taken from the pool's own reserve.</p>
-    <div class="figure">
-      <p class="cap">Where the "whale drift" came from</p>
+    <figure class="figure">
+      <figcaption class="cap">Where the "whale drift" came from</figcaption>
       <div class="flow">
         <div><b>Graduation</b>Pool is seeded. A whale may buy most of it.</div>
         <div><b>Boost crank</b>~29 fee-free buys over ~340 s, 17.58 SOL in total.</div>
@@ -126,14 +151,13 @@
         <div><b>~900 wallets</b>already trade the subsidy. They absorb ~80% of the lift.</div>
       </div>
       <p class="fig-note">Replay counterfactual over 8,117 pools, holding other flow fixed. Removing Boost took the follower rule from about +0.09 to −0.02 SOL per trade, so ~124% of the in-sample edge. Boost was also about a quarter of the whales' own realised profit.</p>
-    </div>
+    </figure>
     <p>So the in-sample edge wasn't skill in picking whales. It was a scheduled, mechanical buyer, and a crowded one. Buying the subsidy directly, without the whale filter, lost about 0.02 SOL per 0.25 SOL trade after costs. A census of the whole market over 30 days found the same picture: the large buyers were the only consistent winners, and no group you could join as a follower kept an edge.</p>
     <p>Once the mechanism was named, 11 of 35 "promising" variants were closed in one pass as explained by Boost. Twenty more were closed because they couldn't reach statistical power before the deadline.</p>
   </section>
 
-  <section>
+  <section class="reveal">
     <h2>Methodology</h2>
-    <p class="meta">how it tried not to fool itself</p>
     <p>An audit partway through found that many earlier "GREEN" and "PASS" labels only meant "the software ran". Of 276 such claims, 53 were later falsified. The programme was rebuilt around five ideas.</p>
 
     <h3>1. Pre-registration and seals</h3>
@@ -151,64 +175,64 @@
     <h3>5. Testing the test: the validation gate</h3>
     <p>The automated idea pipeline's validation gate was run on synthetic data with a planted +3% edge. It found the edge <b>1 time in 200</b>. Most of the gates were testing the absolute profit <i>level</i>, which is dominated by day-and-operator noise, rather than the <i>edge</i> over a control. A few paired tests were also too permissive on nulls.</p>
     <p>Gate v4 separates an effect gate (exact randomisation within time × operator strata, beaten placebo labels, beaten shuffled features) from the economics checks. It was pre-registered before one final run of 500 replications per arm:</p>
-    <div class="figure">
-      <p class="cap">Gate v4: share of 500 synthetic runs passing the effect gate</p>
-      <div class="bars" role="img" aria-label="Null 3.2%, drift without skill 3.6%, placebo 3.4%, +1% 12.8%, +2% 35.2%, +3% 76.2%, +4% 92.4%, +5% 97.8%">
-        <div class="bar"><span>no skill</span><span class="track"><span class="fill null" style="display:block;width:3.2%"></span></span><span class="v">3.2%</span></div>
-        <div class="bar"><span>drift only</span><span class="track"><span class="fill null" style="display:block;width:3.6%"></span></span><span class="v">3.6%</span></div>
-        <div class="bar"><span>placebo</span><span class="track"><span class="fill null" style="display:block;width:3.4%"></span></span><span class="v">3.4%</span></div>
-        <div class="bar"><span>+1% edge</span><span class="track"><span class="fill" style="display:block;width:12.8%"></span></span><span class="v">12.8%</span></div>
-        <div class="bar"><span>+2% edge</span><span class="track"><span class="fill" style="display:block;width:35.2%"></span></span><span class="v">35.2%</span></div>
-        <div class="bar"><span>+3% edge</span><span class="track"><span class="fill" style="display:block;width:76.2%"></span></span><span class="v">76.2%</span></div>
-        <div class="bar"><span>+4% edge</span><span class="track"><span class="fill" style="display:block;width:92.4%"></span></span><span class="v">92.4%</span></div>
-        <div class="bar"><span>+5% edge</span><span class="track"><span class="fill" style="display:block;width:97.8%"></span></span><span class="v">97.8%</span></div>
+    <figure class="figure">
+      <figcaption class="cap">Gate v4: share of 500 synthetic runs passing the effect gate</figcaption>
+      <div class="gate" role="img" aria-label="Null 3.2%, drift without skill 3.6%, placebo 3.4%, +1% 12.8%, +2% 35.2%, +3% 76.2%, +4% 92.4%, +5% 97.8%">
+        <div class="gate-row"><span>no skill</span><span class="track"><span class="fill null" style="display:block;width:3.2%"></span></span><span class="v">3.2%</span></div>
+        <div class="gate-row"><span>drift only</span><span class="track"><span class="fill null" style="display:block;width:3.6%"></span></span><span class="v">3.6%</span></div>
+        <div class="gate-row"><span>placebo</span><span class="track"><span class="fill null" style="display:block;width:3.4%"></span></span><span class="v">3.4%</span></div>
+        <div class="gate-row"><span>+1% edge</span><span class="track"><span class="fill" style="display:block;width:12.8%"></span></span><span class="v">12.8%</span></div>
+        <div class="gate-row"><span>+2% edge</span><span class="track"><span class="fill" style="display:block;width:35.2%"></span></span><span class="v">35.2%</span></div>
+        <div class="gate-row"><span>+3% edge</span><span class="track"><span class="fill" style="display:block;width:76.2%"></span></span><span class="v">76.2%</span></div>
+        <div class="gate-row"><span>+4% edge</span><span class="track"><span class="fill" style="display:block;width:92.4%"></span></span><span class="v">92.4%</span></div>
+        <div class="gate-row"><span>+5% edge</span><span class="track"><span class="fill" style="display:block;width:97.8%"></span></span><span class="v">97.8%</span></div>
       </div>
-      <p class="fig-note">Red: false-positive rate on no-skill worlds, at most 3.6%. Black: power at a planted edge per trade. 76% power at +3% narrowly missed the pre-registered 80% target, and I report it as a fail. Absolute profit still can't be certified at this sample size; that job is left to forward e-processes.</p>
-    </div>
+      <p class="fig-note">Red: false-positive rate on no-skill worlds, at most 3.6%. The rest: power at a planted edge per trade. 76% power at +3% narrowly missed the pre-registered 80% target, and I report it as a fail. Absolute profit still can't be certified at this sample size; that job is left to forward e-processes.</p>
+    </figure>
   </section>
 
-  <section>
+  <section class="reveal">
     <h2>Tested and killed</h2>
-    <p class="meta">a selection · all paper unless noted</p>
-    <div class="tw"><table>
-      <thead><tr><th>Idea</th><th>Result</th><th>Verdict</th></tr></thead>
+    <p class="meta">A selection · all paper unless noted</p>
+    <div class="table-scroll"><table class="table">
+      <thead><tr><th>Idea</th><th>Result</th></tr></thead>
       <tbody>
-        <tr><td>Following whale buyouts (and ~40 variants)</td><td>Edge explained by Boost; 0 of 35 candidates reached GREEN</td><td class="kill">killed</td></tr>
-        <tr><td>Completing stalled bonding curves (15–50 SOL)</td><td>Headline +13.8 SOL/cycle on 33 resolved rows. Intention-to-treat on all 43 events: <span class="num">+3.3, CI90 −3.8 to +10.8</span>. Spans zero, and the regime changed on the day the forward test was sealed</td><td class="kill">killed</td></tr>
-        <tr><td>Custom-pair parent coins (forced quote-token demand)</td><td>Mechanism real, but locked demand is a median 0.7% of the parent's daily volume, and per-trade impact is ≤ 2% against a ≥ 3% cost bar</td><td class="kill">killed</td></tr>
-        <tr><td>US gap fade as a UK spread bet</td><td>+1.74%/trade on assumed costs becomes <span class="num">−0.15%/trade (CI90 −1.3 to +0.9)</span> on measured opening spreads. 2026 negative in every variant</td><td class="kill">killed</td></tr>
-        <tr><td>Betfair: lay drifting favourites</td><td>One-shot confirm on 39,788 bets: <span class="num">−0.23% per £ liability, CI95 −0.43 to −0.02</span></td><td class="kill">killed</td></tr>
-        <tr><td>Resting bids at −20/35/50% wicks</td><td>144 of 144 cells negative even with ideal fills</td><td class="kill">killed</td></tr>
-        <tr><td>Wallet "skill" persistence</td><td>Clean split at null; all 12 derived rules negative</td><td class="kill">killed</td></tr>
-        <tr><td>LLM autoresearch loop</td><td>Its "best" rule was the base rule with the trade size doubled three times. The metric rewarded scale, not edge</td><td class="kill">killed</td></tr>
-        <tr><td>~25 other markets in two days</td><td>Other launchpads and chains, liquidations, token unlocks, PUMP buyback, LP provision, NFTs, CS2 skins, Sorare, 0DTE options, fear-and-greed timing, collectibles, expired domains. None cleared costs, access or data limits</td><td class="kill">killed</td></tr>
+        <tr><td>Following whale buyouts (and ~40 variants)</td><td>Edge explained by Boost; 0 of 35 candidates reached GREEN</td></tr>
+        <tr><td>Completing stalled bonding curves (15–50 SOL)</td><td>Headline +13.8 SOL/cycle on 33 resolved rows. Intention-to-treat on all 43 events: <span class="num">+3.3, CI90 −3.8 to +10.8</span>. Spans zero, and the regime changed on the day the forward test was sealed</td></tr>
+        <tr><td>Custom-pair parent coins (forced quote-token demand)</td><td>Mechanism real, but locked demand is a median 0.7% of the parent's daily volume, and per-trade impact is ≤ 2% against a ≥ 3% cost bar</td></tr>
+        <tr><td>US gap fade as a UK spread bet</td><td>+1.74%/trade on assumed costs becomes <span class="num">−0.15%/trade (CI90 −1.3 to +0.9)</span> on measured opening spreads. 2026 negative in every variant</td></tr>
+        <tr><td>Betfair: lay drifting favourites</td><td>One-shot confirm on 39,788 bets: <span class="num">−0.23% per £ liability, CI95 −0.43 to −0.02</span></td></tr>
+        <tr><td>Resting bids at −20/35/50% wicks</td><td>144 of 144 cells negative even with ideal fills</td></tr>
+        <tr><td>Wallet "skill" persistence</td><td>Clean split at null; all 12 derived rules negative</td></tr>
+        <tr><td>LLM autoresearch loop</td><td>Its "best" rule was the base rule with the trade size doubled three times. The metric rewarded scale, not edge</td></tr>
+        <tr><td>~25 other markets in two days</td><td>Other launchpads and chains, liquidations, token unlocks, PUMP buyback, LP provision, NFTs, CS2 skins, Sorare, 0DTE options, fear-and-greed timing, collectibles, expired domains. None cleared costs, access or data limits</td></tr>
       </tbody>
     </table></div>
     <p class="note">Ideas died for five reasons: fees (1.25% a side on new pools), speed (same-slot races against co-located bots), crowding, data limits, and access.</p>
 
-    <div class="figure">
-      <p class="cap">Three headline numbers before and after honest accounting (90% CIs)</p>
+    <figure class="figure">
+      <figcaption class="cap">Two headline numbers before and after honest accounting (90% CIs)</figcaption>
       <div class="ci-row">Curve completion, SOL/cycle: resolved-only vs intention-to-treat
-        <div class="ci" aria-label="Resolved only +13.8 CI +7.0 to +20.7; ITT +3.3 CI −3.8 to +10.8">
+        <div class="ci" role="img" aria-label="Resolved only +13.8 CI +7.0 to +20.7; ITT +3.3 CI −3.8 to +10.8">
           <span class="axis"></span><span class="zero" style="left:20%"></span>
-          <span class="rng" style="left:34%;width:27.4%;top:8px;background:rgba(34,32,29,0.18)"></span><span class="pt" style="left:47.6%;top:5px"></span>
-          <span class="rng" style="left:12.4%;width:29.2%;top:24px"></span><span class="pt" style="left:26.6%;top:21px"></span>
+          <span class="rng pale" style="left:34%;width:27.4%;top:8px"></span><span class="pt" style="left:47.6%;top:5px"></span><span class="lbl pale" aria-hidden="true" style="left:61.4%;top:8px">+13.8</span>
+          <span class="rng" style="left:12.4%;width:29.2%;top:24px"></span><span class="pt" style="left:26.6%;top:21px"></span><span class="lbl" aria-hidden="true" style="left:41.6%;top:24px">+3.3</span>
         </div>
       </div>
       <div class="ci-row">US gap fade, %/trade: factory costs vs measured costs
-        <div class="ci" aria-label="Factory +1.74 CI +0.61 to +2.83; measured −0.15 CI −1.29 to +0.95">
+        <div class="ci" role="img" aria-label="Factory +1.74 CI +0.61 to +2.83; measured −0.15 CI −1.29 to +0.95">
           <span class="axis"></span><span class="zero" style="left:40%"></span>
-          <span class="rng" style="left:46.1%;width:22.2%;top:8px;background:rgba(34,32,29,0.18)"></span><span class="pt" style="left:57.4%;top:5px"></span>
-          <span class="rng" style="left:27.1%;width:22.4%;top:24px"></span><span class="pt" style="left:38.5%;top:21px"></span>
+          <span class="rng pale" style="left:46.1%;width:22.2%;top:8px"></span><span class="pt" style="left:57.4%;top:5px"></span><span class="lbl pale" aria-hidden="true" style="left:68.3%;top:8px">+1.74</span>
+          <span class="rng" style="left:27.1%;width:22.4%;top:24px"></span><span class="pt" style="left:38.5%;top:21px"></span><span class="lbl" aria-hidden="true" style="left:49.5%;top:24px">−0.15</span>
         </div>
       </div>
-      <p class="fig-note">Pale bar: the number as first reported. Dark bar: the same events after intention-to-treat or real costs. The red line is zero.</p>
-    </div>
+      <p class="fig-note">Faint bar: the number as first reported. Solid bar: the same events after intention-to-treat or real costs. The red line is zero.</p>
+    </figure>
   </section>
 
-  <section>
+  <section class="reveal">
     <h2>What survived</h2>
-    <p class="meta">uk investment-trust tenders · paper only</p>
+    <p class="meta">UK investment-trust tenders · paper only</p>
     <p>Closed-ended investment trusts sometimes offer to buy back part of their shares at close to net asset value, while the shares trade at a discount. Buying five trading days before the last buy date, tendering the basic entitlement and selling the remainder after the result gave:</p>
     <div class="stats">
       <div><b>+2.0%</b><span>mean net return per event, after stamp duty, spread and fees</span></div>
@@ -224,9 +248,8 @@
     </ul>
   </section>
 
-  <section>
+  <section class="reveal">
     <h2>Engineering</h2>
-    <p class="meta">python · gRPC · clickhouse · on-chain decoders</p>
     <ul>
       <li><b>Recorders and archive.</b> gRPC stream recorders capturing every graduation and pool tick, a 98M-row local archive and a ClickHouse mirror. The export was rebuilt as a staged partition swap after the original drop-then-insert left production days empty when an insert timed out.</li>
       <li><b>Decoders and the quote fuzzer.</b> An exact-integer mirror of PumpSwap pricing, ported from the official SDK, with signed virtual reserves (they can go negative since a 30 September upgrade, which quietly broke tools that clamped them at zero) and the full fee-tier schedule. A fuzzer checks it against a public aggregator's quotes. A review of 11 public repos found none that handled the pool layout and fees correctly.</li>
@@ -243,7 +266,7 @@
     </ul>
   </section>
 
-  <section>
+  <section class="reveal">
     <h2>Lessons</h2>
     <ul>
       <li><b>Name the mechanism before you size.</b> One afternoon spent on <i>why</i> the drift existed was worth more than weeks of variants on <i>whether</i> it did.</li>
@@ -255,9 +278,16 @@
     </ul>
   </section>
 
-  <footer>
-    <p>Not investment advice. Nothing here is an offer of a product or signal. Paper and backtest figures are labelled as such; the live trades were a small-size execution study. Related: <a href="../research.html">research notes</a> · <a href="../kill-log/">kill log</a> · <a href="../essays/friction-sized-edges.html">friction-sized edges</a>.</p>
-  </footer>
-</div>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <p class="site-legal">Not investment advice. Nothing here is an offer of a product or signal. Paper and backtest figures are labelled as such; the live trades were a small-size execution study.</p>
+  <nav class="site-nav" aria-label="Related">
+    <a href="../research.html">Research notes</a>
+    <a href="../kill-log/">Kill log</a>
+    <a href="../essays/friction-sized-edges.html">Friction-sized edges</a>
+  </nav>
+</footer>
 </body>
 </html>

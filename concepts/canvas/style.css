@@ -1,0 +1,310 @@
+/* Canvas concept: every project is an object on one dotted canvas.
+   Without JS (or before app.js runs) the same markup is a plain scrolling list.
+   With JS, <html class="cv"> turns .world into a camera-driven plane. */
+
+:root {
+  /* motion tokens (concepts/_content/motion-brief.md §1) */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --spring-snappy: linear(0, 0.095 6%, 0.278 12%, 0.455 19%, 0.609 25%, 0.724 31%, 0.811 38%, 0.871 44%, 0.914 50%, 0.943 56%, 0.962 62%, 0.975 69%, 0.984 75%, 0.989 81%, 0.993 88%, 0.996 94%, 1);
+  --spring-snappy-dur: 400ms;
+  --spring-bouncy: linear(0, 0.101 6%, 0.305 12%, 0.529 19%, 0.712 25%, 0.852 31%, 0.940 38%, 0.993 44%, 1.018 50%, 1.026 56%, 1.025 62%, 1.021 69%, 1.015 75%, 1.009 81%, 1.005 88%, 1.002 94%, 1);
+  --spring-bouncy-dur: 400ms;
+  --dur-press: 100ms; --dur-exit: 120ms; --dur-fast: 125ms; --dur-base: 180ms; --dur-slow: 260ms;
+
+  /* colour */
+  --canvas: #f3f3f1;
+  --dot: rgba(24, 24, 27, 0.22);
+  --surface: #ffffff;
+  --chrome: rgba(255, 255, 255, 0.86);
+  --ink: #18181b;
+  --muted: #55555d;
+  --faint: #626269;
+  --line: rgba(24, 24, 27, 0.09);
+  --accent: #0a6cff;
+  --go: #0058d6;
+  --shadow: 0 1px 2px rgba(24, 24, 27, 0.06), 0 4px 16px rgba(24, 24, 27, 0.06);
+  --shadow-lift: 0 2px 4px rgba(24, 24, 27, 0.06), 0 16px 40px rgba(24, 24, 27, 0.12);
+  --tint-green: #0f1f14;
+  --tint-leaf: #e7f3ee;
+
+  --sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+  color-scheme: light dark;
+}
+@supports not (transition-timing-function: linear(0, 1)) {
+  :root { --spring-snappy: var(--ease-out); --spring-bouncy: var(--ease-out); }
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --canvas: #0f0f11;
+    --dot: rgba(237, 237, 240, 0.2);
+    --surface: #1a1a1d;
+    --chrome: rgba(26, 26, 29, 0.84);
+    --ink: #ededf0;
+    --muted: #a1a1a9;
+    --faint: #93939b;
+    --line: rgba(237, 237, 240, 0.1);
+    --accent: #3d8bff;
+    --go: #1f5fd1;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 16px rgba(0, 0, 0, 0.3);
+    --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.4), 0 16px 40px rgba(0, 0, 0, 0.5);
+    --tint-leaf: #13221d;
+  }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--canvas); color: var(--ink);
+  font: 400 1rem/1.55 var(--sans); letter-spacing: -0.005em;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; }
+img, video { display: block; max-width: 100%; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* ---------- fixed chrome ---------- */
+.top, .bottom {
+  position: fixed; left: 0; right: 0; z-index: 10;
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left));
+  pointer-events: none;
+}
+.top { top: 0; align-items: center; }
+.bottom { bottom: 0; align-items: flex-end; padding-top: 0; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+.top > *, .bottom > * { pointer-events: auto; }
+
+.pill {
+  display: flex; align-items: center; height: 36px; padding: 0 4px;
+  background: var(--chrome); border: 1px solid var(--line); border-radius: 999px;
+  box-shadow: var(--shadow);
+  -webkit-backdrop-filter: blur(16px) saturate(1.6); backdrop-filter: blur(16px) saturate(1.6);
+}
+.pill a, .pill button {
+  display: flex; align-items: center; height: 28px; padding: 0 12px; border-radius: 999px;
+  font-size: 0.8125rem; font-weight: 500; letter-spacing: 0;
+  border: 0; background: none; cursor: pointer;
+  transition: transform var(--dur-press) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
+}
+.pill a:active, .pill button:active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) {
+  .pill a:hover, .pill button:hover { background: var(--line); }
+}
+
+/* the small name only appears once the big one has left the screen */
+.brand { font-weight: 600 !important; }
+.cv .brand-pill { transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out), visibility 0s; }
+.cv .brand-pill[data-hidden] {
+  opacity: 0; transform: translateY(-4px); visibility: hidden;
+  transition: opacity var(--dur-exit) var(--ease-out), transform var(--dur-exit) var(--ease-out), visibility 0s linear var(--dur-exit);
+}
+
+.honesty {
+  margin: 0; padding: 8px 14px; border-radius: 18px;
+  background: var(--chrome); border: 1px solid var(--line); box-shadow: var(--shadow);
+  -webkit-backdrop-filter: blur(16px) saturate(1.6); backdrop-filter: blur(16px) saturate(1.6);
+  font-size: 0.75rem; line-height: 1.45; color: var(--muted); text-wrap: pretty;
+}
+.tools { display: none; position: relative; }
+.cv .tools { display: flex; }
+/* The minimap is transient, like the scale bar in Maps: it shows while the camera moves
+   (or while the pointer rests on the zoom controls), so at rest it covers nothing. */
+.mini {
+  position: absolute; right: 0; bottom: calc(100% + 8px);
+  width: 176px; height: 112px; display: block;
+  background: var(--chrome); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow);
+  -webkit-backdrop-filter: blur(16px) saturate(1.6); backdrop-filter: blur(16px) saturate(1.6);
+  cursor: pointer; touch-action: none;
+  opacity: 0; transform: translateY(4px) scale(0.97); transform-origin: 100% 100%; pointer-events: none;
+  transition: opacity var(--dur-exit) var(--ease-out), transform var(--dur-exit) var(--ease-out);
+}
+.mini.show, .tools:hover .mini {
+  opacity: 1; transform: none; pointer-events: auto;
+  transition: opacity var(--dur-base) var(--ease-out), transform var(--spring-snappy-dur) var(--spring-snappy);
+}
+.zoom button { width: 32px; justify-content: center; padding: 0; font-size: 1rem; }
+.zoom .pct { width: auto; min-width: 52px; font-size: 0.75rem; font-variant-numeric: tabular-nums; }
+
+/* ---------- canvas ---------- */
+.viewport { position: relative; }
+.dots { display: none; }
+.name { margin: 96px 16px 24px; font-size: clamp(2.5rem, 6vw + 1rem, 4.5rem); font-weight: 600; letter-spacing: -0.035em; line-height: 1.02; }
+.name span { display: block; }
+.world { list-style: none; margin: 0; padding: 0 16px 160px; display: grid; gap: 48px 24px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+
+html.cv, .cv body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+.cv body { touch-action: none; }  /* no browser pinch-zoom anywhere, the canvas owns it */
+.cv .viewport {
+  position: fixed; inset: 0; overflow: clip;
+  touch-action: none; cursor: grab;
+  -webkit-user-select: none; user-select: none;
+}
+.cv .viewport.grabbing { cursor: grabbing; }
+.cv .dots { display: block; position: absolute; inset: 0; width: 100%; height: 100%; }
+.cv .plane {
+  position: absolute; left: 0; top: 0; transform-origin: 0 0;
+  /* close to the JS home camera, so the frame before app.js runs is already composed */
+  transform: translate(50vw, 50vh) scale(0.9);
+}
+.cv .plane.moving { will-change: transform; }
+.cv .name {
+  position: absolute; left: 0; top: 0; margin: 0;
+  transform: translate3d(-50%, calc(-50% + var(--push, 0) * 1px), 0);
+  font-size: 112px; line-height: 0.9; letter-spacing: -0.05em; white-space: nowrap; text-align: left;
+  transition: opacity var(--dur-slow) var(--ease-out), transform var(--spring-snappy-dur) var(--spring-snappy);
+}
+.cv.picked .name { opacity: 0.25; }
+.cv .world { display: block; padding: 0; }
+.cv .card {
+  position: absolute; left: calc(var(--x) * 1px); top: calc(var(--y) * 1px); width: calc(var(--w, 300) * 1px);
+  transform: translate3d(0, calc(var(--push, 0) * 1px), 0);
+  transition: transform var(--spring-snappy-dur) var(--spring-snappy);
+}
+.cv img, .cv a { -webkit-user-drag: none; }
+
+/* ---------- card ---------- */
+.card { position: relative; }
+.card article { position: relative; }
+
+/* Figma-style frame title: app.js counter-scales it so it stays the same size on screen */
+.label {
+  margin: 0 0 8px; font-size: 0.8125rem; font-weight: 500; letter-spacing: 0; line-height: 1.2;
+  color: var(--muted); transition: opacity var(--dur-slow) var(--ease-out);
+}
+.cv .label {
+  position: absolute; left: 0; bottom: 100%; margin: 0 0 4px;
+  transform-origin: 0 100%; white-space: nowrap;
+}
+.label a { display: inline-flex; align-items: flex-end; padding: 4px 0 2px; transition: color var(--dur-fast) var(--ease-out); }
+.sel .label { color: var(--ink); font-weight: 600; }
+@media (hover: hover) and (pointer: fine) { .label a:hover { color: var(--ink); } }
+
+.face {
+  position: relative; background: var(--surface); border-radius: 14px;
+  box-shadow: 0 0 0 1px var(--line);
+  cursor: pointer;
+  transition: transform var(--spring-bouncy-dur) var(--spring-bouncy);
+}
+/* shadows are two stacked layers; only their opacity moves */
+.face::before, .face::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; transition: opacity var(--dur-base) var(--ease-out); }
+.face::before { box-shadow: var(--shadow); }
+.face::after { box-shadow: var(--shadow-lift); opacity: 0; }
+.clip { position: relative; overflow: hidden; border-radius: inherit; }
+@media (hover: hover) and (pointer: fine) {
+  .card:not(.sel) .face:hover { transform: translateY(-3px); }
+  .card:not(.sel) .face:hover::after { opacity: 1; }
+}
+.face:active { transform: scale(0.985); transition-duration: var(--dur-press); transition-timing-function: var(--ease-out); }
+.sel .face::after { opacity: 1; }
+
+/* Selection ring: Figma blue, 1.5px on screen whatever the zoom (app.js sets --inv on this one element).
+   Focus is a separate 2px outline around the label, so the two never look alike. */
+.ring {
+  position: absolute; inset: -5px; border-radius: 18px; pointer-events: none;
+  box-shadow: 0 0 0 calc(1.5px * var(--inv, 1)) var(--accent);
+  opacity: 0; transform: scale(0.985);
+  transition: opacity var(--dur-exit) var(--ease-out), transform var(--dur-exit) var(--ease-out);
+}
+.sel .ring { opacity: 1; transform: none; transition: opacity var(--dur-base) var(--ease-out), transform var(--spring-bouncy-dur) var(--spring-bouncy); }
+
+/* A picked card dims what is around it: pictures, big figures and lines step back,
+   qualifiers and status lines keep full contrast. */
+.cv .card :is(.shot, .phone, .icon, .num, .line) { transition: opacity var(--dur-slow) var(--ease-out); }
+.cv.picked .card:not(.sel) :is(.shot, .phone, .icon, .num) { opacity: 0.4; }
+.cv.picked .card:not(.sel) :is(.line, .label) { opacity: 0.6; }
+.cv .card.sel { z-index: 2; }
+
+/* visuals */
+.shot { position: relative; aspect-ratio: 16 / 10; background: #16161a; }
+.shot img, .shot video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.shot video { opacity: 0; transition: opacity var(--dur-slow) var(--ease-out); }
+.shot video.on { opacity: 1; }
+.phone { height: 248px; overflow: hidden; background: radial-gradient(120% 90% at 50% 0%, #1d3b24, var(--tint-green)); display: flex; justify-content: center; padding-top: 26px; }
+.phone img { width: 150px; height: auto; border-radius: 24px; box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 18px 40px rgba(0,0,0,0.45); align-self: flex-start; }
+.icon { height: 150px; background: var(--tint-leaf); display: grid; place-items: center; }
+.icon img { width: 84px; height: 84px; filter: drop-shadow(0 10px 18px rgba(16, 80, 64, 0.22)); }
+
+.fig { padding: 20px 18px 0; }
+.num {
+  margin: 0; font-size: 2.75rem; font-weight: 600; letter-spacing: -0.04em; line-height: 1;
+  font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.fig p { margin: 0; }
+.fig .what { margin-top: 10px; font-size: 0.9375rem; line-height: 1.4; color: var(--muted); text-wrap: pretty; }
+.q { margin-top: 6px !important; font-size: 0.8125rem; line-height: 1.4; color: var(--faint); text-wrap: pretty; }
+
+.text { padding: 14px 18px 16px; }
+.fig + .text { padding-top: 14px; margin-top: 16px; border-top: 1px solid var(--line); }
+.line { margin: 0; font-size: 1.125rem; font-weight: 500; line-height: 1.3; letter-spacing: -0.015em; text-wrap: balance; }
+.status { margin: 6px 0 0; font-size: 0.8125rem; line-height: 1.4; color: var(--muted); text-wrap: pretty; }
+
+/* ---------- detail: hangs under the card when selected ----------
+   Closed panels are transparent and ignore the pointer, but stay in the accessibility tree:
+   screen readers read every number and honesty line without opening anything. */
+.more {
+  margin-top: 12px; padding: 18px; background: var(--surface); border-radius: 14px;
+  box-shadow: 0 0 0 1px var(--line), var(--shadow);
+}
+.cv .more {
+  position: absolute; left: 0; right: 0; top: 100%;
+  opacity: 0; transform: translateY(-8px) scale(0.97); transform-origin: 50% 0; pointer-events: none;
+  transition: opacity var(--dur-exit) var(--ease-out), transform var(--dur-exit) var(--ease-out);
+  -webkit-user-select: text; user-select: text; cursor: auto;
+}
+.cv .sel .more {
+  opacity: 1; transform: none; pointer-events: auto;
+  transition: opacity var(--dur-base) var(--ease-out), transform var(--spring-snappy-dur) var(--spring-snappy);
+}
+.more dl { margin: 0; display: grid; gap: 14px; }
+.more dl div { display: grid; gap: 2px; }
+.more dt { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.more dd { margin: 0; font-size: 0.875rem; line-height: 1.4; color: var(--muted); text-wrap: pretty; }
+.more dd .q { display: block; }
+.more .note { margin: 14px 0 0; font-size: 0.8125rem; line-height: 1.45; color: var(--faint); text-wrap: pretty; }
+.more .note.q { margin-top: 14px !important; }
+.more dl + .links, .more .note + .links { margin-top: 16px; }
+.links { margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.links a {
+  display: inline-flex; align-items: center; min-height: 36px; padding: 0 14px; border-radius: 999px;
+  font-size: 0.8125rem; font-weight: 500; box-shadow: inset 0 0 0 1px var(--line);
+  transition: transform var(--dur-press) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
+}
+.links a:active { transform: scale(0.97); }
+.links .go { background: var(--go); color: #fff; box-shadow: none; }
+@media (hover: hover) and (pointer: fine) {
+  .links a:hover { background: var(--line); }
+  .links .go:hover { background: color-mix(in srgb, var(--go) 88%, #000); }
+}
+
+/* ---------- phone ---------- */
+@media (max-width: 600px) {
+  .cv .name { font-size: 84px; }
+  .bottom { flex-direction: column; align-items: stretch; gap: 8px; }
+  .honesty { font-size: 0.75rem; border-radius: 14px; }
+  .tools { position: absolute; right: max(16px, env(safe-area-inset-right)); bottom: 100%; }
+  .mini { width: 120px; height: 76px; border-radius: 10px; bottom: 8px; }
+  .top nav a { padding: 0 10px; }
+  .zoom { display: none !important; }
+}
+
+/* ---------- touch: every target at least 44px ---------- */
+@media (pointer: coarse) {
+  .pill { height: 48px; }
+  .pill a, .pill button { height: 44px; padding: 0 14px; }
+  .links a { min-height: 50px; padding: 0 18px; }  /* world px: still 45px on screen at the 0.9 phone card zoom */
+  .label a { min-height: 44px; padding-top: 0; }
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important; transition-delay: 0s !important;
+  }
+  .cv .card :is(.shot, .phone, .icon, .num, .line), .label, .more, .ring, .brand-pill, .shot video, .mini, .cv .name {
+    transition: opacity var(--dur-fast) var(--ease-out), visibility 0s !important;
+  }
+  .cv .more { transform: none; }
+}

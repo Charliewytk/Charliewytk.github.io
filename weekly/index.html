@@ -21,161 +21,85 @@
 <meta name="twitter:description" content="Free weekly edition. Method first, then the 19 August week-late table. A 3% spread annualises to 24.6%; after costs it is +1.38%. Filings, not advice. Zero subscribers. £0.">
 <meta name="twitter:image" content="https://charliewytk.github.io/media/og-weekly.png">
 <meta name="twitter:image:alt" content="Free weekly: method first. 24.6% annualises; after costs +1.38%. Filings, not advice.">
+<link rel="stylesheet" href="../assets/site.css">
 <style>
-  :root {
-    --ink: #22201d;
-    --ink2: #3b3833;
-    --muted: #5f5b52;
-    --faint: #6f6a60;
-    --rule: #c9c6b4;
-    --paper: #f7f7ef;
-    --accent: #a9331f;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-    font-size: 16.5px;
-    line-height: 1.65;
-    -webkit-font-smoothing: antialiased;
-  }
-  a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); padding-bottom: 1px; }
-  a:hover { color: var(--accent); border-color: var(--accent); }
-  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+  /* /weekly/: page rules only. Tokens, base, header, footer, table and button come from assets/site.css. */
+  .shell { max-width: calc(44rem + 2 * var(--gutter)); margin-inline: auto; padding: var(--space-8) var(--gutter) 0; }
+  .eyebrow { margin: 0 0 var(--space-4); font-size: var(--text-sm); color: var(--fg-3); }
+  .shell h1 { font-size: var(--text-xl); line-height: var(--leading-tight); letter-spacing: var(--tracking-tight); margin-bottom: var(--space-5); }
+  .shell h2 { font-size: var(--text-lg); line-height: 1.25; letter-spacing: var(--tracking-snug); margin-bottom: var(--space-3); }
+  .shell p { color: var(--fg-2); }
+  .shell .lead { color: var(--fg); }
+  section { margin-top: var(--space-8); }
 
-  .mast {
-    display: flex; justify-content: space-between; align-items: baseline;
-    padding: 18px 28px;
-    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
-    border-bottom: 1px solid var(--ink);
-  }
-  .mast a { border: none; font-weight: 700; }
-
-  .shell { max-width: 720px; margin: 0 auto; padding: 48px 24px 88px; }
-  .eyebrow {
-    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--faint); margin: 0 0 16px;
-  }
-  h1 {
-    font-family: Georgia, "Times New Roman", serif;
-    font-weight: 600;
-    font-size: clamp(1.85rem, 5.4vw, 2.55rem);
-    line-height: 1.12;
-    letter-spacing: -0.02em;
-    margin: 0 0 14px;
-  }
-  h2 {
-    font-family: Georgia, "Times New Roman", serif;
-    font-weight: 600;
-    font-size: 1.28rem;
-    margin: 0 0 12px;
-    letter-spacing: -0.01em;
-  }
-  .lede {
-    font-size: 1.05rem;
-    line-height: 1.5;
-    color: var(--ink2);
-    margin: 0 0 22px;
-    max-width: 40rem;
-  }
-  p { margin: 0 0 16px; text-wrap: pretty; }
-  .note { color: var(--muted); font-size: 0.9rem; }
-  section { margin-top: 44px; padding-top: 24px; border-top: 1px solid var(--rule); }
-
-  .twoup { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin: 0 0 22px; }
-  .twoup div { padding: 18px 20px; background: rgba(34,32,29,0.04); }
+  /* the two numbers: what gets marketed, and what is left after costs */
+  .twoup { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin: var(--space-6) 0; }
+  .twoup div { padding: var(--space-5); background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--radius-3); }
   .twoup b {
-    display: block;
-    font-family: "Arial Narrow", Arial, sans-serif;
-    font-weight: 700;
-    font-size: 1.85rem;
-    letter-spacing: 0.01em;
-    margin-bottom: 6px;
+    display: block; margin-bottom: var(--space-2);
+    font-size: clamp(2rem, 4vw + 1rem, 2.75rem); font-weight: 600; line-height: 1;
+    letter-spacing: var(--tracking-display); font-variant-numeric: tabular-nums;
   }
-  .twoup .bad b { color: rgba(34,32,29,0.42); }
-  .twoup .real b { color: var(--accent); }
-  .twoup span { font-size: 0.8rem; color: var(--muted); line-height: 1.4; display: block; }
+  .twoup .bad b { color: var(--fg-4); }
+  .twoup .real b { color: var(--fg); }
+  .twoup span { display: block; font-size: var(--text-sm); line-height: 1.45; color: var(--fg-3); }
 
-  .sample { width: 100%; border-collapse: collapse; font-size: 0.86rem; margin: 8px 0 14px; }
-  .sample th {
-    text-align: left;
-    font-size: 0.68rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--faint);
-    font-weight: 600;
-    padding: 8px 10px 8px 0;
-    border-bottom: 1px solid var(--ink);
-  }
-  .sample td {
-    padding: 11px 10px 11px 0;
-    border-bottom: 1px solid rgba(34,32,29,0.14);
-    vertical-align: top;
-  }
-  .sample .tk { font-family: ui-monospace, Menlo, monospace; font-weight: 600; letter-spacing: 0.03em; }
-  .sample .num { font-family: ui-monospace, Menlo, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .sample .co { color: var(--muted); }
+  /* table: rows below the published 1.59% break-even are dimmed, not hidden */
+  .sample { margin: var(--space-5) 0 var(--space-3); }
+  .sample .tk { font-family: var(--font-mono); font-weight: 600; color: var(--fg); }
+  .sample .co { color: var(--fg-3); }
+  .sample .num { color: var(--fg); }
+  .sample th.num { font-family: var(--font-sans); }
+  .sample .below td { color: var(--fg-4); }
+  .sample tr:not(.below) + tr.below td { border-top: 1px solid var(--fg-4); }
+  .sample tbody tr { transition: background-color var(--dur-fast) var(--ease-out); }
+  @media (hover: hover) and (pointer: fine) { .sample tbody tr:hover { background: var(--bg-2); } }
 
-  .cta { margin: 0 0 10px; }
-  .btn {
-    display: inline-block;
-    background: var(--ink);
-    color: var(--paper);
-    border: 1px solid var(--ink);
-    padding: 14px 22px;
-    font-weight: 600;
-    font-size: 1.02rem;
-    min-height: 48px;
-    line-height: 1.2;
-    text-align: center;
-  }
-  .btn:hover { background: var(--accent); border-color: var(--accent); color: var(--paper); }
-
-  footer {
-    margin-top: 56px;
-    padding-top: 22px;
-    border-top: 1px solid var(--rule);
-    font-size: 0.86rem;
-    color: var(--muted);
-  }
-  footer p { margin: 0 0 8px; }
+  .cta { margin: var(--space-8) 0 var(--space-3); }
+  .site-footer { max-width: calc(44rem + 2 * var(--gutter)); margin-top: var(--space-9); }
+  .site-footer .site-nav { flex-wrap: wrap; gap: var(--space-3) var(--space-5); }
 
   @media (max-width: 640px) {
-    .mast { padding: 12px 14px; }
-    .shell { padding: 24px 16px 72px; }
-    h1 { font-size: 1.62rem; }
+    .shell { padding-top: var(--space-7); }
     .twoup { grid-template-columns: 1fr; }
+    .twoup div { padding: var(--space-4) var(--space-5); }
     .sample th:nth-child(2), .sample td:nth-child(2) { display: none; }
-    .cta .btn { display: block; width: 100%; }
+    .cta .btn { display: flex; width: 100%; }
   }
 </style>
 </head>
 <body>
-<header class="mast">
-  <a class="who" href="../">Charlie Wuytack</a>
-  <a href="../merger-monitor/">Week-late table</a>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="site-name" href="../">Charlie Wuytack</a>
+  <nav class="site-nav" aria-label="Site">
+    <a href="../work/">Work</a>
+    <a href="../merger-monitor/">Merger Monitor</a>
+    <a href="mailto:charlie@wuytack.net">Contact</a>
+  </nav>
 </header>
 
-<main class="shell">
-  <p class="eyebrow">Free weekly edition &middot; extraction + cost-sizing &middot; not advice</p>
-  <h1>The method first. Then this week's table. Nothing to pay to read it.</h1>
-  <p class="lede">Same extractor as the evening table, published seven days late. The arithmetic is walked through at <a href="../example/">/example/</a> &mdash; ACA on this table is the 3% case in the wild. A 3% spread annualises to 24.6%. After the stated break rate and costs it is +1.38%. Break-even is 1.59%. That is a filing and a price. It is not a recommendation.</p>
+<main class="shell" id="main">
+  <div class="stagger">
+    <p class="eyebrow" style="--i:0">Free weekly edition &middot; extraction + cost-sizing &middot; not advice</p>
+    <h1 style="--i:1">The method first. Then this week's table. Nothing to pay to read it.</h1>
+    <p class="lead" style="--i:2">Same extractor as the evening table, published seven days late. The arithmetic is walked through at <a href="../example/">/example/</a> &mdash; ACA on this table is the 3% case in the wild.</p>
 
-  <div class="twoup">
-    <div class="bad"><b>24.6%</b><span>a year — a 3% spread over 49 days, annualised. Marketing.</span></div>
-    <div class="real"><b>+1.38%</b><span>per deal — after the stated break rate, break loss, round-trip cost and carry. The net already published.</span></div>
+    <div class="twoup" style="--i:3">
+      <div class="bad"><b>24.6%</b><span>a year — a 3% spread over 49 days, annualised. Marketing.</span></div>
+      <div class="real"><b>+1.38%</b><span>per deal — after the stated break rate, break loss, round-trip cost and carry. The net already published.</span></div>
+    </div>
+    <p style="--i:4">Break-even is 1.59%. That is a filing and a price. It is not a recommendation. CRNX on the same table is +0.29%. Price it the same way and it dies after costs. Both rows are published.</p>
+    <p style="--i:5">The public calculator at <a href="../sizer/">/sizer/</a> now fails closed to the measured 40bp bar &mdash; unknown stage stays the labelled 1.57% policy.</p>
   </div>
-  <p>CRNX on the same table is +0.29%. Price it the same way and it dies after costs. Both rows are published. <a href="../example/">ACA, worked through</a>.</p>
-  <p>The public calculator at <a href="../sizer/">/sizer/</a> now fails closed to the measured 40bp bar &mdash; unknown stage stays the labelled 1.57% policy.</p>
 
   <section>
     <h2>This week's table &mdash; 19 August 2026, a week late on purpose</h2>
     <p>Figures are copied from the public week-late table already on this site. Spreads move; these were computed when that page was built. No new ticker is introduced here. Filing sentences stay on the <a href="../merger-monitor/">full 19 August table</a>.</p>
-    <table class="sample">
+    <div class="table-scroll">
+    <table class="sample table">
       <thead>
-        <tr><th>Deal</th><th>Company</th><th>Offer / market</th><th>Spread</th></tr>
+        <tr><th scope="col">Deal</th><th scope="col">Company</th><th scope="col" class="num">Offer / market</th><th scope="col" class="num">Spread</th></tr>
       </thead>
       <tbody>
         <tr>
@@ -232,49 +156,49 @@
           <td class="num">$15.00 / $14.74</td>
           <td class="num">+1.76%</td>
         </tr>
-        <tr>
+        <tr class="below">
           <td class="tk">FSEA</td>
           <td class="co">First Seacoast</td>
           <td class="num">$17.25 / $17.07</td>
           <td class="num">+1.05%</td>
         </tr>
-        <tr>
+        <tr class="below">
           <td class="tk">SLP</td>
           <td class="co">Simulations Plus</td>
           <td class="num">$18.50 / $18.36</td>
           <td class="num">+0.76%</td>
         </tr>
-        <tr>
+        <tr class="below">
           <td class="tk">DBRG</td>
           <td class="co">DigitalBridge</td>
           <td class="num">$16.00 / $15.91</td>
           <td class="num">+0.57%</td>
         </tr>
-        <tr>
+        <tr class="below">
           <td class="tk">GBTG</td>
           <td class="co">Global Business Travel</td>
           <td class="num">$9.50 / $9.45</td>
           <td class="num">+0.53%</td>
         </tr>
-        <tr>
+        <tr class="below">
           <td class="tk">ALOT</td>
           <td class="co">AstroNova</td>
           <td class="num">$29.00 / $28.88</td>
           <td class="num">+0.42%</td>
         </tr>
-        <tr>
+        <tr class="below">
           <td class="tk">APGE</td>
           <td class="co">Apogee Therapeutics</td>
           <td class="num">$135.11 / $134.57</td>
           <td class="num">+0.40%</td>
         </tr>
-        <tr>
+        <tr class="below">
           <td class="tk">CRNX</td>
           <td class="co">Crinetics</td>
           <td class="num">$85.00 / $84.75</td>
           <td class="num">+0.29%</td>
         </tr>
-        <tr>
+        <tr class="below">
           <td class="tk">FBRX</td>
           <td class="co">Forte Biosciences</td>
           <td class="num">$77.00 / $76.88</td>
@@ -282,6 +206,7 @@
         </tr>
       </tbody>
     </table>
+    </div>
     <p class="note">Seventeen cash-priced rows. Nine clear the published 1.59% break-even. The rest are published anyway. Unpriced cash deals stay on the <a href="../merger-monitor/">week-late public table</a>, with the sentence each figure was read from.</p>
   </section>
 
@@ -294,12 +219,16 @@
     <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergerweekly" target="_blank" rel="noopener">Get the free Sunday mail</a>
   </div>
   <p class="note">Same table, one week late, on the existing free Gumroad listing. No new SKU. Zero subscribers. Take: £0.</p>
-
-  <footer>
-    <p>Source: the 19 August 2026 week-late table. Method numbers are the 3% case already used on this site.</p>
-    <p>Tonight's table, if you want the evening it is built, is still on <a href="../subscribe/">/subscribe/</a>.</p>
-    <p><a href="../example/">worked example</a> · <a href="../merger-monitor/">week-late table</a> · <a href="../kill-log/">paper kill log</a> · <a href="../">charliewytk.github.io</a></p>
-  </footer>
 </main>
+
+<footer class="site-footer">
+  <p class="site-legal">Source: the 19 August 2026 week-late table. Method numbers are the 3% case already used on this site. Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
+  <nav class="site-nav" aria-label="More">
+    <a href="../example/">Worked example</a>
+    <a href="../merger-monitor/">Week-late table</a>
+    <a href="../kill-log/">Paper kill log</a>
+    <a href="../subscribe/">Tonight's table</a>
+  </nav>
+</footer>
 </body>
 </html>

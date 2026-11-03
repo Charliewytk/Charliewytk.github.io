@@ -1,0 +1,189 @@
+/* Shader concept: a near-black page, a noise field behind it, one list. */
+
+:root {
+  --ground: #070807;
+  --ink: #ece8df;
+  --muted: #a19c90;                /* 7.4:1 on the ground */
+  --faint: #8d887c;                /* 5.7:1 on the ground */
+  --tint: #8d887c;                 /* set by app.js to the active project's colour */
+  --sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+  --gutter: clamp(16px, 4.4vw, 64px);
+
+  /* motion tokens, from concepts/_content/motion-brief.md */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --spring-bouncy: linear(0, 0.101 6%, 0.305 12%, 0.529 19%, 0.712 25%, 0.852 31%, 0.940 38%, 0.993 44%, 1.018 50%, 1.026 56%, 1.025 62%, 1.021 69%, 1.015 75%, 1.009 81%, 1.005 88%, 1.002 94%, 1);
+  --spring-bouncy-dur: 400ms;
+  --dur-press: 100ms; --dur-fast: 125ms; --dur-base: 180ms; --dur-slow: 260ms;
+}
+@supports not (transition-timing-function: linear(0, 1)) { :root { --spring-bouncy: var(--ease-out); } }
+/* Registered so the fallback gradient can fade between project colours. */
+@property --tint { syntax: '<color>'; inherits: true; initial-value: #8d887c; }
+
+* { box-sizing: border-box; }
+html { background: var(--ground); color-scheme: dark; -webkit-text-size-adjust: 100%; }
+/* Only the CSS field uses --tint, so only it pays for the fade. */
+html:not(.gl) { transition: --tint var(--dur-slow) var(--ease-out); }
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  color: var(--ink);
+  font: 400 1rem/1.55 var(--sans);
+  letter-spacing: -0.005em;
+  -webkit-font-smoothing: antialiased;
+  /* Static fallback field: shown when there is no WebGL, no JS, or reduced motion.
+     The canvas covers it whenever the shader runs. */
+  background:
+    radial-gradient(80% 60% at 78% 42%, color-mix(in oklab, var(--tint) 26%, transparent), transparent 70%),
+    radial-gradient(70% 70% at 10% 100%, rgba(236, 232, 223, 0.05), transparent 70%),
+    var(--ground);
+}
+a { color: inherit; text-decoration: none; }
+p { margin: 0; }
+::selection { background: rgba(236, 232, 223, 0.22); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* Visible focus for every link. */
+a:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 4px; }
+
+/* The WebGL field sits behind everything and never takes input. */
+.field {
+  position: fixed; inset: 0; width: 100%; height: 100%;
+  z-index: -1; pointer-events: none;
+  opacity: 0; transition: opacity var(--dur-slow) var(--ease-out);
+}
+.gl .field { opacity: 1; }
+/* The canvas sits at z-index -1, under body's own background: clear it. */
+.gl body { background: transparent; }
+
+/* Header: name left, three links right. */
+.top {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+  padding: 24px var(--gutter) 0;
+}
+.name { margin: 0; font-size: 1rem; font-weight: 600; letter-spacing: -0.01em; }
+.top nav { display: flex; gap: 20px; font-size: 0.9375rem; color: var(--muted); }
+/* 44px hit area without changing the layout. */
+.top nav a { display: inline-block; padding: 11px 8px; margin: -11px -8px; transition: color var(--dur-fast) var(--ease-out); }
+
+/* Project list: the only large type on the page. */
+main {
+  display: flex; align-items: center;
+  padding: 40px var(--gutter);
+}
+.list {
+  list-style: none; margin: 0; padding: 0;
+  width: min(100%, 560px);
+}
+/* Name, then its status on the same baseline. */
+.row {
+  display: block;
+  padding: 0.12em 0;
+  font-size: clamp(1.75rem, 1.4vw + 1.2rem, 2.5rem);
+  font-weight: 600; letter-spacing: -0.03em; line-height: 1.12;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.row .t {
+  display: inline-block; text-wrap: balance;
+  transition: transform var(--spring-bouncy-dur) var(--spring-bouncy), opacity var(--dur-fast) var(--ease-out);
+}
+.row .s, .row .q {
+  display: inline-block;
+  transition: transform var(--spring-bouncy-dur) var(--spring-bouncy);
+  font-size: 0.8125rem; font-weight: 500; letter-spacing: 0; line-height: 1.4;
+  color: var(--muted); white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+/* A qualifier that belongs to a number in the status sits right under it. */
+.row .s { margin-left: 4px; }        /* plus the space in the HTML: about 14px */
+.row .q { display: block; width: fit-content; padding-top: 2px; white-space: normal; }
+.row:active .t { transform: scale(0.97); transition-duration: var(--dur-press); transition-timing-function: var(--ease-out); }
+
+/* While one row is active, the other names step back. Status text keeps its contrast. */
+.list.has-active .row:not(.is-active) .t { opacity: 0.45; }
+.row.is-active > * { transform: translateX(6px); }
+
+/* The preview box. Only exists on wide screens. */
+.stage { display: none; }
+
+.foot { padding: 0 var(--gutter) 24px; }
+.foot p { max-width: 68ch; font-size: 0.8125rem; font-weight: 500; line-height: 1.4; color: var(--faint); }
+
+@media (hover: hover) and (pointer: fine) {
+  .top nav a:hover { color: var(--ink); }
+}
+
+@media (min-width: 900px) {
+  /* The ring hugs the text; 8px on the right leaves room for the 6px shift. */
+  .row { width: fit-content; max-width: 100%; padding-right: 8px; }
+  .stage {
+    display: grid; place-items: center;
+    grid-template: minmax(0, 1fr) / minmax(0, 1fr);   /* a definite track, so nothing can grow it */
+    position: fixed;
+    top: 120px; bottom: 120px;
+    left: calc(var(--gutter) + 620px);
+    right: var(--gutter);
+    pointer-events: none;
+  }
+  /* Fallback preview (no WebGL / reduced motion): a plain image that fades. */
+  .stage img {
+    position: absolute; inset: 0; margin: auto;      /* centred in the box, never sized by it */
+    width: auto; height: auto; max-width: 100%; max-height: 100%;
+    border-radius: var(--r, 12px);
+    opacity: 0; transition: opacity var(--dur-base) var(--ease-out);
+  }
+  .stage img.on { opacity: 1; }
+  .gl .stage img { display: none; }
+  /* Clicking the preview opens the project; app.js sets this over the media. */
+  .over-preview, .over-preview * { cursor: pointer; }
+
+  /* A project with no media: its key number condenses out of the field. */
+  .kn {
+    grid-area: 1 / 1;
+    width: min(100%, 30rem);
+    text-shadow: 0 0 28px rgba(7, 8, 7, 0.7);
+  }
+  .kn > * {
+    opacity: 0; filter: blur(12px); transform: translateY(10px) scale(0.985);
+    transition: opacity 160ms var(--ease-out), filter 200ms var(--ease-out), transform 200ms var(--ease-out);
+  }
+  .kn.on > * {
+    opacity: 1; filter: blur(0); transform: none;
+    transition: opacity 320ms var(--ease-out), filter 480ms var(--ease-out), transform 520ms var(--spring-bouncy);
+  }
+  .kn.on > :nth-child(2) { transition-delay: 50ms; }
+  .kn.on > :nth-child(3) { transition-delay: 100ms; }
+  .kn .v {
+    font-size: clamp(3.5rem, 5vw, 5.5rem); font-weight: 600; letter-spacing: -0.045em; line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .kn .l { margin-top: 14px; max-width: 30ch; text-wrap: balance; font-size: 1.0625rem; line-height: 1.4; color: var(--ink); }
+  /* Brighter than --muted: it sits on lit smoke and carries the qualifier (about 6:1 there). */
+  .kn .k { margin-top: 10px; max-width: 40ch; font-size: 0.8125rem; font-weight: 500; line-height: 1.4; color: #c9c4b8; }
+}
+@media (min-width: 900px) and (max-width: 1180px) {
+  .list { width: min(100%, 440px); }
+  .stage { left: calc(var(--gutter) + 480px); }
+}
+
+@media (max-width: 599px) { :root { --gutter: 16px; } }
+@media (max-width: 899px) {
+  main { align-items: flex-start; padding-top: 48px; }
+  /* Rows at least 44px tall for touch. */
+  .row { padding: 0.23em 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important; transition-delay: 0s !important; scroll-behavior: auto !important;
+  }
+  /* Fades stay; nothing moves or blurs. */
+  .row .t, .stage img, .kn > * { transition: opacity var(--dur-fast) var(--ease-out) !important; }
+  .row.is-active > * { transform: none; }
+  .kn > * { filter: none; transform: none; }
+}

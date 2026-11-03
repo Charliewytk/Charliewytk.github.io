@@ -8,213 +8,126 @@
 <meta name="robots" content="noindex,nofollow">
 <link rel="canonical" href="https://charliewytk.github.io/share/">
 <link rel="icon" href="../media/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/site.css">
 <style>
-  :root {
-    --ink: #22201d;
-    --ink2: #3b3833;
-    --muted: #5f5b52;
-    --faint: #6f6a60;
-    --rule: #c9c6b4;
-    --paper: #f7f7ef;
-    --accent: #a9331f;
-    --warn: #f3e4c2;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-    font-size: 17px;
-    line-height: 1.55;
-    -webkit-font-smoothing: antialiased;
-  }
-  a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); padding-bottom: 1px; }
-  a:hover { color: var(--accent); border-color: var(--accent); }
-  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  /* /share/: page rules only. Tokens, base, header, footer, links, focus and .btn come from assets/site.css. */
+  .shell { max-width: calc(680px + 2 * var(--gutter)); margin: 0 auto; padding: var(--space-7) var(--gutter) 0; }
+  .intro h1 { font-size: var(--text-xl); }
+  .intro p { margin: var(--space-3) 0 0; color: var(--fg-2); }
+  .intro .note { margin-top: var(--space-4); }
+  .drafts { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6); margin-top: var(--space-7); }
 
-  .mast {
-    display: flex; justify-content: space-between; align-items: baseline;
-    padding: 14px 16px;
-    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
-    border-bottom: 1px solid var(--ink);
-  }
-  .mast a { border: none; font-weight: 700; }
+  .draft-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); margin: 0 0 var(--space-3); }
+  .draft h2 { font-size: var(--text-md); line-height: var(--leading-snug); letter-spacing: var(--tracking-snug); }
+  .draft .chip { color: var(--fg-3); }
+  .draft .note { margin: 0 0 var(--space-3); }
 
-  .banner {
-    background: var(--warn);
-    border-bottom: 2px solid var(--accent);
-    padding: 16px 16px 18px;
+  /* one draft reads like one note: title, hairline, body */
+  .sheet {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-3);
+    overflow: hidden;
   }
-  .banner strong {
-    display: block;
-    font-size: 1.05rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 6px;
+  .sheet textarea {
+    display: block; width: 100%; margin: 0;
+    padding: var(--space-4);
+    font-size: 16px; line-height: var(--leading);   /* 16px stops iOS zoom on focus */
+    color: var(--fg); background: transparent;
+    border: 0; border-radius: 0; resize: none;
+    field-sizing: content;
+    -webkit-user-select: text; user-select: text;
   }
-  .banner p { margin: 0 0 8px; }
-  .banner p:last-child { margin: 0; color: var(--ink2); font-size: 0.95rem; }
+  .sheet textarea.title { font-weight: 600; letter-spacing: var(--tracking-snug); line-height: var(--leading-snug); }
+  .sheet textarea.title { border-bottom: 1px solid var(--line); }
+  .sheet textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 0; }
 
-  .shell { max-width: 720px; margin: 0 auto; padding: 28px 16px 300px; }
-  h1 {
-    font-family: Georgia, "Times New Roman", serif;
-    font-weight: 600;
-    font-size: 1.7rem;
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-    margin: 0 0 12px;
+  .row { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
+  .row .btn { flex: 1 1 0; min-width: 0; }
+  .row .btn.post { flex: 1 1 100%; }
+  @media (min-width: 600px) {
+    .row .btn, .row .btn.post { flex: 0 0 auto; min-width: 9.5em; }
   }
-  .lede { color: var(--ink2); margin: 0 0 22px; }
+  .btn.copy { touch-action: manipulation; }
+  .btn.copy.ok { background: var(--good); border-color: var(--good); color: var(--accent-fg); }
+  @media (prefers-reduced-motion: no-preference) {
+    .btn.copy.ok { animation: copied var(--spring-bouncy-dur) var(--spring-bouncy); }
+    @keyframes copied { from { transform: scale(0.94); } }
+  }
+  .draft .meta { margin: var(--space-3) 0 0; }
 
-  section[data-draft] {
-    margin: 0 0 28px;
-    padding: 18px 16px 16px;
-    border: 1px solid var(--rule);
-    background: #fffcf4;
-  }
-  h2 {
-    font-family: Georgia, "Times New Roman", serif;
-    font-weight: 600;
-    font-size: 1.18rem;
-    margin: 0 0 6px;
-  }
-  .where { color: var(--muted); font-size: 0.9rem; margin: 0 0 14px; }
-
-  label {
-    display: block;
-    font-size: 0.72rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--faint);
-    font-weight: 700;
-    margin: 12px 0 6px;
-  }
-  textarea {
-    width: 100%;
-    display: block;
-    font: inherit;
-    font-size: 16px;
-    line-height: 1.45;
-    color: var(--ink);
-    background: #fff;
-    border: 1px solid var(--rule);
-    padding: 12px;
-    resize: vertical;
-    min-height: 7.5em;
-    -webkit-user-select: text;
-    user-select: text;
-  }
-  textarea.title { min-height: 5.2em; }
-  textarea.short { min-height: 20em; }
-  .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-  button.copy {
-    appearance: none;
-    -webkit-appearance: none;
-    background: var(--ink);
-    color: var(--paper);
-    border: 1px solid var(--ink);
-    min-height: 48px;
-    padding: 12px 16px;
-    font-weight: 700;
-    font-size: 0.95rem;
-    flex: 1 1 140px;
-    touch-action: manipulation;
-  }
-  button.copy.post { flex: 1 1 100%; }
-  button.copy:hover { background: var(--accent); border-color: var(--accent); }
-  button.copy.ok { background: #2d5a32; border-color: #2d5a32; }
-  .meta { color: var(--faint); font-size: 0.82rem; margin: 8px 0 0; }
+  /* tomorrow's one copy: a floating bar, clear of the home indicator */
   .morning {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 5;
-    background: var(--ink);
-    color: var(--paper);
-    border-top: 2px solid var(--accent);
-    padding: 12px 16px calc(14px + env(safe-area-inset-bottom, 0px));
+    position: fixed; z-index: 40;
+    left: 0; right: 0; bottom: 0;
+    display: grid; grid-template-columns: 1fr; gap: var(--space-2) var(--space-4); align-items: center;
+    padding: var(--space-3) max(var(--gutter), env(safe-area-inset-right, 0px)) calc(var(--space-3) + env(safe-area-inset-bottom, 0px)) max(var(--gutter), env(safe-area-inset-left, 0px));
+    background: color-mix(in srgb, var(--bg) 86%, transparent);
+    -webkit-backdrop-filter: saturate(1.6) blur(14px);
+    backdrop-filter: saturate(1.6) blur(14px);
+    border-top: 1px solid var(--line);
+    font-size: var(--text-sm);
   }
-  .morning p { margin: 0 0 10px; font-size: 0.92rem; }
-  .morning button.copy {
-    width: 100%;
-    flex: 1 1 100%;
-    background: var(--paper);
-    color: var(--ink);
-    border-color: var(--paper);
+  .morning p { margin: 0; color: var(--fg-3); }
+  .morning p b { color: var(--fg); font-weight: 600; }
+  .morning .btn { width: 100%; }
+  .morning .sku { display: flex; flex-wrap: wrap; column-gap: var(--space-4); }
+  .morning .sku a { display: inline-flex; align-items: center; min-height: 32px; color: var(--fg-3); }
+  .morning .sku a.pay { color: var(--fg); font-weight: 500; }
+  .morning .sku .only { display: inline-flex; align-items: center; min-height: 32px; color: var(--fg-4); }
+  @media (min-width: 720px) {
+    .morning {
+      left: 50%; right: auto; bottom: var(--space-4);
+      width: min(680px, calc(100% - 2 * var(--gutter)));
+      transform: translateX(-50%);
+      grid-template-columns: 1fr auto;
+      grid-template-areas: "when btn" "sku btn";
+      padding: var(--space-3) var(--space-3) var(--space-3) var(--space-5);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-3);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 12px 32px -12px rgba(0, 0, 0, 0.18);
+    }
+    .morning p { grid-area: when; }
+    .morning .btn { grid-area: btn; width: auto; min-width: 13em; }
+    .morning .sku { grid-area: sku; }
   }
-  .morning button.copy.ok {
-    background: #2d5a32;
-    color: var(--paper);
-    border-color: #2d5a32;
-  }
-  .morning .sku-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 8px;
-  }
-  .morning a.btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    min-height: 48px;
-    padding: 12px 14px;
-    font-weight: 700;
-    font-size: 0.95rem;
-    border: 1px solid var(--paper);
-    color: var(--paper);
-    text-decoration: none;
-    flex: 1 1 140px;
-    touch-action: manipulation;
-  }
-  .morning a.btn.pay {
-    background: var(--accent);
-    border-color: var(--accent);
-    flex: 1 1 100%;
-  }
-  .morning a.btn.quiet {
-    background: transparent;
-    color: var(--paper);
-    font-weight: 600;
-    font-size: 0.88rem;
+  @media (prefers-reduced-motion: no-preference) {
+    .morning { animation: bar-in var(--spring-snappy-dur) var(--spring-snappy) 200ms backwards; }
+    @keyframes bar-in { from { opacity: 0; translate: 0 24px; } }
   }
 
-  footer {
-    margin-top: 12px;
-    padding-top: 18px;
-    border-top: 1px solid var(--rule);
-    font-size: 0.88rem;
-    color: var(--muted);
-  }
+  /* the footer clears the floating bar */
+  .site-footer { width: min(680px, 100% - 2 * var(--gutter)); max-width: none; padding-inline: 0; margin-top: var(--space-9); padding-bottom: calc(224px + env(safe-area-inset-bottom, 0px)); }
+  .site-footer .site-nav { flex-wrap: wrap; gap: var(--space-2) var(--space-4); }
+  @media (min-width: 720px) { .site-footer { padding-bottom: 184px; } }
 </style>
 </head>
 <body>
-<header class="mast">
-  <a class="who" href="../">Charlie Wuytack</a>
-  <span>Clipboard</span>
+<header class="site-header">
+  <a class="site-name" href="../">Charlie Wuytack</a>
+  <nav class="site-nav" aria-label="Site">
+    <a href="../work/">Work</a>
+    <a href="https://github.com/Charliewytk">GitHub</a>
+    <a href="mailto:charlie@wuytack.net">Contact</a>
+  </nav>
 </header>
 
-<div class="banner">
-  <strong>Drafts. You still click Post.</strong>
-  <p>These are conservative drafts for 09:00. Agents never submit Reddit, X, or HN. Open the app yourself, paste, and you still click Post / Submit.</p>
-  <p>Reddit account: <b>u/charliequantack</b>. Extraction and cost-sizing only. Not advice.</p>
-</div>
-
 <main class="shell">
-  <h1>Method first. Then the public calculator and the existing £5 listing. Nothing here is a post until you tap it.</h1>
-  <p class="lede">Frozen site figures, checked against /example/ and /weekly/: a 3% spread annualises to 24.6%; after a 2.4% break rate and costs it is +1.38% a deal. The public calculator is /sizer/. Pay stays on the existing £5 Gumroad listing. One Copy post tap on iPhone. First line is the title; Title / Body are backup. Long-press a box if Copy fails. You still click Post.</p>
+  <div class="intro">
+    <h1>Drafts. You still click Post.</h1>
+    <p>Conservative drafts for 09:00. Agents never submit Reddit, X, or HN. Open the app yourself, paste, and you still click Post / Submit.</p>
+    <p>Frozen site figures, checked against /example/ and /weekly/: a 3% spread annualises to 24.6%; after a 2.4% break rate and costs it is +1.38% a deal.</p>
+    <p class="note">Reddit account: <b>u/charliequantack</b>. Extraction and cost-sizing only. Not advice. Long-press a box if Copy fails.</p>
+  </div>
 
-  <section data-draft="reddit-sa">
-    <h2>1. Reddit &mdash; r/SecurityAnalysis</h2>
-    <p class="where">09:00 pick. One copy: first line is the title, rest is the body. You still click Post as u/charliequantack.</p>
-    <label for="sa-title">Title</label>
-    <textarea id="sa-title" class="title" data-field="title" readonly>A 3% cash-merger spread annualises to 24.6%. After a 2.4% break rate and costs it is +1.38% a deal</textarea>
-    <label for="sa-body">Body</label>
-    <textarea id="sa-body" data-field="body" readonly>A 3% cash-merger spread annualises to 24.6%. After a 2.4% break rate and costs it is +1.38% a deal. The annualised figure is the one this trade is usually sold on. Held to a median 49-day close, 3% looks like 24.6% a year. Charge a measured 2.4% break rate after a definitive proxy, round-trip cost and T-bill carry, and the same 3% case is +1.38% a deal.
+  <div class="drafts stagger">
+  <section class="draft" data-draft="reddit-sa" aria-labelledby="h-sa" style="--i:0">
+    <div class="draft-head"><h2 id="h-sa">Reddit &mdash; r/SecurityAnalysis</h2><span class="chip">09:00</span></div>
+    <div class="sheet">
+      <label class="visually-hidden" for="sa-title">Title</label>
+      <textarea id="sa-title" class="title" data-field="title" rows="2" readonly>A 3% cash-merger spread annualises to 24.6%. After a 2.4% break rate and costs it is +1.38% a deal</textarea>
+      <label class="visually-hidden" for="sa-body">Body</label>
+      <textarea id="sa-body" data-field="body" rows="14" readonly>A 3% cash-merger spread annualises to 24.6%. After a 2.4% break rate and costs it is +1.38% a deal. The annualised figure is the one this trade is usually sold on. Held to a median 49-day close, 3% looks like 24.6% a year. Charge a measured 2.4% break rate after a definitive proxy, round-trip cost and T-bill carry, and the same 3% case is +1.38% a deal.
 
 That is extraction and cost-sizing, not a booked return. The arithmetic is walked through on a dated public table. The Arcosa row is the 3% case already published on the site — not a new expected value, and not a recommendation.
 
@@ -226,20 +139,21 @@ Week-late free table: https://charliewytk.github.io/weekly/
 Tonight's table is £5/month on the existing listing: https://wuytackcharlie.gumroad.com/l/mergermonitor
 
 Filings, not advice. Not a tip sheet.</textarea>
+    </div>
     <div class="row">
-      <button type="button" class="copy post" data-copy-post="reddit-sa">Copy post</button>
-      <button type="button" class="copy" data-copy="sa-title">Copy title</button>
-      <button type="button" class="copy" data-copy="sa-body">Copy body</button>
+      <button type="button" class="btn copy post" data-copy-post="reddit-sa">Copy post</button>
+      <button type="button" class="btn secondary copy" data-copy="sa-title">Copy title</button>
+      <button type="button" class="btn secondary copy" data-copy="sa-body">Copy body</button>
     </div>
   </section>
 
-  <section data-draft="reddit-investing">
-    <h2>1b. Reddit &mdash; r/investing (shorter)</h2>
-    <p class="where">Same method, shorter. You still click Post as u/charliequantack.</p>
-    <label for="inv-title">Title</label>
-    <textarea id="inv-title" class="title" data-field="title" readonly>3% merger spread annualises to 24.6%; after a 2.4% break rate and costs it is +1.38% a deal</textarea>
-    <label for="inv-body">Body</label>
-    <textarea id="inv-body" class="short" data-field="body" readonly>A 3% cash spread held to the median close annualises to 24.6%. After a 2.4% break rate and costs the same 3% case is +1.38% a deal. The first number is marketing.
+  <section class="draft" data-draft="reddit-investing" aria-labelledby="h-inv" style="--i:1">
+    <div class="draft-head"><h2 id="h-inv">Reddit &mdash; r/investing (shorter)</h2></div>
+    <div class="sheet">
+      <label class="visually-hidden" for="inv-title">Title</label>
+      <textarea id="inv-title" class="title" data-field="title" rows="2" readonly>3% merger spread annualises to 24.6%; after a 2.4% break rate and costs it is +1.38% a deal</textarea>
+      <label class="visually-hidden" for="inv-body">Body</label>
+      <textarea id="inv-body" class="short" data-field="body" rows="10" readonly>A 3% cash spread held to the median close annualises to 24.6%. After a 2.4% break rate and costs the same 3% case is +1.38% a deal. The first number is marketing.
 
 The public calculator at /sizer/ now fails closed to the measured 40bp bar — unknown stage stays the labelled 1.57% policy.
 
@@ -249,20 +163,22 @@ Free weekly table: https://charliewytk.github.io/weekly/
 £5/month, existing listing: https://wuytackcharlie.gumroad.com/l/mergermonitor
 
 Filings and cost-sizing only. Not advice.</textarea>
+    </div>
     <div class="row">
-      <button type="button" class="copy post" data-copy-post="reddit-investing">Copy post</button>
-      <button type="button" class="copy" data-copy="inv-title">Copy title</button>
-      <button type="button" class="copy" data-copy="inv-body">Copy body</button>
+      <button type="button" class="btn copy post" data-copy-post="reddit-investing">Copy post</button>
+      <button type="button" class="btn secondary copy" data-copy="inv-title">Copy title</button>
+      <button type="button" class="btn secondary copy" data-copy="inv-body">Copy body</button>
     </div>
   </section>
 
-  <section data-draft="hn">
-    <h2>2. Hacker News &mdash; Show HN</h2>
-    <p class="where">Submit URL <a href="https://charliewytk.github.io/sizer/">https://charliewytk.github.io/sizer/</a>, paste the title, then the comment. You still click Submit.</p>
-    <label for="hn-title">Title</label>
-    <textarea id="hn-title" class="title" data-field="title" readonly>Show HN: 3% spread annualises to 24.6%; after 2.4% + costs it is +1.38%</textarea>
-    <label for="hn-body">Comment</label>
-    <textarea id="hn-body" data-field="body" readonly>A 3% cash-merger spread annualises to 24.6%. After a 2.4% break rate and costs it is +1.38% a deal. The annualised figure is what this is usually sold on; the second number is the one that survives the cost pass.
+  <section class="draft" data-draft="hn" aria-labelledby="h-hn" style="--i:2">
+    <div class="draft-head"><h2 id="h-hn">Hacker News &mdash; Show HN</h2></div>
+    <p class="note">Submit URL <a href="https://charliewytk.github.io/sizer/">https://charliewytk.github.io/sizer/</a>, then the title and comment.</p>
+    <div class="sheet">
+      <label class="visually-hidden" for="hn-title">Title</label>
+      <textarea id="hn-title" class="title" data-field="title" rows="2" readonly>Show HN: 3% spread annualises to 24.6%; after 2.4% + costs it is +1.38%</textarea>
+      <label class="visually-hidden" for="hn-body">Comment</label>
+      <textarea id="hn-body" data-field="body" rows="12" readonly>A 3% cash-merger spread annualises to 24.6%. After a 2.4% break rate and costs it is +1.38% a deal. The annualised figure is what this is usually sold on; the second number is the one that survives the cost pass.
 
 The calculator, the method, and a week-late table are public. Same 3% case, dated figures — not a new expected value.
 
@@ -274,18 +190,19 @@ Free weekly edition: https://charliewytk.github.io/weekly/
 Tonight's table is £5/month on the existing listing: https://wuytackcharlie.gumroad.com/l/mergermonitor
 
 Extraction and cost-sizing. Not advice.</textarea>
+    </div>
     <div class="row">
-      <button type="button" class="copy post" data-copy-post="hn">Copy post</button>
-      <button type="button" class="copy" data-copy="hn-title">Copy title</button>
-      <button type="button" class="copy" data-copy="hn-body">Copy comment</button>
+      <button type="button" class="btn copy post" data-copy-post="hn">Copy post</button>
+      <button type="button" class="btn secondary copy" data-copy="hn-title">Copy title</button>
+      <button type="button" class="btn secondary copy" data-copy="hn-body">Copy comment</button>
     </div>
   </section>
 
-  <section data-draft="x">
-    <h2>3. X &mdash; one post</h2>
-    <p class="where">One post. Paste, then you still click Post. Weighted length stays under 280 with t.co URLs.</p>
-    <label for="x-body">Post</label>
-    <textarea id="x-body" class="short" data-field="body" readonly>3% merger spread annualises to 24.6%; after 2.4% break + costs +1.38% a deal. /sizer/ fails closed to measured 40bp; unknown stage labelled 1.57%.
+  <section class="draft" data-draft="x" aria-labelledby="h-x" style="--i:3">
+    <div class="draft-head"><h2 id="h-x">X &mdash; one post</h2></div>
+    <div class="sheet">
+      <label class="visually-hidden" for="x-body">Post</label>
+      <textarea id="x-body" class="short" data-field="body" rows="8" readonly>3% merger spread annualises to 24.6%; after 2.4% break + costs +1.38% a deal. /sizer/ fails closed to measured 40bp; unknown stage labelled 1.57%.
 
 https://charliewytk.github.io/sizer/
 https://charliewytk.github.io/example/
@@ -293,25 +210,31 @@ https://charliewytk.github.io/weekly/
 https://wuytackcharlie.gumroad.com/l/mergermonitor
 
 Filings, not advice. £5/month.</textarea>
-    <div class="row">
-      <button type="button" class="copy post" data-copy-post="x">Copy post</button>
     </div>
-    <p class="meta">Weighted length stays under 280 (each URL counts as 23).</p>
+    <div class="row">
+      <button type="button" class="btn copy post" data-copy-post="x">Copy post</button>
+    </div>
+    <p class="note meta">Weighted length stays under 280 (each URL counts as 23).</p>
   </section>
-
-  <footer>
-    <p>Clipboard only. Not a listing, not a tip sheet, and not a submitted post. Figures match the published 3% case on this site.</p>
-    <p><a href="../sizer/">/sizer/</a> · <a href="../example/">/example/</a> · <a href="../weekly/">/weekly/</a> · <a href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">£5/month on Gumroad</a> · <a href="https://wuytackcharlie.gumroad.com/l/mergerweekly" target="_blank" rel="noopener">free Sunday mail</a> · <a href="../">charliewytk.github.io</a></p>
-  </footer>
-</main>
-<div class="morning" data-morning>
-  <p>09:00 — one copy. r/SecurityAnalysis. First line is the title. You still click Post. Existing listings only — not a new product.</p>
-  <button type="button" class="copy post" data-copy-post="reddit-sa">Copy tomorrow's post</button>
-  <div class="sku-row">
-    <a class="btn pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table — £5/month</a>
-    <a class="btn quiet" href="https://wuytackcharlie.gumroad.com/l/mergerweekly" target="_blank" rel="noopener">Get the free Sunday mail</a>
   </div>
-</div>
+</main>
+
+<footer class="site-footer">
+  <p class="site-legal">Clipboard only. Not a listing, not a tip sheet, and not a submitted post. Existing listings only &mdash; not a new product. Figures match the published 3% case on this site.</p>
+  <nav class="site-nav" aria-label="Links">
+    <a href="../sizer/">/sizer/</a>
+    <a href="../example/">/example/</a>
+    <a href="../weekly/">/weekly/</a>
+    <a href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">£5/month on Gumroad</a>
+    <a href="https://wuytackcharlie.gumroad.com/l/mergerweekly" target="_blank" rel="noopener">free Sunday mail</a>
+  </nav>
+</footer>
+
+<aside class="morning" data-morning aria-label="Tomorrow's post">
+  <p><b class="num">09:00</b> — one copy. r/SecurityAnalysis. First line is the title. You still click Post.</p>
+  <button type="button" class="btn copy post" data-copy-post="reddit-sa">Copy tomorrow's post</button>
+  <span class="sku"><a class="pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table — £5/month</a><a class="quiet" href="https://wuytackcharlie.gumroad.com/l/mergerweekly" target="_blank" rel="noopener">Get the free Sunday mail</a><span class="only">Existing listings only — not a new product.</span></span>
+</aside>
 <script src="../assets/js/share-copy.js"></script>
 <script>ShareCopy.bindSharePage(document);</script>
 </body>

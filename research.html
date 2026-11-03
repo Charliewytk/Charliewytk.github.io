@@ -2,97 +2,86 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Charlie Wuytack's trading research notes, explained in plain English.">
+<meta name="theme-color" content="#fbfbf9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0c0b" media="(prefers-color-scheme: dark)">
 <title>Research notes — Charlie Wuytack</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<link rel="icon" href="media/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/site.css">
 <style>
-  :root {
-    --ink:   #22201d;   /* 15.1:1 — headings, primary prose            */
-    --ink2:  #3b3833;   /* 10.8:1 — secondary prose                    */
-    --muted: #5f5b52;   /*  6.3:1 — captions, notes, muted body        */
-    --faint: #6f6a60;   /*  5.0:1 — micro-labels; lightest text allowed */
-    --rule:  rgba(34,32,29,0.16);
-    --rule2: rgba(34,32,29,0.26);
+  /* research notes: page rules only. Tokens, base, header, footer, tables and buttons come from assets/site.css. */
+  html { scroll-padding-top: calc(var(--header-offset) + var(--space-5)); }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+  .doc { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, var(--measure)) minmax(0, 1fr); padding-inline: var(--gutter); }
+  .doc > * { grid-column: 2; }
+
+  .intro { padding-top: clamp(var(--space-8), 6vw, var(--space-9)); }
+  .intro h1 { margin-bottom: var(--space-4); }
+  .intro .note { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0; margin-bottom: var(--space-6); }
+  .intro .lead { margin-bottom: var(--space-4); }
+
+  .prose section { margin-top: clamp(var(--space-8), 6vw, var(--space-9)); padding-top: var(--space-6); border-top: 1px solid var(--line); }
+  .prose section > * + * { margin-top: 1em; }
+  .prose section > h3 { margin-top: var(--space-7); }
+  .prose section > h2 { margin: 0; font-size: clamp(1.5rem, 1vw + 1.125rem, 2rem); }
+  .prose section > .note { margin-top: var(--space-2); font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0; }
+  .prose section > h2 + p:not(.note), .prose section > .note + * { margin-top: var(--space-5); }
+  .prose section > h3 + * { margin-top: var(--space-2); }
+  .prose h3 { font-size: var(--text-md); line-height: var(--leading-snug); letter-spacing: var(--tracking-snug); }
+  .prose .table-scroll { margin-block: var(--space-5); }
+  .prose .table td:last-child { color: var(--fg-3); }
+  .prose .table th.num { font-family: inherit; }
+  .prose .cta { margin-block: var(--space-5); }
+  a:where(:not(.btn, .site-name, .site-nav a)) { text-decoration-color: color-mix(in srgb, var(--accent) 55%, transparent); }
+  .site-footer { font-size: inherit; max-width: calc(var(--measure) + 2 * var(--gutter)); }
+  .site-footer > * { font-size: var(--text-sm); }
+  @media (hover: hover) and (pointer: fine) { .prose a:not(.btn):hover { color: var(--accent); } }
+
+  /* contents rail, built by the script below; wide screens only */
+  .toc { display: none; }
+  @media (min-width: 1180px) {
+    .doc { column-gap: var(--space-7); }
+    .toc { display: block; grid-column: 1; grid-row: 1 / span 2; justify-self: end; width: 200px; position: sticky; top: calc(var(--header-offset) + var(--space-9)); align-self: start; margin-top: var(--space-9); }
+    .toc ol { position: relative; list-style: none; margin: 0; padding: 0 0 0 var(--space-4); border-left: 1px solid var(--line); }
+    .toc li + li { margin-top: var(--space-1); }
+    .toc a { display: block; padding: var(--space-1) 0; font-size: var(--text-sm); line-height: var(--leading-snug); color: var(--fg-4); text-decoration: none; transition: color var(--dur-fast) var(--ease-out); }
+    .toc a[aria-current="true"] { color: var(--fg); }
+    .toc ol::before { content: ""; position: absolute; left: -1px; top: 0; width: 1px; height: 1px; background: var(--fg); transform-origin: top; transform: translateY(var(--y, 0)) scaleY(var(--h, 20)); opacity: 0; transition: transform var(--spring-snappy-dur) var(--spring-snappy), opacity var(--dur-base) var(--ease-out); }
+    .toc.ready ol::before { opacity: 1; }
+    @media (hover: hover) and (pointer: fine) { .toc a:hover { color: var(--fg); } }
   }
-
-  body {
-    margin: 0;
-    background: #f7f7ef;
-    color: #22201d;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    line-height: 1.6;
-    font-size: 16.5px;
-    -webkit-font-smoothing: antialiased;
-  }
-  ::selection { background: #e4e2d4; color: #22201d; }
-  .page { max-width: 580px; margin: 0 auto; padding: 56px 22px 100px; }
-
-  a { color: #22201d; text-decoration: none; border-bottom: 1px solid #c9c6b4; }
-  a:hover { color: var(--accent); border-color: var(--accent); }
-  a:hover { text-decoration: underline; text-underline-offset: 3px; }
-  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
-
-  h1 { font-family: "Lora", Georgia, serif; font-weight: 600; font-size: 2.1rem; margin: 14px 0; color: #22201d; }
-  h2 { font-family: "Lora", Georgia, serif; font-weight: 600; font-size: 1.6rem; margin: 0 0 6px; color: #22201d; }
-  h3 { font-size: 1rem; margin: 30px 0 8px; color: #22201d; }
-  .meta {
-    font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    font-size: 0.72rem; letter-spacing: 0.06em; color: var(--faint); margin: 0 0 16px;
-  }
-  p { margin: 0 0 15px; text-wrap: pretty; }
-  .lede { font-family: "Lora", Georgia, serif; font-style: italic; font-size: 1.2rem; color: var(--ink2); text-wrap: balance; }
-  ul { margin: 0 0 15px; padding-left: 22px; }
-  li { margin-bottom: 11px; text-wrap: pretty; }
-  .back { font-size: 0.88rem; }
-
-  section { margin-top: 72px; padding-top: 32px; border-top: 1px solid var(--rule); }
-
-  .maths {
-    border-left: 1px solid #d6d3c2;
-    padding-left: 16px;
-    margin: 0 0 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 13px;
-  }
-  .maths .row { display: flex; flex-direction: column; gap: 3px; }
-  .maths code {
-    font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    font-size: 0.78rem; color: var(--accent); font-variant-numeric: tabular-nums;
-  }
-  .maths .why { font-size: 0.9rem; color: var(--muted); max-width: 58ch; }
-
-  .tw { overflow-x: auto; margin: 18px 0; border: 1px solid #e2dfd0; border-radius: 8px; }
-  table { border-collapse: collapse; width: 100%; font-size: 0.87rem; }
-  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid #e2dfd0; vertical-align: top; }
-  tr:last-child td { border-bottom: none; }
-  th { background: #efeee4; font-weight: 600; color: var(--ink2); }
-  td.num { font-variant-numeric: tabular-nums; white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 0.82rem; }
-  footer { margin-top: 80px; padding-top: 26px; border-top: 1px solid #e2dfd0; color: var(--muted); font-size: 0.88rem; }
-  footer a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #c9c6b4; }
 </style>
 </head>
 <body>
-<div class="page">
-  <p class="back"><a href="index.html">← charliewytk.github.io</a></p>
-  <h1>Research notes</h1>
-  <p class="lede">Around 110 hypotheses tested. Nine produced a real, measurable anomaly. Zero produced one bigger than the cost of trading it.</p>
-  <p>HyperFund / phd_ml is a sealed harness: walk-forward, BH multiple-testing, cost- and funding-aware half-Kelly. First family: <b>1 PASS / 11 FAIL</b>. The pass is the Merger Monitor deal-EV below. The fails include HL micro variants, meme mortality, Polymarket complete-set, and the rest of that family. That is a kill log, not a return.</p>
-  <p class="meta">updated 6 sep 2026 &middot; every number below says what kind of number it is &mdash; live, holdout, or backtest</p>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="site-name" href="index.html">Charlie Wuytack</a>
+  <nav class="site-nav" aria-label="Site">
+    <a href="work/">Work</a>
+    <a href="https://github.com/Charliewytk">GitHub</a>
+    <a href="mailto:charlie@wuytack.net">Contact</a>
+  </nav>
+</header>
 
-  <section>
-    <h2>The finding</h2>
-    <p class="meta">what ~110 tests actually established</p>
+<main id="main" class="doc">
+  <div class="intro stagger">
+    <h1 style="--i:0">Research notes</h1>
+    <p class="note" style="--i:1"><time datetime="2026-09-06">updated 6 sep 2026</time> &middot; every number below says what kind of number it is &mdash; live, holdout, or backtest</p>
+    <p class="lead" style="--i:2">Around 110 hypotheses tested. Nine produced a real, measurable anomaly. Zero produced one bigger than the cost of trading it.</p>
+    <p style="--i:3">HyperFund / phd_ml is a sealed harness: walk-forward, BH multiple-testing, cost- and funding-aware half-Kelly. First family: <b>1 PASS / 11 FAIL</b>. The pass is the Merger Monitor deal-EV below. The fails include HL micro variants, meme mortality, Polymarket complete-set, and the rest of that family. That is a kill log, not a return.</p>
+  </div>
+
+  <div class="prose">
+  <section id="finding" aria-labelledby="finding-h">
+    <h2 id="finding-h">The finding</h2>
     <p>The result everyone expects from this kind of work is "nothing worked". That is not what happened. Nine anomalies came back real and measurable — and each was approximately the size of the costs required to trade it. The edge exists; it is spent getting to it. Separately, four findings survived independent replication, and none of them is a tradeable edge — which is the point.</p>
     <p>That distinction matters, because it changes what to do next. A null says stop looking. A friction-sized edge says the search space is fine and the problem is execution, capacity or the cost base — which are things you can attack.</p>
     <p>The second reason for the rig below: test enough ideas and some look brilliant purely by luck. They are not fakes — that is just what randomness looks like when you go hunting for patterns.</p>
-    </section>
-
-  <section>
-    <h2>The rig</h2>
-    <p class="meta">backtesting infrastructure · python</p>
+  </section>
+  <section id="rig" aria-labelledby="rig-h">
+    <h2 id="rig-h">The rig</h2>
     <p>Four rules, enforced by the code rather than my good intentions:</p>
     <ul>
       <li>Every idea is written down before any data is touched, in a log where editing an old entry breaks the chain.</li>
@@ -103,10 +92,8 @@
     <p>Ninety ideas went through it. None survived — written up as <a href="essays/90-Hypotheses-Zero-Edges-short.pdf">90 Hypotheses, Zero Edges (pdf)</a> — written at an earlier count.</p>
     <p>That was the strategy-validation era. The ledger has since been restarted as a running record across the competition platforms I now enter — one row per hypothesis tested, failures especially, never reset, 32 rows so far and climbing. A post-mortem across the whole record found the deaths stack into three causes: most ideas die on <b>economics, not statistics</b> (the effect is real and roughly the size of its own trading costs); the next batch die of <b>identification failure</b> (the "signal" turns out to be market beta or cash yield wearing an alpha label); and event-driven ideas on free data hit an <b>observability wall</b> — free data deletes exactly the observations that would falsify the thesis.</p>
   </section>
-
-  <section>
-    <h2>Where it pays, and what it pays</h2>
-    <p class="meta">merger monitor · the only thing with a price on it</p>
+  <section id="merger" aria-labelledby="merger-h">
+    <h2 id="merger-h">Where it pays, and what it pays</h2>
     <p>Every US cash merger that has reached a definitive proxy, priced against the live market, carrying the sentence from the SEC filing the deal price came from. On the 19 August table, nine of the seventeen cash-priced rows clear the 1.59% break-even. The rest are published anyway, because a wide spread and a thin one look identical until you price the break risk.</p>
     <p>Base rate: <b>2.4% of deals break after a definitive proxy — 39 of 1,606 settled outcomes</b>. The page says out loud that this is a floor rather than a ceiling, because deals that collapse before that stage never enter the sample.</p>
 
@@ -114,24 +101,24 @@
     <p>A 3% spread held to the median 49-day close annualises to <b>24.6% a year</b>. That is how this kind of thing is normally sold, and it is worthless. Price the same trade properly — 2.4% break rate, 27% median loss when one does break, 0.40% round-trip cost, 0.49% of forgone Treasury-bill carry — and it is worth <b>+1.38% per deal</b>.</p>
     <p>SEAL_PHD_0004 in HyperFund research/phd_ml ran the same 3% case: measured EV ≈ +1.37% a deal, bootstrap CI roughly [1.35%, 1.39%]. A sealed check of the method already published here, not a book.</p>
     <p>A 1% spread still annualises to something that looks healthy. Priced the same way it is <b>−0.57% per deal</b>. Break-even sits at 1.59%, which is why that number, and not the annualised one, is what the product publishes.</p>
-    <p><a href="subscribe/">Subscribe — £5/month</a>. Checkout stays on the existing <a href="https://wuytackcharlie.gumroad.com/l/mergermonitor">Gumroad listing</a>. The <a href="merger-monitor/">week-late public table</a> is the same maths, one week late. Filings, not advice. No position, no execution, no tips.</p>
+    <p class="cta"><a href="subscribe/" class="btn">Subscribe — £5/month</a></p>
+    <p>Checkout stays on the existing <a href="https://wuytackcharlie.gumroad.com/l/mergermonitor">Gumroad listing</a>. The <a href="merger-monitor/">week-late public table</a> is the same maths, one week late. Filings, not advice. No position, no execution, no tips.</p>
     <ul>
       <li>Live product, free and paid tiers, send path built and firing nightly at 22:30.</li>
       <li>Zero subscribers so far. Revenue to date across the whole programme: £0.</li>
     </ul>
   </section>
-
-  <section>
-    <h2>Machine learning, scored publicly</h2>
-    <p class="meta">datacrunch · adia · numerai · quantiacs · worldquant brain</p>
+  <section id="ml" aria-labelledby="ml-h">
+    <h2 id="ml-h">Machine learning, scored publicly</h2>
+    <p class="note">datacrunch · adia · numerai · quantiacs · worldquant brain</p>
     <p>The one place I get an honest scoreboard: same data for everyone, thousands of entrants, no marking my own homework.</p>
 
     <h3>Quantiacs Q25 — submitted and selected</h3>
     <p>A defended dual-momentum entry to the Q25 Crypto Top-10 contest: Sharpe 1.22, maximum drawdown 23.6%, both verified on the platform, and a from-source engine that reproduces the platform's numbers exactly. Selected as 1 of 15. It runs live 1 October to 31 January against a $2M pool, strategy locked, no downside.</p>
 
     <h3>DataCrunch — about 12th of 13,534</h3>
-    <div class="tw"><table>
-      <tr><th>Generation</th><th>Cloud score</th><th></th></tr>
+    <div class="table-scroll"><table class="table">
+      <thead><tr><th scope="col">Generation</th><th scope="col" class="num">Cloud score</th><th scope="col"><span class="visually-hidden">Note</span></th></tr></thead><tbody>
       <tr><td>v1</td><td class="num">0.0394</td><td>first attempt</td></tr>
       <tr><td>v2</td><td class="num">0.0491</td><td>big jump</td></tr>
       <tr><td>v3</td><td class="num">0.0443</td><td>went backwards, left in the log</td></tr>
@@ -139,7 +126,7 @@
       <tr><td>v5</td><td class="num">—</td><td>retired before it was ever submitted</td></tr>
       <tr><td>v6</td><td class="num">0.05682</td><td>current, about 12th</td></tr>
       <tr><td>v7</td><td class="num">0.0484</td><td>lost to v6, left in the log</td></tr>
-    </table></div>
+    </tbody></table></div>
     <p>The leader scores 0.0868, so the gap is real and the log says so. Six further ideas were screened locally after v7; none beat the live model, so nothing was submitted.</p>
 
     <h3>Structural break — 263rd of 1,332, and why that is the interesting part</h3>
@@ -153,39 +140,31 @@
     <p>Three days and 308 single-term simulations produced a 0-for-5 rejection queue. Every candidate strong enough to clear the performance gates was a fast price/volume signal already in my book, so each one drew self-correlation around 0.79 against a 0.70 limit. Searching harder inside that class could not fix it, because the class was the problem.</p>
     <p>Pairing each strong-but-crowded fast term with a weak, orthogonal slow one cleared 14 of 30 combinations, against 2 of 308 singles. Correlation fell 0.79 → 0.51 and fitness rose 1.04 → 1.68. The components that made it work had all failed on their own and would have been filed as dead ends. Gold (10,000 pts) reached around 30 August 2026. About 14 alphas live.</p>
   </section>
-
-  <section>
-    <h2>The Almach study</h2>
-    <p class="meta">$2,895 → +$221,120, audited from the chain</p>
+  <section id="almach" aria-labelledby="almach-h">
+    <h2 id="almach-h">The Almach study</h2>
     <p>A Polymarket account was posting returns that looked impossible. Rather than guess, I pulled its complete on-chain ledger — 478,021 events over 97 days — and reconstructed every position.</p>
     <p>The profit is real: <b>+$221,120 from $2,895 of peak capital, t = 7.52</b>. A second account independently returned +$291,481 at t = 10.15. Both win about half their bets at a median entry around 45–46¢, which is the tell: this is directional value betting on five-minute markets, not the market-making everyone assumed it was.</p>
     <p>Knowing the mechanism is not the same as being able to run it, so there is now a paper clone with a sealed evaluator and a verdict due around 10 September. Nothing real is staked on it.</p>
   </section>
-
-  <section>
-    <h2>The kill log</h2>
-    <p class="meta">each one a genuinely closed door</p>
-    <div class="tw"><table>
-      <tr><th>Idea</th><th>What killed it</th></tr>
+  <section id="kills" aria-labelledby="kills-h">
+    <h2 id="kills-h">The kill log</h2>
+    <div class="table-scroll"><table class="table">
+      <thead><tr><th scope="col">Idea</th><th scope="col">What killed it</th></tr></thead><tbody>
       <tr><td>Polymarket longshot bias</td><td>the bias is real at about 2¢ — under a 1.5–3¢ spread</td></tr>
       <tr><td>Factor zoo, 25 equity signals</td><td>29 "FDR survivors" turned out to be one levered bet on beta</td></tr>
       <tr><td>13F cloning</td><td>survivorship, plus a single regime doing the work</td></tr>
       <tr><td>Analyst upgrades</td><td>the reaction lands in the untradeable gap; firm track record barely persists, ρ = 0.005</td></tr>
       <tr><td>FCA short register</td><td>the information is the standing short, not the disclosure</td></tr>
       <tr><td>Intraday dip-buying</td><td>dips continue rather than revert, −4bp over the next 30 minutes</td></tr>
-    </table></div>
+    </tbody></table></div>
   </section>
-
-  <section>
-    <h2>Two that failed usefully</h2>
-    <p class="meta">the audit that voided its own projection</p>
+  <section id="failed" aria-labelledby="failed-h">
+    <h2 id="failed-h">Two that failed usefully</h2>
     <p><b>A market maker.</b> Its projection rested entirely on a fill model, so the fill model got a pre-declared test: one honest week of resting real quotes. Zero fills in 71 attempts against 3.7 expected. The projection was voided by its own audit, which is exactly what the audit was for. Two sibling strategies died the same way, by counting: one found 2 usable events in 98,079 observations, the other 2 in six million.</p>
     <p><b>An ETF cost comparison.</b> It ranks nothing on purpose. Two cost components are not available free, so ranking would just promote whichever fund has the least data. It reports what is missing instead.</p>
   </section>
-
-  <section>
-    <h2>How the rig works</h2>
-    <p class="meta">the part nobody else publishes</p>
+  <section id="method" aria-labelledby="method-h">
+    <h2 id="method-h">How the rig works</h2>
     <p>Every trading blog has results. Almost none can tell you what they could have detected. That is the difference, and it is the part I would defend hardest:</p>
     <ul>
       <li><b>The detection floor is measured before the search runs.</b> On Quantiacs the floor was 0.68 while the real effects were 0.1–0.2 — and taking the best of a hundred tries manufactured a +0.30 that was pure selection. Knowing the floor first is what stops that being written up as a finding.</li>
@@ -196,10 +175,9 @@
     </ul>
     <p>Three findings from that discipline outrank any single strategy. Edges are friction-sized. Reproducibility is not relevance — four platforms shipped locally reproducible gains that scored roughly zero live. And matching levels licenses nothing about improvements.</p>
   </section>
-
-  <section>
-    <h2>What is running right now, unstaked</h2>
-    <p class="meta">paper books, sealed gates, evidence gates. nothing staked until a gate passes</p>
+  <section id="running" aria-labelledby="running-h">
+    <h2 id="running-h">What is running right now, unstaked</h2>
+    <p class="note">paper books, sealed gates, evidence gates. nothing staked until a gate passes</p>
     <ul>
       <li>A 40-name value and quality book, paper, at a real broker since 20 August — there to measure execution honestly rather than to make money. Measured median effective spread came in at 3.5 basis points against the 10 the models had assumed.</li>
       <li>The paper Almach clone, accruing toward its September verdict behind a sealed evaluator.</li>
@@ -208,17 +186,69 @@
     </ul>
     <p>Every automated submission runs preflights first — is the data fresh, are the predictions sane and non-degenerate, does the model file match the code — behind a retry wrapper that has already saved one live round from a dropped connection. Nightly unattended sessions re-verify the stack and commit a digest: 1,500+ tests across three suites, green before I wake up.</p>
   </section>
+  </div>
+</main>
 
-  <footer>
-    Most of this is in private repos — happy to walk through any of it, dead ends included. <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a> · <a href="index.html">back to the projects</a>
-  </footer>
-</div>
+<footer class="site-footer">
+  <p class="site-legal">Research and engineering, not financial advice. Nothing here is trading live at a profit. Most of this is in private repos — happy to walk through any of it, dead ends included.</p>
+  <nav class="site-nav" aria-label="Contact">
+    <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a>
+    <a href="https://github.com/Charliewytk">GitHub</a>
+  </nav>
+</footer>
 <script>
-  // carry the record the visitor chose across to this page (Nielsen #4: consistency)
+  // carry the record the visitor chose on /work/ across to this page (light mode only; the dark theme keeps its own accent)
   try {
     var a = localStorage.getItem('cw-accent');
-    if (a) document.documentElement.style.setProperty('--accent', a);
+    if (a && /^#[0-9a-f]{6}$/i.test(a) && !window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.style.setProperty('--accent', a);
+    }
   } catch (e) {}
+
+  // contents rail: one link per section, the current one marked as you read
+  (function () {
+    var main = document.getElementById('main');
+    var sections = main.querySelectorAll('section[id]');
+    if (!sections.length || !('IntersectionObserver' in window)) return;
+    var nav = document.createElement('nav');
+    nav.className = 'toc';
+    nav.setAttribute('aria-label', 'On this page');
+    var ol = document.createElement('ol');
+    var links = {};
+    sections.forEach(function (s) {
+      var li = document.createElement('li');
+      var link = document.createElement('a');
+      link.href = '#' + s.id;
+      link.textContent = s.querySelector('h2').textContent;
+      li.appendChild(link);
+      ol.appendChild(li);
+      links[s.id] = link;
+    });
+    nav.appendChild(ol);
+    main.insertBefore(nav, main.firstChild);
+
+    var current = null;
+    function mark(id) {
+      if (id === current || !links[id]) return;
+      if (current) links[current].removeAttribute('aria-current');
+      current = id;
+      var link = links[id];
+      link.setAttribute('aria-current', 'true');
+      ol.style.setProperty('--y', link.parentNode.offsetTop + 'px');
+      ol.style.setProperty('--h', link.offsetHeight);
+      requestAnimationFrame(function () { nav.classList.add('ready'); });
+    }
+    var visible = {};
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { visible[e.target.id] = e.isIntersecting; });
+      for (var i = 0; i < sections.length; i++) {
+        if (visible[sections[i].id]) { mark(sections[i].id); return; }
+      }
+    }, { rootMargin: '-20% 0px -60% 0px' });
+    sections.forEach(function (s) { io.observe(s); });
+    var start = location.hash.slice(1);
+    mark(links[start] ? start : sections[0].id);
+  })();
 </script>
 </body>
 </html>

@@ -18,29 +18,40 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://charliewytk.github.io/media/og/powerleash.png">
-<meta name="theme-color" content="#14130f">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&amp;family=Fraunces:ital,opsz,wght@1,9..144,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+<meta name="theme-color" content="#fbfbf9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0c0b" media="(prefers-color-scheme: dark)">
+<link rel="stylesheet" href="../../assets/site.css">
 <link rel="stylesheet" href="../../tracks/track.css">
+<script>
+  // flipping tracks slides the page the way you went (cross-document view transitions; ignored where unsupported)
+  addEventListener('pagereveal', function (e) {
+    var from = e.viewTransition && window.navigation && navigation.activation && navigation.activation.from;
+    if (!from) return;
+    var url = function (sel) { var a = document.querySelector(sel); return a && new URL(a.getAttribute('href'), location.href).href; };
+    if (from.url === url('a.prev')) e.viewTransition.types.add('forward');
+    else if (from.url === url('a.next')) e.viewTransition.types.add('back');
+  });
+</script>
 </head>
-<body style="--bg:#14130f;--acc:#f2ece0">
-<div class="grain" aria-hidden="true"></div>
-
-<header class="wrap top">
-  <a href="../../">← Shelf</a>
-  <nav><a href="../">Track 06 / 12</a><a href="../../work/">All work</a><a href="https://wuytackcharlie.gumroad.com/l/mergermonitor">Merger Monitor £5/mo</a></nav>
+<body>
+<header class="site-header">
+  <a class="site-name" href="../../">Charlie Wuytack</a>
+  <nav class="site-nav" aria-label="Site">
+    <a href="../../work/">Work</a>
+    <a class="opt" href="https://github.com/Charliewytk">GitHub</a>
+    <a href="mailto:charlie@wuytack.net">Contact</a>
+    <a class="pay" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" aria-label="Get tonight's table — £5/month">£5/month</a>
+  </nav>
 </header>
 
 <main>
   <div class="wrap hero">
     <div>
-      <p class="kick">Track 06 · macOS utility</p>
+      <p class="kick"><a href="../">Track 06 / 12</a></p>
       <h1>PowerLeash</h1>
       <p class="sub">A low power mode that leaves the app in front alone.</p>
       <p class="lede">Apple's low power mode made my Mac feel sluggish: it was cutting CPU performance by about 40% across the board. And on a 45 W charger, heavy work drained the battery while plugged in. So I made my own.</p>
     </div>
-    <div class="disc" aria-hidden="true"><div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg><small>TRACK 06</small></div></div>
   </div>
 
   <div class="wrap"><div class="facts"><div><b>59.0 → 42.7 W</b><span>system load, before and after Match Charger</span></div><div><b>−15.6 → −3.5 W</b><span>battery flow while plugged in: from draining hard to nearly break-even</span></div><div><b>60 → 30 W</b><span>one heavy background app demoted; the app in front untouched</span></div></div></div>
@@ -67,7 +78,7 @@
         <li>Quantify the actual battery saving; the gauge only updates every ~16 s</li>
         <li>GPU-bound workloads: there's no public API to lower GPU clocks</li>
       </ul>
-      <div class="cta"><a class="btn solid" href="../../downloads/PowerLeash.zip" download>Download for Mac</a></div>
+      <div class="cta"><a class="btn" href="../../downloads/PowerLeash.zip" download>Download for Mac</a></div>
       <p class="note">Apple Silicon, unsigned. Unzip, drag PowerLeash.app to /Applications, then right-click and Open. Double-click is blocked by Gatekeeper; that is expected.</p></section>
     </div>
     <dl class="liner"><dt>Status</dt><dd>Download · Apple Silicon</dd><dt>Pieces</dt><dd>Eco Mode · Match Charger · a live per-process power readout</dd><dt>Full case study</dt><dd><a href="../../work/#powerleash">On the work page</a></dd></dl>
@@ -78,7 +89,13 @@
 
 <a class="prev wrap" href="../doorly/"><small>← Previous · track 05</small> Doorly</a>
 <a class="next wrap" href="../abyss-warden/"><small>Next · track 07</small><b>Abyss Warden →</b></a>
-<footer class="wrap foot"><span>Charlie Wuytack · <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></span><span>Research and engineering, not financial advice. Nothing here is trading live at a profit.</span></footer>
+<footer class="site-footer">
+  <p class="site-legal">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
+  <nav class="site-nav" aria-label="Contact">
+    <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a>
+    <a href="https://github.com/Charliewytk">GitHub</a>
+  </nav>
+</footer>
 <script>
   // opened straight from the homepage? Back takes you to where you were on it, not to the top
   (function () {
@@ -109,6 +126,12 @@
       if (Math.abs(dx) > 80 && Math.abs(dx) > Math.abs(dy) * 1.8) go(dx < 0 ? 1 : -1);
     }, { passive: true });
   })();
+</script>
+<script>
+  // reduced motion: demo videos wait for a tap instead of looping on their own
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('video[autoplay]').forEach(function (v) { v.removeAttribute('autoplay'); v.pause(); v.controls = true; });
+  }
 </script>
 </body>
 </html>

@@ -1,0 +1,520 @@
+/* ==========================================================================
+   Reel: one project per screen.
+   1. Tokens       2. Base        3. Header + rail
+   4. Chapter      5. Media kinds (film, phones, plate)    6. Credits
+   7. Reel motion  8. Cuts (View Transitions)               9. Reduced motion
+   ========================================================================== */
+
+/* 1. Tokens ---------------------------------------------------------------- */
+:root {
+  --ground: #070807;
+  --ink: #f2efe8;
+  --muted: #b3aea3;          /* 8.6:1 on --ground */
+  --faint: rgba(242, 239, 232, 0.18);
+  --tint: var(--ink);        /* each chapter sets its own */
+  --bg: var(--ground);
+
+  --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --gut: 16px;               /* side gutter; grows on desktop */
+  --rail-room: 0px;          /* space the rail takes on the right */
+  --top-h: 56px;
+
+  /* A chapter is one screen. On iOS the screen is tallest with the toolbar
+     collapsed (lvh), so a snapped chapter never shows the next one peeking in.
+     --bar is the toolbar's height: captions sit above it when it is showing. */
+  --ch-h: 100vh;
+  --bar: 0px;
+
+  /* motion tokens: concepts/_content/motion-brief.md §1 */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --spring-bouncy: linear(0, 0.101 6%, 0.305 12%, 0.529 19%, 0.712 25%, 0.852 31%, 0.940 38%, 0.993 44%, 1.018 50%, 1.026 56%, 1.025 62%, 1.021 69%, 1.015 75%, 1.009 81%, 1.005 88%, 1.002 94%, 1);
+  --spring-bouncy-dur: 400ms;
+  --dur-press: 100ms; --dur-exit: 120ms; --dur-fast: 125ms; --dur-base: 180ms; --dur-slow: 260ms;
+}
+@supports (height: 100lvh) { :root { --ch-h: 100lvh; --bar: calc(100lvh - 100svh); } }
+@supports not (transition-timing-function: linear(0, 1)) { :root { --spring-bouncy: var(--ease-out); } }
+
+@media (min-width: 760px) {
+  :root { --gut: clamp(24px, 3.6vw, 56px); --rail-room: 40px; --top-h: 64px; }
+}
+
+/* 2. Base ------------------------------------------------------------------ */
+*, *::before, *::after { box-sizing: border-box; }
+html {
+  background: var(--ground);
+  color-scheme: dark;
+  /* Native snapping only: no wheel or touch listeners anywhere. Short screens
+     (landscape phones) get "proximity" so nothing can trap the reader. */
+  scroll-snap-type: y proximity;
+  -webkit-text-size-adjust: 100%;
+}
+@media (min-height: 600px) { html { scroll-snap-type: y mandatory; } }
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font: 400 1rem/1.5 var(--sans);
+  letter-spacing: -0.005em;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+a { color: inherit; text-decoration: none; }
+img, video { display: block; max-width: 100%; }
+p, h1, h2, ol, ul { margin: 0; padding: 0; }
+ol, ul { list-style: none; }
+::selection { background: color-mix(in oklab, var(--tint) 40%, transparent); }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 4px; }
+
+/* 3. Header + rail --------------------------------------------------------- */
+.top {
+  position: fixed; inset: 0 0 auto 0; z-index: 10;
+  height: var(--top-h);
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 0 var(--gut);
+  padding-top: env(safe-area-inset-top);
+  font-size: 0.875rem; font-weight: 500;
+  pointer-events: none;            /* only the links take clicks */
+  transition: opacity var(--dur-base) var(--ease-out), visibility 0s;
+}
+.top a { pointer-events: auto; padding: 12px 0; }
+.top__name { transition: opacity var(--dur-base) var(--ease-out), visibility 0s; }
+.top__nav { display: flex; gap: 20px; }
+.top__nav a { color: var(--muted); transition: color var(--dur-fast) var(--ease-out); }
+@media (hover: hover) and (pointer: fine) { .top__nav a:hover { color: var(--ink); } }
+/* Copy that repeats the screen goes: the name on the title card, the whole bar on
+   the credits (which carry the same links). visibility keeps them out of Tab order. */
+html[data-at="top"] .top__name,
+html[data-at="credits"] .top {
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--dur-exit) var(--ease-out), visibility 0s var(--dur-exit);
+}
+
+/* The rail: a 1px track, a scroll-linked fill, and twelve tick links. */
+.rail {
+  position: fixed; z-index: 10;
+  right: 6px; top: 50%;
+  height: min(56svh, 440px);
+  width: 4px;
+  transform: translateY(-50%);
+}
+.rail::before, .rail__fill {
+  content: ""; position: absolute; left: 1px; top: 0; bottom: 0; width: 1px;
+  background: var(--faint);
+}
+.rail__fill { background: var(--ink); transform-origin: 50% 0; transform: scaleY(0); }
+.rail ol { display: none; }       /* phone: the fill alone is the rail */
+
+@media (min-width: 760px) {
+  .rail { right: calc(var(--gut) - 4px); width: 24px; }
+  .rail::before, .rail__fill { left: auto; right: 4px; }
+  .rail ol { display: block; position: absolute; inset: 0; }
+  .rail li { position: absolute; right: 0; top: calc(var(--i) / 13 * 100%);   /* 14 screens: intro, 12 chapters, credits */ }
+  /* The tick is a 24x24 target; its visible mark is an 8px line that grows when current */
+  .rail a {
+    display: block; position: relative; width: 24px; height: 24px; margin-top: -12px;
+  }
+  .rail a::before {
+    content: ""; position: absolute; right: 4px; top: 11.5px; width: 12px; height: 1px;
+    background: var(--muted); transform-origin: 100% 50%; transform: scaleX(0.67);
+    transition: transform var(--spring-bouncy-dur) var(--spring-bouncy), background-color var(--dur-fast) var(--ease-out);
+  }
+  .rail a[aria-current]::before { transform: scaleX(1.5); background: var(--ink); }
+  /* Name label: appears beside the tick on hover or keyboard focus */
+  .rail a span {
+    position: absolute; right: 30px; top: 50%;
+    white-space: nowrap; font-size: 0.8125rem; font-weight: 500;
+    padding: 4px 8px; border-radius: 6px;
+    background: rgba(7, 8, 7, 0.72); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    opacity: 0; transform: translate(4px, -50%); pointer-events: none;
+    transition: opacity var(--dur-exit) var(--ease-out), transform var(--dur-exit) var(--ease-out);
+  }
+  .rail a:focus-visible { outline-offset: 0; }
+  .rail a:focus-visible span { opacity: 1; transform: translate(0, -50%); transition-duration: var(--dur-fast); }
+}
+@media (min-width: 760px) and (hover: hover) and (pointer: fine) {
+  .rail a:hover::before { background: var(--ink); }
+  .rail a:hover span { opacity: 1; transform: translate(0, -50%); transition-duration: var(--dur-fast); }
+}
+
+/* 4. Chapter --------------------------------------------------------------- */
+/* A chapter is one screen. Its background is transparent on purpose: during a
+   wipe, the next chapter's card rises over the previous chapter's pinned frame. */
+.ch {
+  position: relative;
+  isolation: isolate;          /* each chapter stacks as one: a later chapter always covers an earlier one */
+  height: var(--ch-h);
+  min-height: 520px;
+  scroll-snap-align: start;
+}
+.media { position: absolute; inset: 0; overflow: hidden; background: var(--bg); }
+
+.cap {
+  position: absolute; z-index: 1; left: 0; right: 0; bottom: 0;
+  padding: 0 calc(var(--gut) + var(--rail-room)) calc(var(--gut) + 8px + var(--bar) + env(safe-area-inset-bottom)) var(--gut);
+  display: grid; grid-template-columns: minmax(0, 1fr); align-content: end;
+}
+.cap__title {
+  font-size: min(14vw, 10rem, 19svh);
+  font-weight: 650; letter-spacing: -0.045em; line-height: 0.92;
+  text-wrap: balance;
+  margin-left: -0.04em;           /* optical: big type looks indented otherwise */
+}
+.cap__title a { display: inline; }
+/* A ring round a 0.92-leading inline box cuts through the lines around it;
+   an underline in the chapter's tint marks focus without touching them. */
+.cap__title a:focus-visible {
+  outline: none;
+  text-decoration: underline 0.05em var(--tint);
+  text-underline-offset: 0.1em;
+}
+/* The arrow says "this opens"; it is always visible, it nudges on hover */
+.arrow {
+  display: inline-block; width: 0.34em; height: 0.34em; margin-left: 0.14em;
+  vertical-align: 0.06em;
+  fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round;
+  color: var(--tint); opacity: 0.9;
+  transition: transform var(--spring-bouncy-dur) var(--spring-bouncy);
+}
+@media (hover: hover) and (pointer: fine) {
+  .cap__title a:hover .arrow { transform: translateX(0.08em); }
+}
+.cap__title a:active .arrow { transform: translateX(0.04em) scale(0.94); transition-duration: var(--dur-press); }
+
+.cap__meta { margin-top: 16px; font-size: 0.9375rem; font-weight: 500; }
+.cap__note, .cap__aside { font-size: 0.8125rem; color: var(--muted); text-wrap: pretty; }
+.cap__note { margin-top: 4px; max-width: 46ch; }
+.cap__aside { font-weight: 400; margin-left: 12px; }
+
+/* A real download link, set as a small pill so it reads as an action */
+.dl {
+  display: inline-flex; align-items: center; gap: 8px;
+  min-height: 44px; padding: 0 16px 0 12px; margin: -6px 0;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--tint) 18%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--tint) 45%, transparent);
+  transition: transform var(--dur-press) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
+}
+.dl svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.dl:active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) { .dl:hover { background: color-mix(in oklab, var(--tint) 30%, transparent); } }
+
+/* Key figure, small form (film + phones chapters). Verbatim, never animated.
+   Proportional figures: Inter's tabular set spaces hyphens and 1s loosely,
+   and nothing here sits in a column. */
+.cap .fig { margin-top: 20px; max-width: 34ch; text-wrap: pretty; }
+.fig b { display: block; font-weight: 600; letter-spacing: -0.02em; }
+.cap .fig b { font-size: 1.5rem; line-height: 1.1; margin-bottom: 4px; color: var(--ink); }
+.fig span { color: var(--ink); opacity: 0.86; font-size: 0.875rem; }
+.fig small { display: block; margin-top: 4px; font-size: 0.8125rem; color: var(--muted); }
+
+@media (min-width: 760px) {
+  .cap__title { font-size: min(12.5vw, 10rem, 19svh); }
+  .cap {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "title title" "meta fig" "note fig";
+    column-gap: 48px;
+  }
+  .cap__title { grid-area: title; }
+  .cap__meta { grid-area: meta; margin-top: 20px; }
+  .cap__note { grid-area: note; }
+  .cap .fig { grid-area: fig; align-self: end; margin-top: 20px; text-align: right; justify-self: end; }
+  .intro .cap { grid-template-columns: minmax(0, 1fr); grid-template-areas: none; }
+  .intro .cap > * { grid-area: auto; }
+}
+
+/* Title card */
+.intro .media { background: radial-gradient(90% 70% at 85% 0%, #101410 0%, var(--ground) 60%); }
+.intro__name {
+  font-size: min(15vw, 13rem, 24svh);
+  font-weight: 650; letter-spacing: -0.05em; line-height: 0.88;
+  margin-left: -0.05em;
+}
+.intro__name span { display: block; }
+.intro__line { margin-top: 24px; font-size: clamp(1.125rem, 1vw + 0.9rem, 1.5rem); font-weight: 500; letter-spacing: -0.015em; }
+
+/* 5. Media kinds ----------------------------------------------------------- */
+
+/* Film: a demo recording, full-bleed at every size. On a landscape screen it is
+   cover-fitted; on a portrait one it fills the height and pans slowly across. */
+.film .media { background: #000; }
+.film .frame { position: absolute; inset: 0; }
+.film video { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
+.film .media::after {                       /* scrims: a light one under the header, a deep one under the caption */
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,0.72) 0, rgba(0,0,0,0.42) var(--top-h), transparent calc(var(--top-h) + 110px)),
+    linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.88) 22%, rgba(0,0,0,0.6) 36%, rgba(0,0,0,0.22) 47%, transparent 58%);
+}
+@media (max-aspect-ratio: 1/1) {
+  /* Height-filled, so UI text reads at ~1.2x its recorded size. --f0 / --f1 are the
+     pan's ends as a fraction of the overflow (0 = left edge, 1 = right edge). */
+  .film video {
+    position: absolute; top: 0; left: 0;
+    width: auto; max-width: none; height: 100%;
+    aspect-ratio: var(--ar);
+    object-fit: fill;
+    transform: translateX(calc((100vw - (var(--ch-h) * var(--ar))) * (var(--f0) + var(--f1)) / 2));
+  }
+  .film .media::after {
+    background:
+      linear-gradient(to bottom, rgba(0,0,0,0.9) 0, rgba(0,0,0,0.66) var(--top-h), transparent calc(var(--top-h) + 88px)),
+      linear-gradient(to top, rgba(0,0,0,0.96) 0%, rgba(0,0,0,0.9) 28%, rgba(0,0,0,0.55) 44%, transparent 62%);
+  }
+}
+
+/* Play / pause toggle (added by app.js into the caption; films only move while JS runs).
+   A 44px target around a 36px visible disc. */
+.toggle {
+  position: relative; flex: none;
+  width: 44px; height: 44px; border: 0; padding: 0; margin: 0;
+  display: grid; place-items: center;
+  color: var(--ink); background: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform var(--dur-press) var(--ease-out);
+}
+.toggle::before {
+  content: ""; position: absolute; inset: 4px; border-radius: 50%;
+  background: rgba(242, 239, 232, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.16);
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+.toggle:active { transform: scale(0.92); }
+@media (hover: hover) and (pointer: fine) { .toggle:hover::before { background: rgba(242, 239, 232, 0.22); } }
+.toggle svg { position: relative; width: 13px; height: 13px; fill: currentColor; }
+.toggle .i-play { display: none; }
+.toggle[aria-pressed="false"] .i-play { display: block; }
+.toggle[aria-pressed="false"] .i-pause { display: none; }
+
+.film .cap .toggle {
+  position: absolute; right: calc(var(--gut) + var(--rail-room) - 4px);
+  bottom: calc(var(--gut) + 8px + var(--bar) + env(safe-area-inset-bottom) - 6px);
+}
+.film .cap .fig { padding-right: 52px; }
+@media (min-width: 760px) {
+  .film .cap .fig { padding-right: 60px; }
+}
+
+/* Phones: three real App Store screens */
+.phones .media {
+  background: radial-gradient(70% 90% at 75% 30%, color-mix(in oklab, var(--tint) 16%, var(--bg)) 0%, var(--bg) 70%);
+}
+.phones__row {
+  position: absolute; display: flex; justify-content: center; align-items: center;
+  left: 50%; top: calc(var(--top-h) + 12px);
+  height: 52svh; transform: translateX(-50%);
+}
+.phones__row img {
+  height: 100%; width: auto; border-radius: 22px;
+  box-shadow: 0 30px 80px -30px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.08);
+}
+.phones__row img:nth-child(1), .phones__row img:nth-child(3) { height: 84%; opacity: 0.78; }
+.phones__row img:nth-child(1) { margin-right: -14%; }
+.phones__row img:nth-child(3) { margin-left: -14%; }
+.phones__row img:nth-child(2) { position: relative; z-index: 1; }
+@media (min-width: 760px) {
+  .phones__row { left: auto; right: calc(var(--gut) + var(--rail-room) + 2vw); top: calc(var(--top-h) + 5svh); height: 58svh; transform: none; gap: 1.6vw; }
+  .phones__row img { border-radius: 28px; }
+  .phones__row img:nth-child(n) { height: 100%; margin: 0; opacity: 1; }
+  .phones__row img:nth-child(2) { transform: translateY(-5%); }
+}
+
+/* Plate: the key number is the picture, set huge in the chapter's tint.
+   Each plate picks a shot (data-shot) so consecutive cuts land on different frames:
+     side    number left, its words beside it on the baseline
+     right   number and words flush right, high in the frame
+     centre  everything centred
+     icon    number left, the app icon large on the right
+   --em is the number's width in em (measured), so it can be sized to fit the frame
+   whole: a figure is never cropped. The number sits above the caption, never under it. */
+.plate .media {
+  --avail: calc(100vw - 2 * var(--gut) - var(--rail-room));
+  --cap-room: 270px;            /* the caption's height, kept clear */
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+  padding: calc(var(--top-h) + 3svh) calc(var(--gut) + var(--rail-room)) calc(var(--cap-room) + var(--bar)) var(--gut);
+  background:
+    radial-gradient(80% 70% at var(--glow-x, 12%) 30%, color-mix(in oklab, var(--tint) 14%, var(--bg)) 0%, transparent 70%),
+    var(--bg);
+}
+.plate .media .fig { max-width: 100%; }
+.plate .media .fig b {
+  font-size: min(calc(var(--avail) / var(--em)), 15rem, 30svh);
+  line-height: 0.86; letter-spacing: -0.055em;
+  margin-left: -0.025em;
+  color: var(--tint);
+  white-space: nowrap;
+}
+.plate .media .fig span { display: block; margin-top: 18px; max-width: 34ch; font-size: 1rem; text-wrap: pretty; }
+.plate .media .fig small { max-width: 44ch; font-size: 0.875rem; text-wrap: pretty; }
+
+.plate[data-shot="right"] .media { --glow-x: 88%; justify-content: flex-start; align-items: flex-end; text-align: right; }
+.plate[data-shot="right"] .media .fig b { margin-left: 0; }
+.plate[data-shot="right"] .media .fig span { max-width: 40ch; text-wrap: balance; }
+.plate[data-shot="right"] .media .fig span,
+.plate[data-shot="right"] .media .fig small { margin-left: auto; }
+.plate[data-shot="centre"] .media { --glow-x: 50%; align-items: center; text-align: center; }
+.plate[data-shot="centre"] .media .fig span,
+.plate[data-shot="centre"] .media .fig small { margin-inline: auto; max-width: 46ch; }
+
+.plate__icon {
+  position: absolute; height: auto;
+  width: 96px; right: calc(var(--gut) + var(--rail-room)); top: calc(var(--top-h) + 3svh);
+  filter: drop-shadow(0 30px 60px rgba(0,0,0,0.5));
+}
+
+@media (max-width: 759px) {
+  .plate .media { --cap-room: 230px; --avail: calc(100vw - 2 * var(--gut) - 6px); padding-right: calc(var(--gut) + 6px); }   /* clear of the phone rail */
+  .plate[data-shot="right"] .media { justify-content: center; }   /* a phone has no room for a high shot without a dead band */
+  .plate[data-shot="icon"] .media { padding-top: calc(var(--top-h) + 3svh + 96px); }
+}
+@media (min-width: 760px) {
+  .plate .media { --cap-room: calc(min(12.5vw, 10rem, 19svh) * 0.92 + 120px); }
+  /* side: the number fills the frame's height; its words sit on its baseline */
+  .plate[data-shot="side"] .media .fig {
+    display: grid; grid-template-columns: auto minmax(0, 30ch); grid-template-rows: 1fr auto;
+    column-gap: clamp(24px, 3vw, 48px); align-items: end;
+  }
+  .plate[data-shot="side"] .media .fig b { grid-row: 1 / 3; font-size: min(calc((var(--avail) - 30ch - 48px) / var(--em)), 26rem, 52svh); }
+  .plate[data-shot="side"] .media .fig span { margin-top: 0; padding-bottom: 0.4em; }
+  .plate[data-shot="side"] .media .fig small { grid-column: 2; padding-bottom: 0.9em; margin-top: -0.2em; }
+  .plate[data-shot="right"] .media .fig b { font-size: min(calc(var(--avail) / var(--em)), 22rem, 40svh); }
+  .plate[data-shot="centre"] .media .fig b { font-size: min(calc(var(--avail) / var(--em)), 20rem, 36svh); }
+  /* icon: number left, the icon large on the right, both centred in the frame */
+  .plate[data-shot="icon"] .media .fig b { font-size: min(calc(var(--avail) * 0.58 / var(--em)), 18rem, 34svh); }
+  .plate__icon {
+    width: min(28vw, 44svh); right: calc(var(--gut) + var(--rail-room) + 2vw);
+    top: calc(var(--top-h) + 3svh + (100% - var(--top-h) - 3svh - var(--cap-room)) / 2);
+    transform: translateY(-50%);
+  }
+}
+
+/* 6. Credits --------------------------------------------------------------- */
+.end {
+  height: auto; min-height: var(--ch-h);
+  background: var(--ground);
+  display: flex;
+}
+.end__in {
+  width: 100%;
+  padding: calc(var(--top-h) + 8px) calc(var(--gut) + var(--rail-room)) calc(var(--gut) + 8px + var(--bar) + env(safe-area-inset-bottom)) var(--gut);
+  display: flex; flex-direction: column; justify-content: space-between; gap: 48px;
+}
+.credits { display: grid; grid-template-columns: 1fr 1fr; column-gap: 16px; }
+.credits a {
+  display: block; padding: 11px 0;
+  font-size: 1.0625rem; font-weight: 550; letter-spacing: -0.015em; line-height: 1.3;
+  border-top: 1px solid var(--faint);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) { .credits a:hover { color: var(--muted); } }
+.end__foot { display: grid; gap: 32px; }
+.end__name { font-size: clamp(2rem, 4vw + 1rem, 4.5rem); font-weight: 650; letter-spacing: -0.045em; line-height: 1; }
+.end__links { display: flex; flex-wrap: wrap; gap: 0 24px; margin-top: 10px; }
+.end__links a { display: inline-block; padding: 12px 0; color: var(--muted); font-weight: 500; transition: color var(--dur-fast) var(--ease-out); }
+@media (hover: hover) and (pointer: fine) { .end__links a:hover { color: var(--ink); } }
+.end__honesty { font-size: 0.8125rem; color: var(--muted); max-width: 60ch; text-wrap: pretty; }
+@media (min-width: 760px) {
+  .credits { grid-template-columns: repeat(3, 1fr); column-gap: 32px; }
+  .credits a { font-size: clamp(1.25rem, 1.2vw + 0.75rem, 2rem); padding: 16px 0 18px; letter-spacing: -0.025em; }
+  .end__foot { grid-template-columns: 1fr auto; align-items: end; column-gap: 64px; }
+  .end__honesty { text-align: right; }
+}
+
+/* 7. Reel motion ----------------------------------------------------------- */
+/* Each chapter's media is tied to its own view timeline:
+     entry  a rounded card rises and opens to full-bleed (clip-path wipe)
+     exit   the frame pins in place, steps back and dims while the next card covers it
+   Snapped (at rest) every chapter is complete, so headless shots, no-JS and
+   unsupported browsers see the full page. Only transform, opacity, clip-path move. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .rail__fill { animation: rail-fill linear both; animation-timeline: scroll(root block); }
+
+    /* One named timeline per chapter; every layer reads the chapter's position */
+    .ch { view-timeline: --ch block; }
+    .ch:not(.end) .media {
+      animation: card-open linear both, frame-pin linear both;
+      animation-timeline: --ch, --ch;
+      animation-range: entry 0% entry 100%, exit 0% exit 100%;
+    }
+    /* The credits open like every other card, so the last cut matches the rest */
+    .end {
+      animation: card-open linear both;
+      animation-timeline: --ch;
+      animation-range: entry 0% entry 100%;
+    }
+    /* The caption pins with its frame, so the whole shot steps back as one.
+       Its origin is the screen centre, matching the media's scale origin. */
+    .ch:not(.end) .cap {
+      transform-origin: 50% calc(100% - var(--ch-h) / 2);
+      animation: cap-pin linear both;
+      animation-timeline: --ch;
+      animation-range: exit 0% exit 100%;
+    }
+    /* The entry rides on the children, so it never overrides the pin above.
+       Figures and honesty notes are excluded: they are never revealed late. */
+    .ch:not(.end):not(.intro) .cap > :not(.fig):not(.cap__note):not(:has(.cap__aside)) {
+      animation: cap-in linear both;
+      animation-timeline: --ch;
+      animation-range: entry 55% entry 100%;
+    }
+    /* the first frame is already on screen at load: no entry for it */
+    .intro .media { animation-name: none, frame-pin; }
+
+    /* Phone films pan slowly across the recording while it plays */
+    @media (max-aspect-ratio: 1/1) {
+      .film video { animation: pan 18s var(--ease-in-out) infinite alternate; }
+      .film:not([data-playing="true"]) video { animation-play-state: paused; }
+    }
+  }
+}
+@keyframes rail-fill { to { transform: scaleY(1); } }
+@keyframes card-open {
+  /* top inset stays above the plate figures, so a number is never clipped once visible */
+  from { clip-path: inset(5% 5% 0 5% round 28px); }
+  to   { clip-path: inset(0 0 0 0 round 0); }
+}
+@keyframes frame-pin {
+  /* translateY(100%) cancels the scroll, so the frame holds still underneath */
+  to { transform: translateY(100%) scale(0.92); opacity: 0; }
+}
+@keyframes cap-pin {
+  to { transform: translateY(var(--ch-h)) scale(0.92); opacity: 0; }
+}
+@keyframes cap-in {
+  from { opacity: 0.4; transform: translateY(12px); }
+}
+@keyframes pan {
+  from { transform: translateX(calc((100vw - (var(--ch-h) * var(--ar))) * var(--f0))); }
+  to   { transform: translateX(calc((100vw - (var(--ch-h) * var(--ar))) * var(--f1))); }
+}
+
+/* No scroll timelines: the fill tracks the current tick instead (set by app.js) */
+@supports not (animation-timeline: view()) {
+  .rail__fill { transform: scaleY(var(--p, 0)); transition: transform var(--dur-slow) var(--ease-in-out); }
+}
+
+/* 8. Cuts (View Transitions) ----------------------------------------------- */
+/* A rail click is a cut, not a scroll: the new chapter wipes in over the old.
+   app.js sets data-cut="down|up" on <html> for the direction, and lets a second
+   press interrupt a running cut. */
+.top  { view-transition-name: top; }
+.rail { view-transition-name: rail; }
+::view-transition-group(*) { animation-duration: var(--dur-slow); animation-timing-function: var(--ease-in-out); }
+::view-transition-old(root) { animation: var(--dur-slow) var(--ease-in-out) both cut-out; }
+::view-transition-new(root) { animation: var(--dur-slow) var(--ease-in-out) both cut-in-down; }
+html[data-cut="up"]::view-transition-new(root) { animation-name: cut-in-up; }
+@keyframes cut-out     { to { transform: scale(0.96); opacity: 0.4; } }
+@keyframes cut-in-down { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0); } }
+@keyframes cut-in-up   { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0); } }
+
+/* 9. Reduced motion -------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important; transition-delay: 0s !important; scroll-behavior: auto !important;
+  }
+  .rail__fill { transform: scaleY(var(--p, 0)); }
+}

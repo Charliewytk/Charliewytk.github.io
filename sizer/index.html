@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Cost sizer — same method, frozen 3% case</title>
 <meta name="description" content="Paste an offer and a market. A 3% spread annualises to 24.6%; after a 2.4% break rate and 0.40% costs it is +1.38%. Filings, not advice. Zero subscribers. £0.">
 <link rel="canonical" href="https://charliewytk.github.io/sizer/">
@@ -21,178 +21,151 @@
 <meta name="twitter:description" content="Paste an offer and a market. A 3% spread annualises to 24.6%; after a 2.4% break rate and 0.40% costs it is +1.38%. Filings, not advice. Zero subscribers. £0.">
 <meta name="twitter:image" content="https://charliewytk.github.io/media/og-sizer.png">
 <meta name="twitter:image:alt" content="Cost sizer: 3% case. 24.6% annualises; after a 2.4% break rate and 0.40% costs it is +1.38%. Filings, not advice.">
+<link rel="stylesheet" href="../assets/site.css">
 <style>
-  :root {
-    --ink: #22201d;
-    --ink2: #3b3833;
-    --muted: #5f5b52;
-    --faint: #6f6a60;
-    --rule: #c9c6b4;
-    --paper: #f7f7ef;
-    --accent: #a9331f;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-    font-size: 16.5px;
-    line-height: 1.65;
-    -webkit-font-smoothing: antialiased;
-  }
-  a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); padding-bottom: 1px; }
-  a:hover { color: var(--accent); border-color: var(--accent); }
-  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+  /* /sizer/: page rules only. Tokens, base, header, footer, links, buttons and focus come from assets/site.css. */
+  :root { --page: 960px; }
 
-  .mast {
-    display: flex; justify-content: space-between; align-items: baseline;
-    padding: 18px 28px;
-    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
-    border-bottom: 1px solid var(--ink);
-  }
-  .mast a { border: none; font-weight: 700; }
+  main { padding-block: var(--space-8) 0; }
+  h1 { font-size: var(--text-xl); max-width: 22ch; }
+  .lead { max-width: 60ch; margin: var(--space-4) 0 0; color: var(--fg-2); }
 
-  .shell { max-width: 720px; margin: 0 auto; padding: 48px 24px 88px; }
-  .eyebrow {
-    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--faint); margin: 0 0 16px;
+  /* calculator: inputs left, results right; one column on a phone */
+  .calc { display: grid; gap: var(--space-5); margin-top: var(--space-7); align-items: start; }
+  @media (min-width: 860px) {
+    .calc { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-7); }
+    .results { position: sticky; top: calc(var(--header-offset) + var(--space-5)); }
   }
-  h1 {
-    font-family: Georgia, "Times New Roman", serif;
-    font-weight: 600;
-    font-size: clamp(1.85rem, 5.4vw, 2.55rem);
-    line-height: 1.12;
-    letter-spacing: -0.02em;
-    margin: 0 0 14px;
-  }
-  h2 {
-    font-family: Georgia, "Times New Roman", serif;
-    font-weight: 600;
-    font-size: 1.28rem;
-    margin: 0 0 12px;
-    letter-spacing: -0.01em;
-  }
-  .lede {
-    font-size: 1.05rem;
-    line-height: 1.5;
-    color: var(--ink2);
-    margin: 0 0 22px;
-    max-width: 40rem;
-  }
-  p { margin: 0 0 16px; text-wrap: pretty; }
-  .note { color: var(--muted); font-size: 0.9rem; }
-  section { margin-top: 44px; padding-top: 24px; border-top: 1px solid var(--rule); }
 
-  .grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px 18px;
-    margin: 0 0 22px;
-  }
-  label {
-    display: block;
-    font-size: 0.68rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--faint);
-    font-weight: 600;
-    margin: 0 0 6px;
-  }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+  .grid > .span-2 { grid-column: 1 / -1; }
+  label { display: block; margin: 0 0 var(--space-2); font-size: var(--text-sm); font-weight: 500; color: var(--fg-2); }
   input, select {
-    width: 100%;
-    font-family: ui-monospace, Menlo, monospace;
-    font-size: 1.05rem;
-    font-variant-numeric: tabular-nums;
-    color: var(--ink);
-    background: #fffcf4;
-    border: 1px solid var(--rule);
-    padding: 11px 12px;
-    min-height: 48px;
+    display: block; width: 100%; min-height: 48px; margin: 0; padding: 0 var(--space-3);
+    font: 500 1.0625rem / 1 var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: 0;
+    color: var(--fg); background: var(--bg); border: 1px solid var(--line-2); border-radius: var(--radius-2);
+    transition: border-color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
   }
-  select { letter-spacing: 0; }
-  input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-  .out { margin: 0 0 10px; }
-  .out .k { color: var(--muted); font-size: 0.8rem; }
-  .out .v {
-    font-family: "Arial Narrow", Arial, sans-serif;
-    font-weight: 700;
-    font-size: 1.85rem;
-    letter-spacing: 0.01em;
-    font-variant-numeric: tabular-nums;
+  select {
+    -webkit-appearance: none; appearance: none; padding-right: var(--space-7);
+    font-family: var(--font-sans); font-size: var(--text-base);
+    background-image: linear-gradient(45deg, transparent 50%, var(--fg-3) 50%), linear-gradient(135deg, var(--fg-3) 50%, transparent 50%);
+    background-position: calc(100% - 19px) 50%, calc(100% - 14px) 50%;
+    background-size: 5px 5px; background-repeat: no-repeat;
   }
-  .out .net .v { color: var(--accent); }
-  .opt { font-weight: 500; letter-spacing: 0; text-transform: none; }
-  .stated { margin: 8px 0 0; }
-  .twoup { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin: 0 0 18px; }
-  .twoup > div { padding: 18px 20px; background: rgba(34,32,29,0.04); }
-  .err { color: var(--accent); font-size: 0.95rem; min-height: 1.4em; }
-
-  .cta { margin: 0 0 10px; }
-  .btn {
-    display: inline-block;
-    background: var(--ink);
-    color: var(--paper);
-    border: 1px solid var(--ink);
-    padding: 14px 22px;
-    font-weight: 600;
-    font-size: 1.02rem;
-    min-height: 48px;
-    line-height: 1.2;
-    text-align: center;
+  input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--radius-2); border-color: transparent; }
+  @media (hover: hover) and (pointer: fine) {
+    input:hover, select:hover { border-color: var(--fg-4); }
   }
-  .btn:hover { background: var(--accent); border-color: var(--accent); color: var(--paper); }
-  .btn:focus-visible { outline-offset: 3px; }
 
-  footer {
-    margin-top: 56px;
-    padding-top: 22px;
-    border-top: 1px solid var(--rule);
-    font-size: 0.86rem;
-    color: var(--muted);
+  /* results: net first, verdict coloured by state, never by sign alone */
+  .results { padding: var(--space-5); background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--radius-3); }
+  .twoup { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5) var(--space-4); }
+  .out .k { font-size: var(--text-sm); color: var(--fg-3); line-height: var(--leading-snug); }
+  .out .v { margin-top: var(--space-1); font-size: var(--text-lg); font-weight: 600; letter-spacing: var(--tracking-snug); font-variant-numeric: tabular-nums; }
+  .out.net { grid-column: 1 / -1; padding-bottom: var(--space-5); border-bottom: 1px solid var(--line); }
+  .out.net .v {
+    font-size: clamp(2.5rem, 4vw + 1rem, 3.5rem); line-height: 1; letter-spacing: var(--tracking-display);
+    transform-origin: left center; transition: color var(--dur-base) var(--ease-out);
   }
-  footer p { margin: 0 0 8px; }
+  .results[data-state="fails"] .net .v { color: color-mix(in srgb, var(--bad) 72%, var(--fg)); }
+  .verdict .v { transform-origin: left center; }
+  .verdict .v {
+    display: inline-block; padding: 2px var(--space-3); border-radius: var(--radius-pill);
+    color: var(--fg-3); background: var(--bg-3);
+    transition: color var(--dur-base) var(--ease-out), background-color var(--dur-base) var(--ease-out);
+  }
+  .results[data-state="clears"] .verdict .v { color: var(--good); background: color-mix(in srgb, var(--good) 14%, transparent); }
+  .results[data-state="fails"] .verdict .v { color: var(--bad); background: color-mix(in srgb, var(--bad) 14%, transparent); }
+  .results .stated { margin: var(--space-5) 0 0; padding-top: var(--space-4); border-top: 1px solid var(--line); }
+  .results .stated + .stated { margin-top: var(--space-2); padding-top: 0; border-top: 0; }
+  .err { margin: var(--space-3) 0 0; font-size: var(--text-sm); color: var(--bad); }
 
-  @media (max-width: 640px) {
-    .mast { padding: 12px 14px; }
-    .shell { padding: 24px 16px 72px; }
-    h1 { font-size: 1.62rem; }
-    .grid, .twoup { grid-template-columns: 1fr; }
-    .cta .btn { display: block; width: 100%; }
+  section { margin-top: var(--space-8); max-width: var(--measure); }
+  section h2 { font-size: var(--text-lg); letter-spacing: var(--tracking-snug); margin-bottom: var(--space-3); }
+  section p { color: var(--fg-2); margin: 0; }
+  section p + p { margin-top: var(--space-3); }
+
+  /* phone: net and verdict ride along at the bottom while the result panel is still below the fold */
+  .peek-dock { display: none; }
+  @media (max-width: 859px) {
+    .peek-dock {
+      display: flex; justify-content: center; position: fixed; z-index: 40; pointer-events: none;
+      left: max(var(--gutter), env(safe-area-inset-left, 0px)); right: max(var(--gutter), env(safe-area-inset-right, 0px));
+      bottom: max(var(--space-4), env(safe-area-inset-bottom, 0px));
+    }
+    .peek {
+      display: inline-flex; align-items: baseline; gap: var(--space-3);
+      padding: var(--space-3) var(--space-5); border-radius: var(--radius-pill);
+      font-size: var(--text-base); font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1.2;
+      color: var(--fg); background: color-mix(in srgb, var(--bg-2) 88%, transparent);
+      -webkit-backdrop-filter: saturate(1.6) blur(14px); backdrop-filter: saturate(1.6) blur(14px);
+      border: 1px solid var(--line-2); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      opacity: 0; visibility: hidden; transform: translateY(calc(100% + var(--space-5)));
+      transition: transform var(--spring-snappy-dur) var(--spring-snappy), opacity var(--dur-base) var(--ease-out), visibility 0s linear var(--spring-snappy-dur);
+    }
+    .peek[data-show] { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+    .peek span { display: inline-block; transform-origin: center; }
+    .peek .sep { color: var(--fg-4); font-weight: 400; }
+    .peek [data-peek="verdict"] { color: var(--fg-3); }
+    .peek[data-state="clears"] [data-peek="verdict"] { color: var(--good); }
+    .peek[data-state="fails"] [data-peek="verdict"] { color: var(--bad); }
+    .peek[data-state="fails"] [data-peek="net"] { color: color-mix(in srgb, var(--bad) 72%, var(--fg)); }
+    input, select { scroll-margin-bottom: 96px; }
+  }
+
+  .cta { margin: var(--space-8) 0 var(--space-3); }
+  .cta + .note { max-width: var(--measure); }
+
+  .site-footer .site-nav { flex-wrap: wrap; gap: var(--space-3) var(--space-5); }
+  /* once the footer box stops at the narrow column, draw its rule on the content edge, not the padding edge */
+  @media (min-width: 1025px) {
+    .site-footer { border-top: 0; background: linear-gradient(var(--line), var(--line)) top center / calc(100% - 2 * var(--gutter)) 1px no-repeat; }
+  }
+
+  @media (max-width: 520px) {
+    main { padding-top: var(--space-6); }
+    .calc { margin-top: var(--space-6); }
+    .results { padding: var(--space-4); }
+    .cta .btn { display: flex; width: 100%; }
   }
 </style>
 </head>
 <body>
-<header class="mast">
-  <a class="who" href="../">Charlie Wuytack</a>
-  <a href="../example/">Worked example</a>
+<a class="skip-link" href="#sizer">Skip to the sizer</a>
+<header class="site-header">
+  <a class="site-name" href="../">Charlie Wuytack</a>
+  <nav class="site-nav" aria-label="Site">
+    <a href="../work/">Work</a>
+    <a href="../merger-monitor/">Merger Monitor</a>
+    <a href="mailto:charlie@wuytack.net">Contact</a>
+  </nav>
 </header>
 
-<main class="shell">
-  <p class="eyebrow">Cost sizer &middot; extraction + cost-sizing &middot; not advice</p>
+<main class="wrap">
   <h1>Paste an offer and a market. The 3% case is already filled in.</h1>
-  <p class="lede">Same method as <a href="../example/">/example/</a> and <a href="../subscribe/">/subscribe/</a>. A 3% spread annualises to 24.6%. After a 2.4% break rate and 0.40% round-trip costs it is +1.38% a deal. Defaults are those frozen figures. Nothing here is a recommendation.</p>
+  <p class="lead">Same method as <a href="../example/">/example/</a> and <a href="../subscribe/">/subscribe/</a>. A 3% spread annualises to 24.6%. After a 2.4% break rate and 0.40% round-trip costs it is +1.38% a deal. Defaults are those frozen figures. Nothing here is a recommendation.</p>
 
+  <div class="calc">
   <form id="sizer" action="#" method="get">
-    <div class="grid">
-      <div>
+    <div class="grid stagger">
+      <div style="--i:0">
         <label for="offer">Offer</label>
         <input id="offer" name="offer" type="text" inputmode="decimal" value="103" autocomplete="off">
       </div>
-      <div>
+      <div style="--i:1">
         <label for="market">Market</label>
         <input id="market" name="market" type="text" inputmode="decimal" value="100" autocomplete="off">
       </div>
-      <div>
-        <label for="break-rate">Break rate % <span class="opt">(optional)</span></label>
+      <div style="--i:2">
+        <label for="break-rate">Break rate %</label>
         <input id="break-rate" name="break-rate" type="text" inputmode="decimal" value="2.4" autocomplete="off">
       </div>
-      <div>
-        <label for="cost">Round-trip cost % <span class="opt">(optional)</span></label>
+      <div style="--i:3">
+        <label for="cost">Round-trip cost %</label>
         <input id="cost" name="cost" type="text" inputmode="decimal" value="0.40" autocomplete="off">
       </div>
-      <div>
+      <div class="span-2" style="--i:4">
         <label for="stage">Stage</label>
         <select id="stage" name="stage">
           <option value="unknown" selected>Unknown — labelled 1.57%</option>
@@ -203,43 +176,51 @@
           <option value="SC 14D9">SC 14D9 — 27-day costed bar</option>
         </select>
       </div>
-      <div>
-        <label for="claimed-bar">Claimed bar % <span class="opt">(optional)</span></label>
-        <input id="claimed-bar" name="claimed-bar" type="text" inputmode="decimal" value="" autocomplete="off" placeholder="leave blank">
+      <div class="span-2" style="--i:5">
+        <label for="claimed-bar">Claimed bar % (if any)</label>
+        <input id="claimed-bar" name="claimed-bar" type="text" inputmode="decimal" value="" autocomplete="off">
       </div>
     </div>
   </form>
 
-  <div class="twoup">
-    <div class="out ann">
-      <div class="k">Spread</div>
-      <div class="v" data-out="spread">+3.00%</div>
+  <div class="results" id="result" data-state="clears">
+    <div class="twoup">
+      <div class="out net">
+        <div class="k">Net after stated break rate and costs</div>
+        <div class="v" data-out="net">+1.38%</div>
+      </div>
+      <div class="out ann">
+        <div class="k">Spread</div>
+        <div class="v" data-out="spread">+3.00%</div>
+      </div>
+      <div class="out">
+        <div class="k">Annualised gross</div>
+        <div class="v" data-out="annualised">24.6%</div>
+      </div>
+      <div class="out">
+        <div class="k">Applied bar</div>
+        <div class="v" data-out="bar">1.57%</div>
+      </div>
+      <div class="out verdict">
+        <div class="k">Versus the bar</div>
+        <div class="v" data-out="clears">Clears</div>
+      </div>
     </div>
-    <div class="out">
-      <div class="k">Annualised gross</div>
-      <div class="v" data-out="annualised">24.6%</div>
-    </div>
-    <div class="out net">
-      <div class="k">Net after stated break rate and costs</div>
-      <div class="v" data-out="net">+1.38%</div>
-    </div>
-    <div class="out">
-      <div class="k">Stated inputs</div>
-      <div class="note stated">Break <span data-out="break-rate">2.4%</span> · round-trip <span data-out="cost">0.40%</span> · 27% median break loss · 0.49% T-bill carry · 49-day close.</div>
-    </div>
-    <div class="out">
-      <div class="k">Applied bar</div>
-      <div class="v" data-out="bar">1.57%</div>
-    </div>
-    <div class="out">
-      <div class="k">Versus the bar</div>
-      <div class="v" data-out="clears">Clears</div>
-    </div>
+    <p class="err" data-out="error" hidden></p>
+    <p class="note stated">Break <span data-out="break-rate">2.4%</span> · round-trip <span data-out="cost">0.40%</span> · 27% median break loss · 0.49% T-bill carry · 49-day close.</p>
+    <p class="note stated" data-out="bar-basis">labelled 1.57% policy (unknown stage)</p>
   </div>
-  <p class="note stated" data-out="bar-basis">labelled 1.57% policy (unknown stage)</p>
-  <p class="err" data-out="error" hidden></p>
-  <p class="note">Annualised is marketing: the published 3% case over 49 days is 24.6%. The net charges the stated break rate, the 27% median loss when one breaks, round-trip cost, and 0.49% of forgone T-bill carry. The 2.4% default is 39 of 1,606 settled outcomes. A 1% spread on that pass is &minus;0.57%. Break-even is 1.59%.</p>
-  <p class="note">The bar fails closed. Unknown stage stays the labelled 1.57% policy. Known stage uses the measured 40bp GBP-funded round trip, not a restated sliver or a zero-cost floor. A claimed bar is kept only when it charges that 40bp. Paper / education only — not a recommendation.</p>
+  </div>
+  <p class="visually-hidden" aria-live="polite" data-out="summary"></p>
+  <div class="peek-dock" aria-hidden="true">
+    <div class="peek" data-state="clears"><span data-peek="net">+1.38%</span><span class="sep">·</span><span data-peek="verdict">Clears</span></div>
+  </div>
+
+  <section>
+    <h2>Method</h2>
+    <p>Annualised is marketing: the published 3% case over 49 days is 24.6%. The net charges the stated break rate, the 27% median loss when one breaks, round-trip cost, and 0.49% of forgone T-bill carry. The 2.4% default is 39 of 1,606 settled outcomes. A 1% spread on that pass is &minus;0.57%. Break-even is 1.59%.</p>
+    <p>The bar fails closed. Unknown stage stays the labelled 1.57% policy. Known stage uses the measured 40bp GBP-funded round trip, not a restated sliver or a zero-cost floor. A claimed bar is kept only when it charges that 40bp. Paper / education only — not a recommendation.</p>
+  </section>
 
   <section>
     <h2>What this is not</h2>
@@ -249,18 +230,33 @@
   <div class="cta">
     <a class="btn" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">Get tonight's table &mdash; £5/month</a>
   </div>
-  <p class="note">Same SKU as the rest of the site. The evening the table is built, not a secret. The <a href="../weekly/">free weekly edition</a> is the same table, week-late. Cancel on Gumroad. 7-day refund. Zero subscribers. Take: £0.</p>
-
-  <footer>
-    <p>Defaults are the 3% case already used on this site. Zero subscribers. Take: £0.</p>
-    <p><a href="../example/">worked example</a> · <a href="../weekly/">free weekly</a> · <a href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">£5/month on Gumroad</a> · <a href="../">charliewytk.github.io</a></p>
-  </footer>
+  <p class="note">The evening the table is built, not a secret. The <a href="../weekly/">free weekly edition</a> is the same table, week-late. Cancel on Gumroad. 7-day refund. Zero subscribers. Take: £0.</p>
 </main>
+
+<footer class="site-footer">
+  <p class="site-legal">Defaults are the 3% case already used on this site. Zero subscribers. Take: £0. Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
+  <nav class="site-nav" aria-label="More">
+    <a href="../example/">Worked example</a>
+    <a href="../weekly/">Free weekly</a>
+    <a href="https://wuytackcharlie.gumroad.com/l/mergermonitor" target="_blank" rel="noopener">£5/month on Gumroad</a>
+    <a href="mailto:charlie@wuytack.net">Contact</a>
+  </nav>
+</footer>
 <script src="../assets/js/merger-sizer.js"></script>
 <script>
 (function () {
   var form = document.getElementById("sizer");
+  var results = document.querySelector(".results");
   var ids = ["offer", "market", "break-rate", "cost", "stage", "claimed-bar"];
+  var peek = document.querySelector(".peek");
+  var netEl = document.querySelector('[data-out="net"]');
+  var verdictEl = document.querySelector('[data-out="clears"]');
+  var summaryEl = document.querySelector('[data-out="summary"]');
+  var motionOK = window.matchMedia && window.matchMedia("(prefers-reduced-motion: no-preference)");
+  var summaryTimer = 0;
+
+  // A true minus for a leading hyphen on a figure; the number itself is unchanged.
+  function minus(text) { return typeof text === "string" ? text.replace(/^-/, "−") : text; }
 
   function set(name, text, isError) {
     var el = document.querySelector('[data-out="' + name + '"]');
@@ -270,10 +266,25 @@
       el.textContent = text || "";
       return;
     }
-    el.textContent = text;
+    el.textContent = minus(text);
   }
 
-  function render() {
+  // Spring tick when a figure changes: transform and opacity only, restarted on each change so it never queues.
+  function tick(el) {
+    if (!el || !el.animate || !motionOK || !motionOK.matches) return;
+    if (el._tick) el._tick.cancel();
+    var frames = [{ transform: "translateY(2px) scale(0.97)", opacity: 0.55 }, { transform: "none", opacity: 1 }];
+    var easing = getComputedStyle(document.documentElement).getPropertyValue("--spring-bouncy").trim();
+    try { el._tick = el.animate(frames, { duration: 400, easing: easing || "cubic-bezier(0.22, 1, 0.36, 1)" }); }
+    catch (e) { el._tick = el.animate(frames, { duration: 260, easing: "cubic-bezier(0.22, 1, 0.36, 1)" }); }
+  }
+
+  function announce(text) {
+    clearTimeout(summaryTimer);
+    summaryTimer = setTimeout(function () { summaryEl.textContent = text; }, 600);
+  }
+
+  function render(fromUser) {
     if (!window.MergerSizer) return;
     var out = window.MergerSizer.size({
       offer: document.getElementById("offer").value,
@@ -283,34 +294,71 @@
       stage: document.getElementById("stage").value,
       claimedBarPct: document.getElementById("claimed-bar").value
     });
+    var prevNet = netEl.textContent, prevVerdict = verdictEl.textContent;
+    var state, verdict;
     if (out.error) {
+      state = "error";
+      verdict = "—";
       set("error", out.error, true);
       set("spread", "—");
       set("annualised", "—");
       set("net", "—");
       set("bar", out.barLabel || "—");
       set("bar-basis", out.barBasisLabel || "");
-      set("clears", "—");
-      return;
+    } else {
+      state = out.clears ? "clears" : "fails";
+      verdict = out.clears ? "Clears" : "Does not clear";
+      set("error", "", true);
+      set("spread", out.spreadLabel);
+      set("annualised", out.annualisedLabel);
+      set("net", out.netLabel);
+      set("break-rate", out.breakRateLabel);
+      set("cost", out.costLabel);
+      set("bar", out.barLabel);
+      set("bar-basis", out.barBasisLabel);
     }
-    set("error", "", true);
-    set("spread", out.spreadLabel);
-    set("annualised", out.annualisedLabel);
-    set("net", out.netLabel);
-    set("break-rate", out.breakRateLabel);
-    set("cost", out.costLabel);
-    set("bar", out.barLabel);
-    set("bar-basis", out.barBasisLabel);
-    set("clears", out.clears ? "Clears" : "Does not clear");
+    set("clears", verdict);
+    results.setAttribute("data-state", state);
+    peek.setAttribute("data-state", state);
+    peek.querySelector('[data-peek="net"]').textContent = netEl.textContent;
+    peek.querySelector('[data-peek="verdict"]').textContent = verdict;
+
+    if (!fromUser) return;
+    if (netEl.textContent !== prevNet) { tick(netEl); tick(peek.querySelector('[data-peek="net"]')); }
+    if (verdict !== prevVerdict) { tick(verdictEl); tick(peek.querySelector('[data-peek="verdict"]')); }
+    announce(out.error
+      ? out.error
+      : "Net " + netEl.textContent + ". " + verdict + " the " + minus(out.barLabel) + " bar.");
   }
 
-  form.addEventListener("submit", function (e) { e.preventDefault(); render(); });
+  function onEdit() { render(true); }
+  form.addEventListener("submit", function (e) { e.preventDefault(); render(true); });
   ids.forEach(function (id) {
     var el = document.getElementById(id);
-    el.addEventListener("input", render);
-    el.addEventListener("change", render);
+    el.addEventListener("input", onEdit);
+    el.addEventListener("change", onEdit);
   });
-  render();
+  render(false);
+
+  // Phone: show the strip only while the net figure is still below the viewport (clear of the strip itself).
+  // The root reaches far upward, so a figure scrolled past counts as seen and any jump crosses a threshold.
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (entries) {
+      var e = entries[entries.length - 1];
+      var below = e.intersectionRatio < 1;
+      if (below) peek.setAttribute("data-show", ""); else peek.removeAttribute("data-show");
+    }, { rootMargin: "100000px 0px -88px 0px", threshold: [0, 1] }).observe(netEl);
+  }
+  // Keep the strip above an on-screen keyboard (iOS keeps fixed elements on the layout viewport).
+  var vv = window.visualViewport, dock = document.querySelector(".peek-dock");
+  if (vv && dock) {
+    var place = function () {
+      var hidden = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+      dock.style.transform = hidden ? "translateY(" + (-hidden) + "px)" : "";
+    };
+    vv.addEventListener("resize", place);
+    vv.addEventListener("scroll", place);
+  }
 })();
 </script>
 </body>

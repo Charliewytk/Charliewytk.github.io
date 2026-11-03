@@ -1,0 +1,425 @@
+/* Editorial: a Swiss design annual. Paper, one serif, one grotesk, a strict 12-column grid.
+   Motion: names rise out of their line masks as they arrive, pictures drift inside fixed frames,
+   the index tracks where you are. Everything is visible without JS and without scroll-driven support. */
+
+:root {
+  --paper: #f1eee6;
+  --plate: #e3dfd4;
+  --ink: #141414;
+  --ink-2: #57534b;          /* 6.9:1 on paper */
+  --rule: rgba(20, 20, 20, 0.16);
+  --accent: #c93a16;         /* one colour: numbers, arrows, the index marker and progress (4.9:1 on paper) */
+
+  --serif: "Instrument Serif", "Times New Roman", Times, serif;
+  --sans: "Inter Tight", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+
+  --margin: 16px;
+  --gap: 12px;
+  --row: 34px;               /* desktop index row height; the marker moves in these steps */
+  --head: 44px;              /* phone running head */
+
+  /* motion tokens (motion-brief.md §1) */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --spring-snappy: linear(0, 0.095 6%, 0.278 12%, 0.455 19%, 0.609 25%, 0.724 31%, 0.811 38%, 0.871 44%, 0.914 50%, 0.943 56%, 0.962 62%, 0.975 69%, 0.984 75%, 0.989 81%, 0.993 88%, 0.996 94%, 1);
+  --spring-snappy-dur: 400ms;
+  --spring-bouncy: linear(0, 0.101 6%, 0.305 12%, 0.529 19%, 0.712 25%, 0.852 31%, 0.940 38%, 0.993 44%, 1.018 50%, 1.026 56%, 1.025 62%, 1.021 69%, 1.015 75%, 1.009 81%, 1.005 88%, 1.002 94%, 1);
+  --spring-bouncy-dur: 400ms;
+  --dur-press: 100ms; --dur-exit: 120ms; --dur-fast: 125ms; --dur-base: 180ms; --dur-slow: 260ms;
+  --dur-reveal: 700ms;       /* display lines only: a one-shot hero-scale move */
+  --stagger-line: 60ms;
+}
+@supports not (transition-timing-function: linear(0, 1)) {
+  :root { --spring-snappy: var(--ease-out); --spring-bouncy: var(--ease-out); }
+}
+@media (min-width: 960px) {
+  :root { --margin: 40px; --gap: 24px; }
+}
+
+/* ---------- base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { color-scheme: light; background: var(--paper); -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 400 1rem/1.5 var(--sans); letter-spacing: -0.005em;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; }
+img, video { display: block; max-width: 100%; }
+p, h1, h2, dl, dd { margin: 0; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 2px; }
+::selection { background: var(--ink); color: var(--paper); }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+/* ---------- the grid: 4 columns on phones, 12 from 960px ---------- */
+.page {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: var(--gap);
+  padding-inline: max(var(--margin), env(safe-area-inset-left)) max(var(--margin), env(safe-area-inset-right));
+}
+.page > * { grid-column: 1 / -1; }
+
+@media (min-width: 960px) {
+  .page { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .cover { grid-column: 4 / -1; grid-row: 2; }
+  .index { grid-column: 1 / 4; grid-row: 2 / 4; }  /* spans cover + works, so it sticks the whole way */
+  .page > main { grid-column: 4 / -1; grid-row: 3; }
+  .colophon { grid-row: 4; }
+}
+
+/* ---------- small type + underline hover ---------- */
+.mast, .meta, .note, .fine, .out, .index { font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.005em; line-height: 1.35; }
+.u { position: relative; }
+.u::after {
+  content: ""; position: absolute; left: var(--ux, 0); right: var(--ux, 0); bottom: var(--uy, -2px); height: 1px;
+  background: currentColor; transform: scaleX(0); transform-origin: right;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .u:hover::after { transform: scaleX(1); transform-origin: left; }
+}
+/* stand-alone links: a 44px target, the underline stays on the text */
+.tap {
+  display: inline-flex; align-items: center; min-height: 44px; min-width: 44px;
+  --uy: calc(50% - 0.85em);
+}
+
+/* a link inside a sentence: 15px of block padding gives a 44px target without moving the line */
+.hit { padding-block: 15px; --uy: 13px; }
+
+/* ---------- masthead ---------- */
+.mast { display: flex; justify-content: flex-end; min-height: 56px; align-items: center; }
+.mast nav { display: flex; margin-right: -8px; }
+.mast nav a { justify-content: center; padding-inline: 8px; --ux: 8px; }
+
+/* ---------- display lines: each line is its own mask ---------- */
+.line { display: block; overflow: clip; padding-bottom: 0.12em; margin-bottom: -0.12em; }
+.line > span { display: block; transform-origin: 0 100%; }
+
+.cover {
+  container-type: inline-size;
+  font: 400 1px/1 var(--serif);       /* real size is set on the lines, in container units */
+  margin-block: clamp(16px, 4vw, 72px) clamp(40px, 8vw, 120px);
+}
+.cover .line { font-size: 36cqi; line-height: 0.84; letter-spacing: -0.04em; }
+@media (min-width: 960px) {
+  .cover { margin-top: 2px; }
+  .cover .line { font-size: 31cqi; }
+}
+
+/* ---------- index: contents list on phones, sticky rail on desktop ---------- */
+.index { position: relative; }
+.index ol { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); }
+.index li a {
+  display: grid; grid-template-columns: 2.25rem 1fr; align-items: baseline; column-gap: 8px;
+  min-height: 44px; padding-block: 13px 12px; border-bottom: 1px solid var(--rule);
+  font-size: 0.9375rem; transition: color var(--dur-fast) var(--ease-out);
+}
+.n { color: var(--accent); font-variant-numeric: tabular-nums; }
+.index li a { grid-template-columns: 2.25rem 1fr auto; }
+.index .t { position: relative; justify-self: start; }
+.index .k { color: var(--ink-2); font-size: 0.8125rem; text-align: right; white-space: nowrap; }
+.marker, .pv { display: none; }
+
+@media (min-width: 960px) {
+  .index { position: sticky; top: 0; align-self: start; padding-top: 14px; }
+  .index ol { border-top: 0; }
+  .index li a {
+    align-items: baseline; padding-top: 7px;
+    min-height: 0; height: var(--row); padding-bottom: 0; border: 0;
+    font: 400 1.25rem/1 var(--serif); letter-spacing: -0.01em; color: var(--ink-2);
+  }
+  .index .n { font: 500 0.75rem/1 var(--sans); letter-spacing: 0.01em; }
+  .index .k { display: none; }
+  .index a[aria-current] { color: var(--ink); }
+  /* the current name steps right on the spring; the marker springs to its row */
+  .index .t { transition: transform var(--spring-bouncy-dur) var(--spring-bouncy); }
+  .index a[aria-current] .t { transform: translateX(6px); }
+  .marker {
+    display: block; position: absolute; left: -20px; top: calc(14px + var(--row) / 2 - 4px);
+    width: 8px; height: 8px; background: var(--accent);
+    transform: translateY(calc(var(--i, 0) * var(--row)));
+    opacity: 0;
+    transition: transform var(--spring-bouncy-dur) var(--spring-bouncy), opacity var(--dur-fast) var(--ease-out);
+  }
+  .index.has-current .marker { opacity: 1; }
+  /* reading progress: a hairline under the current name fills as you read through its spread */
+  .index .t::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -5px; height: 2px;
+    background: var(--accent); transform-origin: left; opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
+  .index a[aria-current] .t::after { opacity: 1; }
+}
+@media (hover: hover) and (pointer: fine) {
+  .index li a:hover { color: var(--ink); }
+}
+
+/* The rail as an instrument: a fixed plate under it previews whichever project you point at
+   or focus, sliding between them like a contact sheet on the same spring as the marker.
+   Shown on the cover and while you use the rail; it steps aside while you read. */
+@media (min-width: 960px) and (min-height: 720px) {
+  .pv {
+    display: block; margin-top: 28px; pointer-events: none; transform-origin: 0 0;
+    transition: opacity var(--dur-base) var(--ease-out), transform var(--spring-snappy-dur) var(--spring-snappy);
+  }
+  .index.has-current:not(.peek) .pv {
+    opacity: 0; transform: scale(0.96);
+    transition: opacity var(--dur-exit) var(--ease-out), transform var(--dur-exit) var(--ease-out);
+  }
+  .pv-frame { position: relative; aspect-ratio: 3 / 2; overflow: clip; border-radius: 2px; background: var(--plate); }
+  .pv-strip {
+    display: grid; grid-auto-rows: 100%; height: 100%;
+    transform: translateY(calc(var(--p, 0) * -100%));
+    transition: transform var(--spring-bouncy-dur) var(--spring-bouncy);
+  }
+  .pv.still .pv-strip, .pv.still .pv-cap .roll { transition: none; }
+  .pv-f { position: relative; overflow: clip; }
+  .pv-f.dark { background: #191a1c; }
+  .pv-f > img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
+  .pv-phone { height: 78%; width: auto; aspect-ratio: 540 / 1173; border-radius: 12% / 5.5%; box-shadow: 0 10px 24px -14px rgba(0, 0, 0, 0.5); }
+  .pv-type {
+    display: flex; flex-direction: column; justify-content: space-between; height: 100%;
+    padding: 14px 16px 16px;
+  }
+  .pv-type .n { font: 400 clamp(4rem, 2rem + 4vw, 7rem)/0.8 var(--serif); letter-spacing: -0.04em; }
+  .pv-type p { font: italic 400 clamp(1.25rem, 0.4rem + 1.3vw, 1.75rem)/1.05 var(--serif); letter-spacing: -0.01em; text-wrap: balance; }
+  .pv-cap { --h: 1.35em; height: var(--h); margin-top: 10px; overflow: clip; color: var(--ink-2); }
+  .pv-cap .roll { transform: translateY(calc(var(--p, 0) * var(--h) * -1)); }
+  .pv-cap .roll > span { height: var(--h); }
+}
+
+/* ---------- a spread ---------- */
+main { padding-bottom: 1px; }
+.spread {
+  container-type: inline-size;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: var(--gap);
+  align-items: start;
+  margin-top: clamp(104px, 13vw, 192px);
+  scroll-margin-top: calc(var(--head) + 16px);
+}
+.spread > * { grid-column: 1 / -1; }
+.spread:not(:has(.nums > :nth-child(3))) { margin-top: clamp(80px, 9vw, 136px); }
+.spread:first-child { margin-top: 0; }
+
+.meta {
+  display: flex; flex-wrap: wrap; gap: 4px 20px; min-height: 2.35em;
+  border-top: 1px solid var(--ink); padding-top: 10px; color: var(--ink-2);
+}
+
+.name { font-weight: 400; margin: clamp(20px, 3cqi, 36px) 0 clamp(28px, 5.5cqi, 64px); }
+.name a { display: block; width: fit-content; }
+.name .line {
+  font-family: var(--serif); font-size: 20cqi; line-height: 0.86; letter-spacing: -0.03em;
+  hyphens: none; white-space: nowrap;
+}
+.arrow {
+  display: inline-block; margin-left: 0.12em; font-size: 0.34em; vertical-align: 0.9em;
+  font-family: var(--sans); font-weight: 400; color: var(--accent);
+  transition: transform var(--spring-bouncy-dur) var(--spring-bouncy);
+}
+@media (hover: hover) and (pointer: fine) {
+  .spread:has(.name a:hover, .fig:hover) .arrow { transform: translateX(0.25em); }
+}
+
+.lede {
+  font: italic 400 clamp(1.625rem, 1.2rem + 1.2vw, 2.125rem)/1.1 var(--serif);
+  letter-spacing: -0.01em; max-width: 20ch; text-wrap: balance;
+  margin-bottom: 28px;
+}
+
+/* figure: a fixed frame; the picture drifts inside it */
+.fig { display: block; margin-bottom: 8px; transition: transform var(--dur-press) var(--ease-out); }
+.fig:active { transform: scale(0.985); }
+.frame {
+  display: block; position: relative; aspect-ratio: 3 / 2; overflow: clip;
+  background: #191a1c; border-radius: 2px;
+}
+.fig:not(.plate) .frame { aspect-ratio: 33 / 20; }
+.plate .frame { background: var(--plate); }
+.media { position: absolute; top: -1.5%; left: 0; width: 100%; height: 103%; object-fit: cover; object-position: 50% 0; }
+
+.phones { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; gap: 5%; }
+.phone {
+  height: 80%; width: auto; aspect-ratio: 540 / 1173;
+  border-radius: 12% / 5.5%;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 18px 40px -18px rgba(0, 0, 0, 0.45);
+}
+
+/* figures: one scale on every spread. Values verbatim, qualifier beside its number, never animated */
+.nums > div { border-top: 1px solid var(--rule); padding-block: 16px 24px; }
+.nums dt {
+  font: 500 clamp(2.75rem, 12cqi, 6rem)/0.95 var(--sans); letter-spacing: -0.045em;   /* grotesk figures: unambiguous 1 vs l */
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.nums dd { margin-top: 10px; font-size: 0.875rem; line-height: 1.4; color: var(--ink-2); max-width: 40ch; text-wrap: pretty; }
+.nums dd.q { color: var(--ink); font-size: 0.8125rem; border-left: 2px solid var(--accent); padding-left: 8px; }
+
+.note { color: var(--ink-2); max-width: 46ch; display: grid; gap: 6px; text-wrap: pretty; padding-top: 12px; }
+.note a { color: var(--ink); }
+
+/* PowerLeash: the icon sits small beside its download, no plate */
+.dl { display: flex; align-items: center; gap: 12px; }
+.dl .icon { width: 56px; height: 56px; flex: none; margin-left: -4px; }
+.dl a { --uy: calc(50% - 0.85em); }
+
+@media (min-width: 960px) {
+  .spread { grid-template-columns: repeat(9, minmax(0, 1fr)); scroll-margin-top: 40px; }
+  .meta { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); column-gap: var(--gap); }
+  .meta > :nth-child(2) { grid-column: 4 / -1; }
+  .name .line { font-size: 19cqi; }
+
+  .lede { grid-column: 1 / 4; grid-row: 3; }
+  .note { grid-column: 1 / 4; grid-row: 4; padding-top: 18px; }
+  .pic .fig  { grid-column: 4 / -1; grid-row: 3; margin: 0; }
+  .pic .nums { grid-column: 4 / -1; grid-row: 4; margin-top: clamp(32px, 4cqi, 56px); }
+  .type .nums { grid-column: 4 / -1; grid-row: 3 / 6; }
+
+  .nums > div { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); column-gap: var(--gap); }
+  .nums dt { grid-column: 1 / -1; font-size: clamp(3.25rem, 7.5cqi, 6.5rem); }
+  .nums dd { grid-column: 1 / 4; }
+  .nums dd.q { grid-column: 4 / -1; grid-row: 2; align-self: start; }
+
+  /* wide: a type-only spread with three or four figures sets them as a table across all 9 columns */
+  .wide .lede { grid-column: 1 / 6; max-width: 24ch; }
+  .wide .nums { grid-column: 1 / -1; grid-row: 4; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--gap); }
+  .wide .nums:has(> :nth-child(3):last-child) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .wide .nums > div { display: block; }
+  .wide .nums dt { font-size: clamp(3rem, 6cqi, 5rem); }
+  .wide .note { grid-row: 5; }
+
+  /* the ExeTix and Chelsea notes sit at the foot of the figure, not beside the numbers */
+  .pic .note { grid-column: 4 / -1; grid-row: 5; }
+}
+@media (min-width: 1200px) {
+  .pic .note { grid-column: 1 / 4; grid-row: 3; align-self: end; }
+}
+
+/* ---------- colophon ---------- */
+.colophon {
+  container-type: inline-size;
+  margin-top: clamp(140px, 20vw, 300px);
+  border-top: 1px solid var(--ink);
+  padding: 24px 0 max(40px, env(safe-area-inset-bottom));
+  display: grid; gap: 28px;
+}
+.motto .line { font: 400 19cqi/0.86 var(--serif); letter-spacing: -0.035em; }
+.out { display: flex; flex-wrap: wrap; gap: 0 24px; font-size: 0.9375rem; }
+.fine { color: var(--ink-2); max-width: 60ch; text-wrap: balance; }
+@media (min-width: 960px) {
+  .colophon { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); row-gap: 32px; }
+  .colophon > * { grid-column: 4 / -1; }
+  .motto .line { font-size: 10.5cqi; }
+  .colophon .fine:last-child { grid-column: 1 / 4; grid-row: 3; }
+}
+
+/* ---------- phone running head (odometer) ---------- */
+.runhead {
+  position: fixed; inset: 0 0 auto 0; z-index: 10;
+  display: flex; align-items: center; gap: 12px;
+  height: calc(var(--head) + env(safe-area-inset-top)); padding: env(safe-area-inset-top) var(--margin) 0;
+  background: var(--paper);                  /* solid: no per-frame re-blur over playing video */
+  border-bottom: 1px solid var(--rule);
+  font: 500 0.875rem/var(--head) var(--sans);
+  transform: translateY(-101%);
+  transition: transform var(--dur-base) var(--ease-out);          /* exit: quick, no spring */
+}
+.runhead.on { transform: none; transition: transform var(--spring-snappy-dur) var(--spring-snappy); }
+.rh-n, .rh-t { height: var(--head); overflow: clip; }
+.rh-n { color: var(--accent); width: 1.6rem; font-variant-numeric: tabular-nums; }
+.rh-t { flex: 1; }
+.rh-of { color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.roll {
+  display: flex; flex-direction: column;
+  transform: translateY(calc(var(--i, 0) * var(--head) * -1));
+  transition: transform var(--spring-bouncy-dur) var(--spring-bouncy);
+}
+.roll > span { height: var(--head); white-space: nowrap; }
+.rh-bar {
+  position: absolute; left: 0; right: 0; bottom: -1px; height: 2px;
+  background: var(--accent); transform: scaleX(0); transform-origin: left;
+}
+@media (min-width: 960px) { .runhead { display: none; } }
+
+/* ---------- motion ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  /* Hero moment: the name rises out of its masks once, on load. No delay and no fill-before,
+     so a frame taken before the animation starts shows the name; line 2 holds briefly inside
+     its own keyframes instead of waiting on a delay. */
+  .cover .line > span { animation: rise 900ms var(--ease-out); }
+  .cover .line:nth-child(2) > span { animation-name: rise-2; animation-duration: 990ms; }
+  @keyframes rise   { from { transform: translateY(104%) rotate(2.5deg); } }
+  @keyframes rise-2 { 0%, 9% { transform: translateY(104%) rotate(2.5deg); } }
+
+  /* Display lines: app.js arms a name only when it is about to scroll in from below, then
+     drops the arm when it is on screen, so the line transitions up out of its mask.
+     A transition, not keyframes: it retargets if interrupted. Unarmed = fully visible. */
+  .name .line > span, .motto .line > span {
+    transition: transform var(--dur-reveal) var(--ease-out);
+    transition-delay: calc(var(--li, 0) * var(--stagger-line));
+  }
+  .armed .line > span { transform: translateY(105%); transition: none; }
+}
+@media print { .armed .line > span { transform: none !important; } }
+
+/* Scroll-driven, compositor-only. Browsers without view() just see the page. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .frame { view-timeline: --frame block; }
+    .media { animation: drift linear both; animation-timeline: --frame; animation-range: cover; }
+    @keyframes drift {
+      from { transform: translateY(-1.4%); }
+      to   { transform: translateY(1.4%); }
+    }
+    .phone { animation: float linear both; animation-timeline: --frame; animation-range: cover; }
+    @keyframes float {
+      from { transform: translateY(var(--d)); }
+      to   { transform: translateY(calc(var(--d) * -1)); }
+    }
+  }
+}
+
+/* Reading progress. Each spread publishes a view timeline measured against a thin band 40% down
+   the viewport (the same line app.js uses to pick the current spread), so 0 → 1 runs exactly while
+   that spread is current. timeline-scope on body lets the index and the running head read it. */
+@supports (timeline-scope: --a) and (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    body { timeline-scope: --s1, --s2, --s3, --s4, --s5, --s6, --s7, --s8, --s9, --s10, --s11, --s12; }
+    .spread { view-timeline-axis: block; view-timeline-inset: 40% 59%; }
+    .spread:nth-child(1)  { view-timeline-name: --s1; }
+    .spread:nth-child(2)  { view-timeline-name: --s2; }
+    .spread:nth-child(3)  { view-timeline-name: --s3; }
+    .spread:nth-child(4)  { view-timeline-name: --s4; }
+    .spread:nth-child(5)  { view-timeline-name: --s5; }
+    .spread:nth-child(6)  { view-timeline-name: --s6; }
+    .spread:nth-child(7)  { view-timeline-name: --s7; }
+    .spread:nth-child(8)  { view-timeline-name: --s8; }
+    .spread:nth-child(9)  { view-timeline-name: --s9; }
+    .spread:nth-child(10) { view-timeline-name: --s10; }
+    .spread:nth-child(11) { view-timeline-name: --s11; }
+    .spread:nth-child(12) { view-timeline-name: --s12; }
+
+    .index .t::after, .rh-bar { animation: fill linear both; animation-range: cover; }
+    @keyframes fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    .index li:nth-child(1)  .t::after, .runhead[data-i="0"]  .rh-bar { animation-timeline: --s1; }
+    .index li:nth-child(2)  .t::after, .runhead[data-i="1"]  .rh-bar { animation-timeline: --s2; }
+    .index li:nth-child(3)  .t::after, .runhead[data-i="2"]  .rh-bar { animation-timeline: --s3; }
+    .index li:nth-child(4)  .t::after, .runhead[data-i="3"]  .rh-bar { animation-timeline: --s4; }
+    .index li:nth-child(5)  .t::after, .runhead[data-i="4"]  .rh-bar { animation-timeline: --s5; }
+    .index li:nth-child(6)  .t::after, .runhead[data-i="5"]  .rh-bar { animation-timeline: --s6; }
+    .index li:nth-child(7)  .t::after, .runhead[data-i="6"]  .rh-bar { animation-timeline: --s7; }
+    .index li:nth-child(8)  .t::after, .runhead[data-i="7"]  .rh-bar { animation-timeline: --s8; }
+    .index li:nth-child(9)  .t::after, .runhead[data-i="8"]  .rh-bar { animation-timeline: --s9; }
+    .index li:nth-child(10) .t::after, .runhead[data-i="9"]  .rh-bar { animation-timeline: --s10; }
+    .index li:nth-child(11) .t::after, .runhead[data-i="10"] .rh-bar { animation-timeline: --s11; }
+    .index li:nth-child(12) .t::after, .runhead[data-i="11"] .rh-bar { animation-timeline: --s12; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important; transition-delay: 0s !important; scroll-behavior: auto !important;
+  }
+}

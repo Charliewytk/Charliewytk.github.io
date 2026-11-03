@@ -1,0 +1,317 @@
+/* Stack: the projects as a deck of physical cards.
+   Without JS: a plain grid, both faces readable.
+   With JS (html.js): cards are absolutely placed; app.js drives every transform with springs.
+   data-mode="fan"   wide screens: a fanned hand. Each card's index (name, line, status) sits in
+                     the strip the next card leaves visible, so the hand reads at rest.
+   data-mode="stack" everything else: a deck, swipe the top card away, tap to flip. */
+
+:root {
+  /* motion tokens (motion-brief §1) */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-press: 100ms; --dur-fast: 125ms; --dur-base: 180ms; --dur-slow: 260ms;
+
+  /* paper */
+  --paper: #f2f0eb;
+  --card: #fffefb;
+  --ink: #1b1a18;
+  --ink-2: #57534c;
+  --rule: rgba(27, 26, 24, 0.09);
+  --focus: #2f6bff;
+  --radius: 24px;
+
+  --sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+
+  /* card size; fan mode scales it down with transform, so the open card is crisp at scale 1 */
+  --cw: 440px;
+  --ch: 640px;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 16px/1.5 var(--sans);
+  letter-spacing: -0.005em;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 6px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* ---------- header / footer ---------- */
+.top {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 20px 32px;
+}
+.top h1 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+.top h1 a, .top nav a { text-decoration: none; }
+/* 44px hit areas, same visual line */
+.top h1 a, .top nav a { display: inline-block; padding: 12px 0; margin: -12px 0; }
+.top nav { display: flex; gap: 24px; font-size: 15px; }
+.top nav a { color: var(--ink-2); transition: color var(--dur-fast) var(--ease-out); }
+.foot { padding: 14px 32px 22px; }
+.foot p { margin: 0; font-size: 13px; line-height: 1.4; color: var(--ink-2); text-wrap: pretty; }
+@media (hover: hover) and (pointer: fine) {
+  .top nav a:hover { color: var(--ink); }
+}
+
+/* ---------- the stage ---------- */
+.stage { position: relative; min-height: 0; overflow: clip visible; }
+.deck { list-style: none; margin: 0; padding: 0; }
+
+/* ---------- a card ---------- */
+.card { position: relative; width: var(--cw); height: var(--ch); }
+.inner { position: absolute; inset: 0; margin: 0; transform-style: preserve-3d; }
+.face {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  padding: 24px;
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: inset 0 0 0 1px var(--rule);
+  overflow: hidden;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.back { transform: rotateY(180deg); }
+
+/* shadows are separate layers; app.js fades their opacity (never animates box-shadow) */
+.shadow { position: absolute; inset: 0; border-radius: var(--radius); pointer-events: none; }
+.shadow-rest { box-shadow: 0 1px 2px rgba(40, 30, 10, 0.08), 0 6px 16px -6px rgba(40, 30, 10, 0.16); }
+.shadow-lift { opacity: 0; box-shadow: 0 30px 60px -18px rgba(40, 30, 10, 0.30), 0 12px 24px -12px rgba(40, 30, 10, 0.18); }
+
+/* playing-card corner index */
+.pip { font: 600 13px/1 var(--sans); font-variant-numeric: tabular-nums; letter-spacing: 0.02em; color: var(--deep); }
+
+/* front: index (name, line, status), then the picture or the lead number */
+.front h2 { margin: 12px 0 0; font-size: 30px; line-height: 1.05; font-weight: 650; letter-spacing: -0.028em; text-wrap: balance; }
+.front h2 a { text-decoration: none; -webkit-user-drag: none; }
+.line { margin: 8px 0 0; font-size: 16px; line-height: 1.4; color: var(--ink-2); text-wrap: pretty; }
+.meta { margin: 14px 0 18px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; font-size: 13px; line-height: 1.35; }
+.chip {
+  padding: 3px 9px; border-radius: 999px;
+  background: var(--tint); color: var(--deep); font-weight: 600; white-space: nowrap;
+}
+.detail { color: var(--ink-2); text-wrap: pretty; }
+
+.art {
+  position: relative; flex: 1; min-height: 0; margin: 0;
+  border-radius: 14px; background: var(--tint); overflow: hidden;
+}
+.art img { display: block; -webkit-user-drag: none; user-select: none; }
+.art--photo img { width: 100%; height: 100%; object-fit: cover; object-position: left top; }
+#doorly .art--photo img { object-position: 18% 8%; }   /* the headline: cheapest flight vs cheapest trip */
+.art--shot img {
+  position: absolute; left: 50%; top: 22px; width: 58%; height: auto; transform: translateX(-50%);
+  border-radius: 22px; box-shadow: 0 18px 40px -16px rgba(20, 60, 10, 0.45);
+}
+.art--icon img { position: absolute; left: 50%; top: 50%; width: auto; height: 72%; max-width: 46%; object-fit: contain; transform: translate(-50%, -50%); }
+
+/* the lead number, on cards without a picture */
+.art--num {
+  display: flex; flex-direction: column; justify-content: flex-end; gap: 4px;
+  padding: 20px 20px 18px;
+}
+.art--num b {
+  font-size: 46px; line-height: 1; font-weight: 650; letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums; color: var(--deep);
+}
+.art--num span { margin-top: 6px; font-size: 15px; line-height: 1.35; color: var(--ink); text-wrap: pretty; }
+.art--num small { font-size: 13px; line-height: 1.35; color: var(--deep); text-wrap: pretty; }
+
+/* the whole face is a button */
+.turn {
+  position: absolute; inset: 0; z-index: 1;
+  margin: 0; padding: 0; border: 0; border-radius: var(--radius);
+  background: transparent; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.turn:focus-visible { outline-offset: -3px; border-radius: var(--radius); }
+
+/* back */
+.back-head { display: flex; align-items: center; gap: 10px; min-height: 36px; }
+.back-name { margin: 0; flex: 1; font-size: 17px; font-weight: 600; letter-spacing: -0.015em; }
+.turn--back {
+  position: relative; inset: auto; flex: none;
+  width: 36px; height: 36px; display: grid; place-items: center;
+  border-radius: 50%; background: var(--tint); color: var(--deep);
+  transition: transform var(--dur-press) var(--ease-out);
+}
+.turn--back::before { content: ""; position: absolute; inset: -4px; border-radius: 50%; } /* 44px hit area */
+.turn--back:active { transform: scale(0.94); }
+.nums { list-style: none; margin: 14px 0 0; padding: 0; min-height: 0; flex: 0 1 auto; overflow: auto; overscroll-behavior: contain; }
+.nums li { display: grid; gap: 2px; padding: 12px 0 13px; border-top: 1px solid var(--rule); }
+.nums b { font-size: 27px; line-height: 1.1; font-weight: 650; letter-spacing: -0.025em; font-variant-numeric: tabular-nums; color: var(--ink); }
+.nums span { font-size: 14px; line-height: 1.4; color: var(--ink-2); text-wrap: pretty; }
+.nums small { font-size: 13px; line-height: 1.4; color: var(--deep); text-wrap: pretty; }
+/* the picture again, in the room the numbers leave (app.js hides it when there is no room) */
+.back .art { flex: 1 1 0; margin-top: 16px; }
+.back .art[hidden] { display: none; }
+.back .art video {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; transition: opacity var(--dur-slow) var(--ease-out);
+}
+.back .art.is-playing video { opacity: 1; }
+.note { margin: 14px 0 0; font-size: 12.5px; line-height: 1.4; color: var(--ink-2); text-wrap: pretty; }
+.links { margin: auto 0 0; padding-top: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; font-size: 14px; }
+.links a { color: var(--ink-2); text-underline-offset: 3px; text-decoration-color: var(--rule); -webkit-user-drag: none; }
+.links .open {
+  display: inline-flex; align-items: center; height: 44px; padding: 0 20px;
+  border-radius: 999px; background: var(--ink); color: var(--card);
+  font-weight: 600; text-decoration: none;
+  transition: transform var(--dur-press) var(--ease-out);
+}
+.links .open::after { content: "\2192"; margin-left: 8px; }
+.links .open:active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) {
+  .links a:hover { color: var(--ink); text-decoration-color: currentColor; }
+}
+
+/* ---------- no JS: a readable grid ---------- */
+html:not(.js) .deck {
+  display: grid; gap: 24px; padding: 8px 32px 32px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+}
+html:not(.js) .card { width: auto; height: auto; }
+html:not(.js) .inner, html:not(.js) .face { position: relative; }
+html:not(.js) .face { min-height: 0; }
+html:not(.js) .front { border-radius: var(--radius) var(--radius) 0 0; }
+html:not(.js) .front .art { flex: none; height: 220px; }
+html:not(.js) .back { transform: none; border-radius: 0 0 var(--radius) var(--radius); }
+html:not(.js) .turn, html:not(.js) .dots, html:not(.js) .back .art { display: none; }
+
+/* ---------- JS: shared deck geometry ---------- */
+html.js .stage { touch-action: pan-y; }
+html.js .card {
+  position: absolute; left: 50%; top: 50%;
+  margin: calc(var(--ch) / -2) 0 0 calc(var(--cw) / -2);
+  perspective: 2200px;
+  user-select: none; -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+/* one surface, one action: tapping the front turns the card; "Open" on the back navigates */
+html.js .front h2 a { pointer-events: none; }
+html.js .card.dragging { will-change: transform; cursor: grabbing; }
+
+/* open card: soft highlight that follows the pointer, under the text (motion-brief §8) */
+.back > * { position: relative; z-index: 1; }
+.back::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  background: radial-gradient(320px at var(--mx, 50%) var(--my, 30%), color-mix(in srgb, var(--tint) 70%, transparent), transparent 70%);
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .card.is-open .back::before { opacity: 1; }
+}
+
+/* ---------- fan: a hand of cards ----------
+   app.js sets, in card pixels:  --k    1 / card scale, so type is sized for the screen
+                                 --col  width of the index column (fits the visible strip)
+                                 --gap  space from the column to the panel, so the panel starts under the next card */
+html.js[data-mode="fan"] .stage { touch-action: none; overflow: clip; } /* the table edge: cards never cover the footer */
+html.js[data-mode="fan"] .dots { display: none; }
+html.js[data-mode="fan"] .front {
+  --k: var(--fan-k, 1.75);
+  display: grid;
+  grid-template-columns: var(--fan-col, 150px) minmax(0, 1fr);
+  grid-template-rows: auto auto auto auto minmax(0, 1fr);
+  column-gap: var(--fan-gap, 30px);
+  align-content: stretch;
+  padding: calc(11px * var(--k)) calc(9px * var(--k));
+}
+html.js[data-mode="fan"] .front > :not(.art):not(.turn) { grid-column: 1; }
+html.js[data-mode="fan"] .front .pip { font-size: calc(10px * var(--k)); }
+html.js[data-mode="fan"] .front h2 {
+  width: var(--fan-title-w, 150px); margin-top: calc(7px * var(--k));
+  font-size: var(--fan-title, 27px); line-height: 1.12; letter-spacing: -0.02em;
+  text-wrap: wrap;
+}
+html.js[data-mode="fan"] .front .line { margin-top: calc(5px * var(--k)); font-size: calc(11.5px * var(--k)); line-height: 1.35; }
+html.js[data-mode="fan"] .front .meta {
+  margin: calc(9px * var(--k)) 0 0; display: block;
+  font-size: calc(11px * var(--k)); line-height: 1.35;
+}
+html.js[data-mode="fan"] .front .chip { display: block; padding: 0; background: none; white-space: normal; }
+html.js[data-mode="fan"] .front .detail { display: block; margin-top: calc(2px * var(--k)); }
+/* the panel sits right of the column, under the next card while the hand rests */
+html.js[data-mode="fan"] .front .art { grid-column: 2; grid-row: 1 / -1; border-radius: calc(9px * var(--k)); }
+html.js[data-mode="fan"] .front .art--photo { grid-column: 1 / -1; grid-row: 5; margin-top: calc(12px * var(--k)); }
+html.js[data-mode="fan"] .front .art--shot img { width: 78%; top: calc(14px * var(--k)); border-radius: calc(16px * var(--k)); }
+html.js[data-mode="fan"] .front .art--icon img { max-width: 72%; }
+html.js[data-mode="fan"] .front .art--num { padding: calc(12px * var(--k)); gap: calc(2px * var(--k)); }
+html.js[data-mode="fan"] .front .art--num b { font-size: calc(25px * var(--k)); }
+html.js[data-mode="fan"] .front .art--num span { margin-top: calc(3px * var(--k)); font-size: calc(11.5px * var(--k)); }
+html.js[data-mode="fan"] .front .art--num small { font-size: calc(11px * var(--k)); }
+
+/* ---------- stack: a deck (phones, tablets, small windows) ---------- */
+@media not ((min-width: 1360px) and (min-height: 640px)) {
+  :root {
+    /* fill the height the phone gives, keep the card no squatter than 1.3 and no taller than 1.62 */
+    --cw: min(358px, 100vw - 32px, (100svh - 150px) / 1.3);
+    --ch: clamp(var(--cw) * 1.3, 100svh - 236px, var(--cw) * 1.62);
+    --radius: 22px;
+  }
+  .top { padding: 14px 16px; }
+  .top h1, .top nav { font-size: 15px; }
+  .top nav { gap: 18px; }
+  .foot { padding: 6px 16px 20px; }
+  .foot p { font-size: 12.5px; }
+  html:not(.js) .deck { padding: 4px 16px 24px; }
+
+  .face { padding: 20px; }
+  .front h2 { font-size: 27px; margin-top: 10px; }
+  .line { font-size: 15px; margin-top: 6px; }
+  .meta { margin: 12px 0 14px; font-size: 12.5px; }
+  .art--num b { font-size: 40px; }
+  .art--num span { font-size: 14px; }
+  .art--num small { font-size: 12.5px; }
+  .nums { margin-top: 10px; }
+  .nums li { padding: 9px 0 10px; }
+  .nums b { font-size: 22px; }
+  .nums span { font-size: 13.5px; line-height: 1.35; }
+  .nums small { font-size: 12.5px; line-height: 1.35; }
+  .note { margin-top: 10px; font-size: 12px; }
+  .links { padding-top: 12px; }
+
+  /* the deck sits at the top of the stage; the cards behind peek below it */
+  html.js body { grid-template-rows: auto auto auto 1fr; }
+  html.js .stage { height: calc(var(--ch) + 56px); }
+  html.js .card { top: calc(var(--ch) / 2 + 10px); }
+  html.js .foot { align-self: end; }
+
+  /* position dots: one per card, the top card's dot is long. 44px tall hit areas. */
+  .dots { display: flex; justify-content: center; padding: 0 16px; }
+  .dots button {
+    width: 28px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer;
+    display: grid; place-items: center; -webkit-tap-highlight-color: transparent;
+  }
+  .dots button::before {
+    content: ""; width: 6px; height: 6px; border-radius: 3px; background: var(--ink); opacity: 0.18;
+    transition: transform var(--dur-base) var(--ease-out), opacity var(--dur-base) var(--ease-out);
+  }
+  .dots button[aria-current="true"]::before { opacity: 0.85; transform: scaleX(2.4); }
+}
+/* phone on its side: a wide, short card, so the face still fits */
+@media (max-height: 560px) and (not ((min-width: 1360px) and (min-height: 640px))) {
+  :root { --cw: min(358px, 100vw - 32px); --ch: max(220px, 100svh - 154px); }
+}
+@media (min-width: 1360px) and (min-height: 640px) { .dots { display: none; } }
+/* wide but short, or mid-width: the deck sits centred and a little larger */
+@media (min-width: 700px) and (min-height: 700px) and (not ((min-width: 1360px) and (min-height: 640px))) {
+  :root { --cw: 400px; --ch: min(600px, 100svh - 236px); }
+  .top { padding: 20px 32px; }
+  .foot { padding: 6px 32px 22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}

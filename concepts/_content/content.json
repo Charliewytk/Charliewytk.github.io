@@ -1,0 +1,1170 @@
+{
+  "version": 1,
+  "built": "2026-11-03",
+  "owner": {
+    "name": "Charlie Wuytack",
+    "location": "Exeter",
+    "site": "https://charliewytk.github.io/",
+    "links": {
+      "github": "https://github.com/Charliewytk",
+      "contact": "mailto:charlie@wuytack.net",
+      "email": "charlie@wuytack.net"
+    },
+    "home_nav": [
+      {
+        "label": "Work",
+        "href": "/work/"
+      },
+      {
+        "label": "GitHub",
+        "href": "https://github.com/Charliewytk"
+      },
+      {
+        "label": "Contact",
+        "href": "mailto:charlie@wuytack.net"
+      }
+    ],
+    "motto": {
+      "text": "I'd rather build than consume.",
+      "source": "work/index.html"
+    }
+  },
+  "projects": [
+    {
+      "n": "01",
+      "slug": "exetix",
+      "home_id": "exetix",
+      "name": "ExeTix",
+      "one_line": {
+        "text": "Pinged the second Exeter tickets drop.",
+        "source": "index.html"
+      },
+      "alt_lines": [
+        {
+          "text": "Get pinged the second Exeter tickets drop.",
+          "source": "work/index.html"
+        },
+        {
+          "text": "Sold out? Buy a verified student's spare.",
+          "source": "work/index.html"
+        }
+      ],
+      "kind": "iPhone app",
+      "shelf_tag": "Built and sold",
+      "status": "Built and sold",
+      "status_detail": {
+        "text": "On the App Store · released 29 Sep 2026 · sold Oct 2026",
+        "source": "work/index.html"
+      },
+      "primary_href": "/exetix/",
+      "track_href": "/tracks/exetix/",
+      "work_anchor": "/work/#exetix",
+      "related_hrefs": [
+        "/exetix/how-it-works.html",
+        "/exetix/engineering.html",
+        "/exetix/gallery.html"
+      ],
+      "external_href": [
+        {
+          "label": "On the App Store",
+          "href": "https://apps.apple.com/gb/app/exetix/id6814591245"
+        },
+        {
+          "label": "exeterticketexchange.com",
+          "href": "https://www.exeterticketexchange.com"
+        }
+      ],
+      "media": {
+        "image": "/exetix/img/screen-drops.webp",
+        "images": [
+          {
+            "src": "/exetix/img/screen-alerts.webp",
+            "alt": "ExeTix onboarding screen ‘Be first, every time’ with sample alerts: dropping in 10 min, tickets just dropped, restock, resale listed",
+            "w": 540,
+            "h": 1173
+          },
+          {
+            "src": "/exetix/img/screen-explore.webp",
+            "alt": "ExeTix Explore tab: ‘5 club nights tonight’ with a flyer for Indie Thursday at Timepiece and a Dropping soon rail",
+            "w": 540,
+            "h": 1173
+          },
+          {
+            "src": "/exetix/img/screen-drops.webp",
+            "alt": "ExeTix Drops tab: the next drop counting down and sold-out nights watched for restocks",
+            "w": 540,
+            "h": 1173
+          },
+          {
+            "src": "/exetix/img/store-01-welcome.webp",
+            "alt": null
+          }
+        ],
+        "icon": {
+          "src": "/exetix/img/icon-green.png",
+          "alt": "ExeTix app icon: a black ticket on bright green"
+        },
+        "video": null,
+        "poster": null,
+        "og": "/media/og/exetix.png"
+      },
+      "key_numbers": [
+        {
+          "value": "~1–2 s",
+          "label": "from a known release time to the alert",
+          "qualifier": null,
+          "source": "exetix/index.html"
+        },
+        {
+          "value": "£0",
+          "label": "seller fees. Sellers keep 100% of their price",
+          "qualifier": null,
+          "source": "work/index.html"
+        },
+        {
+          "value": "≈⅓",
+          "label": "of a typical student-resale booking fee: card processing, nothing on top",
+          "qualifier": null,
+          "source": "work/index.html"
+        }
+      ]
+    },
+    {
+      "n": "02",
+      "slug": "kill-log",
+      "home_id": "kill-log",
+      "name": "The Kill Log",
+      "one_line": {
+        "text": "Research that says no.",
+        "source": "index.html"
+      },
+      "alt_lines": [
+        {
+          "text": "Most trading ideas die. This is where they die on the record.",
+          "source": "index.html"
+        }
+      ],
+      "kind": "Quant research",
+      "shelf_tag": "Research",
+      "status": "Research",
+      "status_detail": {
+        "text": "Two strategies in small-size live execution tests. Nothing here claims a profit",
+        "source": "tracks/research/index.html"
+      },
+      "primary_href": "/kill-log/",
+      "track_href": "/tracks/research/",
+      "work_anchor": "/work/#research",
+      "related_hrefs": [
+        "/apex/",
+        "/research.html",
+        "/essays/friction-sized-edges.html"
+      ],
+      "external_href": [
+        {
+          "label": "KILL_LOG.md",
+          "href": "https://github.com/Charliewytk/trading101/blob/main/PaperMill/KILL_LOG.md"
+        }
+      ],
+      "media": {
+        "image": null,
+        "images": [],
+        "video": null,
+        "poster": null,
+        "og": "/media/og/research.png",
+        "homepage_world_imgs": [
+          "/media/og-kill-log.png"
+        ]
+      },
+      "key_numbers": [
+        {
+          "value": "~170",
+          "label": "pre-registered hypotheses across two programmes",
+          "qualifier": null,
+          "source": "tracks/research/index.html"
+        },
+        {
+          "value": "50 / 65",
+          "label": "trading lanes on the second ledger killed, on the record",
+          "qualifier": "From the lane ledger as of 30 September 2026.",
+          "source": "tracks/research/index.html",
+          "qualifier_source": "tracks/research/index.html"
+        },
+        {
+          "value": "p ≈ 1.0",
+          "label": "deflated Sharpe of the best of 3,038 model trials. The honest answer",
+          "qualifier": null,
+          "source": "tracks/research/index.html"
+        },
+        {
+          "value": "110",
+          "label": "paper hypotheses. They died to costs.",
+          "qualifier": "This is a paper book. No live P&L is claimed. No live book is implied.",
+          "source": "kill-log/index.html",
+          "qualifier_source": "kill-log/index.html"
+        }
+      ]
+    },
+    {
+      "n": "03",
+      "slug": "solana",
+      "home_id": "solana",
+      "name": "Solana execution",
+      "one_line": {
+        "text": "Fast enough. Then I measured whether fast mattered.",
+        "source": "index.html"
+      },
+      "alt_lines": [
+        {
+          "text": "A third of a millisecond, and why it didn't matter.",
+          "source": "tracks/solana/index.html"
+        },
+        {
+          "text": "Trigger to exit in a third of a millisecond.",
+          "source": "index.html"
+        }
+      ],
+      "kind": "On-chain infrastructure",
+      "shelf_tag": "Systems",
+      "status": "Live execution test",
+      "status_detail": {
+        "text": "0.25 SOL clips since 30 Sep 2026",
+        "source": "work/index.html"
+      },
+      "primary_href": "/tracks/solana/",
+      "track_href": "/tracks/solana/",
+      "work_anchor": "/work/#solana",
+      "related_hrefs": [],
+      "external_href": [],
+      "media": {
+        "image": null,
+        "images": [],
+        "video": null,
+        "poster": null,
+        "og": "/media/og/solana.png"
+      },
+      "key_numbers": [
+        {
+          "value": "0.33 ms",
+          "label": "p50, trigger to ready-to-sign sell bytes (p90 1.2 ms)",
+          "qualifier": null,
+          "source": "tracks/solana/index.html"
+        },
+        {
+          "value": "0.4 points",
+          "label": "Replayed on the same positions, it improved the average stop fill by 0.4 points",
+          "qualifier": "Fills are simulated at the estimated landing slot, not landed.",
+          "source": "tracks/solana/index.html",
+          "qualifier_source": "work/index.html"
+        },
+        {
+          "value": "0.0 bps",
+          "label": "median error of my integer AMM quote against the on-chain fill",
+          "qualifier": null,
+          "source": "tracks/solana/index.html"
+        }
+      ]
+    },
+    {
+      "n": "04",
+      "slug": "merger-monitor",
+      "home_id": "merger",
+      "name": "Merger Monitor",
+      "one_line": {
+        "text": "A table of filings, not a tip sheet.",
+        "source": "tracks/merger-monitor/index.html"
+      },
+      "alt_lines": [
+        {
+          "text": "A 3% spread is not 24.6% a year.",
+          "source": "subscribe/index.html"
+        }
+      ],
+      "kind": "Data product · SEC filings",
+      "shelf_tag": "£5 / mo",
+      "status": "Live · £5/month",
+      "status_detail": {
+        "text": "Zero subscribers so far. Take: £0.",
+        "source": "work/index.html"
+      },
+      "primary_href": "/merger-monitor/",
+      "track_href": "/tracks/merger-monitor/",
+      "work_anchor": "/work/#merger",
+      "related_hrefs": [
+        "/subscribe/",
+        "/weekly/",
+        "/example/",
+        "/sizer/"
+      ],
+      "external_href": [
+        {
+          "label": "Pay on Gumroad",
+          "href": "https://wuytackcharlie.gumroad.com/l/mergermonitor"
+        }
+      ],
+      "media": {
+        "image": null,
+        "images": [],
+        "video": null,
+        "poster": null,
+        "og": "/media/og/merger-monitor.png"
+      },
+      "key_numbers": [
+        {
+          "value": "24.6%",
+          "label": "what a 3% spread looks like annualised. That number is marketing",
+          "qualifier": null,
+          "source": "tracks/merger-monitor/index.html"
+        },
+        {
+          "value": "+1.38%",
+          "label": "per deal after break risk, costs and forgone carry",
+          "qualifier": "Filings, not advice.",
+          "source": "tracks/merger-monitor/index.html",
+          "qualifier_source": "tracks/merger-monitor/index.html"
+        },
+        {
+          "value": "1.59%",
+          "label": "break-even spread. Thinner deals lose money on average",
+          "qualifier": null,
+          "source": "tracks/merger-monitor/index.html"
+        },
+        {
+          "value": "£5/month",
+          "label": "the same table, emailed the evening it is built",
+          "qualifier": "Zero subscribers so far. Take: £0.",
+          "source": "work/index.html",
+          "qualifier_source": "work/index.html"
+        }
+      ]
+    },
+    {
+      "n": "05",
+      "slug": "doorly",
+      "home_id": "doorly",
+      "name": "Doorly",
+      "one_line": {
+        "text": "The cheapest flight isn't the cheapest trip.",
+        "source": "index.html"
+      },
+      "alt_lines": [
+        {
+          "text": "Flight search that ranks the whole door-to-door trip, not just the fare.",
+          "source": "work/index.html"
+        }
+      ],
+      "kind": "Web + iOS",
+      "shelf_tag": "Web app",
+      "status": "Demo",
+      "status_detail": {
+        "text": "Demo fares, labelled as such",
+        "source": "work/index.html"
+      },
+      "primary_href": "/doorly/",
+      "track_href": "/tracks/doorly/",
+      "work_anchor": "/work/#doorly",
+      "related_hrefs": [],
+      "external_href": [],
+      "media": {
+        "image": "/media/doorly.jpg",
+        "images": [],
+        "video": "/media/doorly-demo.mp4",
+        "poster": "/media/doorly.jpg",
+        "og": "/media/og/doorly.png"
+      },
+      "key_numbers": [
+        {
+          "value": "£120 < £130",
+          "label": "until you add the journey to the airport",
+          "qualifier": "Demo fares, labelled as such",
+          "source": "work/index.html",
+          "qualifier_source": "work/index.html"
+        }
+      ]
+    },
+    {
+      "n": "06",
+      "slug": "powerleash",
+      "home_id": "powerleash",
+      "name": "PowerLeash",
+      "one_line": {
+        "text": "A Mac menu-bar tool with one job.",
+        "source": "index.html"
+      },
+      "alt_lines": [
+        {
+          "text": "A low power mode that leaves the app in front alone.",
+          "source": "tracks/powerleash/index.html"
+        },
+        {
+          "text": "Holds the charger's cap at 42.8 W.",
+          "source": "index.html"
+        }
+      ],
+      "kind": "macOS utility",
+      "shelf_tag": "Mac tool",
+      "status": "Download",
+      "status_detail": {
+        "text": "Apple Silicon, unsigned.",
+        "source": "tracks/powerleash/index.html"
+      },
+      "primary_href": "/tracks/powerleash/",
+      "track_href": "/tracks/powerleash/",
+      "work_anchor": "/work/#powerleash",
+      "download_href": "/downloads/PowerLeash.zip",
+      "related_hrefs": [],
+      "external_href": [],
+      "media": {
+        "image": "/media/powerleash.png",
+        "images": [],
+        "video": null,
+        "poster": null,
+        "og": "/media/og/powerleash.png"
+      },
+      "key_numbers": [
+        {
+          "value": "42.8 W",
+          "label": "held under a sustained 8-thread burn",
+          "qualifier": null,
+          "source": "work/index.html"
+        },
+        {
+          "value": "59.0 → 42.7 W",
+          "label": "system load, before and after Match Charger",
+          "qualifier": null,
+          "source": "tracks/powerleash/index.html"
+        },
+        {
+          "value": "−15.6 → −3.5 W",
+          "label": "battery flow while plugged in: from draining hard to nearly break-even",
+          "qualifier": "Battery savings are not quantified yet.",
+          "source": "tracks/powerleash/index.html",
+          "qualifier_source": "tracks/powerleash/index.html"
+        }
+      ]
+    },
+    {
+      "n": "07",
+      "slug": "abyss-warden",
+      "home_id": "abyss",
+      "name": "Abyss Warden",
+      "one_line": {
+        "text": "Deep-sea tower defence.",
+        "source": "index.html"
+      },
+      "alt_lines": [
+        {
+          "text": "Hold the trench. Keep the lights on.",
+          "source": "tracks/abyss-warden/index.html"
+        }
+      ],
+      "kind": "Game",
+      "shelf_tag": "Game",
+      "status": "Playable",
+      "status_detail": null,
+      "primary_href": "/abyss-warden/",
+      "track_href": "/tracks/abyss-warden/",
+      "work_anchor": "/work/#abyss",
+      "related_hrefs": [],
+      "external_href": [],
+      "media": {
+        "image": "/media/abyss-1.jpg",
+        "images": [
+          {
+            "src": "/media/abyss-1.jpg",
+            "alt": null
+          },
+          {
+            "src": "/media/abyss-2.jpg",
+            "alt": null
+          },
+          {
+            "src": "/media/abyss-3.jpg",
+            "alt": null
+          }
+        ],
+        "video": "/media/abyss.mp4",
+        "poster": "/media/abyss-poster.jpg",
+        "og": "/media/og/abyss-warden.png"
+      },
+      "key_numbers": [
+        {
+          "value": "5",
+          "label": "bosses, playable in the browser",
+          "qualifier": null,
+          "source": "work/index.html"
+        },
+        {
+          "value": "20",
+          "label": "levels, all finished and balance-passed",
+          "qualifier": null,
+          "source": "tracks/abyss-warden/index.html"
+        }
+      ]
+    },
+    {
+      "n": "08",
+      "slug": "deskstatus",
+      "home_id": "deskstatus",
+      "name": "DeskStatus",
+      "one_line": {
+        "text": "The whole trading desk in one window.",
+        "source": "index.html"
+      },
+      "alt_lines": [
+        {
+          "text": "The desk in one window. It can't sign anything.",
+          "source": "index.html"
+        },
+        {
+          "text": "Looking can't turn into doing by accident.",
+          "source": "tracks/deskstatus/index.html"
+        }
+      ],
+      "kind": "macOS app",
+      "shelf_tag": "Mac tool",
+      "status": "Shipped · v1.0.3",
+      "status_detail": null,
+      "primary_href": "/tracks/deskstatus/",
+      "track_href": "/tracks/deskstatus/",
+      "work_anchor": "/work/#deskstatus",
+      "related_hrefs": [],
+      "external_href": [],
+      "media": {
+        "image": null,
+        "images": [],
+        "video": null,
+        "poster": null,
+        "og": "/media/og/deskstatus.png",
+        "note": {
+          "text": "The real window shows live account data, so it isn't pictured.",
+          "source": "work/index.html"
+        }
+      },
+      "key_numbers": [
+        {
+          "value": "7",
+          "label": "tabs, a menu-bar status light and a headless mode for scripts",
+          "qualifier": null,
+          "source": "work/index.html"
+        },
+        {
+          "value": "Read-only",
+          "label": "it can't sign anything",
+          "qualifier": null,
+          "source": "index.html"
+        }
+      ]
+    },
+    {
+      "n": "09",
+      "slug": "numerai",
+      "home_id": "numerai",
+      "name": "Numerai",
+      "one_line": {
+        "text": "The audit, and a deadline that moves.",
+        "source": "index.html"
+      },
+      "alt_lines": [],
+      "kind": "Tournament ML",
+      "shelf_tag": "Research",
+      "status": "Live, unstaked",
+      "status_detail": null,
+      "primary_href": "/tracks/numerai/",
+      "track_href": "/tracks/numerai/",
+      "work_anchor": "/work/#numerai",
+      "related_hrefs": [],
+      "external_href": [],
+      "media": {
+        "image": null,
+        "images": [],
+        "video": null,
+        "poster": null,
+        "og": "/media/og/numerai.png"
+      },
+      "key_numbers": [
+        {
+          "value": "1.47",
+          "label": "Sharpe of CORR60 over 93 held-out eras, positive in 95% of them",
+          "qualifier": null,
+          "source": "tracks/numerai/index.html"
+        },
+        {
+          "value": "1.27",
+          "label": "Sharpe of the payout score out of sample, with no losing quarter",
+          "qualifier": null,
+          "source": "tracks/numerai/index.html"
+        },
+        {
+          "value": "2",
+          "label": "live rounds resolved so far. Too few to stake on; the policy asks for ten",
+          "qualifier": null,
+          "source": "tracks/numerai/index.html"
+        }
+      ]
+    },
+    {
+      "n": "10",
+      "slug": "competitions",
+      "home_id": "competitions",
+      "name": "Competitions",
+      "one_line": {
+        "text": "Read deltas, not levels.",
+        "source": "tracks/competitions/index.html"
+      },
+      "alt_lines": [
+        {
+          "text": "Quantiacs, BRAIN, Structural Break.",
+          "source": "index.html"
+        }
+      ],
+      "kind": "Competitions",
+      "shelf_tag": "Research",
+      "status": "Selected",
+      "status_detail": null,
+      "primary_href": "/tracks/competitions/",
+      "track_href": "/tracks/competitions/",
+      "work_anchor": "/work/#competitions",
+      "related_hrefs": [],
+      "external_href": [],
+      "media": {
+        "image": null,
+        "images": [],
+        "video": null,
+        "poster": null,
+        "og": "/media/og/competitions.png"
+      },
+      "key_numbers": [
+        {
+          "value": "1 of 15",
+          "label": "strategies selected in the Quantiacs Q25 contest",
+          "qualifier": "In-sample Sharpe 1.22, maximum drawdown 23.6%.",
+          "source": "work/index.html",
+          "qualifier_source": "work/index.html"
+        },
+        {
+          "value": "Gold",
+          "label": "on WorldQuant BRAIN, with about 14 alphas live",
+          "qualifier": null,
+          "source": "tracks/competitions/index.html"
+        },
+        {
+          "value": "263rd of 1,332",
+          "label": "Structural Break",
+          "qualifier": null,
+          "source": "work/index.html"
+        },
+        {
+          "value": "−0.0003",
+          "label": "live change from two improvements that gained +0.0144 on my holdout",
+          "qualifier": null,
+          "source": "tracks/competitions/index.html"
+        }
+      ]
+    },
+    {
+      "n": "11",
+      "slug": "chess-exchange",
+      "home_id": "chess",
+      "name": "Chess Exchange",
+      "one_line": {
+        "text": "Markets on live games. Play money.",
+        "source": "index.html"
+      },
+      "alt_lines": [
+        {
+          "text": "Prediction markets on live chess games.",
+          "source": "index.html"
+        }
+      ],
+      "kind": "Markets + engines",
+      "shelf_tag": "Web app",
+      "status": "Play money",
+      "status_detail": null,
+      "primary_href": "/tracks/chess-exchange/",
+      "track_href": "/tracks/chess-exchange/",
+      "work_anchor": "/work/#chess",
+      "related_hrefs": [],
+      "external_href": [
+        {
+          "label": "Try the FEN → WDL demo",
+          "href": "https://charliewytk.github.io/chess-exchange/"
+        }
+      ],
+      "media": {
+        "image": "/media/chess.jpg",
+        "images": [],
+        "video": "/media/chess-demo.mp4",
+        "poster": "/media/chess.jpg",
+        "og": "/media/og/chess-exchange.png"
+      },
+      "key_numbers": [
+        {
+          "value": "W / D / B",
+          "label": "from any position you paste in",
+          "qualifier": "Play money. Not a book, not advice.",
+          "source": "work/index.html",
+          "qualifier_source": "tracks/chess-exchange/index.html"
+        },
+        {
+          "value": "6",
+          "label": "liquidity bots around an LMSR market maker",
+          "qualifier": null,
+          "source": "tracks/chess-exchange/index.html"
+        }
+      ]
+    },
+    {
+      "n": "12",
+      "slug": "chelsea-bikes",
+      "home_id": "chelsea",
+      "name": "Chelsea Bikes",
+      "one_line": {
+        "text": "My local bike shop, rebuilt unasked.",
+        "source": "index.html"
+      },
+      "alt_lines": [
+        {
+          "text": "My local bike shop's website, rebuilt unasked.",
+          "source": "index.html"
+        }
+      ],
+      "kind": "Web design",
+      "shelf_tag": "Website",
+      "status": "Prototype",
+      "status_detail": {
+        "text": "Not yet pitched",
+        "source": "work/index.html"
+      },
+      "primary_href": "/chelsea-bikes/",
+      "track_href": "/tracks/chelsea-bikes/",
+      "work_anchor": "/work/#chelsea",
+      "related_hrefs": [
+        "/chelsea-bikes/compare.html"
+      ],
+      "external_href": [],
+      "media": {
+        "image": "/media/chelsea.jpg",
+        "images": [],
+        "video": "/media/chelsea-demo.mp4",
+        "poster": "/media/chelsea.jpg",
+        "og": "/media/og/chelsea-bikes.png"
+      },
+      "key_numbers": [
+        {
+          "value": "11",
+          "label": "pages, works offline",
+          "qualifier": null,
+          "source": "work/index.html"
+        }
+      ]
+    }
+  ],
+  "honesty_lines": [
+    {
+      "text": "Research and engineering, not financial advice. Nothing here is trading live at a profit.",
+      "source": "index.html",
+      "applies_to": "site-wide footer (home, every track page)"
+    },
+    {
+      "text": "Research and engineering, not financial advice. Backtest and paper results are labelled as such, and nothing on this page is trading live at a profit. Merger Monitor is a table of filings, not a tip sheet.",
+      "source": "work/index.html",
+      "applies_to": "site-wide footer (/work/)"
+    },
+    {
+      "text": "Two strategies in small-size live execution tests. Nothing here claims a profit yet",
+      "source": "work/index.html",
+      "applies_to": "research"
+    },
+    {
+      "text": "~£0. Live tests run at tiny size to measure real fills against paper; paper and backtest numbers are labelled as such throughout.",
+      "source": "work/index.html",
+      "applies_to": "research"
+    },
+    {
+      "text": "From the lane ledger as of 30 September 2026.",
+      "source": "work/index.html",
+      "applies_to": "research scoreboard"
+    },
+    {
+      "text": "Scaling up needs a separate, pre-registered live test.",
+      "source": "work/index.html",
+      "applies_to": "research scoreboard"
+    },
+    {
+      "text": "Separately, the meme-desk auditor has closed about 70 entry and exit variants as failed or inconclusive, with no pass standing.",
+      "source": "work/index.html",
+      "applies_to": "research scoreboard"
+    },
+    {
+      "text": "−$102.59/day per $1,000 (paper), after rewards",
+      "source": "work/index.html",
+      "applies_to": "research ledger: Polymarket liquidity provision"
+    },
+    {
+      "text": "Both are candidates on paper, not results.",
+      "source": "work/index.html",
+      "applies_to": "event shorts"
+    },
+    {
+      "text": "Research, not advice.",
+      "source": "work/index.html",
+      "applies_to": "event shorts"
+    },
+    {
+      "text": "Fills are simulated at the estimated landing slot, not landed.",
+      "source": "work/index.html",
+      "applies_to": "solana"
+    },
+    {
+      "text": "Zero subscribers. Take: £0. Filings, not advice.",
+      "source": "work/index.html",
+      "applies_to": "merger-monitor"
+    },
+    {
+      "text": "Zero subscribers so far. Take: £0.",
+      "source": "work/index.html",
+      "applies_to": "merger-monitor"
+    },
+    {
+      "text": "£5/month · not advice",
+      "source": "work/index.html",
+      "applies_to": "merger-monitor"
+    },
+    {
+      "text": "A floor, not a ceiling: deals that die before a definitive proxy never enter the sample.",
+      "source": "work/index.html",
+      "applies_to": "merger-monitor"
+    },
+    {
+      "text": "Spreads move; these were computed when the page was built.",
+      "source": "merger-monitor/index.html",
+      "applies_to": "merger-monitor table"
+    },
+    {
+      "text": "Nothing here is investment advice. No position is held in anything listed.",
+      "source": "subscribe/index.html",
+      "applies_to": "merger-monitor / subscribe"
+    },
+    {
+      "text": "£5/month on Gumroad. Cancel there. 7-day refund.",
+      "source": "subscribe/index.html",
+      "applies_to": "merger-monitor / subscribe"
+    },
+    {
+      "text": "This is a paper book. No live P&L is claimed. No live book is implied.",
+      "source": "kill-log/index.html",
+      "applies_to": "kill-log"
+    },
+    {
+      "text": "No position is held in anything listed.",
+      "source": "kill-log/index.html",
+      "applies_to": "kill-log"
+    },
+    {
+      "text": "Numbers are paper or backtest unless they're marked live.",
+      "source": "apex/index.html",
+      "applies_to": "apex"
+    },
+    {
+      "text": "Not investment advice. Nothing here is an offer of a product or signal. Paper and backtest figures are labelled as such; the live trades were a small-size execution study.",
+      "source": "apex/index.html",
+      "applies_to": "apex"
+    },
+    {
+      "text": "This is a paper-forward candidate, not a result.",
+      "source": "apex/index.html",
+      "applies_to": "apex: investment-trust tenders"
+    },
+    {
+      "text": "Demo fares, labelled as such.",
+      "source": "work/index.html",
+      "applies_to": "doorly"
+    },
+    {
+      "text": "Apple Silicon, unsigned. Unzip → drag PowerLeash.app to /Applications → right-click Open. Double-click is blocked by Gatekeeper; that is expected. Battery savings are not quantified yet.",
+      "source": "work/index.html",
+      "applies_to": "powerleash download"
+    },
+    {
+      "text": "Play money. Not a book, not advice.",
+      "source": "tracks/chess-exchange/index.html",
+      "applies_to": "chess-exchange"
+    },
+    {
+      "text": "A schematic of the layout, not a screenshot. The real window shows live account data, so it isn't pictured.",
+      "source": "work/index.html",
+      "applies_to": "deskstatus"
+    },
+    {
+      "text": "2 live rounds resolved so far. Too few to stake on; the policy asks for ten",
+      "source": "tracks/numerai/index.html",
+      "applies_to": "numerai"
+    },
+    {
+      "text": "Backtest, compounded through annual net returns, slippage included.",
+      "source": "tracks/competitions/index.html",
+      "applies_to": "competitions: Quantiacs chart"
+    },
+    {
+      "text": "ExeTix is independent. It is not affiliated with the University of Exeter, any venue, or any ticketing platform, and it never buys tickets on other platforms for you.",
+      "source": "exetix/index.html",
+      "applies_to": "exetix"
+    }
+  ],
+  "research_summary": {
+    "source": "work/index.html",
+    "anchor": "/work/#programme",
+    "headline": {
+      "text": "In the first programme, about 110 hypotheses produced nine real anomalies. None were bigger than the cost of trading them.",
+      "source": "work/index.html"
+    },
+    "total": {
+      "value": "~170",
+      "label": "hypotheses tested across two programmes. Two now in small live execution tests; no profit claimed.",
+      "source": "work/index.html"
+    },
+    "status": {
+      "value": "Live tests",
+      "label": "Two strategies in small-size live execution tests. Nothing here claims a profit yet",
+      "source": "work/index.html"
+    },
+    "revenue": {
+      "value": "~£0",
+      "label": "Live tests run at tiny size to measure real fills against paper; paper and backtest numbers are labelled as such throughout.",
+      "source": "work/index.html"
+    },
+    "first_programme": [
+      {
+        "value": "~110",
+        "label": "hypotheses tested: equities, ETFs, Polymarket, factors, filings",
+        "source": "work/index.html"
+      },
+      {
+        "value": "9",
+        "label": "produced a real, measurable anomaly",
+        "source": "work/index.html"
+      },
+      {
+        "value": "0",
+        "label": "survived their own trading costs",
+        "source": "work/index.html"
+      }
+    ],
+    "second_ledger": {
+      "caption": {
+        "text": "Every trading lane on the second ledger, by verdict (n = 65)",
+        "source": "work/index.html"
+      },
+      "as_of": {
+        "text": "From the lane ledger as of 30 September 2026.",
+        "source": "work/index.html"
+      },
+      "n": 65,
+      "verdicts": [
+        {
+          "value": "50",
+          "label": "killed. Negative out of sample, eaten by fees, no capacity, or the wrong sign.",
+          "source": "work/index.html"
+        },
+        {
+          "value": "8",
+          "label": "inconclusive. Too few independent events to decide. Said so rather than guessing.",
+          "source": "work/index.html"
+        },
+        {
+          "value": "3",
+          "label": "accruing. Forward paper tests with a sealed sample-size target.",
+          "source": "work/index.html"
+        },
+        {
+          "value": "2",
+          "label": "candidates, on paper. The unlock short below, and the book that combines the event shorts.",
+          "source": "work/index.html"
+        },
+        {
+          "value": "2",
+          "label": "in live execution tests. The listing short and a Solana microstructure strategy, each at tiny size to measure real fills against paper. Scaling up needs a separate, pre-registered live test.",
+          "source": "work/index.html"
+        }
+      ]
+    },
+    "method_rules": [
+      {
+        "value": "3,038",
+        "label": "model trials sit in one ledger. The best of them, deflated for all 3,038, has a deflated-Sharpe p of about 1.0. That is the honest answer.",
+        "source": "work/index.html"
+      },
+      {
+        "value": "AUC 0.47",
+        "label": "A model trained on permuted labels scores AUC 0.47, against 0.82–0.94 on the real ones.",
+        "source": "work/index.html"
+      },
+      {
+        "value": "21",
+        "label": "21 live Numerai rounds turn out to be about one independent observation.",
+        "source": "work/index.html"
+      }
+    ],
+    "retraction": [
+      {
+        "value": "Claimed",
+        "label": "Buying a newly migrated token 1–2 seconds after the snipers had positive expected value.",
+        "source": "work/index.html"
+      },
+      {
+        "value": "Caught",
+        "label": "An audit of the raw data found 88 of 1,320 tick files were sparse.",
+        "source": "work/index.html"
+      },
+      {
+        "value": "Corrected",
+        "label": "On the 1,232 complete pools, entry loses at every delay: −5.2% a trade at 1 s (t −5.3), −3.9% at 5 s, −5.4% at 22 s (t −8.6). Verdict: RED, published the same day.",
+        "source": "work/index.html"
+      }
+    ],
+    "what_ate_the_edges": [
+      {
+        "edge": "Polymarket longshot bias, real: ~2¢",
+        "eaten_by": "the spread is 1.5–3¢",
+        "source": "work/index.html"
+      },
+      {
+        "edge": "Dip-buying, 503 stocks + 90 ETFs: +20bp in 2016–21",
+        "eaten_by": "+2bp in 2021–26, below costs",
+        "source": "work/index.html"
+      },
+      {
+        "edge": "Polymarket liquidity provision, liquid markets",
+        "eaten_by": "−$102.59/day per $1,000 (paper), after rewards",
+        "source": "work/index.html"
+      },
+      {
+        "edge": "Following analyst upgrades",
+        "eaten_by": "the whole reaction is in the untradeable gap",
+        "source": "work/index.html"
+      },
+      {
+        "edge": "25 equity factors, 29 survivors of multiple-testing correction",
+        "eaten_by": "one levered beta bet wearing 29 hats",
+        "source": "work/index.html"
+      },
+      {
+        "edge": "13F cloning, 19,000 filings",
+        "eaten_by": "survivorship, plus a single regime",
+        "source": "work/index.html"
+      },
+      {
+        "edge": "Merger spreads: 3% annualises to 24.6% a year",
+        "eaten_by": "after break risk and costs, +1.38% a deal; break-even 1.59%",
+        "source": "work/index.html"
+      }
+    ]
+  },
+  "other_pages": [
+    {
+      "href": "/work/",
+      "title": "Everything, in full",
+      "source": "index.html"
+    },
+    {
+      "href": "/apex/",
+      "title": "Apex — on-chain trading research, written up honestly",
+      "source": "work/index.html"
+    },
+    {
+      "href": "/research.html",
+      "title": "Research notes",
+      "source": "research.html"
+    },
+    {
+      "href": "/subscribe/",
+      "title": "Get tonight's table — £5/month",
+      "source": "work/index.html"
+    },
+    {
+      "href": "/weekly/",
+      "title": "Free weekly edition",
+      "source": "work/index.html"
+    },
+    {
+      "href": "/example/",
+      "title": null,
+      "source": null
+    },
+    {
+      "href": "/sizer/",
+      "title": null,
+      "source": null
+    },
+    {
+      "href": "/essays/friction-sized-edges.html",
+      "title": "I pre-registered 110 market hypotheses. Nine were real. Zero were tradeable.",
+      "source": "work/index.html"
+    }
+  ],
+  "conflicts": [
+    {
+      "topic": "merger-monitor wording",
+      "where": "index.html P.merger",
+      "site_says": "\"+1.38%\", \"realised, not 24.6% a year\" and body \"Realised +1.38%\"",
+      "elsewhere": "/work/, /subscribe/, /tracks/merger-monitor/ describe +1.38% as expected value per deal after break rate, costs and carry; zero subscribers, no position held",
+      "pack_uses": "tracks/merger-monitor wording; never call +1.38% 'realised'"
+    },
+    {
+      "topic": "solana latency",
+      "where": "index.html P.solana",
+      "site_says": "0.3 ms / a third of a millisecond",
+      "elsewhere": "/work/ and track: 0.33 ms p50 (p90 1.2 ms)",
+      "pack_uses": "0.33 ms with the p50 qualifier"
+    },
+    {
+      "topic": "exetix alert time",
+      "where": "index.html P.exetix",
+      "site_says": "1–2 s from ticket drop to lock screen",
+      "elsewhere": "/work/ and /exetix/: ~1–2 s from a known release time to the alert",
+      "pack_uses": "~1–2 s from a known release time"
+    },
+    {
+      "topic": "kill-log count",
+      "where": "index.html P.kill-log",
+      "site_says": "50 trading ideas killed out of sample",
+      "elsewhere": "/work/: 50 of 65 trading lanes, 'negative out of sample, eaten by fees, no capacity, or the wrong sign', as of 30 September 2026",
+      "pack_uses": "50 / 65 with the as-of date"
+    },
+    {
+      "topic": "kill-log destination",
+      "where": "index.html PAGES['kill-log'] = kill-log/",
+      "site_says": "card numbers (~170, 50/65, p ≈ 1.0) come from /tracks/research/ and /work/#research",
+      "elsewhere": "/kill-log/ is the ~110-hypothesis first-programme paper log with a Merger Monitor upsell",
+      "pack_uses": "primary_href /kill-log/, track_href /tracks/research/ (unresolved)"
+    },
+    {
+      "topic": "solana live status",
+      "where": "/work/#solana and /tracks/solana/",
+      "site_says": "Live execution test, 0.25 SOL clips since 30 Sep 2026",
+      "elsewhere": "/apex/ says 'programme closed' (sep–oct 2026); whale-follow ran live six days",
+      "pack_uses": "site text as written; may be stale"
+    },
+    {
+      "topic": "DataCrunch rank",
+      "where": "research.html",
+      "site_says": "about 12th of 13,534",
+      "elsewhere": "/work/: around 15th of 13,534",
+      "pack_uses": "not used as a key number"
+    },
+    {
+      "topic": "chess external demo",
+      "where": "/work/#chess, /tracks/chess-exchange/",
+      "site_says": "https://charliewytk.github.io/chess-exchange/ — 'Demo goes live after Pages click'",
+      "elsewhere": "no chess-exchange/ folder in this repo",
+      "pack_uses": "listed as external_href; treat as possibly dead"
+    },
+    {
+      "topic": "homepage order",
+      "where": "index.html <noscript> list",
+      "site_says": "exetix, kill-log, merger, doorly, abyss, chelsea, solana, powerleash, deskstatus, numerai, competitions, chess",
+      "elsewhere": "P object / n numbers / track numbers: 01 exetix … 12 chelsea",
+      "pack_uses": "P / n order"
+    }
+  ]
+}

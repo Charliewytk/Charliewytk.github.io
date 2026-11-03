@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Charlie Wuytack</title>
+<meta name="description" content="I'd rather build than consume.">
+<meta name="theme-color" content="#08090a">
+<link rel="icon" href="/media/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Inter with the optical-size axis: large sizes render as Inter Display -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<!-- Springs run only with JS and full motion; set before first paint so the fan never flashes -->
+<script>if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('spring');</script>
+<script src="app.js" defer></script>
+</head>
+<body>
+
+<a class="skip" href="#work">Skip to projects</a>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="mark" href="/">Charlie Wuytack</a>
+    <nav aria-label="Primary">
+      <a href="/work/">Work</a>
+      <a href="https://github.com/Charliewytk">GitHub</a>
+      <a href="mailto:charlie@wuytack.net">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- Hero: one line. The page's only glow sits behind it; Work and Contact live in the nav. -->
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <h1 id="hero-title">I'd rather build than&nbsp;consume.</h1>
+  </section>
+
+  <!-- Bento: DOM order = project order 01–12. Width classes: w2 / w3 / w4 / w6 of a 6-column grid.
+       Every card: number on top, its picture at the bottom, the honesty line last.
+       Link name = the h2 (aria-labelledby); number and qualifiers = description. -->
+  <section id="work" class="wrap" aria-label="Projects">
+    <ul class="bento" role="list">
+
+      <!-- 01 ExeTix -->
+      <li class="cell w4 tall">
+        <a class="card" href="/exetix/" aria-labelledby="t01" aria-describedby="d01 s01">
+          <span class="sw" aria-hidden="true"></span>
+          <div class="pv pv-exetix">
+            <div class="stat" id="d01">
+              <p class="num">~1–2&nbsp;s</p>
+              <p class="lab">from a known release time to the alert</p>
+              <img class="app-icon" src="/exetix/img/icon-green.png" width="240" height="240" alt="ExeTix app icon: a black ticket on bright green">
+            </div>
+            <div class="fan">
+              <img src="/exetix/img/screen-alerts.webp" width="540" height="1173" alt="ExeTix onboarding screen ‘Be first, every time’ with sample alerts: dropping in 10 min, tickets just dropped, restock, resale listed">
+              <img src="/exetix/img/screen-explore.webp" width="540" height="1173" alt="ExeTix Explore tab: ‘5 club nights tonight’ with a flyer for Indie Thursday at Timepiece and a Dropping soon rail">
+              <img src="/exetix/img/screen-drops.webp" width="540" height="1173" alt="ExeTix Drops tab: the next drop counting down and sold-out nights watched for restocks">
+            </div>
+          </div>
+          <div class="meta">
+            <h2 id="t01"><span class="nm">ExeTix</span> <span class="ln">Pinged the second Exeter tickets drop.</span></h2>
+            <span class="st" id="s01">Built and sold</span>
+          </div>
+        </a>
+      </li>
+
+      <!-- 02 The Kill Log: 65 lanes, one cell each. Filled = the 50 killed. -->
+      <li class="cell w2 tall">
+        <a class="card" href="/tracks/research/" aria-labelledby="t02" aria-describedby="d02 s02">
+          <span class="sw" aria-hidden="true"></span>
+          <div class="pv pv-stat" id="d02">
+            <p class="num">50 / 65</p>
+            <p class="lab">trading lanes on the second ledger killed, on the record</p>
+            <div class="lanes" aria-hidden="true"><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <p class="q">From the lane ledger as of 30&nbsp;September&nbsp;2026.</p>
+          </div>
+          <div class="meta">
+            <h2 id="t02"><span class="nm">The Kill Log</span> <span class="ln">Research that says no.</span></h2>
+            <span class="st" id="s02">Two strategies in small-size live execution tests. Nothing here claims a profit</span>
+          </div>
+        </a>
+      </li>
+
+      <!-- 03 Solana execution: p50 and p90 on a 0–1.5 ms ruler -->
+      <li class="cell w3">
+        <a class="card" href="/tracks/solana/" aria-labelledby="t03" aria-describedby="d03 s03">
+          <span class="sw" aria-hidden="true"></span>
+          <div class="pv pv-stat" id="d03">
+            <p class="num">0.33&nbsp;ms</p>
+            <p class="lab">p50, trigger to ready-to-sign sell bytes (p90 1.2 ms)</p>
+            <div class="ruler" aria-hidden="true">
+              <span class="tick" style="--at:22%">p50</span>
+              <span class="tick" style="--at:80%">p90</span>
+              <span class="end">0</span><span class="end">1.5&nbsp;ms</span>
+            </div>
+          </div>
+          <div class="meta">
+            <h2 id="t03"><span class="nm">Solana execution</span> <span class="ln">Fast enough. Then I measured whether fast mattered.</span></h2>
+            <span class="st" id="s03">Live execution test · 0.25 SOL clips since 30&nbsp;Sep&nbsp;2026</span>
+          </div>
+        </a>
+      </li>
+
+      <!-- 04 Merger Monitor -->
+      <li class="cell w3">
+        <a class="card" href="/merger-monitor/" aria-labelledby="t04" aria-describedby="d04 s04">
+          <span class="sw" aria-hidden="true"></span>
+          <div class="pv pv-stat" id="d04">
+            <p class="num">+1.38%</p>
+            <p class="lab">per deal after break risk, costs and forgone carry</p>
+            <p class="q">Filings, not advice. Zero subscribers so far. Take: £0.</p>
+          </div>
+          <div class="meta">
+            <h2 id="t04"><span class="nm">Merger Monitor</span> <span class="ln">A table of filings, not a tip sheet.</span></h2>
+            <span class="st" id="s04">Live · £5/month</span>
+          </div>
+        </a>
+      </li>
+
+      <!-- 05 Doorly. Poster = frame 0 of the clip, so playback starts without a cut. -->
+      <li class="cell w4">
+        <a class="card" href="/doorly/" aria-labelledby="t05" aria-describedby="s05">
+          <span class="sw" aria-hidden="true"></span>
+          <div class="pv pv-media pv-top">
+            <video muted loop playsinline preload="none" poster="media/doorly.webp" width="1120" height="700" aria-label="Doorly demo: flight search ranked door to door">
+              <source src="media/doorly-720.mp4" type="video/mp4" media="(max-width: 640px)">
+              <source src="/media/doorly-demo.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="meta">
+            <h2 id="t05"><span class="nm">Doorly</span> <span class="ln">The cheapest flight isn't the cheapest trip.</span></h2>
+            <span class="st" id="s05">Demo fares, labelled as such</span>
+          </div>
+        </a>
+        <button class="play" type="button" hidden><span class="vh">Play Doorly demo</span></button>
+      </li>
+
+      <!-- 06 PowerLeash -->
+      <li class="cell w2">
+        <a class="card" href="/tracks/powerleash/" aria-labelledby="t06" aria-describedby="d06 s06">
+          <span class="sw" aria-hidden="true"></span>
+          <div class="pv pv-stat" id="d06">
+            <p class="num">42.8&nbsp;W</p>
+            <p class="lab">held under a sustained 8-thread burn</p>
+            <img class="app-icon" src="/media/powerleash.png" width="512" height="512" alt="PowerLeash app icon: a white leaf on green" loading="lazy">
+          </div>
+          <div class="meta">
+            <h2 id="t06"><span class="nm">PowerLeash</span> <span class="ln">A Mac menu-bar tool with one job.</span></h2>
+            <span class="st" id="s06">Apple Silicon, unsigned.</span>
+          </div>
+        </a>
+      </li>
+
+      <!-- 07 Abyss Warden: the one full-width card. 16:9 clip, trimmed to start after the title
+           card and wave banner (/media/abyss.mp4 from 3.5 s); the poster is its frame 0. -->
+      <li class="cell w6">
+        <a class="card" href="/abyss-warden/" aria-labelledby="t07" aria-describedby="s07">
+          <span class="sw" aria-hidden="true"></span>
+          <div class="pv pv-media pv-wide">
+            <video muted loop playsinline preload="none" poster="media/abyss.webp" width="960" height="540" aria-label="Abyss Warden gameplay: towers defending a trench">
+              <source src="media/abyss-720.mp4" type="video/mp4" media="(max-width: 640px)">
+              <source src="media/abyss.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="meta">
+            <h2 id="t07"><span class="nm">Abyss Warden</span> <span class="ln">Deep-sea tower defence.</span></h2>
+            <span class="st" id="s07">Playable · 20 levels · 5 bosses</span>
+          </div>
+        </a>
+        <button class="play" type="button" hidden><span class="vh">Play Abyss Warden gameplay</span></button>
+      </li>
+
+      <!-- 08 DeskStatus -->
+      <li class="cell w2">
+        <a class="card" href="/tracks/deskstatus/" aria-labelledby="t08" aria-describedby="d08 s08">
+          <span class="sw" aria-hidden="true"></span>
+          <div class="pv pv-stat" id="d08">
+            <p class="num num-word">Read-only</p>
+            <p class="lab">it can't sign anything</p>
+          </div>
+          <div class="meta">
+            <h2 id="t08"><span class="nm">DeskStatus</span> <span class="ln">The whole trading desk in one window.</span></h2>
+            <span class="st" id="s08">Shipped · v1.0.3</span>
+          </div>
+        </a>
+      </li>
+
+      <!-- 09 Numerai: 2 of the 10 rounds the staking policy asks for -->
+      <li class="cell w2">
+        <a class="card" href="/tracks/numerai/" aria-labelledby="t09" aria-describedby="d09 s09">
+          <span class="sw" aria-hidden="true"></span>
+          <div class="pv pv-stat" id="d09">
+            <p class="num">1.47</p>
+            <p class="lab">Sharpe of CORR60 over 93 held-out eras, positive in 95% of them</p>
+            <div class="dots" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <p class="q">2 live rounds resolved so far. Too few to stake on; the policy asks for ten</p>
+          </div>
+          <div class="meta">
+            <h2 id="t09"><span class="nm">Numerai</span> <span class="ln">The audit, and a deadline that moves.</span></h2>
+            <span class="st" id="s09">Live, unstaked</span>
+          </div>
+        </a>
+      </li>
+
+      <!-- 10 Competitions: 1 of 15 selected -->
+      <li class="cell w2">
+        <a class="card" href="/tracks/competitions/" aria-labelledby="t10" aria-describedby="d10 s10">
+          <span class="sw" aria-hidden="true"></span>
+          <div class="pv pv-stat" id="d10">
+            <p class="num">1 of 15</p>
+            <p class="lab">strategies selected in the Quantiacs Q25 contest</p>
+            <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <p class="q">In-sample Sharpe 1.22, maximum drawdown 23.6%.</p>
+          </div>
+          <div class="meta">
+            <h2 id="t10"><span class="nm">Competitions</span> <span class="ln">Read deltas, not levels.</span></h2>
+            <span class="st" id="s10">Selected</span>
+          </div>
+        </a>
+      </li>
+
+      <!-- 11 Chess Exchange -->
+      <li class="cell w3">
+        <a class="card" href="/tracks/chess-exchange/" aria-labelledby="t11" aria-describedby="s11">
+          <span class="sw" aria-hidden="true"></span>
+          <div class="pv pv-media">
+            <video muted loop playsinline preload="none" poster="media/chess.webp" width="1120" height="700" aria-label="Chess Exchange demo: markets on live games">
+              <source src="media/chess-720.mp4" type="video/mp4" media="(max-width: 640px)">
+              <source src="/media/chess-demo.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="meta">
+            <h2 id="t11"><span class="nm">Chess Exchange</span> <span class="ln">Markets on live games. Play money.</span></h2>
+            <span class="st" id="s11">Play money. Not a book, not advice.</span>
+          </div>
+        </a>
+        <button class="play" type="button" hidden><span class="vh">Play Chess Exchange demo</span></button>
+      </li>
+
+      <!-- 12 Chelsea Bikes -->
+      <li class="cell w3">
+        <a class="card" href="/chelsea-bikes/" aria-labelledby="t12" aria-describedby="s12">
+          <span class="sw" aria-hidden="true"></span>
+          <div class="pv pv-media">
+            <video muted loop playsinline preload="none" poster="media/chelsea.webp" width="1120" height="700" aria-label="Chelsea Bikes website prototype">
+              <source src="media/chelsea-720.mp4" type="video/mp4" media="(max-width: 640px)">
+              <source src="/media/chelsea-demo.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="meta">
+            <h2 id="t12"><span class="nm">Chelsea Bikes</span> <span class="ln">My local bike shop, rebuilt unasked.</span></h2>
+            <span class="st" id="s12">Prototype</span>
+          </div>
+        </a>
+        <button class="play" type="button" hidden><span class="vh">Play Chelsea Bikes prototype</span></button>
+      </li>
+    </ul>
+  </section>
+</main>
+
+<footer class="foot wrap">
+  <p class="honest">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
+  <div class="foot-row">
+    <span>Charlie Wuytack · Exeter</span>
+    <nav aria-label="Elsewhere">
+      <a href="/work/">Work</a>
+      <a href="https://github.com/Charliewytk">GitHub</a>
+      <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

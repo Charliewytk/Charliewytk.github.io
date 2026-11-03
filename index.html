@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -30,179 +30,161 @@
     addEventListener('hashchange', go);
   })();
 </script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
 <style>
-  :root {
-    --ground: #070807;
-    --ink: #ece8df;
-    --muted: #a19c90;
-    --faint: #8d887c;
-    --rule: rgba(236, 232, 223, 0.12);
-    --glow: #3ddc84;
-    --serif: "Cormorant Garamond", Georgia, serif;
-    --sans: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-    --mono: ui-monospace, "SF Mono", Menlo, monospace;
-  }
-  * { box-sizing: border-box; }
+  /* the shelf page: one dark room, full screen; tokens come from assets/site.css (data-theme="dark") */
   html, body { height: 100%; }
-  body {
-    margin: 0; background: var(--ground); color: var(--ink);
-    font-family: var(--sans); font-size: 15px; line-height: 1.6;
-    -webkit-font-smoothing: antialiased; overflow: hidden;
-  }
-  a { color: inherit; }
-  ::selection { background: rgba(61, 220, 132, 0.3); }
-  button { font: inherit; }
+  body { overflow: hidden; background: var(--bg); }
 
-  /* top bar */
-  .bar {
-    position: fixed; inset: 0 0 auto 0; z-index: 60;
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 18px 28px; font-size: 12px; letter-spacing: 0.08em;
-    pointer-events: none; color: var(--ink);
-  }
+  /* header: floats over the scene */
+  .bar { position: fixed; inset: 0 0 auto 0; z-index: 60; background: none; border: 0; -webkit-backdrop-filter: none; backdrop-filter: none; pointer-events: none; }
   .bar > * { pointer-events: auto; }
-  .bar .who { font-weight: 500; }
-  .bar nav { display: flex; gap: 20px; }
-  .bar a, .bar button { text-decoration: none; opacity: 0.78; background: none; border: 0; color: inherit; padding: 0; cursor: pointer; font-size: 12px; letter-spacing: 0.08em; }
-  .bar a:hover, .bar button:hover, .bar a:focus-visible, .bar button:focus-visible { opacity: 1; }
-  .bar :focus-visible { outline: 1px solid var(--glow); outline-offset: 4px; }
+  .bar .site-nav a { color: var(--fg-2); }
+  .bar button:disabled, .bar a[disabled] { opacity: 0.5; }
 
   /* stage */
   .hero { position: fixed; inset: 0; overflow: hidden; }
-  #scene { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: none; touch-action: none; }
-  .hero::after {
-    content: ""; position: absolute; inset: 0; pointer-events: none;
-    background: radial-gradient(ellipse at 50% 50%, transparent 46%, rgba(0,0,0,0.6) 100%);
-  }
+  #scene { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+  .hero::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 50%, transparent 46%, rgba(0, 0, 0, 0.6) 100%); }
 
-  /* keyboard access: one button per object, visible only on focus */
-  .keys { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 20; display: flex; gap: 8px; }
+  /* keyboard: one button per object, shown only while focused */
+  .keys { position: fixed; left: 50%; bottom: calc(var(--space-6) + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 20; }
   .keys button {
     position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
-    background: none; color: var(--ink); border: 0; padding: 4px 2px; font: italic 500 18px var(--serif); cursor: pointer;
-    text-shadow: 0 0 14px rgba(0,0,0,0.9);
+    padding: var(--space-3) var(--space-5); border: 1px solid var(--line-2); border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--bg) 80%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    color: var(--fg); font-size: var(--text-sm); font-weight: 500; line-height: 1;
   }
-  .keys button:focus-visible { position: static; width: auto; height: auto; clip: auto; outline: none; text-decoration: underline; text-decoration-color: var(--glow); text-underline-offset: 6px; }
+  .keys button:focus-visible { position: static; width: auto; height: auto; clip: auto; outline-offset: 2px; }
 
-  /* fallback (no WebGL) */
-  .fallback { display: none; position: absolute; inset: 0; align-items: center; justify-content: center; z-index: 1; padding: 0 16px; }
+  /* no WebGL: the same twelve, as buttons on a plank */
+  .fallback { display: none; position: absolute; inset: 0; align-items: center; justify-content: center; z-index: 1; padding: 0 var(--space-4); }
   .no-webgl .fallback { display: flex; }
   .no-webgl #scene { display: none; }
-  .fallback .shelf2d {
-    display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; align-items: flex-end; padding: 0 24px 14px; max-width: 900px;
-    border-bottom: 14px solid #6b4426; box-shadow: 0 18px 40px rgba(0,0,0,0.5);
-  }
-  .fallback button { background: none; border: 1px solid var(--rule); color: var(--ink); cursor: pointer; padding: 10px 14px; font-size: 13px; border-radius: 4px; }
-  .fallback button:hover { border-color: var(--glow); }
+  .fallback .shelf2d { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); max-width: 760px; padding: 0 var(--space-4) var(--space-4); border-bottom: 12px solid #6b4426; }
+  .fallback button { min-height: 44px; padding: 0 var(--space-4); border: 1px solid var(--line-2); border-radius: var(--radius-pill); background: none; color: var(--fg); font-size: var(--text-sm); font-weight: 500; transition: transform var(--dur-press) var(--ease-out), border-color var(--dur-fast) var(--ease-out); }
+  .fallback button:active { transform: scale(0.97); }
+  @media (hover: hover) and (pointer: fine) { .fallback button:hover { border-color: var(--accent); } }
+  .static-list { position: absolute; inset: 0; display: grid; place-items: center; z-index: 5; }
+  .static-list ul { list-style: none; margin: 0; padding: 0; text-align: center; font-size: var(--text-lg); font-weight: 600; letter-spacing: var(--tracking-snug); line-height: 2; }
+  .static-list a { text-decoration: none; }
 
-  /* hover label */
+  /* name under the object you are pointing at */
   .tip {
-    position: fixed; z-index: 25; pointer-events: none; opacity: 0; white-space: nowrap; text-align: center; margin-top: 34px;
-    font-family: var(--serif); font-style: italic; font-size: 19px; line-height: 1.1; color: var(--ink); letter-spacing: 0.01em;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.9), 0 0 18px rgba(0,0,0,0.85);
-    transform: translate(-50%, -100%) translateY(6px); transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    position: fixed; z-index: 25; pointer-events: none; white-space: nowrap; margin-top: 30px;
+    font-size: 0.9375rem; font-weight: 600; letter-spacing: var(--tracking-snug); line-height: 1; color: var(--fg);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), 0 0 16px rgba(0, 0, 0, 0.8);
+    opacity: 0; transform: translate(-50%, -100%) translateY(6px) scale(0.96);
+    transition: opacity var(--dur-exit) var(--ease-out), transform var(--dur-exit) var(--ease-out);
   }
-  .tip small { display: block; margin-top: 4px; font: 500 10px var(--mono); font-style: normal; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
-  .tip.on { opacity: 1; transform: translate(-50%, -100%); }
+  .tip.on { opacity: 1; transform: translate(-50%, -100%); transition: opacity var(--dur-fast) var(--ease-out), transform var(--spring-bouncy-dur) var(--spring-bouncy); }
 
-  /* work index */
-  .index {
-    position: fixed; inset: 0; z-index: 50; background: rgba(7,8,7,0.97); overflow-y: auto;
-    padding: 90px 28px 60px; opacity: 0; pointer-events: none; transition: opacity 0.35s;
+  /* back to the shelf */
+  .x {
+    position: fixed; z-index: 61; top: var(--header-offset); right: var(--gutter);
+    min-height: 36px; padding: 0 var(--space-4); border: 1px solid var(--line-2); border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--bg) 70%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    color: var(--fg); font-size: var(--text-sm); font-weight: 500; white-space: nowrap;
+    opacity: 0; transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-press) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
   }
-  .index.open { opacity: 1; pointer-events: auto; }
-  .index .inner { max-width: 1000px; margin: 0 auto; }
-  .index h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(2.2rem, 5vw, 3.6rem); margin: 0 0 18px; line-height: 1; }
-  .index h2 em { color: var(--muted); }
-  .index ul { list-style: none; margin: 0; padding: 0; }
-  .index li { }
+  .x:active { transform: scale(0.97); }
+  @media (hover: hover) and (pointer: fine) { .x:hover { border-color: var(--fg-3); } }
+  .open > .x, .index .x { opacity: 1; }
+
+  /* the list of all twelve */
+  .index {
+    position: fixed; inset: 0; z-index: 50; overflow-y: auto; overscroll-behavior: contain;
+    padding: calc(var(--header-offset) + var(--space-8)) var(--gutter) var(--space-8);
+    background: color-mix(in srgb, var(--bg) 94%, transparent); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+    opacity: 0; pointer-events: none; transition: opacity var(--dur-exit) var(--ease-out);
+  }
+  .index.open { opacity: 1; pointer-events: auto; transition: opacity var(--dur-base) var(--ease-out); }
+  .index .inner { max-width: 760px; margin: 0 auto; }
+  .index h2 { font-size: var(--text-xl); margin: 0 0 var(--space-5); }
+  .index ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .index li { border-bottom: 1px solid var(--line); opacity: 0; transform: translateY(8px); transition: opacity var(--dur-exit) var(--ease-out), transform var(--dur-exit) var(--ease-out); }
+  .index.open li { opacity: 1; transform: none; transition: opacity var(--dur-slow) var(--ease-out) calc(min(var(--i, 0), 7) * var(--stagger)), transform var(--spring-bouncy-dur) var(--spring-bouncy) calc(min(var(--i, 0), 7) * var(--stagger)); }
   .index li button {
     all: unset; box-sizing: border-box; cursor: pointer; width: 100%;
-    display: grid; grid-template-columns: 44px 1fr auto; gap: 18px; align-items: baseline; padding: 18px 4px;
-    transition: padding 0.3s ease, background 0.3s;
+    display: grid; grid-template-columns: 40px 1fr; align-items: baseline; gap: var(--space-3); padding: var(--space-4) 0;
+    transition: transform var(--dur-press) var(--ease-out);
   }
-  .index li button:hover, .index li button:focus-visible { padding-left: 14px; color: #fff; }
-  .index li button:hover .t, .index li button:focus-visible .t { font-style: italic; }
-  .index li button:focus-visible { outline: none; }
-  .index li button:focus-visible .n { color: var(--glow); }
-  .index .n { font-size: 12px; color: var(--faint); font-variant-numeric: tabular-nums; }
-  .index .t { font-family: var(--serif); font-size: clamp(1.4rem, 3vw, 2rem); line-height: 1.1; }
-  .index .d { display: block; font-family: var(--sans); font-size: 14px; color: var(--muted); margin-top: 3px; }
-  .index .tag { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); white-space: nowrap; }
-  .index small { display: block; margin-top: 40px; color: var(--faint); font-size: 12px; }
-  .x {
-    position: fixed; top: 54px; right: 28px; z-index: 61; background: none; border: 0; color: var(--ink); padding: 4px 0;
-    font: italic 500 20px var(--serif); cursor: pointer; opacity: 0; transition: opacity 0.4s, color 0.2s; white-space: nowrap;
-    text-shadow: 0 0 16px rgba(0,0,0,0.9);
+  .index li button:active { transform: scale(0.985); }
+  .index li button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--radius-1); }
+  .index .n { font: 500 var(--text-xs) var(--font-mono); color: var(--fg-4); font-variant-numeric: tabular-nums; }
+  .index .t { display: inline-block; font-size: var(--text-lg); font-weight: 600; letter-spacing: var(--tracking-snug); line-height: 1.2; transition: transform var(--spring-bouncy-dur) var(--spring-bouncy), color var(--dur-fast) var(--ease-out); }
+  @media (hover: hover) and (pointer: fine) {
+    .index li button:hover .t { transform: translateX(6px); color: var(--accent); }
   }
-  .x small { font: 500 10px var(--mono); font-style: normal; letter-spacing: 0.16em; color: var(--muted); margin-left: 10px; vertical-align: 3px; }
-  .x:hover { color: var(--glow); }
-  .open > .x, .index .x { opacity: 1; }
-  .x:focus-visible { outline: none; color: var(--glow); }
+  .index li button:focus-visible .t { color: var(--accent); }
+  .index .w-link { margin: var(--space-6) 0 0; }
+  .index .site-legal { margin: var(--space-7) 0 0; font-size: var(--text-sm); }
 
   /* ================= project world ================= */
   /* opened by the camera flying into an object's face: clip-path and transform are driven per frame from JS */
   .world {
-    position: fixed; inset: 0; z-index: 45; overflow-y: auto; overflow-x: hidden;
-    background: #060706; color: var(--ink);
+    position: fixed; inset: 0; z-index: 45; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain;
+    background: var(--bg); color: var(--fg);
     opacity: 0; pointer-events: none; visibility: hidden;
   }
   .world.live { visibility: visible; }
   /* the page scrolls under the name and nav: fade it out up there instead of drawing a bar */
-  .world::before { content: ""; position: sticky; top: 0; display: block; height: 110px; margin-bottom: -110px; z-index: 4; pointer-events: none; background: linear-gradient(#060706 30%, rgba(6,7,6,0)); }
-  .world.fade { transition: opacity 0.45s ease; }
+  .world::before { content: ""; position: sticky; top: 0; display: block; height: 110px; margin-bottom: -110px; z-index: 4; pointer-events: none; background: linear-gradient(var(--bg) 30%, transparent); }
+  .world.fade { transition: opacity var(--dur-slow) var(--ease-out); }
   .world.open { opacity: 1; pointer-events: auto; }
-  #w-inner { transform-origin: 50vw 50vh; will-change: transform; }
-  .w-hero { position: relative; height: 100vh; min-height: 560px; overflow: hidden; }
+  #w-inner { transform-origin: 50vw 50vh; }
+  .w-hero { position: relative; height: 100vh; height: 100svh; min-height: 520px; overflow: hidden; }
   .w-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none; background:
-      radial-gradient(ellipse at 30% 100%, rgba(6,7,6,0.85) 0%, rgba(6,7,6,0) 60%),
-      linear-gradient(180deg, rgba(6,7,6,0.55) 0%, rgba(6,7,6,0) 22%, rgba(6,7,6,0) 60%, rgba(6,7,6,0.9) 100%); }
+      radial-gradient(ellipse at 30% 100%, rgba(11, 12, 11, 0.85) 0%, rgba(11, 12, 11, 0) 60%),
+      linear-gradient(180deg, rgba(11, 12, 11, 0.55) 0%, rgba(11, 12, 11, 0) 22%, rgba(11, 12, 11, 0) 60%, rgba(11, 12, 11, 0.9) 100%); }
   .w-bg { position: absolute; inset: 0; }
   .w-bg canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-  .w-kick { position: absolute; z-index: 3; left: 28px; top: 62px; margin: 0; font: 500 12px var(--mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--acc); }
   .w-title {
-    position: absolute; z-index: 3; left: -0.05em; bottom: -0.16em; margin: 0; white-space: nowrap;
-    font-family: var(--serif); font-weight: 500; font-size: clamp(7rem, 24vw, 30rem); line-height: 0.8; letter-spacing: -0.045em;
-    color: var(--ink); will-change: transform;
-    transform: translateY(30%); opacity: 0; transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.05s, opacity 0.6s ease 0.05s;
+    position: absolute; z-index: 3; left: calc(var(--gutter) - 0.06em); bottom: var(--space-6); margin: 0; max-width: calc(100% - 2 * var(--gutter));
+    font-size: clamp(3.5rem, 13vw, 12rem); font-weight: 600; line-height: 0.92; letter-spacing: -0.05em; text-wrap: balance;
+    transform: translateY(24px); opacity: 0;
+    transition: transform var(--spring-snappy-dur) var(--spring-snappy), opacity var(--dur-slow) var(--ease-out);
   }
-  .world.open .w-title { transform: translateY(0); opacity: 1; }
-  .w-num { position: absolute; z-index: 3; right: 28px; top: 11vh; text-shadow: 0 0 24px #000, 0 0 60px #000, 0 0 90px #000; text-align: right; max-width: 60vw;
-    transform: translateY(-20px); opacity: 0; transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s, opacity 0.6s ease 0.2s; }
+  .world.open .w-title { transform: none; opacity: 1; }
+  .w-num {
+    position: absolute; z-index: 3; right: var(--gutter); top: calc(var(--header-h) + 9vh); max-width: min(60vw, 520px); text-align: right;
+    text-shadow: 0 0 24px #000, 0 0 60px #000;
+    transform: translateY(-12px); opacity: 0;
+    transition: transform var(--spring-snappy-dur) var(--spring-snappy) calc(2 * var(--stagger)), opacity var(--dur-slow) var(--ease-out) calc(2 * var(--stagger));
+  }
   .world.open .w-num { transform: none; opacity: 1; }
-  .w-num b { display: block; font-family: var(--serif); font-weight: 500; font-size: clamp(4.5rem, 13vw, 14rem); line-height: 0.85; letter-spacing: -0.04em; color: var(--acc); }
+  .w-num b { display: block; font-size: clamp(3rem, 9vw, 8.5rem); font-weight: 600; line-height: 0.9; letter-spacing: -0.045em; color: var(--acc); font-variant-numeric: tabular-nums; }
   .w-num b s { opacity: 0.45; }
-  .w-num span { display: block; margin-top: 22px; font: 500 12px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
-  .w-more { position: relative; max-width: 1180px; margin: 0 auto; padding: 90px 28px 80px; }
-  .w-line { font-family: var(--serif); font-style: italic; font-size: clamp(1.8rem, 4.4vw, 3.6rem); line-height: 1.08; margin: 0; max-width: 20ch; }
-  .w-media { margin: 70px -28px 0; height: 78vh; overflow: hidden; position: relative; -webkit-mask-image: linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent); mask-image: linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent); }
-  .w-media img { position: absolute; left: 0; top: -15%; width: 100%; height: 130%; object-fit: cover; will-change: transform; }
+  .w-num span { display: block; margin-top: var(--space-4); font-size: var(--text-sm); color: var(--fg-2); text-wrap: balance; }
+  .w-more { position: relative; max-width: calc(var(--page) + 2 * var(--gutter)); margin: 0 auto; padding: var(--space-9) var(--gutter) 0; }
+  .w-media { margin: 0 calc(-1 * var(--gutter)); height: 70vh; overflow: hidden; position: relative; -webkit-mask-image: linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent); mask-image: linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent); }
+  .w-media img { position: absolute; left: 0; top: -15%; width: 100%; height: 130%; max-width: none; object-fit: cover; }
   .w-media.phones { display: flex; justify-content: center; gap: 4vw; align-items: center; background: radial-gradient(circle at 50% 60%, color-mix(in srgb, var(--acc) 18%, transparent), transparent 60%); }
-  .w-media.phones img { position: static; width: auto; height: 82%; object-fit: contain; border-radius: 28px; box-shadow: 0 40px 80px -30px rgba(0,0,0,0.8); }
-  .w-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 28px 48px; margin: 80px 0 0; }
-  .w-stat { padding: 0; }
-  .w-stat b { display: block; font-family: var(--serif); font-weight: 500; font-size: clamp(2.6rem, 6vw, 4.6rem); line-height: 0.95; letter-spacing: -0.02em; }
+  .w-media.phones img { position: static; width: auto; height: 82%; object-fit: contain; border-radius: 28px; box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.8); }
+  .w-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-6) var(--space-7); margin: var(--space-8) 0 0; }
+  .w-stat { border-top: 1px solid var(--line); padding-top: var(--space-4); }
+  .w-stat b { display: block; font-size: clamp(2rem, 4vw, 3rem); font-weight: 600; line-height: 1; letter-spacing: -0.035em; font-variant-numeric: tabular-nums; }
   .w-stat b s { opacity: 0.5; }
-  .w-stat span { display: block; margin-top: 8px; font-size: 13px; color: var(--muted); }
-  .w-body { columns: 2 300px; column-gap: 40px; margin: 56px 0 0; font-size: 17px; line-height: 1.65; color: #cfcabd; }
-  .w-body p { margin: 0 0 14px; break-inside: avoid; }
-  .w-body strong { color: var(--acc); font-weight: 500; }
-  .w-foot { margin: 100px 0 0; padding-top: 0; display: flex; justify-content: space-between; gap: 18px; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
-  .w-foot a { text-decoration: none; border-bottom: 1px solid var(--acc); color: var(--ink); }
+  .w-stat span { display: block; margin-top: var(--space-2); font-size: var(--text-sm); color: var(--fg-3); }
+  .w-body { max-width: var(--measure); margin: var(--space-8) 0 0; font-size: var(--text-md); line-height: 1.6; color: var(--fg-2); }
+  .w-body p { margin: 0 0 1em; }
+  .w-body strong { color: var(--fg); font-weight: 600; }
+  .w-link { margin: var(--space-5) 0 0; font-size: var(--text-md); font-weight: 500; }
+  .w-link a { text-decoration-color: var(--acc, var(--accent)); text-decoration-thickness: 2px; }
+  .w-link a span { display: inline-block; transition: transform var(--spring-bouncy-dur) var(--spring-bouncy); }
+  @media (hover: hover) and (pointer: fine) { .w-link a:hover span { transform: translateX(4px); } }
+  .world .site-footer { margin-top: var(--space-9); padding-inline: 0; }
 
   /* background: the project's own screen, full bleed (static image, CSS scanlines) */
   .crt { position: absolute; inset: 0; overflow: hidden; background: #000; }
-  .crt img { position: absolute; inset: -4%; width: 108%; height: 108%; object-fit: cover; filter: saturate(0.9) contrast(1.12) brightness(0.78); }
-  .crt::before { content: ""; position: absolute; inset: 0; z-index: 1; background: repeating-linear-gradient(180deg, rgba(0,0,0,0.34) 0 1px, transparent 1px 3px); }
-  .crt::after { content: ""; position: absolute; inset: 0; z-index: 2; background: radial-gradient(ellipse at 50% 50%, transparent 45%, rgba(0,0,0,0.85) 100%); }
+  .crt img { position: absolute; inset: -4%; width: 108%; height: 108%; max-width: none; object-fit: cover; filter: saturate(0.9) contrast(1.12) brightness(0.78); }
+  .crt::before { content: ""; position: absolute; inset: 0; z-index: 1; background: repeating-linear-gradient(180deg, rgba(0, 0, 0, 0.34) 0 1px, transparent 1px 3px); }
+  .crt::after { content: ""; position: absolute; inset: 0; z-index: 2; background: radial-gradient(ellipse at 50% 50%, transparent 45%, rgba(0, 0, 0, 0.85) 100%); }
 
-  /* background: ExeTix phones fanning */
+  /* background: ExeTix phones fanning out */
   .fan { position: absolute; inset: 0; }
-  .fan img { position: absolute; right: 12vw; bottom: 8vh; height: 70vh; border-radius: 34px; box-shadow: 0 50px 90px -30px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.06);
-    transform-origin: 50% 120%; transform: translateX(var(--x)) rotate(var(--r)); transition: transform 1.3s cubic-bezier(0.16, 1, 0.3, 1); }
+  .fan img { position: absolute; right: 12vw; bottom: 8vh; height: 70vh; width: auto; max-width: none; border-radius: 34px; box-shadow: 0 50px 90px -30px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.06);
+    transform-origin: 50% 120%; transform: translateX(var(--x)) rotate(var(--r)); transition: transform var(--spring-bouncy-dur) var(--spring-bouncy) calc(2 * var(--stagger)); }
   .fan img:nth-child(1) { --r: -22deg; --x: -12vw; }
   .fan img:nth-child(2) { --r: 0deg; --x: 0vw; z-index: 2; }
   .fan img:nth-child(3) { --r: 22deg; --x: 12vw; }
@@ -212,78 +194,60 @@
   .board-wrap { position: absolute; inset: 0; perspective: 1100px; display: grid; place-items: center; }
   .board { width: min(86vh, 90vw); aspect-ratio: 1; display: grid; grid-template-columns: repeat(8, 1fr); position: relative;
     transform: translate(18vw, -6vh) rotateX(58deg) rotateZ(-24deg); transform-style: preserve-3d;
-    box-shadow: 0 0 0 10px #15130f, 0 80px 120px rgba(0,0,0,0.8); }
+    box-shadow: 0 0 0 10px #15130f, 0 80px 120px rgba(0, 0, 0, 0.8); }
   .board i { display: block; background: #1b1915; }
   .board i.l { background: #2c2922; }
-  .board .pc { position: absolute; width: 12.5%; height: 12.5%; display: grid; place-items: center; font-size: min(7vh, 7vw); color: var(--acc);
-    transform: rotateZ(24deg) rotateX(-58deg) translateY(-30%); transition: left 0.9s cubic-bezier(0.65,0,0.35,1), top 0.9s cubic-bezier(0.65,0,0.35,1); text-shadow: 0 8px 18px rgba(0,0,0,0.8); }
+  .board .pc { position: absolute; left: 0; top: 0; width: 12.5%; height: 12.5%; display: grid; place-items: center; font-size: min(7vh, 7vw); color: var(--acc);
+    transform: translate(calc(var(--px, 0) * 100%), calc(var(--py, 0) * 100%)) rotateZ(24deg) rotateX(-58deg) translateY(-30%);
+    transition: transform var(--spring-snappy-dur) var(--spring-snappy); text-shadow: 0 8px 18px rgba(0, 0, 0, 0.8); }
   .board .pc.b { color: #6f6a5e; }
 
-  /* film grain: one small noise tile, nudged a few times a second */
-  .grain { position: fixed; inset: -50%; z-index: 70; pointer-events: none; opacity: 0.07; mix-blend-mode: overlay; background-size: 220px 220px; animation: grain 0.9s steps(5) infinite; }
-  @keyframes grain { 0% { transform: translate(0, 0); } 20% { transform: translate(-3%, 2%); } 40% { transform: translate(2%, -3%); } 60% { transform: translate(-2%, -1%); } 80% { transform: translate(3%, 3%); } 100% { transform: translate(0, 0); } }
-
   @media (max-width: 720px) {
-    .bar { padding: 14px 16px; }
-    .bar nav { gap: 14px; }
-    .index { padding: 76px 16px 40px; }
-    .index li button { grid-template-columns: 30px 1fr; }
-    .index .tag { display: none; }
-    .x { top: 46px; right: 16px; }
-    .w-kick { left: 16px; top: 100px; }
-    .w-num { right: 16px; top: 15vh; }
-    .w-title { font-size: 30vw; }
-    .w-more { padding: 60px 16px 60px; }
-    .w-media { margin: 50px -16px 0; height: 60vh; }
-    .fan img { height: 48vh; right: 50%; margin-right: -14vh; bottom: 20vh; }
+    .index li button { grid-template-columns: 32px 1fr; }
+    .w-num { top: calc(var(--header-h) + 12vh); }
+    .w-title { font-size: clamp(3rem, 17vw, 6rem); }
+    .w-media { height: 56vh; }
+    .fan img { height: 48vh; right: 50%; margin-right: -14vh; bottom: 24vh; }
     .board { transform: translate(6vw, -10vh) rotateX(58deg) rotateZ(-24deg); }
   }
   @media (prefers-reduced-motion: reduce) {
-    .world.fade, .w-title, .w-num, .index, .index li button, .fan img { transition: none; }
-    .grain { animation: none; }
-    .tip, .tip.on { transition: opacity 0.2s; transform: translate(-50%, -100%); }
+    .tip, .tip.on { transform: translate(-50%, -100%); }
+    .index li { opacity: 1; transform: none; }
   }
-  .static-list { position: absolute; inset: 0; display: grid; place-items: center; z-index: 5; }
-  .static-list ul { list-style: none; margin: 0; padding: 0; text-align: center; font-family: var(--serif); font-size: 1.6rem; line-height: 1.6; }
-  .static-list a { color: inherit; text-decoration: none; }
-  .w-link { margin: 28px 0 0; font-family: var(--serif); font-style: italic; font-size: 1.35rem; }
-  .w-link a { color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: 2px; }
-  .w-link a:hover, .w-link a:focus-visible { color: var(--acc, #3ddc84); outline: none; }
 </style>
 </head>
 <body>
 
 <header class="bar">
-  <span class="who">Charlie Wuytack</span>
-  <nav>
+  <span class="site-name">Charlie Wuytack</span>
+  <nav class="site-nav" aria-label="Site">
     <a href="work/" id="work-btn">Work</a>
     <a href="https://github.com/Charliewytk">GitHub</a>
     <a href="mailto:charlie@wuytack.net">Contact</a>
   </nav>
 </header>
 
-<section class="hero" aria-label="Two shelves of projects. Point at one and pick it up.">
+<section class="hero" aria-label="Projects">
   <canvas id="scene" aria-hidden="true"></canvas>
   <noscript><nav class="static-list" aria-label="Projects"><ul><li><a href="exetix/">ExeTix</a></li><li><a href="kill-log/">The Kill Log</a></li><li><a href="merger-monitor/">Merger Monitor</a></li><li><a href="doorly/">Doorly</a></li><li><a href="abyss-warden/">Abyss Warden</a></li><li><a href="chelsea-bikes/">Chelsea Bikes</a></li><li><a href="tracks/solana/">Solana execution</a></li><li><a href="tracks/powerleash/">PowerLeash</a></li><li><a href="tracks/deskstatus/">DeskStatus</a></li><li><a href="tracks/numerai/">Numerai</a></li><li><a href="tracks/competitions/">Competitions</a></li><li><a href="tracks/chess-exchange/">Chess Exchange</a></li><li><a href="work/">Everything, in full</a></li></ul></nav></noscript>
   <div class="fallback" role="group" aria-label="Projects on the shelf"><div class="shelf2d" id="shelf2d"></div></div>
-  <div class="keys" id="keys" aria-label="Pick up an object"></div>
+  <div class="keys" id="keys" role="group" aria-label="Pick up a project"></div>
 </section>
 
 <div class="tip" id="tip" aria-hidden="true"></div>
-<div class="grain" id="grain" aria-hidden="true"></div>
 
 <div class="index" id="index" role="dialog" aria-modal="true" aria-labelledby="idx-title" aria-hidden="true">
-  <button class="x" id="idx-close" type="button">← Shelf <small>ESC</small></button>
+  <button class="x" id="idx-close" type="button">← Shelf</button>
   <div class="inner">
-    <h2 id="idx-title">Twelve things, <em>shipped or killed</em></h2>
+    <h2 id="idx-title">Work</h2>
     <ul id="idx-list"></ul>
     <p class="w-link"><a href="work/">Everything, in full <span aria-hidden="true">→</span></a></p>
-    <small>Research and engineering, not financial advice. Nothing here is trading live at a profit.</small>
+    <p class="site-legal">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
   </div>
 </div>
 
 <div class="world" id="world" role="dialog" aria-modal="true" aria-labelledby="w-title" aria-hidden="true">
-  <button class="x" id="w-close" type="button">← Shelf <small>ESC</small></button>
+  <button class="x" id="w-close" type="button">← Shelf</button>
   <div id="w-inner"></div>
 </div>
 
@@ -298,73 +262,58 @@
 
   /* ================= content ================= */
   const P = {
-    "exetix": { n: "01", t: "ExeTix", tag: "Built and sold", d: "Pinged the second Exeter tickets drop.", acc: "#3ddc84", kind: "fan",
-      line: "Exeter tickets sell out in seconds. This got students there first.",
-      big: ["1–2 s", "ticket drop to lock screen"],
-      stats: [["1–2 s", "from ticket drop to lock screen"], ["0%", "fees for sellers"], ["Sold", "built, shipped, then sold in Oct 2026"]],
-      body: `<p>An iOS app for Exeter student tickets. Alerts reach the lock screen about <strong>1–2 seconds</strong> after a drop.</p><p>Sold out anyway? Buy a verified student's spare. Sellers pay no fees. On the App Store from 29 September 2026. <strong>Built it, then sold it.</strong></p>`,
+    "exetix": { n: "01", t: "ExeTix", tag: "Built and sold", acc: "#3ddc84", kind: "fan",
+      big: ["~1–2 s", "from a known release time to the alert"],
+      stats: [["~1–2 s", "from a known release time to the alert"], ["£0", "seller fees. Sellers keep 100% of their price"], ["Sold", "built, shipped, then sold in Oct 2026"]],
+      body: `<p>An iOS app for Exeter student tickets. Alerts reach the lock screen about <strong>1–2 seconds</strong> after a known release time.</p><p>Sold out anyway? Buy a verified student's spare. Sellers pay no fees. On the App Store from 29 September 2026. <strong>Built it, then sold it.</strong></p>`,
       imgs: ["exetix/img/store-01-welcome.webp", "exetix/img/screen-drops.webp", "exetix/img/screen-alerts.webp"], phones: true },
-    "kill-log": { n: "02", t: "The Kill Log", tag: "Research", d: "Research that says no.", acc: "#e0533d", kind: "crt",
-      line: "Most trading ideas die. This is where they die on the record.",
-      big: ["50", "trading ideas killed out of sample"],
-      stats: [["50", "trading ideas killed out of sample"], ["~170", "hypotheses SHA-256 sealed before results"], ["p ≈ 1.0", "deflated Sharpe of the best of 3,038 trials"]],
+    "kill-log": { n: "02", t: "The Kill Log", tag: "Research", acc: "#e0533d", kind: "crt",
+      big: ["50 / 65", "trading lanes killed, on the record, as of 30 September 2026"],
+      stats: [["50 / 65", "trading lanes on the second ledger killed, on the record. From the lane ledger as of 30 September 2026."], ["~170", "hypotheses SHA-256 sealed before results"], ["p ≈ 1.0", "deflated Sharpe of the best of 3,038 trials"]],
       body: `<p>Every idea gets a pre-registered hurdle, sealed with <strong>SHA-256</strong> before any result is seen. Then it runs out of sample.</p><p>The best of 3,038 trials has a deflated Sharpe of <strong>p ≈ 1.0</strong>. That is the honest answer, and it is published.</p>`,
       imgs: ["media/og-kill-log.png"] },
-    "solana": { n: "03", t: "Solana execution", tag: "Systems", d: "Trigger to exit in a third of a millisecond.", acc: "#ff6b4a", kind: "scope",
-      line: "Fast enough. Then I measured whether fast mattered.",
-      big: ["0.3 ms", "trigger to exit"],
-      stats: [["0.3 ms", "trigger to exit"], ["0.4 pts", "what the speed actually bought"], ["£0", "spent on the server I didn't rent"]],
-      body: `<p>Trigger to exit in a third of a millisecond. Then I measured it: speed bought <strong>0.4 points</strong>.</p><p>The loss was in the gap, not the latency. So I didn't rent the server.</p>` },
-    "merger": { n: "04", t: "Merger Monitor", tag: "£5 / mo", d: "+1.38%. Not 24.6% a year.", acc: "#e7c46a", kind: "chart",
-      line: "A tracker that reports what the spread paid, not what the backtest promised.",
-      big: ["+1.38%", "realised, not 24.6% a year"],
-      stats: [["+1.38%", "realised"], ["<s>24.6%</s>", "what the backtest said a year"], ["£5", "a month"]],
-      body: `<p>A merger-arbitrage tracker for <strong>£5 a month</strong>. Realised <strong>+1.38%</strong>, not the 24.6% a year the backtest suggested. The page says so.</p>` },
-    "doorly": { n: "05", t: "Doorly", tag: "Web app", d: "The cheapest flight isn't the cheapest trip.", acc: "#8fa8ff", kind: "crt",
-      line: "The cheapest flight isn't the cheapest trip.",
+    "solana": { n: "03", t: "Solana execution", tag: "Systems", acc: "#ff6b4a", kind: "scope",
+      big: ["0.33 ms", "p50, trigger to a ready-to-sign exit"],
+      stats: [["0.33 ms", "p50, trigger to a ready-to-sign exit"], ["0.4 pts", "what the speed actually bought. Fills are simulated at the estimated landing slot, not landed."], ["£0", "spent on the server I didn't rent"]],
+      body: `<p>Trigger to a ready-to-sign exit in <strong>0.33 ms</strong> (p50). Then I measured it: replayed on the same positions, speed improved the average stop fill by <strong>0.4 points</strong>. Fills are simulated at the estimated landing slot, not landed.</p><p>The loss was in the gap, not the latency. So I didn't rent the server.</p>` },
+    "merger": { n: "04", t: "Merger Monitor", tag: "£5 / mo", acc: "#e7c46a", kind: "chart",
+      big: ["+1.38%", "a deal after costs, not 24.6% a year"],
+      stats: [["+1.38%", "per deal after break risk, costs and forgone carry"], ["<s>24.6%</s>", "what a 3% spread looks like annualised"], ["£5", "a month"]],
+      body: `<p>A table of filings, not a tip sheet, for <strong>£5 a month</strong>. A 3% spread is not 24.6% a year. After costs it is <strong>+1.38%</strong> a deal. Break-even is 1.59%.</p><p>Zero subscribers. Take: £0. Filings, not advice.</p>` },
+    "doorly": { n: "05", t: "Doorly", tag: "Web app", acc: "#8fa8ff", kind: "crt",
       big: ["Door to door", "the whole trip, priced"],
       stats: [["Door to door", "prices the whole trip, not only the ticket"]],
-      body: `<p>Flight search that prices the whole door-to-door trip: getting to the airport, the flight, getting home.</p>`, imgs: ["media/doorly.jpg"] },
-    "powerleash": { n: "06", t: "PowerLeash", tag: "Mac tool", d: "Holds the charger's cap at 42.8 W.", acc: "#f2c94c", kind: "meter",
-      line: "A Mac menu-bar tool with one job.",
+      body: `<p>The cheapest flight isn't the cheapest trip. Flight search that prices the whole door-to-door trip: getting to the airport, the flight, getting home.</p>`, imgs: ["media/doorly.jpg"] },
+    "powerleash": { n: "06", t: "PowerLeash", tag: "Mac tool", acc: "#f2c94c", kind: "meter",
       big: ["42.8 W", "the charger's cap, held"],
       stats: [["42.8 W", "the charger's cap, held"]],
       body: `<p>A Mac menu-bar tool that holds the charger's cap at <strong>42.8 W</strong>.</p>`, imgs: ["media/powerleash.png"] },
-    "abyss": { n: "07", t: "Abyss Warden", tag: "Game", d: "Deep-sea tower defence. Five bosses.", acc: "#5fd1e8", kind: "crt",
-      line: "Deep-sea tower defence.",
+    "abyss": { n: "07", t: "Abyss Warden", tag: "Game", acc: "#5fd1e8", kind: "crt",
       big: ["5", "bosses"],
       stats: [["5", "bosses"]],
       body: `<p>Deep-sea tower defence with <strong>five bosses</strong>.</p>`, imgs: ["media/abyss-1.jpg", "media/abyss-2.jpg"] },
-    "deskstatus": { n: "08", t: "DeskStatus", tag: "Mac tool", d: "The desk in one window. It can't sign anything.", acc: "#9aa3b5", kind: "grid",
-      line: "The whole trading desk in one window.",
+    "deskstatus": { n: "08", t: "DeskStatus", tag: "Mac tool", acc: "#9aa3b5", kind: "grid",
       big: ["Read-only", "it can't sign anything"],
       stats: [["Read-only", "it can't sign anything"]],
       body: `<p>The whole trading desk in one window. Read-only by design: <strong>it can't sign anything</strong>.</p>` },
-    "numerai": { n: "09", t: "Numerai", tag: "Research", d: "The audit, and a deadline that moves.", acc: "#c9c9c9", kind: "grid",
-      line: "The audit, and a deadline that moves.",
+    "numerai": { n: "09", t: "Numerai", tag: "Research", acc: "#c9c9c9", kind: "grid",
       big: ["The audit", "of my Numerai models"],
       stats: [["The audit", "of my Numerai models"]],
       body: `<p>An audit of my Numerai models, and a deadline that moves.</p>` },
-    "competitions": { n: "10", t: "Competitions", tag: "Research", d: "Quantiacs, BRAIN, Structural Break.", acc: "#b79cff", kind: "grid",
-      line: "Quantiacs, WorldQuant BRAIN, Structural Break.",
+    "competitions": { n: "10", t: "Competitions", tag: "Research", acc: "#b79cff", kind: "grid",
       big: ["3", "competitions entered"],
       stats: [["3", "competitions entered"]],
       body: `<p>Entries in Quantiacs, WorldQuant BRAIN and the Structural Break challenge, each priced before entry.</p>` },
-    "chess": { n: "11", t: "Chess Exchange", tag: "Web app", d: "Markets on live games. Play money.", acc: "#efe7d2", kind: "board",
-      line: "Prediction markets on live chess games.",
+    "chess": { n: "11", t: "Chess Exchange", tag: "Web app", acc: "#efe7d2", kind: "board",
       big: ["Live", "markets on games in progress"],
       stats: [["Live", "markets on games in progress"], ["Play money", "no real stakes"]],
       body: `<p>Prediction markets on live chess games, with play money.</p>`, imgs: ["media/chess.jpg"] },
-    "chelsea": { n: "12", t: "Chelsea Bikes", tag: "Website", d: "My local bike shop, rebuilt unasked.", acc: "#e8a25c", kind: "crt",
-      line: "My local bike shop's website, rebuilt unasked.",
+    "chelsea": { n: "12", t: "Chelsea Bikes", tag: "Website", acc: "#e8a25c", kind: "crt",
       big: ["Unasked", "rebuilt anyway"],
       stats: [["Unasked", "rebuilt anyway"]],
       body: `<p>My local bike shop's website, rebuilt unasked.</p>`, imgs: ["media/chelsea.jpg"] }
   };
 
-  { const c = document.createElement("canvas"); c.width = c.height = 128; const g = c.getContext("2d"), d = g.createImageData(128, 128);
-    for (let i = 0; i < d.data.length; i += 4) { const v = Math.random() * 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; }
-    g.putImageData(d, 0, 0); document.getElementById("grain").style.backgroundImage = `url(${c.toDataURL()})`; }
 
   /* ================= world (project page) ================= */
   const world = document.getElementById("world"), wInner = document.getElementById("w-inner");
@@ -391,7 +340,7 @@
       for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) { const i = document.createElement("i"); if ((r + c) % 2) i.className = "l"; b.appendChild(i); }
       const pcs = [["♚", 4, 7, ""], ["♛", 3, 7, ""], ["♜", 0, 7, ""], ["♞", 6, 7, ""], ["♟", 4, 6, ""], ["♟", 5, 6, ""], ["♚", 4, 0, "b"], ["♛", 3, 0, "b"], ["♝", 2, 0, "b"], ["♟", 3, 1, "b"], ["♟", 4, 1, "b"], ["♞", 1, 0, "b"]]
         .map(([s, x, y, k]) => { const e = document.createElement("span"); e.className = "pc " + k; e.textContent = s; b.appendChild(e); const o = { e, x, y }; place(o); return o; });
-      function place(o) { o.e.style.left = (o.x * 12.5) + "%"; o.e.style.top = (o.y * 12.5) + "%"; }
+      function place(o) { o.e.style.setProperty("--px", o.x); o.e.style.setProperty("--py", o.y); }
       let k = 0;
       wAnims.push({ fit() {}, frame(t) {
         if (reduce || t - k < 1.3) return; k = t;
@@ -451,7 +400,7 @@
         g.lineTo(ex, h); g.lineTo(0, h); g.closePath();
         const fill = g.createLinearGradient(0, yOf(3), 0, h); fill.addColorStop(0, "rgba(231,196,106,0.22)"); fill.addColorStop(1, "rgba(231,196,106,0)"); g.fillStyle = fill; g.fill();
         g.fillStyle = p.acc; g.beginPath(); g.arc(Math.min(ex, w - 6), ey, 5, 0, Math.PI * 2); g.fill();
-        if (shown === N) { g.font = "500 13px ui-monospace, Menlo, monospace"; g.textAlign = "right"; g.fillText("REALISED +1.38%", w - 16, ey - 14); }
+        if (shown === N) { g.font = "500 13px ui-monospace, Menlo, monospace"; g.textAlign = "right"; g.fillText("+1.38% A DEAL, AFTER COSTS", w - 16, ey - 14); }
       });
     },
     scope(host, p) {
@@ -478,7 +427,7 @@
           g.setLineDash([]);
           g.fillStyle = "rgba(236,232,223,0.75)"; g.font = "500 13px ui-monospace, Menlo, monospace"; g.textAlign = "center";
           g.fillText("TRIGGER", xs, cy - amp * 1.7); g.fillText("EXIT", xe, cy - amp * 1.7);
-          g.fillStyle = p.acc; g.fillText("Δt 0.3 ms", (xs + xe) / 2, cy + amp * 0.85);
+          g.fillStyle = p.acc; g.fillText("Δt 0.33 ms p50", (xs + xe) / 2, cy + amp * 0.85);
         }
       });
     },
@@ -503,14 +452,13 @@
     world.style.setProperty("--acc", p.acc);
     const media = p.imgs ? (p.phones ? `<div class="w-media phones">${p.imgs.map(s => `<img src="${s}" alt="">`).join("")}</div>` : `<div class="w-media"><img class="w-par" src="${p.imgs[p.imgs.length > 1 ? 1 : 0]}" alt=""></div>`) : "";
     wInner.innerHTML = `<section class="w-hero"><div class="w-bg" id="w-bg"></div>
-        <p class="w-kick">${p.n} · ${p.tag}</p>
         <div class="w-num"><b>${p.big[0]}</b><span>${p.big[1]}</span></div>
         <h2 class="w-title" id="w-title">${p.t}</h2></section>
-      <section class="w-more"><p class="w-line">${p.line}</p>${media}
+      <section class="w-more">${media}
         <div class="w-grid">${p.stats.map(([b, s]) => `<div class="w-stat"><b>${b}</b><span>${s}</span></div>`).join("")}</div>
         <div class="w-body">${p.body}</div>
         <p class="w-link"><a href="${PAGES[id]}">The full story <span aria-hidden="true">→</span></a></p>
-        <div class="w-foot"><span>Charlie Wuytack · Exeter · ${p.n} / 12</span><a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></div></section>`;
+        <footer class="site-footer"><p class="site-legal">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p><nav class="site-nav" aria-label="Contact"><a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a></nav></footer></section>`;
     (BG[p.kind] || BG.grid)(document.getElementById("w-bg"), p);
     world.scrollTop = 0; parallax();
     world.classList.add("live");
@@ -567,7 +515,8 @@
     const im = wInner.querySelector(".w-par");
     if (im) { const r = im.parentElement.getBoundingClientRect(); im.style.transform = `translateY(${(r.top + r.height / 2 - innerHeight / 2) * -0.18}px)`; }
   }
-  world.addEventListener("scroll", parallax, { passive: true });
+  let parRaf = 0;
+  world.addEventListener("scroll", () => { if (!parRaf) parRaf = requestAnimationFrame(() => { parRaf = 0; parallax(); }); }, { passive: true });
   addEventListener("resize", () => { if (world.classList.contains("live")) wAnims.forEach(a => a.fit()); });
   function closeWorld() {
     if (!worldOpen) return;
@@ -583,7 +532,8 @@
   const index = document.getElementById("index"), idxList = document.getElementById("idx-list"), shelf2d = document.getElementById("shelf2d");
   for (const [id, p] of Object.entries(P)) {
     const li = document.createElement("li");
-    li.innerHTML = `<button type="button" data-idx="${id}"><span class="n">${p.n}</span><span class="t">${p.t}<span class="d">${p.d}</span></span><span class="tag">${p.tag}</span></button>`;
+    li.style.setProperty("--i", idxList.children.length);
+    li.innerHTML = `<button type="button" data-idx="${id}"><span class="n">${p.n}</span><span class="t">${p.t}</span></button>`;
     idxList.appendChild(li);
     const b = document.createElement("button"); b.type = "button"; b.textContent = p.t; b.onclick = () => openWorldDirect(id); shelf2d.appendChild(b);
   }
@@ -785,8 +735,9 @@
   const room = (() => {
     const geos = [];
     const setUV = (g, fn) => { const P = g.attributes.position, N = g.attributes.normal, U = g.attributes.uv; for (let i = 0; i < P.count; i++) { const [u, v] = fn(P.getX(i), P.getY(i), P.getZ(i), N.getX(i), N.getY(i), N.getZ(i)); U.setXY(i, u, v); } };
-    const wallG = new THREE.PlaneGeometry(40, 16).toNonIndexed(); wallG.translate(0, 2, -1.12);
-    setUV(wallG, (x, y) => [(x + 20) / 40, 0.035 + (y + 6) / 16 * 0.43]); geos.push(wallG);
+    // tall enough for a phone's taller view (and the entrance's step back); the plaster edges stretch, the lit middle doesn't
+    const wallG = new THREE.PlaneGeometry(40, 24, 1, 3).toNonIndexed(); wallG.translate(0, 2, -1.12);
+    setUV(wallG, (x, y) => [(x + 20) / 40, 0.035 + (Math.min(10, Math.max(-6, y)) + 6) / 16 * 0.43]); geos.push(wallG);
     SHELF_Y.forEach(y0 => {
       const b = rbox(7.6, 0.2, 2.1, 0.04, roomMat, 0.02).geometry.toNonIndexed();
       setUV(b, (x, y, z, nx, ny, nz) => {
@@ -871,9 +822,9 @@
     const labelTex = canvasTex(512, 256, (g, w, h) => {
       g.fillStyle = "#efe9da"; g.fillRect(0, 0, w, h);
       g.fillStyle = "#c2412f"; g.fillRect(0, 0, w, 46);
-      g.fillStyle = "#fff"; g.font = "600 26px Inter, sans-serif"; g.fillText("SIDE A", 18, 32);
+      g.fillStyle = "#fff"; g.font = "600 26px system-ui, sans-serif"; g.fillText("SIDE A", 18, 32);
       g.fillStyle = "#1b1b1b"; g.font = "italic 500 40px Georgia, serif"; g.fillText("Solana execution", 22, 112);
-      g.font = "500 22px ui-monospace, Menlo, monospace"; g.fillStyle = "#555"; g.fillText("trigger → exit  0.3 ms", 22, 158);
+      g.font = "500 22px ui-monospace, Menlo, monospace"; g.fillStyle = "#555"; g.fillText("trigger → exit  0.33 ms", 22, 158);
       g.fillStyle = "#222"; g.beginPath(); g.roundRect ? g.roundRect(150, 180, 212, 56, 28) : g.rect(150, 180, 212, 56); g.fill();
       g.fillStyle = "#efe9da"; [190, 322].forEach(x => { g.beginPath(); g.arc(x, 208, 18, 0, Math.PI * 2); g.fill(); });
     });
@@ -917,7 +868,7 @@
     const o = new THREE.Group();
     const white = phys({ color: lin(0xecebe6), roughness: 0.35, clearcoat: 0.5, clearcoatRoughness: 0.3 });
     const brick = rbox(0.46, 0.46, 0.3, 0.08, white, 0.03); brick.position.y = 0.23; o.add(brick);
-    const lab = mesh(new THREE.PlaneGeometry(0.3, 0.13), new THREE.MeshBasicMaterial({ map: canvasTex(256, 112, (g, w, h) => { g.fillStyle = "#ecebe6"; g.fillRect(0, 0, w, h); g.fillStyle = "#2b2b28"; g.font = "600 46px Inter, sans-serif"; g.textAlign = "center"; g.fillText("42.8 W", w / 2, 58); g.font = "500 18px ui-monospace, Menlo, monospace"; g.fillStyle = "#77746c"; g.fillText("CAP HELD", w / 2, 92); g.fillStyle = "#3ddc84"; g.beginPath(); g.arc(232, 18, 7, 0, Math.PI * 2); g.fill(); }) }), false);
+    const lab = mesh(new THREE.PlaneGeometry(0.3, 0.13), new THREE.MeshBasicMaterial({ map: canvasTex(256, 112, (g, w, h) => { g.fillStyle = "#ecebe6"; g.fillRect(0, 0, w, h); g.fillStyle = "#2b2b28"; g.font = "600 46px system-ui, sans-serif"; g.textAlign = "center"; g.fillText("42.8 W", w / 2, 58); g.font = "500 18px ui-monospace, Menlo, monospace"; g.fillStyle = "#77746c"; g.fillText("CAP HELD", w / 2, 92); g.fillStyle = "#3ddc84"; g.beginPath(); g.arc(232, 18, 7, 0, Math.PI * 2); g.fill(); }) }), false);
     lab.position.set(0, 0.25, 0.1505); o.add(lab);
     const cp = []; for (let i = 0; i <= 120; i++) { const t = i / 120, a = t * Math.PI * 2 * 3.2; cp.push(new THREE.Vector3(0.33 + Math.cos(a) * 0.09, 0.03 + Math.sin(a) * 0.012 + t * 0.03, Math.sin(a) * 0.09)); }
     cp.push(new THREE.Vector3(0.2, 0.3, 0), new THREE.Vector3(0.05, 0.5, 0), new THREE.Vector3(0, 0.47, 0));
@@ -959,10 +910,10 @@
   {
     const o = new THREE.Group();
     const nb = rbox(0.58, 0.82, 0.1, 0.04, std({ color: lin(0x161616), roughness: 0.72 }), 0.012); nb.position.y = 0.41; o.add(nb);
-    const lab = mesh(new THREE.PlaneGeometry(0.4, 0.26), std({ roughness: 0.8, map: canvasTex(400, 260, (g, w, h) => { g.fillStyle = "#efe9da"; g.fillRect(0, 0, w, h); g.strokeStyle = "#c2412f"; g.lineWidth = 3; g.strokeRect(12, 12, w - 24, h - 24); g.fillStyle = "#1b1b1b"; g.font = "italic 500 50px Georgia, serif"; g.textAlign = "center"; g.fillText("The Kill Log", w / 2, 108); g.font = "500 20px ui-monospace, Menlo, monospace"; g.fillStyle = "#c2412f"; g.fillText("50 KILLED · OUT OF SAMPLE", w / 2, 160); g.fillStyle = "#666"; g.fillText("SHA-256 SEALED FIRST", w / 2, 196); }) }), false);
+    const lab = mesh(new THREE.PlaneGeometry(0.4, 0.26), std({ roughness: 0.8, map: canvasTex(400, 260, (g, w, h) => { g.fillStyle = "#efe9da"; g.fillRect(0, 0, w, h); g.strokeStyle = "#c2412f"; g.lineWidth = 3; g.strokeRect(12, 12, w - 24, h - 24); g.fillStyle = "#1b1b1b"; g.font = "italic 500 50px Georgia, serif"; g.textAlign = "center"; g.fillText("The Kill Log", w / 2, 108); g.font = "500 20px ui-monospace, Menlo, monospace"; g.fillStyle = "#c2412f"; g.fillText("50 / 65 KILLED · ON THE RECORD", w / 2, 160); g.fillStyle = "#666"; g.fillText("SHA-256 SEALED FIRST", w / 2, 196); }) }), false);
     lab.position.set(0, 0.5, 0.0505); o.add(lab);
     const band = mesh(new THREE.BoxGeometry(0.028, 0.825, 0.106), std({ color: lin(0xa3241c), roughness: 0.5 })); band.position.set(0.21, 0.41, 0); o.add(band);
-    place({ id: "kill-log", label: "The Kill Log · 50 killed", obj: o, half: [0.29, 0.41, 0.05], offset: [0, 0.41, 0], shelf: 1, x: -1.85, z: 0.3, rotY: 0.1, mass: 0.4,
+    place({ id: "kill-log", label: "The Kill Log · 50 / 65 killed", obj: o, half: [0.29, 0.41, 0.05], offset: [0, 0.41, 0], shelf: 1, x: -1.85, z: 0.3, rotY: 0.1, mass: 0.4,
       face: { c: [0, 0.41, 0.052], w: 0.58, h: 0.82 } });
   }
   /* DeskStatus: a small laptop */
@@ -978,10 +929,10 @@
       const h = 400;
       g.fillStyle = "#26282a"; g.fillRect(0, h, w, 180); g.fillStyle = "#141516"; for (let r = 0; r < 5; r++) for (let c = 0; c < 15; c++) g.fillRect(8 + c * 42, h + 8 + r * 34, 36, 28);
       g.fillStyle = "#0b0d10"; g.fillRect(0, 0, w, h);
-      g.fillStyle = "#9aa3b5"; g.font = "600 30px Inter, sans-serif"; g.fillText("DeskStatus", 28, 52);
+      g.fillStyle = "#9aa3b5"; g.font = "600 30px system-ui, sans-serif"; g.fillText("DeskStatus", 28, 52);
       g.fillStyle = "#3ddc84"; g.font = "500 16px ui-monospace, Menlo, monospace"; g.fillText("● READ-ONLY · NO SIGNING KEYS", 28, 84);
       g.strokeStyle = "rgba(154,163,181,0.2)"; g.beginPath(); g.moveTo(28, 104); g.lineTo(w - 28, 104); g.stroke();
-      const rows = [["paper desk", "PAPER", "#9aa3b5"], ["merger monitor", "OK", "#3ddc84"], ["numerai", "AUDIT", "#9aa3b5"], ["kill log", "50 KILLED", "#e0533d"], ["solana exec", "0.3 ms", "#9aa3b5"]];
+      const rows = [["paper desk", "PAPER", "#9aa3b5"], ["merger monitor", "OK", "#3ddc84"], ["numerai", "AUDIT", "#9aa3b5"], ["kill log", "50/65 KILLED", "#e0533d"], ["solana exec", "0.33 ms", "#9aa3b5"]];
       g.font = "500 18px ui-monospace, Menlo, monospace";
       rows.forEach(([a, b, c], i) => { const y = 142 + i * 44; g.fillStyle = "#c8ccd4"; g.fillText(a, 28, y); g.fillStyle = c; g.textAlign = "right"; g.fillText(b, w - 28, y); g.textAlign = "left"; g.fillStyle = "rgba(154,163,181,0.08)"; g.fillRect(28, y + 12, w - 56, 1); });
     });
@@ -1060,7 +1011,7 @@
   const keys = document.getElementById("keys");
   let keyAim = null;
   items.forEach(it => {
-    const b = document.createElement("button"); b.type = "button"; b.textContent = "Pick up: " + P[it.id].t;
+    const b = document.createElement("button"); b.type = "button"; b.textContent = P[it.id].t;
     b.onclick = () => startGrab(it);
     b.onfocus = () => { keyAim = it; };
     b.onblur = () => { if (keyAim === it) keyAim = null; };
@@ -1364,8 +1315,7 @@
     if (!it || state !== "idle") { tipEl.classList.remove("on"); return; }
     const p = new THREE.Vector3(it.rest.p.x, SHELF_Y[it.shelf] - 0.3, 1.05).project(camera);
     tipEl.style.left = ((p.x + 1) / 2 * innerWidth) + "px"; tipEl.style.top = ((1 - p.y) / 2 * innerHeight) + "px";
-    const [name, sub] = it.label.split(" · ");
-    tipEl.innerHTML = `${name}<small>${sub || ""}</small>`;
+    tipEl.textContent = it.label.split(" · ")[0];
     tipEl.classList.add("on");
   }
   canvas.addEventListener("pointermove", setNdc);
@@ -1387,6 +1337,7 @@
   const palmDownWorld = out => out.copy(palmDownLocal).applyQuaternion(pivot.quaternion);
   const T_DROP = 0.24, T_REACH = 0.42, T_CLOSE = 0.18, T_LIFT = 0.66, T_WIND = 0.2, T_FLING = 0.12, T_REL = 0.06;
   const T_FLY = 0.95, T_PUSH = 0.7;           // release → square to the lens → dolly into the face (1.65 s)
+  const T_ENTER = 1.1;                        // the room settling in on first load
   let flight = null, push = 0, pushDist = 0;
 
   const sizeOf = it => Math.max(it.half.x, it.half.z, it.half.y * 0.6);
@@ -1484,7 +1435,9 @@
 
     drift.x += (ndc.x - drift.x) * (reduce ? 1 : 0.04); drift.y += (ndc.y - drift.y) * (reduce ? 1 : 0.04);
     const amp = reduce || state !== "idle" ? 0 : 0.25;
-    camera.position.set(camBase.x + drift.x * 0.9 * amp, camBase.y + drift.y * 0.45 * amp, camBase.z);
+    // entrance: the room settles in from a step back (ease-out quint on clamped frame time, so a slow first frame never jumps)
+    const ent = reduce ? 0 : Math.pow(1 - Math.min(1, now / T_ENTER), 5);
+    camera.position.set(camBase.x + drift.x * 0.9 * amp, camBase.y + drift.y * 0.45 * amp + ent * 0.35, camBase.z + ent * 1.6);
     camera.lookAt(look);
     if (push > 0) camera.position.addScaledVector(fwd.set(0, 0, -1).applyQuaternion(camera.quaternion), pushDist * push);
     camera.updateMatrixWorld();
@@ -1497,6 +1450,7 @@
 
     if (state === "idle") {
       castAim(); highlight(aimItem); showTip(aimItem);
+      const cur = aimItem && !keyAim ? "pointer" : "default"; if (canvas.style.cursor !== cur) canvas.style.cursor = cur;
       camPt(restLocal.x + ndc.x * 0.14, restLocal.y + ndc.y * 0.1 + (reduce ? 0 : Math.sin(now * 1.3) * 0.015), restLocal.z, handTarget);
       poseTarget = "hold"; stiffness = 60; damping = 13; roll = HOLD_ROLL;
       aimAt = aimHit;
@@ -1720,7 +1674,9 @@
     lastDraw = now;
     glow.intensity = reduce ? 5 : 4.8 + Math.sin(now * 2.1) * 0.4;
     renderer.render(scene, camera);
+    if (!firstFrame) { firstFrame = true; if (!reduce && canvas.animate) canvas.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 400, easing: "cubic-bezier(0.22, 1, 0.36, 1)" }); }
   }
+  let firstFrame = false;
   const yAxis = new THREE.Vector3(0, 1, 0), cylD = new THREE.Vector3();
   function placeCyl(m, a, b) {
     cylD.copy(b).sub(a); const L = cylD.length();
@@ -1728,6 +1684,7 @@
     m.scale.set(1, L, 1);
     m.quaternion.setFromUnitVectors(yAxis, cylD.normalize());
   }
+  try { renderer.compile(scene, camera); } catch (e) {}   // compile shaders up front, so the first frames of the entrance don't stall
   requestAnimationFrame(loop);
 })();
 </script>

@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Charlie Wuytack</title>
+<meta name="description" content="Charlie Wuytack builds apps, Mac tools, games and honest quant research. Built and sold ExeTix, an iPhone app for Exeter's ticket drops.">
+<meta name="theme-color" content="#f3f3f1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f0f11" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/media/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<!-- Canvas mode is on from the first paint. Without JS the page is a plain list. -->
+<script>document.documentElement.classList.add('cv');</script>
+</head>
+<body>
+
+<header class="top">
+  <div class="pill brand-pill" data-hidden><a class="brand" href="/">Charlie Wuytack</a></div>
+  <nav class="pill" aria-label="Site">
+    <a href="/work/">Work</a>
+    <a href="https://github.com/Charliewytk">GitHub</a>
+    <a href="mailto:charlie@wuytack.net">Contact</a>
+  </nav>
+</header>
+
+<main class="viewport" id="viewport">
+  <canvas class="dots" aria-hidden="true"></canvas>
+
+  <!-- The plane is the world. Each card sits at world coordinates --x/--y (px at 100% zoom), width --w.
+       Research on the left, products on the right, ExeTix under the name.
+       DOM order = Tab order = project number. data-home marks the cards the opening view frames. -->
+  <div class="plane" id="plane">
+    <h1 class="name"><span>Charlie</span> <span>Wuytack</span></h1>
+
+    <ul class="world">
+
+      <!-- 01 -->
+      <li class="card" id="exetix" data-home="phone" style="--x:-180; --y:177; --w:360">
+        <article aria-labelledby="exetix-t">
+          <h2 class="label"><a id="exetix-t" href="/exetix/">ExeTix</a></h2>
+          <div class="face">
+            <span class="ring" aria-hidden="true"></span>
+            <div class="clip">
+              <div class="phone"><img src="/exetix/img/screen-drops.webp" width="540" height="1173" decoding="async" alt="ExeTix Drops tab: the next drop counting down and sold-out nights watched for restocks"></div>
+              <div class="text">
+                <p class="line">Pinged the second Exeter tickets drop.</p>
+                <p class="status">Built and sold</p>
+              </div>
+            </div>
+          </div>
+          <div class="more">
+            <dl>
+              <div><dt>~1–2 s</dt><dd>from a known release time to the alert</dd></div>
+              <div><dt>£0</dt><dd>seller fees. Sellers keep 100% of their price</dd></div>
+              <div><dt>≈⅓</dt><dd>of a typical student-resale booking fee: card processing, nothing on top</dd></div>
+            </dl>
+            <p class="note">On the App Store · released 29 Sep 2026 · sold Oct 2026</p>
+            <p class="note">ExeTix is independent. It is not affiliated with the University of Exeter, any venue, or any ticketing platform, and it never buys tickets on other platforms for you.</p>
+            <p class="links">
+              <a class="go" href="/exetix/" tabindex="-1">Open<span class="vh"> ExeTix</span></a>
+              <a href="https://apps.apple.com/gb/app/exetix/id6814591245">On the App Store</a>
+              <a href="https://www.exeterticketexchange.com">exeterticketexchange.com</a>
+            </p>
+          </div>
+        </article>
+      </li>
+
+      <!-- 02 -->
+      <li class="card" id="kill-log" data-home style="--x:-600; --y:-80; --w:300">
+        <article aria-labelledby="kill-log-t">
+          <h2 class="label"><a id="kill-log-t" href="/kill-log/">The Kill Log</a></h2>
+          <div class="face">
+            <span class="ring" aria-hidden="true"></span>
+            <div class="clip">
+              <div class="fig">
+                <p class="num">50 / 65</p>
+                <p class="what">trading lanes on the second ledger killed, on the record</p>
+                <p class="q">From the lane ledger as of 30 September 2026.</p>
+              </div>
+              <div class="text">
+                <p class="line">Research that says no.</p>
+                <p class="status">Two strategies in small-size live execution tests. Nothing here claims a profit</p>
+              </div>
+            </div>
+          </div>
+          <div class="more">
+            <dl>
+              <div><dt>~170</dt><dd>pre-registered hypotheses across two programmes</dd></div>
+              <div><dt>p ≈ 1.0</dt><dd>deflated Sharpe of the best of 3,038 model trials. The honest answer</dd></div>
+              <div><dt>110</dt><dd>paper hypotheses. They died to costs. <span class="q">This is a paper book. No live P&amp;L is claimed. No live book is implied.</span></dd></div>
+            </dl>
+            <p class="links">
+              <a class="go" href="/kill-log/" tabindex="-1">Open<span class="vh"> The Kill Log</span></a>
+              <a href="/tracks/research/">Research</a>
+              <a href="https://github.com/Charliewytk/trading101/blob/main/PaperMill/KILL_LOG.md">KILL_LOG.md</a>
+            </p>
+          </div>
+        </article>
+      </li>
+
+      <!-- 03 -->
+      <li class="card" id="solana" style="--x:-920; --y:-474; --w:280">
+        <article aria-labelledby="solana-t">
+          <h2 class="label"><a id="solana-t" href="/tracks/solana/">Solana execution</a></h2>
+          <div class="face">
+            <span class="ring" aria-hidden="true"></span>
+            <div class="clip">
+              <div class="fig">
+                <p class="num">0.33 ms</p>
+                <p class="what">p50, trigger to ready-to-sign sell bytes (p90 1.2 ms)</p>
+              </div>
+              <div class="text">
+                <p class="line">Fast enough. Then I measured whether fast mattered.</p>
+                <p class="status">Live execution test · 0.25 SOL clips since 30 Sep 2026</p>
+              </div>
+            </div>
+          </div>
+          <div class="more">
+            <dl>
+              <div><dt>0.4 points</dt><dd>Replayed on the same positions, it improved the average stop fill by 0.4 points <span class="q">Fills are simulated at the estimated landing slot, not landed.</span></dd></div>
+              <div><dt>0.0 bps</dt><dd>median error of my integer AMM quote against the on-chain fill</dd></div>
+            </dl>
+            <p class="links"><a class="go" href="/tracks/solana/" tabindex="-1">Open<span class="vh"> Solana execution</span></a></p>
+          </div>
+        </article>
+      </li>
+
+      <!-- 04 -->
+      <li class="card" id="merger-monitor" style="--x:-920; --y:-146; --w:280">
+        <article aria-labelledby="merger-monitor-t">
+          <h2 class="label"><a id="merger-monitor-t" href="/merger-monitor/">Merger Monitor</a></h2>
+          <div class="face">
+            <span class="ring" aria-hidden="true"></span>
+            <div class="clip">
+              <div class="fig">
+                <p class="num">+1.38%</p>
+                <p class="what">per deal after break risk, costs and forgone carry</p>
+                <p class="q">A floor, not a ceiling: deals that die before a definitive proxy never enter the sample.</p>
+                <p class="q">Filings, not advice.</p>
+              </div>
+              <div class="text">
+                <p class="line">A table of filings, not a tip sheet.</p>
+                <p class="status">Live · £5/month · Zero subscribers so far. Take: £0.</p>
+              </div>
+            </div>
+          </div>
+          <div class="more">
+            <dl>
+              <div><dt>24.6%</dt><dd>what a 3% spread looks like annualised. That number is marketing</dd></div>
+              <div><dt>1.59%</dt><dd>break-even spread. Thinner deals lose money on average</dd></div>
+            </dl>
+            <p class="note">Nothing here is investment advice. No position is held in anything listed.</p>
+            <p class="links"><a class="go" href="/merger-monitor/" tabindex="-1">Open<span class="vh"> Merger Monitor</span></a></p>
+          </div>
+        </article>
+      </li>
+
+      <!-- 05 -->
+      <li class="card" id="doorly" style="--x:670; --y:189; --w:300">
+        <article aria-labelledby="doorly-t">
+          <h2 class="label"><a id="doorly-t" href="/doorly/">Doorly</a></h2>
+          <div class="face">
+            <span class="ring" aria-hidden="true"></span>
+            <div class="clip">
+              <div class="shot" data-video="/media/doorly-demo.mp4"><img src="img/doorly-600.jpg" srcset="img/doorly-600.jpg 600w, img/doorly-900.jpg 900w, /media/doorly.jpg 1400w" sizes="300px" width="1400" height="972" loading="lazy" decoding="async" alt="Doorly search page with fields for where you are and where you're staying"></div>
+              <div class="text">
+                <p class="line">The cheapest flight isn't the cheapest trip.</p>
+                <p class="status">Demo</p>
+              </div>
+            </div>
+          </div>
+          <div class="more">
+            <dl>
+              <div><dt>£120 &lt; £130</dt><dd>until you add the journey to the airport <span class="q">Demo fares, labelled as such.</span></dd></div>
+            </dl>
+            <p class="links"><a class="go" href="/doorly/" tabindex="-1">Open<span class="vh"> Doorly</span></a></p>
+          </div>
+        </article>
+      </li>
+
+      <!-- 06 -->
+      <li class="card" id="powerleash" data-home style="--x:300; --y:259; --w:260">
+        <article aria-labelledby="powerleash-t">
+          <h2 class="label"><a id="powerleash-t" href="/tracks/powerleash/">PowerLeash</a></h2>
+          <div class="face">
+            <span class="ring" aria-hidden="true"></span>
+            <div class="clip">
+              <div class="icon"><img src="/media/powerleash.png" width="512" height="512" loading="lazy" decoding="async" alt="PowerLeash app icon: a white leaf on green"></div>
+              <div class="text">
+                <p class="line">A Mac menu-bar tool with one job.</p>
+                <p class="status">Download</p>
+              </div>
+            </div>
+          </div>
+          <div class="more">
+            <dl>
+              <div><dt>42.8 W</dt><dd>held under a sustained 8-thread burn</dd></div>
+              <div><dt>59.0 → 42.7 W</dt><dd>system load, before and after Match Charger</dd></div>
+              <div><dt>−15.6 → −3.5 W</dt><dd>battery flow while plugged in: from draining hard to nearly break-even</dd></div>
+            </dl>
+            <p class="note q">Apple Silicon, unsigned. Unzip → drag PowerLeash.app to /Applications → right-click Open. Double-click is blocked by Gatekeeper; that is expected. Battery savings are not quantified yet.</p>
+            <p class="links">
+              <a class="go" href="/tracks/powerleash/" tabindex="-1">Open<span class="vh"> PowerLeash</span></a>
+              <a href="/downloads/PowerLeash.zip" download>Download</a>
+            </p>
+          </div>
+        </article>
+      </li>
+
+      <!-- 07 -->
+      <li class="card" id="abyss-warden" data-home style="--x:300; --y:-101; --w:330">
+        <article aria-labelledby="abyss-warden-t">
+          <h2 class="label"><a id="abyss-warden-t" href="/abyss-warden/">Abyss Warden</a></h2>
+          <div class="face">
+            <span class="ring" aria-hidden="true"></span>
+            <div class="clip">
+              <div class="shot" data-video="/media/abyss.mp4"><img src="img/abyss-1-600.jpg" srcset="img/abyss-1-600.jpg 600w, img/abyss-1-900.jpg 900w, /media/abyss-1.jpg 1400w" sizes="360px" width="1400" height="875" loading="lazy" decoding="async" alt="Abyss Warden: towers along a winding path on the sea floor"></div>
+              <div class="text">
+                <p class="line">Deep-sea tower defence.</p>
+                <p class="status">Playable</p>
+              </div>
+            </div>
+          </div>
+          <div class="more">
+            <dl>
+              <div><dt>5</dt><dd>bosses, playable in the browser</dd></div>
+              <div><dt>20</dt><dd>levels, all finished and balance-passed</dd></div>
+            </dl>
+            <p class="links"><a class="go" href="/abyss-warden/" tabindex="-1">Open<span class="vh"> Abyss Warden</span></a></p>
+          </div>
+        </article>
+      </li>
+
+      <!-- 08 -->
+      <li class="card" id="deskstatus" style="--x:670; --y:-100; --w:260">
+        <article aria-labelledby="deskstatus-t">
+          <h2 class="label"><a id="deskstatus-t" href="/tracks/deskstatus/">DeskStatus</a></h2>
+          <div class="face">
+            <span class="ring" aria-hidden="true"></span>
+            <div class="clip">
+              <div class="fig">
+                <p class="num">Read-only</p>
+                <p class="what">it can't sign anything</p>
+              </div>
+              <div class="text">
+                <p class="line">The whole trading desk in one window.</p>
+                <p class="status">Shipped · v1.0.3</p>
+              </div>
+            </div>
+          </div>
+          <div class="more">
+            <dl>
+              <div><dt>7</dt><dd>tabs, a menu-bar status light and a headless mode for scripts</dd></div>
+            </dl>
+            <p class="note">The real window shows live account data, so it isn't pictured.</p>
+            <p class="links"><a class="go" href="/tracks/deskstatus/" tabindex="-1">Open<span class="vh"> DeskStatus</span></a></p>
+          </div>
+        </article>
+      </li>
+
+      <!-- 09 -->
+      <li class="card" id="numerai" data-home style="--x:-600; --y:267; --w:300">
+        <article aria-labelledby="numerai-t">
+          <h2 class="label"><a id="numerai-t" href="/tracks/numerai/">Numerai</a></h2>
+          <div class="face">
+            <span class="ring" aria-hidden="true"></span>
+            <div class="clip">
+              <div class="fig">
+                <p class="num">2</p>
+                <p class="what">live rounds resolved so far. Too few to stake on; the policy asks for ten</p>
+              </div>
+              <div class="text">
+                <p class="line">The audit, and a deadline that moves.</p>
+                <p class="status">Live, unstaked</p>
+              </div>
+            </div>
+          </div>
+          <div class="more">
+            <dl>
+              <div><dt>1.47</dt><dd>Sharpe of CORR60 over 93 held-out eras, positive in 95% of them</dd></div>
+              <div><dt>1.27</dt><dd>Sharpe of the payout score out of sample, with no losing quarter</dd></div>
+            </dl>
+            <p class="links"><a class="go" href="/tracks/numerai/" tabindex="-1">Open<span class="vh"> Numerai</span></a></p>
+          </div>
+        </article>
+      </li>
+
+      <!-- 10 -->
+      <li class="card" id="competitions" style="--x:-920; --y:267; --w:280">
+        <article aria-labelledby="competitions-t">
+          <h2 class="label"><a id="competitions-t" href="/tracks/competitions/">Competitions</a></h2>
+          <div class="face">
+            <span class="ring" aria-hidden="true"></span>
+            <div class="clip">
+              <div class="fig">
+                <p class="num">1 of 15</p>
+                <p class="what">strategies selected in the Quantiacs Q25 contest</p>
+                <p class="q">In-sample Sharpe 1.22, maximum drawdown 23.6%.</p>
+              </div>
+              <div class="text">
+                <p class="line">Read deltas, not levels.</p>
+                <p class="status">Selected</p>
+              </div>
+            </div>
+          </div>
+          <div class="more">
+            <dl>
+              <div><dt>Gold</dt><dd>on WorldQuant BRAIN, with about 14 alphas live</dd></div>
+              <div><dt>263rd of 1,332</dt><dd>Structural Break</dd></div>
+              <div><dt>−0.0003</dt><dd>live change from two improvements that gained +0.0144 on my holdout</dd></div>
+            </dl>
+            <p class="links"><a class="go" href="/tracks/competitions/" tabindex="-1">Open<span class="vh"> Competitions</span></a></p>
+          </div>
+        </article>
+      </li>
+
+      <!-- 11 -->
+      <li class="card" id="chess-exchange" style="--x:1010; --y:224; --w:300">
+        <article aria-labelledby="chess-exchange-t">
+          <h2 class="label"><a id="chess-exchange-t" href="/tracks/chess-exchange/">Chess Exchange</a></h2>
+          <div class="face">
+            <span class="ring" aria-hidden="true"></span>
+            <div class="clip">
+              <div class="shot" data-video="/media/chess-demo.mp4"><img src="img/chess-600.jpg" srcset="img/chess-600.jpg 600w, img/chess-900.jpg 900w, /media/chess.jpg 1400w" sizes="300px" width="1400" height="950" loading="lazy" decoding="async" alt="Chess Exchange: live boards, each priced White, Draw and Black"></div>
+              <div class="text">
+                <p class="line">Prediction markets on live chess games.</p>
+                <p class="status">Play money</p>
+              </div>
+            </div>
+          </div>
+          <div class="more">
+            <dl>
+              <div><dt>W / D / B</dt><dd>from any position you paste in <span class="q">Play money. Not a book, not advice.</span></dd></div>
+              <div><dt>6</dt><dd>liquidity bots around an LMSR market maker</dd></div>
+            </dl>
+            <p class="links"><a class="go" href="/tracks/chess-exchange/" tabindex="-1">Open<span class="vh"> Chess Exchange</span></a></p>
+          </div>
+        </article>
+      </li>
+
+      <!-- 12 -->
+      <li class="card" id="chelsea-bikes" style="--x:1010; --y:-140; --w:300">
+        <article aria-labelledby="chelsea-bikes-t">
+          <h2 class="label"><a id="chelsea-bikes-t" href="/chelsea-bikes/">Chelsea Bikes</a></h2>
+          <div class="face">
+            <span class="ring" aria-hidden="true"></span>
+            <div class="clip">
+              <div class="shot" data-video="/media/chelsea-demo.mp4"><img src="img/chelsea-600.jpg" srcset="img/chelsea-600.jpg 600w, img/chelsea-900.jpg 900w, /media/chelsea.jpg 1400w" sizes="300px" width="1400" height="972" loading="lazy" decoding="async" alt="Chelsea Bikes homepage, rebuilt"></div>
+              <div class="text">
+                <p class="line">My local bike shop, rebuilt unasked.</p>
+                <p class="status">Prototype · Not yet pitched</p>
+              </div>
+            </div>
+          </div>
+          <div class="more">
+            <dl>
+              <div><dt>11</dt><dd>pages, works offline</dd></div>
+            </dl>
+            <p class="links"><a class="go" href="/chelsea-bikes/" tabindex="-1">Open<span class="vh"> Chelsea Bikes</span></a></p>
+          </div>
+        </article>
+      </li>
+
+    </ul>
+  </div>
+</main>
+
+<footer class="bottom">
+  <p class="honesty">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
+  <div class="tools">
+    <canvas class="mini" aria-hidden="true"></canvas>
+    <div class="pill zoom">
+      <button type="button" data-zoom="out" aria-label="Zoom out">−</button>
+      <button type="button" data-zoom="fit" class="pct" aria-label="Zoom to home view">100%</button>
+      <button type="button" data-zoom="in" aria-label="Zoom in">+</button>
+    </div>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
