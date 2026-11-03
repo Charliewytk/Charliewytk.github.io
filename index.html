@@ -81,9 +81,7 @@
 <!-- Open windows (desktop) and sheets (phone) are mounted here from the templates below. -->
 <div class="windows" id="windows"></div>
 
-<!-- Window bodies, cloned on open so closed windows load nothing. Copy is verbatim from concepts/_content/content.json.
-     Each number is written once, in the window's <dl>; the top panels are unlabelled, aria-hidden pictures of those numbers.
-     Two source links are left out until they resolve: the ExeTix web domain (HTTP 402) and the Kill Log file on GitHub (HTTP 404), checked 3 Nov 2026. -->
+<!-- Window bodies, cloned on open so closed windows load nothing. -->
 <template id="tpl-exetix">
   <figure class="media media--phones">
     <img src="exetix/img/screen-alerts.webp" alt="ExeTix onboarding screen ‘Be first, every time’ with sample alerts: dropping in 10 min, tickets just dropped, restock, resale listed" width="540" height="1173" decoding="async">
@@ -103,6 +101,7 @@
       <a class="link" href="https://apps.apple.com/gb/app/exetix/id6814591245" rel="noopener">On the App Store</a>
     </p>
     <p class="note">ExeTix is independent. It is not affiliated with the University of Exeter, any venue, or any ticketing platform, and it never buys tickets on other platforms for you.</p>
+    <p class="note">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
   </div>
 </template>
 <template id="tpl-kill-log">
@@ -116,13 +115,14 @@
       <div><dt>~170</dt><dd>pre-registered hypotheses across two programmes</dd></div>
       <div><dt>50 / 65</dt><dd>trading lanes on the second ledger killed, on the record<small>From the lane ledger as of 30 September 2026. Scaling up needs a separate, pre-registered live test.</small></dd></div>
       <div><dt>p ≈ 1.0</dt><dd>deflated Sharpe of the best of 3,038 model trials. The honest answer</dd></div>
-      <div><dt>110</dt><dd>paper hypotheses. They died to costs.<small>This is a paper book. No live P&amp;L is claimed. No live book is implied.</small></dd></div>
+      <div><dt>~110</dt><dd>paper hypotheses. They died to costs.<small>This is a paper book. No live P&amp;L is claimed. No live book is implied.</small></dd></div>
     </dl>
     <p class="actions">
       <a class="btn" href="kill-log/">Open The Kill Log</a>
     </p>
     <p class="note">Revenue: ~£0. Live tests run at tiny size to measure real fills against paper; paper and backtest numbers are labelled as such throughout.</p>
     <p class="note">Separately, the meme-desk auditor has closed about 70 entry and exit variants as failed or inconclusive, with no pass standing. No position is held in anything listed.</p>
+    <p class="note">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
   </div>
 </template>
 <template id="tpl-solana">
@@ -141,11 +141,10 @@
     <p class="actions">
       <a class="btn" href="tracks/solana/">Open Solana execution</a>
     </p>
+    <p class="note">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
   </div>
 </template>
 <template id="tpl-merger-monitor">
-  <!-- Pack line "Zero subscribers. Take: £0. Filings, not advice." is carried by its two verbatim halves, each kept next to its number below:
-       "Zero subscribers so far. Take: £0." (the £5/month qualifier) and "Filings, not advice." (the +1.38% qualifier). Printing it a third time would only repeat them. -->
   <figure class="viz viz--spread" aria-hidden="true">
     <span class="spread" style="--v:0.53"><i></i></span>
   </figure>
@@ -163,6 +162,7 @@
       <a class="link" href="https://wuytackcharlie.gumroad.com/l/mergermonitor" rel="noopener">Pay on Gumroad</a>
     </p>
     <p class="note">£5/month on Gumroad. Cancel there. 7-day refund. Nothing here is investment advice. No position is held in anything listed.</p>
+    <p class="note">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
   </div>
 </template>
 <template id="tpl-doorly">
@@ -178,6 +178,7 @@
     <p class="actions">
       <a class="btn" href="doorly/">Open Doorly</a>
     </p>
+    <p class="note">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
   </div>
 </template>
 <template id="tpl-powerleash">
@@ -201,6 +202,7 @@
       <a class="link" href="downloads/PowerLeash.zip" download>PowerLeash.zip</a>
     </p>
     <p class="note">Apple Silicon, unsigned. Unzip → drag PowerLeash.app to /Applications → right-click Open. Double-click is blocked by Gatekeeper; that is expected. Battery savings are not quantified yet.</p>
+    <p class="note">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
   </div>
 </template>
 <template id="tpl-abyss-warden">
@@ -217,6 +219,7 @@
     <p class="actions">
       <a class="btn" href="abyss-warden/">Open Abyss Warden</a>
     </p>
+    <p class="note">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
   </div>
 </template>
 <template id="tpl-deskstatus">
@@ -238,6 +241,7 @@
     <p class="actions">
       <a class="btn" href="tracks/deskstatus/">Open DeskStatus</a>
     </p>
+    <p class="note">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
   </div>
 </template>
 <template id="tpl-numerai">
@@ -255,6 +259,7 @@
     <p class="actions">
       <a class="btn" href="tracks/numerai/">Open Numerai</a>
     </p>
+    <p class="note">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
   </div>
 </template>
 <template id="tpl-competitions">
@@ -272,7 +277,7 @@
     <p class="lede">Read deltas, not levels.</p>
     <p class="meta">Selected</p>
     <dl class="nums">
-      <div><dt>1 of 15</dt><dd>strategies selected in the Quantiacs Q25 contest<small>In-sample Sharpe 1.22, maximum drawdown 23.6%.</small></dd></div>
+      <div><dt>1 of 15</dt><dd>strategies selected to trade live in the Quantiacs Q25 contest<small>In-sample Sharpe 1.22, maximum drawdown 23.6%.</small></dd></div>
       <div><dt>Gold</dt><dd>on WorldQuant BRAIN, with about 14 alphas live</dd></div>
       <div><dt>263rd of 1,332</dt><dd>Structural Break</dd></div>
       <div><dt>−0.0003</dt><dd>live change from two improvements that gained +0.0144 on my holdout</dd></div>
@@ -280,6 +285,7 @@
     <p class="actions">
       <a class="btn" href="tracks/competitions/">Open Competitions</a>
     </p>
+    <p class="note">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
   </div>
 </template>
 <template id="tpl-chess-exchange">
@@ -297,6 +303,7 @@
       <a class="btn" href="tracks/chess-exchange/">Open Chess Exchange</a>
       <a class="link" href="https://charliewytk.github.io/chess-exchange/" rel="noopener">Try the FEN → WDL demo</a>
     </p>
+    <p class="note">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
   </div>
 </template>
 <template id="tpl-chelsea-bikes">
@@ -312,6 +319,7 @@
     <p class="actions">
       <a class="btn" href="chelsea-bikes/">Open Chelsea Bikes</a>
     </p>
+    <p class="note">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
   </div>
 </template>
 

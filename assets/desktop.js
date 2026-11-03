@@ -20,7 +20,7 @@
   const MIN_W = 320, MIN_H = 220;
   const RADIUS = 12;          // window corner radius (desktop)
 
-  const phoneMQ = matchMedia('(max-width: 900px), (max-height: 560px)');   // same query as style.css
+  const phoneMQ = matchMedia('(max-width: 900px), (max-height: 560px)');   // same query as desktop.css
   const reduceMQ = matchMedia('(prefers-reduced-motion: reduce)');
   const isPhone = () => phoneMQ.matches;
   const reduced = () => reduceMQ.matches;

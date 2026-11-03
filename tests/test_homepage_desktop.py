@@ -114,6 +114,19 @@ class DesktopHomepage(unittest.TestCase):
         for claim in ("guaranteed", "passive income", "copy my trades"):
             self.assertNotIn(claim, LOWER)
 
+    def test_every_window_says_not_advice(self) -> None:
+        # on a phone a window covers the desktop's honesty line, so each window carries its own
+        line = "Research and engineering, not financial advice. Nothing here is trading live at a profit."
+        for key in PROJECTS:
+            tpl = re.search(rf'<template id="tpl-{key}">.*?</template>', HOMEPAGE, re.S).group(0)
+            self.assertIn(line, tpl, f"{key} window has no honesty line")
+
+    def test_offline_keeps_the_homepage_files(self) -> None:
+        sw = (ROOT / "sw.js").read_text(encoding="utf-8")
+        keep = re.search(r"var KEEP = \[(.*?)\]", sw, re.S).group(1)
+        for path in ("''", "'assets/desktop.css'", "'assets/desktop.js'", "'exetix/img/icon-green.png'", "'media/powerleash.png'"):
+            self.assertIn(path, keep)
+
     def test_paid_and_paper_labels_kept(self) -> None:
         merger = re.search(r'<template id="tpl-merger-monitor">.*?</template>', HOMEPAGE, re.S).group(0)
         for label in ("£5/month", "+1.38%", "Filings, not advice.", "Zero subscribers so far. Take: £0.", "7-day refund"):
@@ -139,7 +152,8 @@ class DesktopHomepage(unittest.TestCase):
         for img, classes in _parsed().imgs:
             self.assertIn("alt", img, img.get("src"))
             if not (img.get("alt") or "").strip():
-                self.assertTrue(any("icon" in c or "menu__bar" in c for c in classes), f"{img.get('src')} needs alt text")
+                tokens = {t for c in classes for t in c.split()}
+                self.assertTrue(tokens & {"icon", "menu__bar"}, f"{img.get('src')} needs alt text")
 
     def test_share_card_and_app_shell(self) -> None:
         self.assertIn("<title>Charlie Wuytack</title>", HOMEPAGE)

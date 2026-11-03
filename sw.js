@@ -5,7 +5,7 @@ var SCOPE = self.registration.scope;
 var TRACKS = ['exetix', 'research', 'solana', 'merger-monitor', 'doorly', 'powerleash', 'abyss-warden',
   'deskstatus', 'numerai', 'competitions', 'chess-exchange', 'chelsea-bikes'];
 var KEEP = ['', 'tracks/', 'tracks/track.css', 'offline.html', 'media/favicon.svg', 'manifest.webmanifest', 'assets/site.css',
-  'assets/desktop.css', 'assets/desktop.js']
+  'assets/desktop.css', 'assets/desktop.js', 'exetix/img/icon-green.png', 'media/powerleash.png']
   .concat(TRACKS.map(function (t) { return 'tracks/' + t + '/'; }))
   .map(function (p) { return new URL(p, SCOPE).href; });
 
