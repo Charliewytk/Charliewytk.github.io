@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>WishNet privacy policy</title>
+<title>WashIt privacy policy</title>
 <style>
   :root { --ink:#0a0a0c; --mute:#5b5b62; }
   body { margin:0; background:#fff; color:var(--ink); font:17px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif; }
@@ -17,32 +17,59 @@
 <body>
 <main>
   <h1>Privacy policy</h1>
-  <p>WishNet · last updated 7 November 2026</p>
+  <p>WashIt (formerly WishNet) · last updated 8 November 2026</p>
 
   <h2>The short version</h2>
-  <p>WishNet does not collect, store or share your personal data. There is no WishNet account, no WishNet server holding your details, no analytics and no advertising.</p>
+  <p>WashIt has no accounts of its own, no analytics, no advertising and no tracking, and it uses no third-party SDKs. It keeps only what it needs to work: a random ID for your phone (for invite codes), and, only while you let it hunt for a machine with the app closed, what our server needs to watch your laundry room and wake your phone.</p>
 
   <h2>Your Washnet login</h2>
-  <p>You log in on Washnet’s own login page, shown inside the app. Your password goes straight to Washnet; WishNet never sees or stores it. Washnet’s login cookie is kept on your iPhone, in the app’s own storage, so WishNet can check machines and make reservations for you. Deleting the app removes it.</p>
+  <p>You log in on Washnet’s own login page, shown inside the app. Your password goes straight to Washnet; WashIt never sees or stores it. Washnet’s login cookie is kept on your iPhone, in the app’s secure storage (Keychain), so WashIt can check machines and make reservations for you.</p>
 
   <h2>What stays on your iPhone</h2>
   <ul>
     <li>The laundry site you chose.</li>
     <li>Timers for your own machines (wash, dryer and 10-minute reservation holds).</li>
-    <li>The initials Washnet shows on your reservations (for example “Reserved AB”), so WishNet can recognise which machine is yours.</li>
+    <li>The initials Washnet shows on your reservations (for example “Reserved AB”), so WashIt can recognise which machine is yours.</li>
     <li>A small diagnostic log, which never leaves your phone unless you send it to us yourself.</li>
   </ul>
 
-  <h2>Who WishNet talks to</h2>
-  <p>Only Washnet (washnet.co.uk), to read machine status and make reservations you asked for. Reminders and Lock Screen countdowns are created on your iPhone by Apple’s system; nothing is sent to us.</p>
+  <h2>Invite codes</h2>
+  <p>WashIt is invite only. When you open the app it makes a random ID for your phone (it is not your name, email or Apple ID, and it is not used for tracking). Our invite server, hosted by Neon in Frankfurt (EU), stores that ID, whether you are a member, your own invite codes and which code was used by which ID. Wrong code attempts are counted per ID for one hour, then deleted. We do not store IP addresses, names or emails.</p>
+
+  <h2>Background hunting (only if you use it)</h2>
+  <p>If you ask WashIt to hunt for a machine and then close the app, your phone sends our hunting server (hosted on Google Cloud in the US) these things, so it can watch your hall and wake your phone when a machine is about to free up:</p>
+  <ul>
+    <li>Your phone’s random ID and a random secret made on your phone (the server stores only a scrambled hash of the secret), so nobody else can change your hunt.</li>
+    <li>Apple’s push token for your phone, so the server can send you an alert.</li>
+    <li>Which hall you chose (its public Washnet page).</li>
+    <li>Washnet’s session cookie (never your password), so the server can keep your Washnet login alive while it hunts. The reservation itself is made from your iPhone.</li>
+    <li>Your Washnet initials (for example “AB”), only to recognise your own machine.</li>
+    <li>What you are hunting for (washer or dryer) and a small log of each hunt’s outcome (for example “reserved” or “stopped”), used to fix problems.</li>
+  </ul>
+  <p>The Washnet cookie is wiped from the server as soon as the hunt stops or ends, and the server’s database overwrites deleted data. Your push token is deleted when Apple reports it is no longer valid. You can ask us to delete everything linked to your phone’s ID at any time by email (below). If you never use background hunting, none of this is sent.</p>
+
+  <h2>Best time to wash</h2>
+  <p>The “best time to wash” chart is built from Washnet’s public machine-status list for each hall, with any initials removed. It contains no data about you.</p>
+
+  <h2>Who WashIt talks to</h2>
+  <ul>
+    <li>Washnet (washnet.co.uk), to read machine status and make reservations you asked for.</li>
+    <li>Our invite server (Neon, EU), as described above.</li>
+    <li>Our hunting server (Google Cloud, US), only for background hunting and the best-time chart.</li>
+    <li>Apple, to deliver push alerts. Reminders and Lock Screen countdowns are created on your iPhone.</li>
+  </ul>
+  <p>We never sell or share your data, and we never use it for advertising or tracking.</p>
+
+  <h2>Deleting your data</h2>
+  <p>Deleting the app removes everything stored in the app. Email us to delete what our servers hold for your phone.</p>
 
   <h2>Children</h2>
-  <p>WishNet is meant for students using Washnet laundries and is not directed at children under 13.</p>
+  <p>WashIt is meant for students using Washnet laundries and is not directed at children under 13.</p>
 
   <h2>Changes and contact</h2>
-  <p>If this policy changes, the new version will be posted here. Questions: <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a>.</p>
+  <p>If this policy changes, the new version will be posted here. Questions or deletion requests: <a href="mailto:charlie@wuytack.net">charlie@wuytack.net</a>.</p>
 
-  <p>WishNet is an independent app and is not affiliated with Washstation Ltd or Washnet.</p>
+  <p>WashIt is an independent app. It is not affiliated with, endorsed by or sponsored by Washnet or Washstation Ltd.</p>
 </main>
 </body>
 </html>
