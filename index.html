@@ -4,18 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Charlie Wuytack</title>
-<meta name="description" content="Charlie Wuytack builds apps, Mac tools, games and honest quant research. Built and sold ExeTix, an iPhone app for Exeter's ticket drops.">
+<meta name="description" content="Charlie Wuytack, Economics student at the University of Exeter: quantitative research with pre-registered tests and honest verdicts, VP at the Exeter Student Investment Fund, and ExeTix, an iPhone app he built and sold.">
 <link rel="canonical" href="https://charliewytk.github.io/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://charliewytk.github.io/">
 <meta property="og:title" content="Charlie Wuytack">
-<meta property="og:description" content="Twelve things I built, shipped, sold or killed. Open one.">
+<meta property="og:description" content="Economics at Exeter. Quant research that publishes its failures, an app I built and sold, and what else I have shipped.">
 <meta property="og:image" content="https://charliewytk.github.io/media/og/desktop.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Charlie Wuytack">
-<meta name="twitter:description" content="Twelve things I built, shipped, sold or killed. Open one.">
+<meta name="twitter:description" content="Economics at Exeter. Quant research that publishes its failures, an app I built and sold, and what else I have shipped.">
 <meta name="twitter:image" content="https://charliewytk.github.io/media/og/desktop.png">
 <meta name="theme-color" content="#0d0e0c" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#e6e2d8" media="(prefers-color-scheme: light)">
@@ -42,25 +42,42 @@
   <time class="menubar__clock" id="clock"><span class="clock__date"></span> <span class="clock__time"></span></time>
 </header>
 
-<!-- Desktop: the name, the twelve apps and the honesty line. Everything here is visible without JS. -->
+<!-- Desktop: who he is, the apps (finance first) and the honesty line. Everything here is visible without JS. -->
 <main class="desktop" id="desktop">
-  <section class="hello">
-    <h1>Charlie Wuytack</h1>
+  <section class="hello" aria-labelledby="who">
+    <h1 id="who">Charlie Wuytack</h1>
+    <p class="who">Economics student at the University of Exeter. I build quantitative research tools, test trading ideas under pre-registered rules and realistic costs, and publish what fails.</p>
+    <ul class="cv">
+      <li><b>BSc Economics</b>, University of Exeter, 2026–2029</li>
+      <li><b>VP, Private Markets &amp; Macro</b>, Exeter Student Investment Fund</li>
+      <li><b>CBRE Investment Management</b> work experience, 2026; <b>Winton</b> quant programme, 2025</li>
+      <li><b>Built and sold ExeTix</b>, an iPhone app with 450 active users</li>
+    </ul>
+    <p class="links">
+      <a class="btn" href="work/#about" data-open="about">About and CV</a>
+      <a class="link" href="https://www.linkedin.com/in/charleswuytack" rel="noopener">LinkedIn</a>
+      <a class="link" href="mailto:charlie@wuytack.net">Email</a>
+    </p>
   </section>
 
   <nav class="apps" aria-label="Projects">
-    <ul>
+    <h2 class="apps__head" id="apps-fin">Finance and research</h2>
+    <ul aria-labelledby="apps-fin">
+      <li><a class="app" href="work/#about" data-app="about"><span class="icon" style="--c:#fbfaf7;--g:#1b1d1f"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-card"/></svg></span><span class="label">About</span></a></li>
+      <li><a class="app" href="tracks/research/" data-app="kill-log"><span class="icon" style="--c:#e5484d"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-tally"/></svg></span><span class="label">Quant research</span></a></li>
       <li><a class="app" href="exetix/" data-app="exetix"><span class="icon icon--img" style="--c:#00c800"><img src="exetix/img/icon-green.png" alt="" width="64" height="64" draggable="false"></span><span class="label">ExeTix</span></a></li>
-      <li><a class="app" href="kill-log/" data-app="kill-log"><span class="icon" style="--c:#e5484d"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-tally"/></svg></span><span class="label">The Kill Log</span></a></li>
-      <li><a class="app" href="tracks/solana/" data-app="solana"><span class="icon" style="--c:#141514"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-watch"/></svg></span><span class="label">Solana execution</span></a></li>
       <li><a class="app" href="merger-monitor/" data-app="merger-monitor"><span class="icon" style="--c:#3b6fe0"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-table"/></svg></span><span class="label">Merger Monitor</span></a></li>
-      <li><a class="app" href="doorly/" data-app="doorly"><span class="icon" style="--c:#f0883e"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-door"/></svg></span><span class="label">Doorly</span></a></li>
-      <li><a class="app" href="tracks/powerleash/" data-app="powerleash"><span class="icon icon--img icon--own" style="--c:transparent"><img src="media/powerleash.png" alt="" width="64" height="64" draggable="false"></span><span class="label">PowerLeash</span></a></li>
-      <li><a class="app" href="abyss-warden/" data-app="abyss-warden"><span class="icon" style="--c:#0e2f47"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-tower"/></svg></span><span class="label">Abyss Warden</span></a></li>
-      <li><a class="app" href="tracks/deskstatus/" data-app="deskstatus"><span class="icon" style="--c:#2c2d30"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-window"/></svg></span><span class="label">DeskStatus</span></a></li>
-      <li><a class="app" href="tracks/numerai/" data-app="numerai"><span class="icon" style="--c:#7457f0"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-scatter"/></svg></span><span class="label">Numerai</span></a></li>
       <li><a class="app" href="tracks/competitions/" data-app="competitions"><span class="icon" style="--c:#d9a422"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-medal"/></svg></span><span class="label">Competitions</span></a></li>
+      <li><a class="app" href="tracks/numerai/" data-app="numerai"><span class="icon" style="--c:#7457f0"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-scatter"/></svg></span><span class="label">Numerai</span></a></li>
+    </ul>
+    <h2 class="apps__head" id="apps-more">Engineering, apps and games</h2>
+    <ul aria-labelledby="apps-more">
+      <li><a class="app" href="tracks/solana/" data-app="solana"><span class="icon" style="--c:#141514"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-watch"/></svg></span><span class="label">Solana execution</span></a></li>
+      <li><a class="app" href="tracks/deskstatus/" data-app="deskstatus"><span class="icon" style="--c:#2c2d30"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-window"/></svg></span><span class="label">DeskStatus</span></a></li>
       <li><a class="app" href="tracks/chess-exchange/" data-app="chess-exchange"><span class="icon" style="--c:#efe9dc;--g:#1b1d1f"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-pawn"/></svg></span><span class="label">Chess Exchange</span></a></li>
+      <li><a class="app" href="tracks/powerleash/" data-app="powerleash"><span class="icon icon--img icon--own" style="--c:transparent"><img src="media/powerleash.png" alt="" width="64" height="64" draggable="false"></span><span class="label">PowerLeash</span></a></li>
+      <li><a class="app" href="doorly/" data-app="doorly"><span class="icon" style="--c:#f0883e"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-door"/></svg></span><span class="label">Doorly</span></a></li>
+      <li><a class="app" href="abyss-warden/" data-app="abyss-warden"><span class="icon" style="--c:#0e2f47"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-tower"/></svg></span><span class="label">Abyss Warden</span></a></li>
       <li><a class="app" href="chelsea-bikes/" data-app="chelsea-bikes"><span class="icon" style="--c:#1f9bd7"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-bike"/></svg></span><span class="label">Chelsea Bikes</span></a></li>
     </ul>
   </nav>
@@ -72,6 +89,7 @@
 <nav class="dock" aria-label="Dock">
   <ul class="dock__list" id="dock">
     <li><a class="tile" href="work/" id="work-btn"><span class="icon" style="--c:#4b8bf5"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-folder"/></svg></span><span class="tile__label">Work</span></a></li>
+    <li><a class="tile" href="https://www.linkedin.com/in/charleswuytack" rel="noopener"><span class="icon" style="--c:#0a66c2"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-linkedin"/></svg></span><span class="tile__label">LinkedIn</span></a></li>
     <li><a class="tile" href="https://github.com/Charliewytk" rel="noopener"><span class="icon" style="--c:#1b1d1f"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-github"/></svg></span><span class="tile__label">GitHub</span></a></li>
     <li><a class="tile" href="mailto:charlie@wuytack.net"><span class="icon" style="--c:#f2efe8;--g:#1b1d1f"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#g-mail"/></svg></span><span class="tile__label">Contact</span></a></li>
     <li class="dock__sep" aria-hidden="true"></li>
@@ -82,6 +100,41 @@
 <div class="windows" id="windows"></div>
 
 <!-- Window bodies, cloned on open so closed windows load nothing. -->
+<template id="tpl-about">
+  <div class="copy">
+    <p class="lede">Economics at Exeter, and a quant research programme that publishes its failures.</p>
+    <p class="meta">BSc Economics, University of Exeter, 2026–2029</p>
+    <h3 class="cv-head">Education</h3>
+    <dl class="cv-list">
+      <div><dt>University of Exeter</dt><dd>BSc Economics · 2026–2029</dd></div>
+      <div><dt>A-Levels</dt><dd>Mathematics A, Economics A, Politics A · Cardinal Vaughan Memorial School, 2024–2026</dd></div>
+      <div><dt>John Locke Institute</dt><dd>Global Essay Prize finalist, Economics, 2025 · selected from 63,328 entries</dd></div>
+      <div><dt>Eton College</dt><dd>2021–2024</dd></div>
+    </dl>
+    <h3 class="cv-head">Experience</h3>
+    <dl class="cv-list">
+      <div><dt>Exeter Student Investment Fund</dt><dd>VP, Private Markets &amp; Macro Division, 2026/27 fund · Oct 2026 to now<small>Runs a five-person team screening fund managers (GPs) and leads the final pitch to the investor board.</small></dd></div>
+      <div><dt>CBRE Investment Management</dt><dd>Work experience, Global Transactions (indirect private real estate) · Jul 2026<small>Sat in on Investment Committee meetings and built Excel outputs for the transactions team.</small></dd></div>
+      <div><dt>Winton</dt><dd>Introduction to Quantitative Investment Strategies programme · Jun 2025</dd></div>
+    </dl>
+    <h3 class="cv-head">Research and projects</h3>
+    <dl class="cv-list">
+      <div><dt>Independent quantitative research</dt><dd>Aug 2026 to now · an automated platform over 22 markets, 100,000+ strategy evaluations, c.170 pre-registered tests from c.3,700 ideas<small>Most ideas were rejected once realistic costs were applied, and every verdict is published. No profit is claimed.</small></dd></div>
+      <div><dt>ExeTix</dt><dd>Founder · an iPhone app for Exeter ticket drops, 450 active users · sold Oct 2026 for an upfront payment plus a revenue share</dd></div>
+      <div><dt>Competitions</dt><dd>WorldQuant BRAIN Gold, invited to become a Research Consultant · one strategy selected to trade live in Quantiacs Q25 · weekly Numerai models</dd></div>
+    </dl>
+    <h3 class="cv-head">Leadership</h3>
+    <dl class="cv-list">
+      <div><dt>CVMS Investment &amp; Trading Society</dt><dd>Founder and lead, 2025–2026 · grew it to c.30 members and coached its team to 1st place at the St Paul's School Economics &amp; Trading competition</dd></div>
+    </dl>
+    <p class="actions">
+      <a class="btn" href="https://www.linkedin.com/in/charleswuytack" rel="noopener">LinkedIn</a>
+      <a class="link" href="mailto:charlie@wuytack.net">charlie@wuytack.net</a>
+      <a class="link" href="work/">All work</a>
+    </p>
+    <p class="note">Full CV on request by email.</p>
+  </div>
+</template>
 <template id="tpl-exetix">
   <figure class="media media--phones">
     <img src="exetix/img/screen-alerts.webp" alt="ExeTix onboarding screen ‘Be first, every time’ with sample alerts: dropping in 10 min, tickets just dropped, restock, resale listed" width="540" height="1173" decoding="async">
@@ -102,7 +155,6 @@
       <a class="link" href="https://apps.apple.com/gb/app/exetix/id6814591245" rel="noopener">On the App Store</a>
     </p>
     <p class="note">Funded by a University of Exeter grant and accepted into Anthropic's Claude for Startups programme. ExeTix is independent. It is not affiliated with the University of Exeter, any venue, or any ticketing platform, and it never buys tickets on other platforms for you.</p>
-    <p class="note">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
   </div>
 </template>
 <template id="tpl-kill-log">
@@ -119,7 +171,8 @@
       <div><dt>p ≈ 1.0</dt><dd>deflated Sharpe of the best of 3,038 model trials in the earlier crypto ledger. The honest answer<small>As of 30 September 2026, when that ledger had killed 50 of its 65 trading lanes.</small></dd></div>
     </dl>
     <p class="actions">
-      <a class="btn" href="kill-log/">Open The Kill Log</a>
+      <a class="btn" href="tracks/research/">Open the research programme</a>
+      <a class="link" href="kill-log/">The Kill Log</a>
     </p>
     <p class="note">Data from WRDS (CRSP, Compustat, I/B/E/S, OptionMetrics, TRACE) and 20+ public sources. Tests are pre-registered and blind, with multiple-testing (luck) controls and look-ahead guards. A long-only equity strategy passed its locked out-of-sample tests; that is a test result, not a live record.</p>
     <p class="note">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
@@ -179,7 +232,6 @@
     <p class="actions">
       <a class="btn" href="doorly/">Open Doorly</a>
     </p>
-    <p class="note">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
   </div>
 </template>
 <template id="tpl-powerleash">
@@ -203,7 +255,6 @@
       <a class="link" href="downloads/PowerLeash.zip" download>PowerLeash.zip</a>
     </p>
     <p class="note">Apple Silicon, unsigned. Unzip → drag PowerLeash.app to /Applications → right-click Open. Double-click is blocked by Gatekeeper; that is expected. Battery savings are not quantified yet.</p>
-    <p class="note">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
   </div>
 </template>
 <template id="tpl-abyss-warden">
@@ -220,7 +271,6 @@
     <p class="actions">
       <a class="btn" href="abyss-warden/">Open Abyss Warden</a>
     </p>
-    <p class="note">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
   </div>
 </template>
 <template id="tpl-deskstatus">
@@ -304,7 +354,6 @@
       <a class="btn" href="tracks/chess-exchange/">Open Chess Exchange</a>
       <a class="link" href="https://charliewytk.github.io/chess-exchange/" rel="noopener">Try the FEN → WDL demo</a>
     </p>
-    <p class="note">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
   </div>
 </template>
 <template id="tpl-chelsea-bikes">
@@ -320,7 +369,6 @@
     <p class="actions">
       <a class="btn" href="chelsea-bikes/">Open Chelsea Bikes</a>
     </p>
-    <p class="note">Research and engineering, not financial advice. Nothing here is trading live at a profit.</p>
   </div>
 </template>
 
@@ -336,6 +384,8 @@
   <symbol id="g-medal" viewBox="0 0 60 60"><path d="M23 13l7 13 7-13"/><circle cx="30" cy="36" r="10.5"/><path fill="currentColor" stroke="none" d="M30 30.5l1.7 3.4 3.8.5-2.7 2.7.6 3.7-3.4-1.8-3.4 1.8.6-3.7-2.7-2.7 3.8-.5z"/></symbol>
   <symbol id="g-pawn" viewBox="0 0 60 60"><g fill="currentColor" stroke="none"><circle cx="30" cy="19.5" r="6"/><path d="M24.5 27h11l-1.8 3.5c0 5.5 1.8 8.5 5.3 11.5H21c3.5-3 5.3-6 5.3-11.5z"/><rect x="19" y="42" width="22" height="4.5" rx="2.25"/></g></symbol>
   <symbol id="g-bike" viewBox="0 0 60 60"><circle cx="17.5" cy="37" r="7.5"/><circle cx="42.5" cy="37" r="7.5"/><path d="M17.5 37 25 23.5 29.5 37zM25 23.5h12.5M29.5 37l8-13.5 5 13.5M22 22.5h6.5M35.5 19.5l2 4"/></symbol>
+  <symbol id="g-card" viewBox="0 0 60 60"><rect x="12" y="17" width="36" height="26" rx="4"/><circle cx="23.5" cy="27.5" r="3.6"/><path d="M17.5 37.5c1.2-3 3.4-4.5 6-4.5s4.8 1.5 6 4.5M34 25.5h8M34 31h8M34 36.5h5"/></symbol>
+  <symbol id="g-linkedin" viewBox="0 0 60 60"><g fill="currentColor" stroke="none"><circle cx="20.5" cy="18.5" r="3.4"/><rect x="17.6" y="25" width="5.8" height="18" rx="1"/><path d="M28 25h5.5v2.6c1.1-1.9 3.3-3.1 6-3.1 4.3 0 6.5 2.7 6.5 7.6V43h-5.8v-9.9c0-2.6-1-3.9-3.1-3.9-2.2 0-3.3 1.5-3.3 4.1V43H28z"/></g></symbol>
   <symbol id="g-folder" viewBox="0 0 60 60"><path d="M13 21a3 3 0 0 1 3-3h8.5l3.5 3.5h16a3 3 0 0 1 3 3V40a3 3 0 0 1-3 3H16a3 3 0 0 1-3-3z"/><path d="M13 27h34"/></symbol>
   <symbol id="g-mail" viewBox="0 0 60 60"><rect x="13" y="18" width="34" height="24" rx="4"/><path d="M14.5 20.5 30 32l15.5-11.5"/></symbol>
   <symbol id="g-github" viewBox="0 0 60 60"><path fill="currentColor" stroke="none" transform="translate(14 14) scale(2)" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></symbol>

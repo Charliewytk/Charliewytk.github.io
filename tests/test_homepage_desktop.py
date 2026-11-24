@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Rails for the Desktop homepage (3 Nov 2026).
 
-The homepage is a tiny desktop: twelve app icons, one per project, and a dock
-with Work, GitHub and Contact. Every icon is a plain link to its project page;
+The homepage is a tiny desktop: who he is (name, one line, four CV facts), thirteen
+app icons (About, then finance and research, then everything else) and a dock with
+Work, LinkedIn, GitHub and Contact (updated 24 Nov 2026). Every icon is a plain link to its project page;
 with JS a click opens the project as a window (desktop) or a sheet (phone),
 cloned from a <template>. The old shelf homepage lives on at /shelf/ with its
 own rails in test_homepage_shelf.py. This page must still:
@@ -29,8 +30,9 @@ JS = (ROOT / "assets" / "desktop.js").read_text(encoding="utf-8")
 STATIC = re.sub(r"<template\b.*?</template>", "", HOMEPAGE, flags=re.S)
 
 PROJECTS = {
+    "about": "work/#about",
     "exetix": "exetix/",
-    "kill-log": "kill-log/",
+    "kill-log": "tracks/research/",
     "solana": "tracks/solana/",
     "merger-monitor": "merger-monitor/",
     "doorly": "doorly/",
@@ -74,6 +76,7 @@ def _parsed() -> _Refs:
 
 
 def _resolves(path: str) -> bool:
+    path = path.split("#", 1)[0]
     target = ROOT / path
     if path.endswith("/") or path == "":
         target = target / "index.html"
@@ -85,13 +88,14 @@ class DesktopHomepage(unittest.TestCase):
         dock = re.search(r'<nav class="dock".*?</nav>', HOMEPAGE, re.S)
         self.assertIsNotNone(dock)
         links = re.findall(r'<a class="tile" href="([^"]+)"', dock.group(0))
-        self.assertEqual(links, ["work/", "https://github.com/Charliewytk", "mailto:charlie@wuytack.net"])
+        self.assertEqual(links, ["work/", "https://www.linkedin.com/in/charleswuytack", "https://github.com/Charliewytk", "mailto:charlie@wuytack.net"])
         self.assertIn('href="work/" id="work-btn"', dock.group(0))
-        self.assertIn("<h1>Charlie Wuytack</h1>", HOMEPAGE)
+        self.assertIn('<h1 id="who">Charlie Wuytack</h1>', HOMEPAGE)
 
     def test_every_project_has_a_real_page_and_window(self) -> None:
         apps = re.findall(r'<a class="app" href="([^"]+)" data-app="([a-z-]+)"', STATIC)
-        self.assertEqual(len(apps), 12)
+        self.assertEqual(len(apps), 13)
+        self.assertEqual([key for _, key in apps][:6], ["about", "kill-log", "exetix", "merger-monitor", "competitions", "numerai"])
         self.assertEqual({key: href for href, key in apps}, PROJECTS)
         for href, key in apps:
             self.assertTrue(_resolves(href), f"{key}: {href} has no page")
@@ -114,10 +118,20 @@ class DesktopHomepage(unittest.TestCase):
         for claim in ("guaranteed", "passive income", "copy my trades"):
             self.assertNotIn(claim, LOWER)
 
-    def test_every_window_says_not_advice(self) -> None:
-        # on a phone a window covers the desktop's honesty line, so each window carries its own
+    def test_who_he_is_without_js(self) -> None:
+        hello = re.search(r'<section class="hello".*?</section>', STATIC, re.S).group(0)
+        for fact in ("University of Exeter", "Exeter Student Investment Fund", "CBRE Investment Management", "Winton", "ExeTix"):
+            self.assertIn(fact, hello)
+        self.assertIn('href="work/#about"', hello)
+        self.assertIn("linkedin.com/in/charleswuytack", hello)
+        # no phone number of any UK mobile shape (the real one is never written into this public repo)
+        self.assertIsNone(re.search(r"(\+44\s?7|\b07)\d{3}\s?\d{6}", HOMEPAGE))
+
+    def test_every_money_window_says_not_advice(self) -> None:
+        # on a phone a window covers the desktop's honesty line, so every window that talks about markets or money
+        # carries its own; the apps and games do not repeat it (24 Nov 2026: once on the page, plus where money is)
         line = "Research and engineering, not financial advice. Nothing here is trading live at a profit."
-        for key in PROJECTS:
+        for key in ("kill-log", "solana", "merger-monitor", "deskstatus", "numerai", "competitions"):
             tpl = re.search(rf'<template id="tpl-{key}">.*?</template>', HOMEPAGE, re.S).group(0)
             self.assertIn(line, tpl, f"{key} window has no honesty line")
 
@@ -177,7 +191,7 @@ class DesktopHomepage(unittest.TestCase):
 
     def test_reachable_without_javascript(self) -> None:
         links = re.findall(r'<a class="(?:app|tile)" href="([^"]+)"', STATIC)
-        self.assertEqual(len(links), 15)
+        self.assertEqual(len(links), 17)   # 13 apps + Work, LinkedIn, GitHub, Contact
         for href in links:
             if not href.startswith(("https://", "mailto:")):
                 self.assertTrue(_resolves(href), href)

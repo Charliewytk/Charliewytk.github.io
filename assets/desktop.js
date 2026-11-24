@@ -612,6 +612,18 @@
     });
   }
 
+  // Text links that open a window (the hero's "About and CV"): plain click opens it, modified clicks navigate.
+  for (const link of $$('[data-open]')) {
+    const win = wins.get(link.dataset.open);
+    if (!win) continue;
+    for (const type of ['pointerenter', 'pointerdown', 'focus']) link.addEventListener(type, () => win.warm(), { passive: true });
+    link.addEventListener('click', (e) => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      e.preventDefault();
+      win.open(win.state === 'min' ? dockTiles.tileOf(win) : win.app, { kbd: e.detail === 0 });
+    });
+  }
+
   // Esc closes the frontmost window.
   addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
@@ -645,11 +657,11 @@
   }
   tick();
 
-  // ---------- First window: ?open=<slug>, else ExeTix on a wide desktop ----------
+  // ---------- First window: ?open=<slug>, else the research programme on a wide desktop ----------
   const wanted = new URLSearchParams(location.search).get('open');
-  // ExeTix opens only where it fits between the name and the icons, so it never covers the name.
-  // Same maths as place(): the window's left edge must clear the name.
-  const roomy = !isPhone() && launcherLeft() - 560 >= $('.hello h1').getBoundingClientRect().right + 24;
-  const first = wins.get(wanted) || (roomy ? wins.get('exetix') : null);
+  // It opens only where it fits between the introduction and the icons, so it never covers who he is.
+  // Same maths as place(): the window's left edge must clear the introduction.
+  const roomy = !isPhone() && launcherLeft() - 560 >= $('.hello').getBoundingClientRect().right + 24;
+  const first = wins.get(wanted) || (roomy ? wins.get('kill-log') : null);
   if (first) first.open(first.app, { focus: !!wanted, instant: true });
 })();

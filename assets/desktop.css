@@ -51,7 +51,7 @@
     --light-off: rgba(236, 232, 223, 0.18);
     --accent: #3ddc84;
     --select: #3b7cf0;
-    --icon-ring: rgba(255, 255, 255, 0.16);
+    --icon-ring: rgba(255, 255, 255, 0.22);
     --scrim: rgba(0, 0, 0, 0.5);
     --shadow-front: 0 0 0 0.5px rgba(255, 255, 255, 0.1), 0 2px 6px rgba(0, 0, 0, 0.3), 0 24px 64px rgba(0, 0, 0, 0.6);
     --shadow-back: 0 0 0 0.5px rgba(255, 255, 255, 0.08), 0 10px 30px rgba(0, 0, 0, 0.45);
@@ -112,22 +112,30 @@ ul { list-style: none; margin: 0; padding: 0; }
 .menubar__clock { font-variant-numeric: tabular-nums; min-width: 9.5ch; text-align: right; }
 
 /* ---------- Desktop ---------- */
-/* Name and honesty line top-left, icons top-right, windows between: the dock (bottom centre) can grow without reaching either. */
-.desktop { --h1: clamp(2.5rem, 4vw + 1rem, 4rem); position: fixed; inset: 28px 0 0 0; }
+/* Who he is top-left, icons top-right, windows between, the honesty line bottom-left: the dock (bottom centre) can grow without reaching any of them.
+   The introduction narrows with the screen so a 560 px window still fits between it and the icons on a 1280 px laptop. */
+.desktop { --h1: clamp(2.25rem, 2.6vw + 0.75rem, 3.5rem); position: fixed; inset: 28px 0 0 0; }
 
-.hello { position: absolute; left: 40px; top: 22px; max-width: 46rem; }
+.hello { position: absolute; left: 40px; top: 22px; width: clamp(17rem, calc(100vw - 990px), 27rem); }
 .hello h1 {
   margin: 0; font-size: var(--h1); font-weight: 600;
   letter-spacing: -0.035em; line-height: 1.02; text-wrap: balance;
 }
+.who { margin: 14px 0 0; font-size: 1rem; line-height: 1.5; color: var(--ink-2); text-wrap: pretty; }
+.cv { margin: 18px 0 0; border-top: 0.5px solid var(--line); font-size: 0.875rem; line-height: 1.4; color: var(--ink-2); }
+.cv li { padding: 8px 0; border-bottom: 0.5px solid var(--line); text-wrap: pretty; }
+.cv b { font-weight: 600; color: var(--ink); }
+.links { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin: 18px 0 0; }
 
 .honesty {
-  position: absolute; left: 42px; top: calc(22px + 1.02 * var(--h1) + 10px); margin: 0; max-width: 20rem;
+  position: absolute; left: 42px; bottom: 100px; margin: 0; max-width: 20rem;
   font-size: 0.8125rem; line-height: 1.45; color: var(--muted); text-wrap: pretty;
 }
 
-.apps { position: absolute; top: 20px; right: 16px; }
+.apps { position: absolute; top: 14px; right: 16px; }
 .apps ul { display: grid; grid-template-columns: repeat(3, 100px); grid-auto-rows: 106px; }
+.apps__head { margin: 0; padding: 6px 10px 4px; font-size: 12px; font-weight: 600; line-height: 1.3; letter-spacing: 0; color: var(--muted); }
+.apps ul + .apps__head { margin-top: 10px; }
 .app {
   display: flex; flex-direction: column; align-items: center; gap: 7px;
   padding: 6px 2px 0; text-decoration: none; border-radius: 10px; outline: none;
@@ -136,7 +144,7 @@ ul { list-style: none; margin: 0; padding: 0; }
 .app .icon { transition: transform var(--spring-bouncy-dur) var(--spring-bouncy); }
 .app:active .icon { transform: scale(0.94); transition-duration: var(--dur-press); transition-timing-function: var(--ease-out); }
 .app .label {
-  font-size: 12px; font-weight: 500; line-height: 1.25; text-align: center;
+  font-size: 12px; font-weight: 500; line-height: 1.3; text-align: center;
   padding: 1px 6px; border-radius: 4px; max-width: 96px;
 }
 .app:focus-visible .icon { outline: 2px solid var(--select); outline-offset: 3px; }
@@ -280,13 +288,24 @@ ul { list-style: none; margin: 0; padding: 0; }
   transition: transform var(--dur-press) var(--ease-out), opacity var(--dur-fast) var(--ease-out);
 }
 .btn:active { transform: scale(0.97); }
-.link { font-size: 13.5px; font-weight: 500; color: var(--ink-2); text-underline-offset: 3px; text-decoration-color: var(--line); }
+.link { font-size: 13.5px; font-weight: 500; color: var(--ink-2); text-underline-offset: 3px; text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); padding-block: 8px; }
 @media (hover: hover) and (pointer: fine) {
   .btn:hover { opacity: 0.88; }
   .link:hover { text-decoration-color: currentColor; }
 }
 .note { margin: 14px 0 0; font-size: 0.75rem; line-height: 1.45; color: var(--muted); text-wrap: pretty; }
 .note + .note { margin-top: 6px; }
+
+/* About window: a short CV. */
+.cv-head { margin: 24px 0 0; font-size: 0.8125rem; font-weight: 600; letter-spacing: 0; color: var(--muted); }
+.cv-list { margin: 8px 0 0; border-top: 0.5px solid var(--line); }
+.cv-list > div { display: grid; gap: 2px; padding: 10px 0; border-bottom: 0.5px solid var(--line); }
+.cv-list dt { font-size: 0.9375rem; font-weight: 600; letter-spacing: -0.01em; }
+.cv-list dd { margin: 0; font-size: 0.875rem; color: var(--ink-2); text-wrap: pretty; }
+.cv-list small { display: block; margin-top: 3px; font-size: 0.8125rem; color: var(--muted); }
+@container (min-width: 520px) {
+  .cv-list > div { grid-template-columns: 12.5rem minmax(0, 1fr); column-gap: 20px; }
+}
 
 /* App panels: each window's top strip, drawn from its own numbers. Static: nothing waits to appear. */
 .viz { --gut: max(24px, calc((100% - 36rem) / 2 + 24px)); margin: 0; padding: 22px var(--gut) 18px; background: var(--panel); box-shadow: 0 0.5px 0 var(--line); }
@@ -350,17 +369,22 @@ ul { list-style: none; margin: 0; padding: 0; }
     display: flex; flex-direction: column; gap: 28px;
     padding: calc(40px + env(safe-area-inset-top)) 16px calc(116px + env(safe-area-inset-bottom));
   }
-  .hello { position: static; padding: 4px 6px 0; }
+  .hello { position: static; width: auto; padding: 4px 6px 0; }
   .hello h1 { font-size: 2.5rem; letter-spacing: -0.035em; }
+  .who { font-size: 1rem; }
+  .cv { font-size: 0.9375rem; }
+  .links .btn { height: 44px; }
+  .apps__head { padding: 0 6px 10px; font-size: 13px; }
+  .apps ul + .apps__head { margin-top: 26px; }
 
   .apps { position: static; }
   .apps ul { grid-template-columns: repeat(4, 1fr); grid-auto-rows: auto; row-gap: 20px; }
   .apps, .hello, .honesty { width: 100%; max-width: 720px; margin-inline: auto; }
   .app { gap: 6px; padding: 0; }
   .app .icon { --size: 60px; }
-  .app .label { font-size: 11.5px; padding: 0 2px; max-width: 84px; }
+  .app .label { font-size: 12px; padding: 0 2px; max-width: 84px; }
 
-  .honesty { position: static; max-width: none; margin-top: auto; padding: 0 6px; font-size: 0.75rem; text-align: center; }   /* pinned above the dock, like page dots */
+  .honesty { position: static; max-width: none; margin-top: auto; padding: 0 6px; font-size: 0.8125rem; text-align: center; }   /* pinned above the dock, like page dots */
 
   .dock { left: 16px; right: 16px; bottom: calc(12px + env(safe-area-inset-bottom)); width: auto; max-width: 420px; }
   .dock__list { justify-content: space-evenly; padding: 12px 8px 8px; }
