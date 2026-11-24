@@ -82,6 +82,7 @@
   const background = [$('.menubar'), $('#desktop'), dock];   // made inert (and pushed back) behind a phone sheet
   const wins = new Map();                                    // slug -> Win
   let zTop = 10;
+  let skipPop = false;                                       // set while our own history.back() is in flight
   let cascade = 0;
 
   const workArea = () => ({ x: 0, y: MENU, w: innerWidth, h: innerHeight - MENU - DOCK });
@@ -261,9 +262,10 @@
       syncVideos();
       if (isPhone()) background.forEach((n) => (n.inert = true));
       // Phone: a sheet gets its own history entry, so the Back gesture closes it instead of leaving the site.
-      if (isPhone() && !instant && history.state?.win !== this.slug) {
-        history.pushState({ win: this.slug }, '', `${location.pathname}?open=${this.slug}`);
-        this.pushed = true;
+      if (isPhone() && history.state?.win !== this.slug) {
+        const url = new URL(location.href);
+        url.searchParams.set('open', this.slug);
+        history.pushState({ win: this.slug }, '', url);
       }
       if (focus) this.el.focus({ preventScroll: true });
     }
@@ -273,10 +275,7 @@
 
     close({ fromPop = false } = {}) {
       if (this.state === 'closed') return;
-      if (this.pushed) {                                     // closed by hand: drop the history entry the sheet added
-        this.pushed = false;
-        if (!fromPop && history.state?.win === this.slug) history.back();
-      }
+      if (!fromPop && history.state?.win === this.slug) { skipPop = true; history.back(); }   // closed by hand: drop the sheet's history entry
       const hadFocus = this.el.contains(document.activeElement);
       const wasMin = this.state === 'min';
       this.state = 'closed';
@@ -286,7 +285,8 @@
       this.dockFlight(false);
       if (!wasMin) { this.from = rectOf($('.icon', this.app)); this.fade = true; this.animate(0, SHUT_X, SHUT_Y); }
       this.video?.pause();
-      if (hadFocus) this.app.focus({ preventScroll: true });
+      if (hadFocus) (this.returnFocus?.isConnected ? this.returnFocus : this.app).focus({ preventScroll: true });
+      this.returnFocus = null;
       frontmost();
     }
 
@@ -629,14 +629,19 @@
     link.addEventListener('click', (e) => {
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
       e.preventDefault();
+      win.returnFocus = link;
       win.open(win.state === 'min' ? dockTiles.tileOf(win) : win.app, { kbd: e.detail === 0 });
     });
   }
 
-  // Back (phone): close the sheet whose history entry was just left.
+  // Back / Forward (phone): show exactly the sheet the history entry names.
   addEventListener('popstate', () => {
+    if (skipPop) { skipPop = false; return; }              // our own history.back() after a hand-closed sheet
+    if (!isPhone()) return;
     const want = history.state?.win;
-    for (const w of wins.values()) if (w.pushed && w.state === 'open' && w.slug !== want) w.close({ fromPop: true });
+    for (const w of wins.values()) if (w.state === 'open' && w.slug !== want) w.close({ fromPop: true });
+    const next = want && wins.get(want);
+    if (next && next.state !== 'open') next.open(next.app, { focus: true });
   });
 
   // Esc closes the frontmost window.
@@ -678,5 +683,10 @@
   // Same maths as place(): the window's left edge must clear the introduction.
   const roomy = !isPhone() && launcherLeft() - 560 >= $('.hello').getBoundingClientRect().right + 24;
   const first = wins.get(wanted) || (roomy ? wins.get('kill-log') : null);
+  if (wanted && first && isPhone()) {                         // a shared ?open= link: put the home screen under the sheet, so Back lands on it
+    const home = new URL(location.href);
+    home.searchParams.delete('open');
+    history.replaceState(null, '', home);
+  }
   if (first) first.open(first.app, { focus: !!wanted, instant: true });
 })();
