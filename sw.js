@@ -1,6 +1,6 @@
 // Offline: keeps the homepage, the tracklist and every track page so the site opens without a signal.
 // Pages are fetched fresh first and fall back to the copy kept here; files are served from here and refreshed behind.
-var VERSION = 'side-a-v4';
+var VERSION = 'side-a-v5';
 var SCOPE = self.registration.scope;
 var TRACKS = ['exetix', 'research', 'solana', 'merger-monitor', 'doorly', 'powerleash', 'abyss-warden',
   'deskstatus', 'numerai', 'competitions', 'chess-exchange', 'chelsea-bikes'];
