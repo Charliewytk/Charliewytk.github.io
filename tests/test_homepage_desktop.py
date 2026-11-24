@@ -132,8 +132,9 @@ class DesktopHomepage(unittest.TestCase):
         for label in ("£5/month", "+1.38%", "Filings, not advice.", "Zero subscribers so far. Take: £0.", "7-day refund"):
             self.assertIn(label, merger)
         kill = re.search(r'<template id="tpl-kill-log">.*?</template>', HOMEPAGE, re.S).group(0)
-        self.assertIn("No live P&amp;L is claimed", kill)
         self.assertIn("Nothing here claims a profit yet", kill)
+        self.assertIn("not a live record", kill)
+        self.assertIn("20 Nov 2026", re.search(r'<template id="tpl-solana">.*?</template>', HOMEPAGE, re.S).group(0))
         solana = re.search(r'<template id="tpl-solana">.*?</template>', HOMEPAGE, re.S).group(0)
         self.assertIn("Fills are simulated at the estimated landing slot, not landed.", solana)
         chess = re.search(r'<template id="tpl-chess-exchange">.*?</template>', HOMEPAGE, re.S).group(0)
