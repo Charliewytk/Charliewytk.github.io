@@ -54,30 +54,6 @@
   @media (hover: hover) and (pointer: fine) { .kills tbody tr:hover { background: var(--bg-2); } }
   .kl .caption { margin: 0 0 var(--space-2); }
 
-  /* pay bar: arrives once the hero button scrolls away, leaves at the footer */
-  .paybar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-4);
-    position: fixed;
-    z-index: 40;
-    left: 0;
-    right: 0;
-    margin-inline: auto;
-    bottom: calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
-    width: min(560px, calc(100% - 2 * var(--gutter)));
-    padding: var(--space-2) var(--space-2) var(--space-2) var(--space-5);
-    background: color-mix(in srgb, var(--bg) 84%, transparent);
-    -webkit-backdrop-filter: saturate(1.6) blur(14px);
-    backdrop-filter: saturate(1.6) blur(14px);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-pill);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
-    transition: transform var(--spring-snappy-dur) var(--spring-snappy), opacity var(--dur-base) var(--ease-out);
-  }
-  .paybar[data-hidden] { opacity: 0; transform: translateY(calc(100% + var(--space-5))); pointer-events: none; }
-  .paybar .hint { font-size: var(--text-sm); font-weight: 500; color: var(--fg-2); }
   .site-footer { position: relative; border-top: 0; max-width: calc(760px + 2 * var(--gutter)); margin-top: var(--space-9); padding-bottom: calc(var(--space-9) + env(safe-area-inset-bottom, 0px)); }
   .site-footer::before { content: ""; position: absolute; top: 0; left: var(--gutter); right: var(--gutter); border-top: 1px solid var(--line); }
 
@@ -93,7 +69,6 @@
     .cta .btn { width: 100%; }
     .kills { font-size: var(--text-sm); }
     .kills td:nth-child(2) { padding-right: var(--space-3); }
-    .paybar { gap: var(--space-3); padding-left: var(--space-4); }
   }
   /* header pill: same rules as subscribe/ */
   .site-header a.pay {
@@ -105,11 +80,6 @@
   .site-header a.pay:active { transform: scale(0.97); }
   @media (hover: hover) and (pointer: fine) { .site-header a.pay:hover { background: var(--accent); color: var(--accent-fg); } }
   @media (max-width: 640px) { .site-header .opt { display: none; } }
-  /* narrow: the restored price hint sits above the button instead of wrapping beside it */
-  @media (max-width: 640px) {
-    .paybar { flex-direction: column; align-items: stretch; gap: var(--space-2); padding: var(--space-3) var(--space-2) var(--space-2); border-radius: var(--radius-3); }
-    .paybar .hint { text-align: center; }
-  }
 </style>
 </head>
 <body>
@@ -181,13 +151,13 @@
     </table>
     </div>
     <p class="caption">Numbers are copied from the paper kill log, or re-costed from stored components. Missing cost stacks were left blank in the source rather than invented. No live P&amp;L column is filled.</p>
-    <p class="caption">The full CSV stays in the research repo. Source: <a href="https://github.com/Charliewytk/trading101/blob/main/PaperMill/KILL_LOG.md">PaperMill/KILL_LOG.md</a> in trading101 (merged paper book). A longer write-up is the <a href="../essays/friction-sized-edges.html">friction-sized note</a>.</p>
+    <p class="caption">The full CSV stays in the research repo. Source: PaperMill/KILL_LOG.md in the private trading101 repo (merged paper book). A longer write-up is the <a href="../essays/friction-sized-edges.html">friction-sized note</a>.</p>
   </section>
 
   <section class="reveal" aria-labelledby="not">
     <h2 id="not">What this is not</h2>
     <p>This is a paper book. No live P&amp;L is claimed. No live book is implied.</p>
-    <p>Not advice, not a recommendation, not a tip sheet, and not an order. Cost-sizing and extraction only. No live edge is claimed. The paper record is public so the deaths stay visible; it is not a second product.</p>
+    <p>It is not advice, a recommendation, a tip sheet or an order. It sizes costs and extracts numbers from filings, and no live edge is claimed. The paper record is public so that the deaths stay visible, not as a second product.</p>
     <p>The same cost-sizing is what <a href="../merger-monitor/">Merger Monitor</a> publishes on every cash row: a measured break rate, round-trip cost, and T-bill carry. A 3% spread is not 24.6% a year after that.</p>
   </section>
 </main>

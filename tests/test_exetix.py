@@ -126,7 +126,9 @@ class ExetixPages(unittest.TestCase):
             self.assertTrue(APP_STORE in html, f"{name}: link the real App Store listing")
             self.assertFalse("testflight.apple.com" in html, f"{name}: no TestFlight invite link")
             self.assertNotIn("Coming to the App Store", html, f"{name}: it is live now")
-            self.assertTrue(LIVE_SITE in html, f"{name}: link the live site")
+            # 24 Nov 2026: the web app now belongs to the buyer and returns 402 (deployment disabled); link the App Store instead
+            self.assertNotIn(f'href="{LIVE_SITE}', html, f"{name}: the web app is down, do not link it")
+            self.assertTrue(APP_STORE in html, f"{name}: link the App Store")
 
     def test_nothing_private_ships(self) -> None:
         bodies = {name: _page(name) for name in PAGES}
@@ -173,7 +175,7 @@ class HomepageHero(unittest.TestCase):
     def test_hero_links_and_images(self) -> None:
         block = _section()
         self.assertIn('href="../exetix/"', block)
-        self.assertIn(LIVE_SITE, block)
+        self.assertNotIn(f'href="{LIVE_SITE}', block)
         self.assertIn(APP_STORE, block)
         p = _parse(block)
         self.assertGreaterEqual(len(p.imgs), 3)

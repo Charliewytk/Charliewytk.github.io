@@ -6,7 +6,7 @@ Charlie Wuytack's portfolio: apps, Mac tools, games and quantitative trading res
 
 | Path | What it is |
 | --- | --- |
-| `index.html` | Homepage: a tiny desktop. Twelve app icons open each project as a window (a sheet on a phone). Styles and script in `assets/desktop.css` and `assets/desktop.js`. Every icon is a plain link, so it works without JS. |
+| `index.html` | Homepage: a tiny desktop. On the left, who Charlie is (one line, four CV facts, About/LinkedIn/Email); on the right, thirteen app icons in two groups (About and finance/research first, then engineering, apps and games) that open each project as a window (a sheet on a phone; Back closes the sheet). Styles and script in `assets/desktop.css` and `assets/desktop.js`. Every icon is a plain link, so it works without JS. |
 | `shelf/` | The previous 3D shelf homepage, kept as is. Unlinked. Uses `<base href="../">`. |
 | `work/` | The long-form portfolio page: ExeTix, other projects, research, tools, about. |
 | `tracks/` | Tracklist (`tracks/index.html`) and one page per project (`tracks/<name>/`). Shared styles in `tracks/track.css`. |

@@ -260,14 +260,23 @@
       dockTiles.add(this, instant);
       syncVideos();
       if (isPhone()) background.forEach((n) => (n.inert = true));
+      // Phone: a sheet gets its own history entry, so the Back gesture closes it instead of leaving the site.
+      if (isPhone() && !instant && history.state?.win !== this.slug) {
+        history.pushState({ win: this.slug }, '', `${location.pathname}?open=${this.slug}`);
+        this.pushed = true;
+      }
       if (focus) this.el.focus({ preventScroll: true });
     }
 
     // A phone sheet is modal (the home screen behind it is inert); a desktop window is not.
     modal() { if (isPhone()) this.el.setAttribute('aria-modal', 'true'); else this.el.removeAttribute('aria-modal'); }
 
-    close() {
+    close({ fromPop = false } = {}) {
       if (this.state === 'closed') return;
+      if (this.pushed) {                                     // closed by hand: drop the history entry the sheet added
+        this.pushed = false;
+        if (!fromPop && history.state?.win === this.slug) history.back();
+      }
       const hadFocus = this.el.contains(document.activeElement);
       const wasMin = this.state === 'min';
       this.state = 'closed';
@@ -623,6 +632,12 @@
       win.open(win.state === 'min' ? dockTiles.tileOf(win) : win.app, { kbd: e.detail === 0 });
     });
   }
+
+  // Back (phone): close the sheet whose history entry was just left.
+  addEventListener('popstate', () => {
+    const want = history.state?.win;
+    for (const w of wins.values()) if (w.pushed && w.state === 'open' && w.slug !== want) w.close({ fromPop: true });
+  });
 
   // Esc closes the frontmost window.
   addEventListener('keydown', (e) => {
