@@ -105,15 +105,16 @@ class TrackPages(unittest.TestCase):
         for slug in TRACKS:
             html = _page(slug).read_text(encoding="utf-8").lower()
             skus = set(re.findall(r"https://wuytackcharlie\.gumroad\.com/l/[a-z0-9]+", html))
-            self.assertEqual(skus, {GUMROAD}, slug)
+            self.assertLessEqual(skus, {GUMROAD}, slug)   # variant (a), Nov 2026: track headers no longer carry the pay link
             self.assertIn("not financial advice", html, slug)
             for claim in ("guaranteed", "passive income", "copy my trades"):
                 self.assertNotIn(claim, html, slug)
 
     def test_merger_track_is_honest(self) -> None:
         html = _page("merger-monitor").read_text(encoding="utf-8")
-        self.assertIn("Zero subscribers so far", html)
-        self.assertIn("Take: £0", html)
+        # variant (a), Nov 2026: reframed as a research data product; no price or subscriber line, Gumroad kept quietly
+        self.assertNotIn("£5", html)
+        self.assertIn(GUMROAD, html)
         self.assertIn("not advice", html.lower())
         self.assertIn("merger-stats.js", html)
         self.assertIsNone(re.search(r"[1-9][\d,]*\s+subscribers?", html.lower()))

@@ -342,6 +342,8 @@ class SizerPage(unittest.TestCase):
         self.assertIn('href="../example/"', notes.group(1))
         self.assertNotIn("share/", homepage.lower())
 
+    @unittest.skip("Variant (a), Nov 2026: Merger Monitor reframed as a research data product for job applications; the £5 pay path was removed from the homepage, /work/, /kill-log/ and track headers. Revert the variant (a) commit to restore.")
+
     def test_does_not_replace_paid_path_on_homepage_or_subscribe(self) -> None:
         homepage = (ROOT / "work" / "index.html").read_text(encoding="utf-8")
         fold = re.search(r'<header class="opening">.*?</header>', homepage, re.S)

@@ -54,6 +54,8 @@ class HomepageMoneyPath(unittest.TestCase):
         self.assertIn("mm-preview", block)
         self.assertIn("merger-monitor", block)
 
+    @unittest.skip("Variant (a), Nov 2026: Merger Monitor reframed as a research data product for job applications; the £5 pay path was removed from the homepage, /work/, /kill-log/ and track headers. Revert the variant (a) commit to restore.")
+
     def test_primary_paid_cta_is_subscribe(self) -> None:
         """Once /subscribe/ exists, the paid button owns that path — not the free weekly."""
         block = _merger_block()
@@ -66,6 +68,8 @@ class HomepageMoneyPath(unittest.TestCase):
         )
         self.assertNotIn("mergerweekly", href)
         self.assertNotEqual(href, WEEKLY)
+
+    @unittest.skip("Variant (a), Nov 2026: Merger Monitor reframed as a research data product for job applications; the £5 pay path was removed from the homepage, /work/, /kill-log/ and track headers. Revert the variant (a) commit to restore.")
 
     def test_paid_path_is_subscribe_plus_gumroad(self) -> None:
         self.assertTrue(SUBSCRIBE.is_file(), "/subscribe/ page from PR #2 is missing")
@@ -99,6 +103,8 @@ class HomepageMoneyPath(unittest.TestCase):
         subscribe = SUBSCRIBE.read_text(encoding="utf-8")
         self.assertIn(GUMROAD, subscribe)
         self.assertNotIn("<form", subscribe.lower())
+
+    @unittest.skip("Variant (a), Nov 2026: Merger Monitor reframed as a research data product for job applications; the £5 pay path was removed from the homepage, /work/, /kill-log/ and track headers. Revert the variant (a) commit to restore.")
 
     def test_honest_week_late_copy(self) -> None:
         text = _merger_block().lower()
@@ -344,6 +350,8 @@ class KillLogConversionPath(unittest.TestCase):
         self.assertNotIn("i trade", lowered)
         self.assertIn("not advice", lowered)
 
+    @unittest.skip("Variant (a), Nov 2026: Merger Monitor reframed as a research data product for job applications; the £5 pay path was removed from the homepage, /work/, /kill-log/ and track headers. Revert the variant (a) commit to restore.")
+
     def test_primary_cta_is_existing_gumroad_sku(self) -> None:
         html = self._html()
         btn = re.search(r'<a class="btn" href="([^"]+)"', html)
@@ -433,6 +441,8 @@ class HomepageAndKillLogPayPath(unittest.TestCase):
     no sticky pay control after the named deaths. Same SKU only.
     """
 
+    @unittest.skip("Variant (a), Nov 2026: Merger Monitor reframed as a research data product for job applications; the £5 pay path was removed from the homepage, /work/, /kill-log/ and track headers. Revert the variant (a) commit to restore.")
+
     def test_homepage_merger_offers_gumroad_after_the_offer(self) -> None:
         block = _merger_block()
         gos = re.findall(r'<a class="go(?:\s+pay)?" href="([^"]+)"', block)
@@ -449,6 +459,8 @@ class HomepageAndKillLogPayPath(unittest.TestCase):
         self.assertNotIn("i trade this", block.lower())
         self.assertIsNone(re.search(r"\bict\b", block.lower()))
 
+    @unittest.skip("Variant (a), Nov 2026: Merger Monitor reframed as a research data product for job applications; the £5 pay path was removed from the homepage, /work/, /kill-log/ and track headers. Revert the variant (a) commit to restore.")
+
     def test_homepage_first_row_names_gumroad_without_replacing_subscribe(self) -> None:
         """Already-decided readers can pay from the first doing-row, not only /subscribe/."""
         block = _merger_block()
@@ -456,6 +468,8 @@ class HomepageAndKillLogPayPath(unittest.TestCase):
         self.assertIn("subscribe/", first_row)
         self.assertIn(GUMROAD, first_row)
         self.assertIn("merger-monitor", first_row)
+
+    @unittest.skip("Variant (a), Nov 2026: Merger Monitor reframed as a research data product for job applications; the £5 pay path was removed from the homepage, /work/, /kill-log/ and track headers. Revert the variant (a) commit to restore.")
 
     def test_kill_log_has_sticky_paybar_to_existing_sku(self) -> None:
         html = (ROOT / "kill-log" / "index.html").read_text(encoding="utf-8")
@@ -539,6 +553,8 @@ class UniqueShareCards(unittest.TestCase):
         self.assertNotEqual(twitter_desc, self._name(HOMEPAGE, "twitter:description"))
         self.assertEqual(self._name(html, "twitter:image"), image)
         self.assertNotEqual(self._name(html, "twitter:image"), self.HOME)
+
+    @unittest.skip("Variant (a), Nov 2026: Merger Monitor reframed as a research data product for job applications; the £5 pay path was removed from the homepage, /work/, /kill-log/ and track headers. Revert the variant (a) commit to restore.")
 
     def test_kill_log_share_card_is_not_the_homepage(self) -> None:
         html = (ROOT / "kill-log" / "index.html").read_text(encoding="utf-8")
@@ -679,6 +695,8 @@ class FirstPaidSubPath(unittest.TestCase):
         self.assertRegex(css, r"\.paybar\s*\{[^}]*display:\s*flex")
         self.assertIsNone(re.search(r"\.paybar\s*\{[^}]*display:\s*none", css))
 
+    @unittest.skip("Variant (a), Nov 2026: Merger Monitor reframed as a research data product for job applications; the £5 pay path was removed from the homepage, /work/, /kill-log/ and track headers. Revert the variant (a) commit to restore.")
+
     def test_kill_log_cta_names_tonights_table_after_the_product(self) -> None:
         html = (ROOT / "kill-log" / "index.html").read_text(encoding="utf-8")
         btn = re.search(r'<a class="btn" href="([^"]+)"[^>]*>([^<]+)</a>', html)
@@ -689,6 +707,8 @@ class FirstPaidSubPath(unittest.TestCase):
         hero = html.split('<div class="cta">', 1)[0].lower()
         self.assertIn("merger monitor", hero)
         self.assertTrue("filing" in hero or "22:30" in hero or "tonight" in hero)
+
+    @unittest.skip("Variant (a), Nov 2026: Merger Monitor reframed as a research data product for job applications; the £5 pay path was removed from the homepage, /work/, /kill-log/ and track headers. Revert the variant (a) commit to restore.")
 
     def test_kill_log_paybar_matches_and_is_always_on(self) -> None:
         html = (ROOT / "kill-log" / "index.html").read_text(encoding="utf-8")
@@ -727,6 +747,8 @@ class HomepageOpeningRevealMoney(unittest.TestCase):
         if "fold-sell" in fold:
             self.assertRegex(css, r"\.fold-sell\s*\{[^}]*opacity:\s*var\(--tail-op")
 
+    @unittest.skip("Variant (a), Nov 2026: Merger Monitor reframed as a research data product for job applications; the £5 pay path was removed from the homepage, /work/, /kill-log/ and track headers. Revert the variant (a) commit to restore.")
+
     def test_pay_still_exists_on_mast_and_merger_after_open(self) -> None:
         mast = re.search(r'<div class="masthead">.*?</div>', HOMEPAGE, re.S)
         self.assertIsNotNone(mast)
@@ -745,6 +767,8 @@ class HomepageOpeningRevealMoney(unittest.TestCase):
         self.assertNotIn("guaranteed", self._fold().lower())
         self.assertNotIn("i trade", self._fold().lower())
         self.assertIsNone(re.search(r"\bict\b", self._fold().lower()))
+
+    @unittest.skip("Variant (a), Nov 2026: Merger Monitor reframed as a research data product for job applications; the £5 pay path was removed from the homepage, /work/, /kill-log/ and track headers. Revert the variant (a) commit to restore.")
 
     def test_entry_gate_also_names_tonights_table(self) -> None:
         """First-time visitors see the vinyl gate, not the opening. Same SKU, same CTA."""
@@ -1119,6 +1143,8 @@ class WeeklyFreeEditionPage(unittest.TestCase):
         self.assertIsNone(re.search(r"\bict\b", html))
         self.assertNotIn("<form", html)
 
+    @unittest.skip("Variant (a), Nov 2026: Merger Monitor reframed as a research data product for job applications; the £5 pay path was removed from the homepage, /work/, /kill-log/ and track headers. Revert the variant (a) commit to restore.")
+
     def test_does_not_replace_paid_path_on_homepage_or_subscribe(self) -> None:
         homepage = (ROOT / "work" / "index.html").read_text(encoding="utf-8")
         fold = re.search(r'<header class="opening">.*?</header>', homepage, re.S)
@@ -1271,6 +1297,8 @@ class HomepageStickyPayPath(unittest.TestCase):
     honest. Clothes stays out.
     """
 
+    @unittest.skip("Variant (a), Nov 2026: Merger Monitor reframed as a research data product for job applications; the £5 pay path was removed from the homepage, /work/, /kill-log/ and track headers. Revert the variant (a) commit to restore.")
+
     def test_masthead_has_sticky_gumroad_cta(self) -> None:
         mast = re.search(r'<div class="masthead">.*?</div>', HOMEPAGE, re.S)
         self.assertIsNotNone(mast, "homepage has no masthead")
@@ -1285,6 +1313,8 @@ class HomepageStickyPayPath(unittest.TestCase):
         self.assertIsNotNone(pay, "masthead has no .pay Gumroad link")
         self.assertEqual(pay.group(1), GUMROAD)
         self.assertIn("£5", pay.group(2))
+
+    @unittest.skip("Variant (a), Nov 2026: Merger Monitor reframed as a research data product for job applications; the £5 pay path was removed from the homepage, /work/, /kill-log/ and track headers. Revert the variant (a) commit to restore.")
 
     def test_sticky_pay_stays_outside_the_first_fold(self) -> None:
         opening = re.search(r'<header class="opening">.*?</header>', HOMEPAGE, re.S)
@@ -1302,6 +1332,8 @@ class HomepageStickyPayPath(unittest.TestCase):
         self.assertRegex(css, r"\.masthead\s*\{[^}]*position:\s*fixed")
         self.assertIsNone(re.search(r"\.masthead\s+a\.pay\s*\{[^}]*display:\s*none", css))
         self.assertIsNone(re.search(r"\.masthead\s*\{[^}]*display:\s*none", css))
+
+    @unittest.skip("Variant (a), Nov 2026: Merger Monitor reframed as a research data product for job applications; the £5 pay path was removed from the homepage, /work/, /kill-log/ and track headers. Revert the variant (a) commit to restore.")
 
     def test_zero_ledger_and_no_new_sku(self) -> None:
         lowered = HOMEPAGE.lower()

@@ -129,8 +129,10 @@ class DesktopHomepage(unittest.TestCase):
 
     def test_paid_and_paper_labels_kept(self) -> None:
         merger = re.search(r'<template id="tpl-merger-monitor">.*?</template>', HOMEPAGE, re.S).group(0)
-        for label in ("£5/month", "+1.38%", "Filings, not advice.", "Zero subscribers so far. Take: £0.", "7-day refund"):
+        # variant (a), Nov 2026: research data product; price and subscriber lines removed, Gumroad link kept quietly
+        for label in ("+1.38%", "Filings, not advice.", "https://wuytackcharlie.gumroad.com/l/mergermonitor"):
             self.assertIn(label, merger)
+        self.assertNotIn("£5", merger)
         kill = re.search(r'<template id="tpl-kill-log">.*?</template>', HOMEPAGE, re.S).group(0)
         self.assertIn("Nothing here claims a profit yet", kill)
         self.assertIn("not a live record", kill)
